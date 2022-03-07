@@ -8,16 +8,16 @@ export default [
   },
   {
     id: '2',
-    title: 'Join with us...',
+    title: 'Organize OFFERS...',
     description:
-      '...and get benefits. With our channel partner plan, get guaranteed customers.',
+      '...and SALES and DISCOUNTS with all your nearby people noticing from within the city and outside.',
     image: require('../assets/images/offerlist.png'),
   },
   {
     id: '3',
-    title: 'Join with us...',
+    title: 'Share live shop timing...',
     description:
-      '...and get benefits. With our channel partner plan, get guaranteed customers.',
+      '...and never let customers return home without shopping.',
     image: require('../assets/images/grow.png'),
   },
 ];
