@@ -46,7 +46,6 @@ const PhoneLoginScreen = ({navigation}) => {
         const response = await sendLoginOTP(phoneNumber);
         const {otpId} = response?.data;
         setLoading(false);
-        console.log(otpId);
         if (otpId) {
           navigation.navigate('OTPVerify', {
             phoneNumber: phoneNumber,

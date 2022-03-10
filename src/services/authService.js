@@ -25,7 +25,7 @@ export function sendLoginOTP(phoneNumber) {
 }
 
 //verify login otp
-export function verifyLoginOTP(otpId, otp, role) {
+export function verifyLoginOTP(otpId, otp) {
   return axios({
     method: 'POST',
     url: VERIFY_LOGIN_OTP_API,
@@ -34,7 +34,6 @@ export function verifyLoginOTP(otpId, otp, role) {
     data: {
       otpId: otpId,
       otp: otp,
-      role: role,
     },
   });
 }

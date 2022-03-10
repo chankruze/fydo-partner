@@ -9,41 +9,129 @@ import {
   Dimensions,
 } from 'react-native';
 import React, {useState} from 'react';
-import { DARKBLUE, DARKGREY, GREY, LIGHTBLACK, PRIMARY } from '../assets/colors';
-
+import {DARKBLUE, DARKGREY, GREY, LIGHTBLACK, PRIMARY} from '../assets/colors';
+import {sendLoginOTP, verifyLoginOTP} from '../services/authService';
+import {setUser} from '../store/actions/user.action';
+import {createRef} from 'react';
+import {connect} from 'react-redux';
+import {saveUserData} from '../utils/sharedPreferences';
+import ButtonComponent from '../components/ButtonComponent';
+import OTPTextInput from 'react-native-otp-textinput';
 
 const HEIGHT = Dimensions.get('screen').height;
 
+const mapDispatchToProps = function (dispatch) {
+  return {
+    setUser: user => dispatch(setUser(user)),
+  };
+};
 
 const OTPVerifyScreen = ({route, navigation}) => {
   const [otp, setOtp] = useState(null);
   const [otpId, setOtpId] = useState(route.params.otpId);
-  const [phoneNumber, setPhoneNumber] = useState(route.params.phoneNumber);
+  const {phoneNumber} = route.params.phoneNumber;
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const validateInput = ()=> {
-    if(otp == null || otp.trim() == ''){
-        setError('* Required')
-        return false;
-    }
-    else if(otp.length != 6){
-        setError('Must contain 6 digits')
-        return false;
-    }
-    else return true;
-  }
+  const otpInput = createRef();
 
+  const validateInput = () => {
+    if (otp == null || otp.trim() == '') {
+      setError('* Required');
+      return false;
+    } else if (otp.length != 6) {
+      setError('Must contain 6 digits');
+      return false;
+    } else return true;
+  };
+
+  const handleOTP = value => {
+    setOtp(value);
+  };
+  const verify = async () => {
+    setError(null);
+    setLoading(true);
+    if (!validateInput()) return;
+    try {
+      const response = await verifyLoginOTP(otpId, otp);
+      const {data} = response;
+      setLoading(false);
+      if (data.message) {
+        setError(data.message);
+      } else {
+        setUser(data);
+        saveUserData(data);
+        if (data.profileComplete) {
+          console.log('User Profile Complete, add suitable route');
+        } else {
+          navigation.navigate("RegisterShop", {
+            phoneNumber: phoneNumber
+          })
+        }
+      }
+    } catch (error) {
+      if (error.message == 'Request failed with status code 403') {
+        setError('Invalid OTP');
+        setLoading(false);
+      } else {
+        setError(error.message);
+        setLoading(false);
+      }
+    }
+  };
+
+  const resendOTP = async () => {
+    try {
+      const response = await sendLoginOTP(phoneNumber);
+      const {otpId} = response?.data;
+      setOtp(null);
+      setOtpId(otpId);
+      otpInput.clear();
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
-    <View>
-      <Text>{otpId}</Text>
-      <Text>{phoneNumber}</Text>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.title}>Verify OTP</Text>
+      <Text style={styles.label}>
+        Please enter the 6-digit OTP sent to you at {phoneNumber}
+      </Text>
+      <OTPTextInput
+        // ref={e => (otpInput = e)}
+        handleTextChange={handleOTP}
+        inputCount={6}
+        containerStyle={styles.optContainer}
+        textInputStyle={styles.otpBox}
+      />
+      {error != null && <Text style={styles.error}>{error}</Text>}
+      <ButtonComponent
+        backgroundColor={PRIMARY}
+        color="white"
+        label="Verify & continue"
+        onPress={verify}
+        loading={loading}
+      />
+      <View style={styles.row}>
+        <Text style={styles.label}>Didn't get the OTP?</Text>
+        <TouchableOpacity
+          disabled={otp?.length != 6}
+          onPress={resendOTP}
+          style={styles.resendButton}>
+          <Text style={styles.resendLabel}>Resend</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.footer}>
+        <Text style={styles.footerLabel}>By continuing you agree to our</Text>
+        <TouchableOpacity>
+          <Text style={styles.footerOtherLabel}>Terms & Conditions</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 };
 
-export default OTPVerifyScreen
-
+export default OTPVerifyScreen;
 
 const styles = StyleSheet.create({
   container: {

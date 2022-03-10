@@ -8,8 +8,6 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import OnboardingScreen from './src/screens/OnboardingScreen';
-import PhoneLoginScreen from './src/screens/PhoneLoginScreen';
-import AuthNavigation from './src/navigations/authNavigation';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Loading = () => {
@@ -21,7 +19,7 @@ const Loading = () => {
 };
 
 const App = () => {
-  const [isFirstLaunch, setIsFirstLaunch] = useState(null);
+  const [isFirstLaunch, setIsFirstLaunch] = useState(true);
 
   // useEffect(() => {
   //   AsyncStorage.getItem('@viewedOnboarding').then(value => {
@@ -39,24 +37,20 @@ const App = () => {
     setIsFirstLaunch(false);
   }
 
-  return (
-    <AuthNavigation />
-  )
-  // if (isFirstLaunch === null) {
-  //   return (<View style={styles.container}><Loading /></View>)
-  // } else if (isFirstLaunch === true) {
-  //   return (
-  //     <View style={styles.container}>
-  //       <OnboardingScreen handleFirstLaunch={handleFirstLaunch}/>
-  //     </View>
-  //   );
-  // } else {
-  //   return (
-  //     <View style={styles.container}>
-  //      <RootNavigation />
-  //     </View>
-  //   );
-  // }
+ 
+  if (isFirstLaunch === null) {
+    return (<View style={styles.container}><Loading /></View>)
+  } else if (isFirstLaunch === true) {
+    return (
+      <View style={styles.container}>
+        <OnboardingScreen handleFirstLaunch={handleFirstLaunch}/>
+      </View>
+    );
+  } else {
+    return (
+       <RootNavigation />
+    );
+  }
 };
 
 const styles = StyleSheet.create({

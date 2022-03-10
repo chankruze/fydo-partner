@@ -3,7 +3,7 @@ import { ActivityIndicator, Dimensions, StyleSheet, Text, TouchableOpacity } fro
 
 const WIDTH = Dimensions.get('screen').width;
 
-export default function ButtonComponent({label, color, backgroundColor = 'white', onPress, loading = false}){
+export default function ButtonComponent({label, color, backgroundColor = 'white', onPress = ()=> {}, loading = false}){
     let labelStyle = Object.assign({...styles.label}, {color: color});
     let buttonStyle = Object.assign({...styles.button}, {backgroundColor: backgroundColor});
     return (
