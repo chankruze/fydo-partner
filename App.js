@@ -8,7 +8,9 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import OnboardingScreen from './src/screens/OnboardingScreen';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import PhoneLoginScreen from './src/screens/PhoneLoginScreen';
+import AuthNavigation from './src/navigations/authNavigation';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Loading = () => {
   return (
@@ -21,36 +23,40 @@ const Loading = () => {
 const App = () => {
   const [isFirstLaunch, setIsFirstLaunch] = useState(null);
 
-  useEffect(() => {
-    AsyncStorage.getItem('@viewedOnboarding').then(value => {
-      if (value == null) {
-        AsyncStorage.setItem('@viewedOnboarding', 'true');
-        setIsFirstLaunch(true);
-      } else {
-        setIsFirstLaunch(false);
-      }
-    }, []);
+  // useEffect(() => {
+  //   AsyncStorage.getItem('@viewedOnboarding').then(value => {
+  //     if (value == null) {
+  //       AsyncStorage.setItem('@viewedOnboarding', 'true');
+  //       setIsFirstLaunch(true);
+  //     } else {
+  //       setIsFirstLaunch(false);
+  //     }
+  //   }, []);
 
-  },[]);
+  // },[]);
 
   const handleFirstLaunch = ()=> {
     setIsFirstLaunch(false);
   }
-  if (isFirstLaunch === null) {
-    return (<View style={styles.container}><Loading /></View>)
-  } else if (isFirstLaunch === true) {
-    return (
-      <View style={styles.container}>
-        <OnboardingScreen handleFirstLaunch={handleFirstLaunch}/>
-      </View>
-    );
-  } else {
-    return (
-      <View style={styles.container}>
-       <RootNavigation />
-      </View>
-    );
-  }
+
+  return (
+    <AuthNavigation />
+  )
+  // if (isFirstLaunch === null) {
+  //   return (<View style={styles.container}><Loading /></View>)
+  // } else if (isFirstLaunch === true) {
+  //   return (
+  //     <View style={styles.container}>
+  //       <OnboardingScreen handleFirstLaunch={handleFirstLaunch}/>
+  //     </View>
+  //   );
+  // } else {
+  //   return (
+  //     <View style={styles.container}>
+  //      <RootNavigation />
+  //     </View>
+  //   );
+  // }
 };
 
 const styles = StyleSheet.create({
