@@ -10,6 +10,9 @@ import OfferIcon from './../assets/icons/my offer.svg';
 import MyShopIcon from './../assets/icons/myshop.svg';
 import SupportIcon from './../assets/icons/support.svg';
 import ReferEarnIcon from './../assets/icons/refer and earn.svg';
+import Share from 'react-native-share';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
 
 export default class HomeScreen extends Component{
 
@@ -18,7 +21,20 @@ export default class HomeScreen extends Component{
         this.state = {
             shopOpen: false
         }
+        this.shareCard = this.shareCard.bind(this);
         this.handleShopStatus = this.handleShopStatus.bind(this);
+    }
+
+    async shareCard(){
+        try {
+            const shareResponse = await Share.open({
+                message: 'Message',
+                title: 'Title',
+                url: 'https://www.npmjs.com/package/react-native-share'
+            });
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     handleShopStatus(){
@@ -30,16 +46,38 @@ export default class HomeScreen extends Component{
 
         return (
             <SafeAreaView style={styles.container}>
-                <ScrollView contentContainerStyle={{flex: 1}}>
+                <ScrollView>
                     <StatusBar backgroundColor={PRIMARY}/>
                     <HomeSlider />
-                    <TouchableOpacity style={styles.shareCard}>
-
-                    </TouchableOpacity>
+                    <View style={styles.shareCardContainer}>
+                        <TouchableOpacity 
+                            style={styles.shareCard}
+                            onPress={this.shareCard}>
+                            <MaterialIcons 
+                                name='card-giftcard'
+                                size={26}
+                                color={PRIMARY}
+                            />
+                            <View style={styles.cardLabelContainer}>
+                                <Text style={styles.cardLabel}>Share your business card to get more customer!</Text>
+                                <Text style={styles.cardButtonLabel}>Tap to share</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
                     <View style={styles.line}/>
-                    <TouchableOpacity style={styles.addTagsCard}>
-                        
-                    </TouchableOpacity>
+                    <View style={styles.addTagsCard}>
+                        <TouchableOpacity style={styles.shareCard}>
+                            <Ionicons 
+                                name='pricetag-outline'
+                                size={26}
+                                color={PRIMARY}
+                            />
+                            <View style={styles.cardLabelContainer}>
+                                <Text style={styles.cardLabel}>Add Tags to your shops to make user search you</Text>
+                                <Text style={styles.cardButtonLabel}>Tap to Add</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
                     <View style={styles.line}/>
                     <HomeFab />
                     <View style={styles.row}>
@@ -155,7 +193,7 @@ const styles = StyleSheet.create({
     },
     line: {
         backgroundColor: 'lightgrey',
-        height: .4
+        height: 1
     },
     shopStatusLabel: {
         color: 'black',
@@ -181,10 +219,34 @@ const styles = StyleSheet.create({
     shopStatusOtherLabel: {
         fontSize: 13
     },
-    shareCard: {
-        height: 60
+    shareCardContainer: {
+        // height: 60
+        padding: 20,
+        paddingVertical: 10
     },
     addTagsCard: {
-        height: 60
+        padding: 20,
+        paddingVertical: 10
+        // height: 60
+    },
+    shareCard: {
+        height: 70,
+        borderRadius: 10,
+        backgroundColor: '#00bcd4',
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 10
+    },
+    cardLabelContainer: {
+        marginLeft: 15
+    },
+    cardLabel: {
+        color: 'white',
+
+    },
+    cardButtonLabel: {
+        fontWeight: '500',
+        color: 'white',
+        fontSize: 15
     }
 })  

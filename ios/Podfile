@@ -16,6 +16,8 @@ target 'fydopartner' do
 
   pod 'RNSVG', :path => '../node_modules/react-native-svg'
 
+  pod 'RNShare', :path => '../node_modules/react-native-share'
+
   target 'fydopartnerTests' do
     inherit! :complete
     # Pods for testing
