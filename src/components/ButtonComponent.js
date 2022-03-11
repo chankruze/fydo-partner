@@ -25,14 +25,15 @@ export default function ButtonComponent({label, color, backgroundColor = 'white'
 
 const styles = StyleSheet.create({
     button: {
-        width: WIDTH * 0.9,
         height: 48,
         borderRadius: 5,
+        paddingHorizontal: 5,
+        marginTop: 5,
         justifyContent: 'center',
         alignItems: 'center',
     },
     label: {
         fontWeight: '600',
-        fontSize: 13
+        fontSize: 17,
     },
 })

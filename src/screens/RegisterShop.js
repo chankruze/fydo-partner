@@ -5,7 +5,6 @@ import {
   Text,
   TouchableOpacity,
   View,
-  TextInput,
   Dimensions,
 } from 'react-native';
 import {
@@ -19,16 +18,21 @@ import {
   DARKBLUE,
 } from '../assets/colors';
 import Octicons from 'react-native-vector-icons/Octicons';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {launchImageLibrary} from 'react-native-image-picker';
 import ButtonComponent from '../components/ButtonComponent';
-
+import {TextInput} from 'react-native-paper';
+import EntypoIcon from 'react-native-vector-icons/Entypo';
+import FontIsto from 'react-native-vector-icons/Fontisto';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialComunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 const HEIGHT = Dimensions.get('screen').height;
 
 export default function RegisterShop({route, navigation}) {
   const [ownerName, setOwnerName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState(route.params.phoneNumber);
+  // const [phoneNumber, setPhoneNumber] = useState('');
   const [shopName, setShopName] = useState('');
+  const [location, setLocation] = useState('');
   const [pincode, setPincode] = useState('');
   const [website, setWebsite] = useState('');
   const [shopType, setShopType] = useState('');
@@ -42,23 +46,19 @@ export default function RegisterShop({route, navigation}) {
     if (pincode == null || pincode?.trim() == '') {
       error.pincode = 'Enter pin code';
     }
+    if (
+      phoneNumber == null ||
+      phoneNumber?.trim() == '' ||
+      phoneNumber.length !== 10
+    ) {
+      error.phoneNumber = 'Enter valid phone number';
+    }
+    if (shopName == null || shopName?.trim() == '') {
+      error.shopName = 'Enter shop name';
+    }
     setError(error);
     if (Object.keys(error).length == 0) return true;
     return false;
-  };
-
-  const handleOwnerName = value => {
-    setOwnerName(value);
-  };
-  const handlePhoneNumber = value => {
-    setPhoneNumber(value);
-  };
-  const handlePincode = value => {
-    setPincode(value);
-  };
-
-  const handleShopName = value => {
-    setShopName(value);
   };
 
   return (
@@ -69,10 +69,12 @@ export default function RegisterShop({route, navigation}) {
         <View style={styles.box}>
           <TextInput
             value={ownerName}
-            onChangeText={handleOwnerName}
-            style={styles.input}
+            onChangeText={value => setOwnerName(value)}
+            style={commonstyles.input}
             placeholder="Shop Owner's name"
             placeholderTextColor={DARKGREY}
+            left={<TextInput.Icon name="account" />}
+            required
           />
           {error.ownerName && (
             <Text style={styles.error}>{error.ownerName}</Text>
@@ -82,42 +84,95 @@ export default function RegisterShop({route, navigation}) {
         <View style={styles.box}>
           <TextInput
             value={phoneNumber}
-            onChangeText={handlePhoneNumber}
-            style={styles.input}
+            onChangeText={value => setPhoneNumber(value)}
+            style={commonstyles.input}
             placeholder="Phone number"
             placeholderTextColor={DARKGREY}
+            left={<TextInput.Icon name="phone" />}
+            keyboardType="phone-pad"
           />
+          {error.phoneNumber && (
+            <Text style={styles.error}>{error.phoneNumber}</Text>
+          )}
         </View>
 
         <View style={styles.box}>
           <TextInput
             value={shopName}
-            onChangeText={handleShopName}
-            style={styles.input}
+            onChangeText={value => setShopName(value)}
+            style={commonstyles.input}
             placeholder="Shop name"
             placeholderTextColor={DARKGREY}
+            left={
+              <TextInput.Icon
+                name={() => (
+                  <FontIsto name="shopping-store" size={17} color="#000" />
+                )}
+              />
+            }
+          />
+          {error.shopName && <Text style={styles.error}>{error.shopName}</Text>}
+        </View>
+
+        <View style={styles.box}>
+          <TextInput
+            value={location}
+            style={commonstyles.input}
+            placeholder="Location"
+            placeholderTextColor={DARKGREY}
+            left={
+              <TextInput.Icon
+                name={() => (
+                  <EntypoIcon name="location" size={25} color="#000" />
+                )}
+              />
+            }
+            right={
+              <TextInput.Icon
+                name={() => (
+                  <MaterialIcons name="my-location" size={25} color="#000" />
+                )}
+              />
+            }
           />
         </View>
 
         <View style={styles.box}>
           <TextInput
             value={pincode}
-            onChangeText={handlePincode}
-            style={styles.input}
+            onChangeText={value => setPincode(value)}
+            style={commonstyles.input}
             placeholder="Pincode"
             placeholderTextColor={DARKGREY}
+            left={
+              <TextInput.Icon
+                name={() => (
+                  <MaterialIcons name="edit-location" size={28} color="#000" />
+                )}
+              />
+            }
           />
+          {error.pincode && <Text style={styles.error}>{error.pincode}</Text>}
         </View>
+
+        <View style={styles.box}>
+          <TextInput
+            value={website}
+            onChangeText={value => setWebsite(value)}
+            style={commonstyles.input}
+            placeholder="Website (if any)"
+            placeholderTextColor={DARKGREY}
+            left={<TextInput.Icon name={()=> <MaterialComunityIcons name="web" size={25} color="#000"/>} />}
+          />
+          
+        </View>
+
 
         <ButtonComponent
           label="Next"
           color="white"
           backgroundColor={DARKBLUE}
         />
-
-        {/* <TouchableOpacity style={styles.nextButton}>
-          <Text style={styles.nextButtonLabel}>Next</Text>
-        </TouchableOpacity> */}
       </View>
       <View style={styles.footer}>
         <Text style={styles.footerLabel}>By continuing you agree to our</Text>
@@ -129,10 +184,20 @@ export default function RegisterShop({route, navigation}) {
   );
 }
 
+const commonstyles = {
+  input: {
+    backgroundColor: 'transparent',
+    fontSize: 18,
+  },
+};
+
 const styles = StyleSheet.create({
   container: {
     height: '100%',
     backgroundColor: 'white',
+  },
+  input: {
+    backgroundColor: 'transparent',
   },
   contentContainer: {
     minHeight: HEIGHT * 0.6,
@@ -142,7 +207,8 @@ const styles = StyleSheet.create({
   title: {
     color: LIGHTBLACK,
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 20,
+    textAlign: 'center',
   },
   error: {
     marginVertical: 5,

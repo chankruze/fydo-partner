@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import OnboardingScreen from './src/screens/OnboardingScreen';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
+import RegisterShop from './src/screens/RegisterShop';
 
 const Loading = () => {
   return (
@@ -33,11 +34,11 @@ const App = () => {
 
   // },[]);
 
-  const handleFirstLaunch = ()=> {
+  const handleFirstLaunch = () => {
     setIsFirstLaunch(false);
-  }
+  };
 
- 
+  // return <RegisterShop />;
   if (isFirstLaunch === null) {
     return (<View style={styles.container}><Loading /></View>)
   } else if (isFirstLaunch === true) {
