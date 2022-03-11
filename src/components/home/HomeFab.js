@@ -3,9 +3,11 @@ import {StyleSheet, TouchableOpacity} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { PRIMARY } from '../../assets/colors';
 
-export default function HomeFab(){
+export default function HomeFab({handleModal}){
     return (
-        <TouchableOpacity style={styles.container}>
+        <TouchableOpacity 
+            style={styles.container}
+            onPress={handleModal}>
             <MaterialIcons 
                 name='add-circle-outline'
                 size={26}

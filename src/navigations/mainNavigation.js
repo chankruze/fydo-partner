@@ -24,7 +24,9 @@ export default function MainNavigation(){
                 tabBarIcon: ({ color, size }) => (
                   <MaterialIcons 
                     name="home"
-                    size={20}/>
+                    size={20}
+                    color={PRIMARY}
+                  />
                 ),
                 tabBarStyle: {
                   paddingBottom: 5
@@ -51,7 +53,8 @@ export default function MainNavigation(){
               tabBarIcon: ({ color, size }) => (
                 <MaterialIcons 
                   name="notifications"
-                  size={20}/>
+                  size={20}
+                  color={PRIMARY}/>
               ),
               tabBarStyle: {
                 paddingBottom: 5
