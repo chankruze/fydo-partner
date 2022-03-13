@@ -17,6 +17,7 @@ import {connect} from 'react-redux';
 import {saveUserData} from '../utils/sharedPreferences';
 import ButtonComponent from '../components/ButtonComponent';
 import OTPTextInput from 'react-native-otp-textinput';
+import WithNetInfo from '../components/hoc/withNetInfo';
 
 const HEIGHT = Dimensions.get('screen').height;
 
@@ -131,7 +132,7 @@ const OTPVerifyScreen = ({route, navigation}) => {
   );
 };
 
-export default OTPVerifyScreen;
+export default WithNetInfo(OTPVerifyScreen);
 
 const styles = StyleSheet.create({
   container: {

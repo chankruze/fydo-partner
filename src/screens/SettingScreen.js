@@ -9,10 +9,11 @@ import AboutUsIcon from './../assets/icons/about us.svg';
 import { PRIMARY } from '../assets/colors';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import { getAppVersion } from '../utils/deviceInfo';
+import WithNetInfo from '../components/hoc/withNetInfo';
 
 const PRIVACY_PAGE = "https://fydo.in/privacy-policy.html";
 
-export default class SettingScreen extends Component{
+class SettingScreen extends Component{
 
     constructor(props){
         super(props);
@@ -155,3 +156,5 @@ const styles = StyleSheet.create({
         fontSize: 15
     }
 })
+
+export default WithNetInfo(SettingScreen)

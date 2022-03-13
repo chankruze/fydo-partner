@@ -13,6 +13,7 @@ import {
 import flag from '../assets/images/flag.png';
 import {DARKBLUE, DARKGREY, GREY, LIGHTBLACK, PRIMARY} from '../assets/colors';
 import ButtonComponent from '../components/ButtonComponent';
+import WithNetInfo from '../components/hoc/withNetInfo';
 
 import {sendLoginOTP} from '../services/authService';
 
@@ -112,7 +113,7 @@ const PhoneLoginScreen = ({navigation}) => {
   );
 };
 
-export default PhoneLoginScreen;
+export default WithNetInfo(PhoneLoginScreen);
 
 const styles = StyleSheet.create({
   container: {

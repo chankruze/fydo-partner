@@ -13,8 +13,10 @@ import ReferEarnIcon from './../assets/icons/refer and earn.svg';
 import Share from 'react-native-share';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+import WithNetInfo from '../components/hoc/withNetInfo';
 
-export default class HomeScreen extends Component{
+
+class HomeScreen extends Component{
 
     constructor(){
         super();
@@ -134,6 +136,8 @@ export default class HomeScreen extends Component{
         )
     }
 }
+
+export default WithNetInfo(HomeScreen);
 
 const styles = StyleSheet.create({
     container: {

@@ -9,6 +9,8 @@ import {
 } from 'react-native';
 import OnboardingScreen from './src/screens/OnboardingScreen';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
+import RegisterShop from './src/screens/RegisterShop';
+import HomeScreen from './src/screens/HomeScreen';
 
 const Loading = () => {
   return (
@@ -33,24 +35,25 @@ const App = () => {
 
   // },[]);
 
-  const handleFirstLaunch = ()=> {
+  const handleFirstLaunch = () => {
     setIsFirstLaunch(false);
-  }
+  };
 
- 
-  if (isFirstLaunch === null) {
-    return (<View style={styles.container}><Loading /></View>)
-  } else if (isFirstLaunch === true) {
-    return (
-      <View style={styles.container}>
-        <OnboardingScreen handleFirstLaunch={handleFirstLaunch}/>
-      </View>
-    );
-  } else {
-    return (
-       <RootNavigation />
-    );
-  }
+  // return <RegisterShop />;
+  return <HomeScreen />
+  // if (isFirstLaunch === null) {
+  //   return (<View style={styles.container}><Loading /></View>)
+  // } else if (isFirstLaunch === true) {
+  //   return (
+  //     <View style={styles.container}>
+  //       <OnboardingScreen handleFirstLaunch={handleFirstLaunch}/>
+  //     </View>
+  //   );
+  // } else {
+  //   return (
+  //      <RootNavigation />
+  //   );
+  // }
 }
 
 const styles = StyleSheet.create({
