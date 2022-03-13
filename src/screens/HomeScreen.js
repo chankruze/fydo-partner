@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {SafeAreaView, StyleSheet, ScrollView, TouchableOpacity, View, Text, StatusBar, Switch} from 'react-native';
+import {SafeAreaView, StyleSheet, ScrollView, TouchableOpacity, View, Text, StatusBar, Switch, Modal} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import HomeFab from '../components/home/HomeFab';
 import HomeSlider from './../components/home/HomeSlider';
@@ -12,19 +12,27 @@ import SupportIcon from './../assets/icons/support.svg';
 import ReferEarnIcon from './../assets/icons/refer and earn.svg';
 import Share from 'react-native-share';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+// import MyShopIcon from './../assets/icons/myshop.svg';
+
 
 import WithNetInfo from '../components/hoc/withNetInfo';
 
 
 class HomeScreen extends Component{
-
     constructor(){
         super();
         this.state = {
-            shopOpen: false
+            shopOpen: false,
+            modalVisible: false
         }
+        this.handleModal = this.handleModal.bind(this);
         this.shareCard = this.shareCard.bind(this);
         this.handleShopStatus = this.handleShopStatus.bind(this);
+        this.navigateToMyOffers = this.navigateToMyOffers.bind(this);
+    }
+
+    handleModal(){
+        this.setState({modalVisible: !this.state.modalVisible});
     }
 
     async shareCard(){
@@ -43,11 +51,73 @@ class HomeScreen extends Component{
         this.setState({shopOpen: !this.state.shopOpen});
     }
 
+    navigateToMyOffers(){
+        let {navigation} = this.props;
+        navigation.navigate('MyOffers');
+    }
+
     render(){
         let {shopOpen} = this.state;
 
         return (
             <SafeAreaView style={styles.container}>
+                <HomeFab handleModal={this.handleModal}/>
+                <Modal 
+                    animationType="slide"
+                    transparent={true}
+                    visible={this.state.modalVisible}
+                    onRequestClose={() => {
+                    }}>
+                        <View style={styles.modelContainer}>
+                           <View style={styles.modalItems}>
+                                <TouchableOpacity 
+                                    style={styles.modalItem}
+                                    activeOpacity={.9}>
+                                    <View style={styles.modalIconContainer}>
+                                        <MyShopIcon 
+                                            width={18}
+                                            height={18}
+                                        />
+                                    </View>
+                                    <View style={styles.modalLabelContainer}>
+                                        <Text style={styles.modalLabel}>
+                                            Add new shop
+                                        </Text>
+                                    </View>
+                                </TouchableOpacity>
+                                <TouchableOpacity 
+                                    style={styles.modalItem}
+                                    activeOpacity={.9}>
+                                    <View style={styles.modalIconContainer}>
+                                        <MyShopIcon 
+                                            width={18}
+                                            height={18}
+                                        />
+                                    </View>
+                                    <View style={styles.modalLabelContainer}>
+                                        <Text style={styles.modalLabel}>
+                                            Add Offer
+                                        </Text>
+                                    </View>
+                                </TouchableOpacity>
+                                <TouchableOpacity 
+                                    style={styles.modalItem}
+                                    activeOpacity={.9}>
+                                    <View style={styles.modalIconContainer}>
+                                        <MyShopIcon 
+                                            width={18}
+                                            height={18}
+                                        />
+                                    </View>
+                                    <View style={styles.modalLabelContainer}>
+                                        <Text style={styles.modalLabel}>
+                                            Add Sale
+                                        </Text>
+                                    </View>
+                                </TouchableOpacity>
+                           </View>
+                        </View>
+                    </Modal>
                 <ScrollView>
                     <StatusBar backgroundColor={PRIMARY}/>
                     <HomeSlider />
@@ -81,28 +151,29 @@ class HomeScreen extends Component{
                         </TouchableOpacity>
                     </View>
                     <View style={styles.line}/>
-                    <HomeFab />
                     <View style={styles.row}>
-                        <View style={styles.buttonContainer}>
-                            <TouchableOpacity
+                        <TouchableOpacity style={styles.buttonContainer}>
+                            <View
                                 style={styles.button}>
                                 <MyShopIcon 
                                     width={24}
                                     height={24}
                                 />
-                            </TouchableOpacity>
+                            </View>
                             <Text style={styles.label}>My Shops</Text>
-                        </View>
-                        <View style={styles.buttonContainer}>
-                            <TouchableOpacity
+                        </TouchableOpacity>
+                        <TouchableOpacity 
+                            style={styles.buttonContainer}
+                            onPress={this.navigateToMyOffers}>
+                            <View
                                 style={styles.button}>
                                 <OfferIcon 
                                     width={24}
                                     height={24}
                                 />
-                            </TouchableOpacity>
+                            </View>
                             <Text style={styles.label}>My Offers</Text>
-                        </View>
+                        </TouchableOpacity>
                     </View>
                     <View style={styles.row}>
                         <TouchableOpacity style={styles.support}>
@@ -141,7 +212,7 @@ export default WithNetInfo(HomeScreen);
 
 const styles = StyleSheet.create({
     container: {
-        height: '100%',
+        flex: 1,
         backgroundColor: 'white'
     },
     row: {
@@ -252,5 +323,129 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         color: 'white',
         fontSize: 15
+    },
+    modelContainer: {
+        backgroundColor:'rgba(255, 255, 255, .8)', 
+        height: '100%'
+    },
+    modalItems: {
+        position: 'absolute',
+        width: '100%',
+        bottom: 70,
+        zIndex: 10
+    },
+    modalItem: {
+        height: 50,
+        marginBottom: 10,
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignSelf: 'flex-end',
+        paddingHorizontal: 20
+    },
+    modalIconContainer: {
+        backgroundColor: PRIMARY,
+        height: 40,
+        width: 40,
+        borderRadius: 20,
+        justifyContent: 'center',
+        elevation: 3,
+        borderRadius: 5,
+        backgroundColor: 'rgba(227, 242, 253, .3)',
+        shadowColor: 'rgba(227, 242, 253, 1)',
+    },
+    referEarn: {
+        alignItems: 'center',
+        flex: 1,
+        marginLeft: 5,
+        height: 70,
+        justifyContent: 'center',
+        elevation: 3,
+        borderRadius: 5,
+        backgroundColor: 'rgba(227, 242, 253, .3)',
+        shadowColor: 'rgba(227, 242, 253, 1)',
+    },
+    otherLabel: {
+        color: PRIMARY,
+        fontWeight: '500',
+        fontSize: 13,
+        marginTop: 5
+    },
+    line: {
+        backgroundColor: 'lightgrey',
+        height: 1
+    },
+    shopStatusLabel: {
+        color: 'black',
+        fontSize: 13
+    },
+    shopStatusRow: {
+        padding: 10,
+        height: 46,
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    switchButton: {
+        marginLeft: 10
+    },
+    shopStatus: {
+        paddingHorizontal: 20,
+        paddingVertical: 4,
+        borderRadius: 3,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginLeft: 20
+    },
+    shopStatusOtherLabel: {
+        fontSize: 13
+    },
+    shareCardContainer: {
+        // height: 60
+        padding: 20,
+        paddingVertical: 10
+    },
+    addTagsCard: {
+        padding: 20,
+        paddingVertical: 10
+        // height: 60
+    },
+    shareCard: {
+        height: 70,
+        borderRadius: 10,
+        backgroundColor: '#00bcd4',
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 10
+    },
+    cardLabelContainer: {
+        marginLeft: 15
+    },
+    cardLabel: {
+        color: 'white',
+
+    },
+    cardButtonLabel: {
+        fontWeight: '500',
+        color: 'white',
+        fontSize: 15
+    },
+    modalLabelContainer: {
+        marginLeft: 10,
+        backgroundColor: '#F6FAFF',
+        height: 30,
+        borderRadius: 6,
+        paddingHorizontal: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 133,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.5,
+        shadowRadius: 2,
+        elevation: 2,
+    },
+    modalLabel: {
+        color: '#000914',
+        fontSize: 13,
+        fontWeight: '400'
     }
 })  

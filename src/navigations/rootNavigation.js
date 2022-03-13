@@ -9,6 +9,7 @@ import FAQScreen from '../screens/FAQScreen';
 import FeedbackScreen from '../screens/FeedbackScreen';
 import SupportServiceScreen from '../screens/SupportServiceScreen';
 import AboutUsScreen from '../screens/AboutUsScreen';
+import MyOffersScreen from '../screens/MyOffersScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,7 +20,8 @@ function RootNavigation() {
           <Stack.Screen name="Main" component={MainNavigation} />
           <Stack.Screen name="Auth" component={AuthNavigation} />
           <Stack.Navigator/> */}
-        <Stack.Navigator >
+        <Stack.Navigator 
+          initialRouteName='MyOffers'>
           <Stack.Screen 
             name="Main" 
             component={MainNavigation}
@@ -69,6 +71,17 @@ function RootNavigation() {
             component={AboutUsScreen}
             options={{
               title: 'About Us',
+              headerTintColor: 'white',
+              headerStyle: {
+                backgroundColor: PRIMARY,
+              }
+            }}
+          />
+          <Stack.Screen 
+            name='MyOffers'
+            component={MyOffersScreen}
+            options={{
+              title: 'My Offers',
               headerTintColor: 'white',
               headerStyle: {
                 backgroundColor: PRIMARY,

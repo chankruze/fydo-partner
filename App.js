@@ -12,13 +12,13 @@ import OnboardingScreen from './src/screens/OnboardingScreen';
 import RegisterShop from './src/screens/RegisterShop';
 import HomeScreen from './src/screens/HomeScreen';
 
-const Loading = () => {
-  return (
-    <View>
-      <ActivityIndicator />
-    </View>
-  );
-};
+// const Loading = () => {
+//   return (
+//     <View>
+//       <ActivityIndicator />
+//     </View>
+//   );
+// };
 
 const App = () => {
   const [isFirstLaunch, setIsFirstLaunch] = useState(true);
@@ -55,6 +55,7 @@ const App = () => {
   //   );
   // }
 }
+
 
 const styles = StyleSheet.create({
   container: {
