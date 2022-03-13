@@ -2,6 +2,11 @@
   "name": "fydopartner",
   "version": "0.0.1",
   "private": true,
+  "rnpm": {
+    "assets": [
+      "src/assets/fonts/Gilroy"
+    ]
+  },
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
@@ -14,14 +19,20 @@
     "@react-navigation/bottom-tabs": "^6.2.0",
     "@react-navigation/native": "^6.0.8",
     "@react-navigation/native-stack": "^6.5.0",
-    "axios": "^0.26.0",
+    "axios": "^0.26.1",
     "react": "17.0.2",
     "react-native": "0.67.3",
+    "react-native-device-info": "^8.5.0",
+    "react-native-image-picker": "^4.7.3",
+    "react-native-image-slider-box": "^1.1.20",
     "react-native-otp-textinput": "^0.0.8",
     "react-native-safe-area-context": "^4.1.2",
-    "react-native-screens": "^3.13.0",
+    "react-native-screens": "^3.13.1",
+    "react-native-share": "^7.3.7",
     "react-native-shared-preferences": "^1.0.2",
     "react-native-svg": "^12.3.0",
+    "react-native-svg-transformer": "^1.0.0",
+    "react-native-text-input": "^1.1.0",
     "react-native-vector-icons": "^9.1.0",
     "react-redux": "^7.2.6",
     "redux": "^4.1.2"

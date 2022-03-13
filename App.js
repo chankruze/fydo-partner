@@ -51,7 +51,7 @@ const App = () => {
        <RootNavigation />
     );
   }
-};
+}
 
 const styles = StyleSheet.create({
   container: {
