@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {SafeAreaView, StyleSheet, Text} from 'react-native';
+import WithNetInfo from '../components/hoc/withNetInfo';
 
 export default class NotificationScreen extends Component{
 

@@ -8,7 +8,9 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import OnboardingScreen from './src/screens/OnboardingScreen';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+import RegisterShop from './src/screens/RegisterShop';
+import HomeScreen from './src/screens/HomeScreen';
 
 // const Loading = () => {
 //   return (
@@ -18,45 +20,43 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 //   );
 // };
 
-// const App = () => {
-//   const [isFirstLaunch, setIsFirstLaunch] = useState(null);
+const App = () => {
+  const [isFirstLaunch, setIsFirstLaunch] = useState(true);
 
-//   useEffect(() => {
-//     AsyncStorage.getItem('@viewedOnboarding').then(value => {
-//       if (value == null) {
-//         AsyncStorage.setItem('@viewedOnboarding', 'true');
-//         setIsFirstLaunch(true);
-//       } else {
-//         setIsFirstLaunch(false);
-//       }
-//     }, []);
+  // useEffect(() => {
+  //   AsyncStorage.getItem('@viewedOnboarding').then(value => {
+  //     if (value == null) {
+  //       AsyncStorage.setItem('@viewedOnboarding', 'true');
+  //       setIsFirstLaunch(true);
+  //     } else {
+  //       setIsFirstLaunch(false);
+  //     }
+  //   }, []);
 
-//   },[]);
+  // },[]);
 
-//   const handleFirstLaunch = ()=> {
-//     setIsFirstLaunch(false);
-//   }
-//   if (isFirstLaunch === null) {
-//     return (<View style={styles.container}><Loading /></View>)
-//   } else if (isFirstLaunch === true) {
-//     return (
-//       <View style={styles.container}>
-//         <OnboardingScreen handleFirstLaunch={handleFirstLaunch}/>
-//       </View>
-//     );
-//   } else {
-//     return (
-//       <View style={styles.container}>
-//        <RootNavigation />
-//       </View>
-//     );
-//   }
-// };
+  const handleFirstLaunch = () => {
+    setIsFirstLaunch(false);
+  };
 
-
-function App(){
-  return <RootNavigation />
+  // return <RegisterShop />;
+  return <HomeScreen />
+  // if (isFirstLaunch === null) {
+  //   return (<View style={styles.container}><Loading /></View>)
+  // } else if (isFirstLaunch === true) {
+  //   return (
+  //     <View style={styles.container}>
+  //       <OnboardingScreen handleFirstLaunch={handleFirstLaunch}/>
+  //     </View>
+  //   );
+  // } else {
+  //   return (
+  //      <RootNavigation />
+  //   );
+  // }
 }
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

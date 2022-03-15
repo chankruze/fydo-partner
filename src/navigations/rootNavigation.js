@@ -2,6 +2,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import MainNavigation from './mainNavigation';
+import AuthNavigation from './authNavigation';
 import SettingScreen from '../screens/SettingScreen';
 import { PRIMARY } from '../assets/colors';
 import FAQScreen from '../screens/FAQScreen';
@@ -16,6 +17,12 @@ function RootNavigation() {
     return (
       <NavigationContainer>
         <Stack.Navigator >
+        {/* <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName="Auth">
+          <Stack.Screen name="Main" component={MainNavigation} />
+          <Stack.Screen name="Auth" component={AuthNavigation} />
+          <Stack.Navigator/> */}
+        <Stack.Navigator 
+          initialRouteName='MyOffers'>
           <Stack.Screen 
             name="Main" 
             component={MainNavigation}

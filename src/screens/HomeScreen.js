@@ -15,8 +15,10 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 // import MyShopIcon from './../assets/icons/myshop.svg';
 
 
-export default class HomeScreen extends Component{
+import WithNetInfo from '../components/hoc/withNetInfo';
 
+
+class HomeScreen extends Component{
     constructor(){
         super();
         this.state = {
@@ -207,6 +209,8 @@ export default class HomeScreen extends Component{
     }
 }
 
+export default WithNetInfo(HomeScreen);
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -345,7 +349,85 @@ const styles = StyleSheet.create({
         width: 40,
         borderRadius: 20,
         justifyContent: 'center',
+        elevation: 3,
+        borderRadius: 5,
+        backgroundColor: 'rgba(227, 242, 253, .3)',
+        shadowColor: 'rgba(227, 242, 253, 1)',
+    },
+    referEarn: {
+        alignItems: 'center',
+        flex: 1,
+        marginLeft: 5,
+        height: 70,
+        justifyContent: 'center',
+        elevation: 3,
+        borderRadius: 5,
+        backgroundColor: 'rgba(227, 242, 253, .3)',
+        shadowColor: 'rgba(227, 242, 253, 1)',
+    },
+    otherLabel: {
+        color: PRIMARY,
+        fontWeight: '500',
+        fontSize: 13,
+        marginTop: 5
+    },
+    line: {
+        backgroundColor: 'lightgrey',
+        height: 1
+    },
+    shopStatusLabel: {
+        color: 'black',
+        fontSize: 13
+    },
+    shopStatusRow: {
+        padding: 10,
+        height: 46,
+        flexDirection: 'row',
         alignItems: 'center'
+    },
+    switchButton: {
+        marginLeft: 10
+    },
+    shopStatus: {
+        paddingHorizontal: 20,
+        paddingVertical: 4,
+        borderRadius: 3,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginLeft: 20
+    },
+    shopStatusOtherLabel: {
+        fontSize: 13
+    },
+    shareCardContainer: {
+        // height: 60
+        padding: 20,
+        paddingVertical: 10
+    },
+    addTagsCard: {
+        padding: 20,
+        paddingVertical: 10
+        // height: 60
+    },
+    shareCard: {
+        height: 70,
+        borderRadius: 10,
+        backgroundColor: '#00bcd4',
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 10
+    },
+    cardLabelContainer: {
+        marginLeft: 15
+    },
+    cardLabel: {
+        color: 'white',
+
+    },
+    cardButtonLabel: {
+        fontWeight: '500',
+        color: 'white',
+        fontSize: 15
     },
     modalLabelContainer: {
         marginLeft: 10,
