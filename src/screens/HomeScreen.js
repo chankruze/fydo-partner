@@ -60,7 +60,8 @@ export default class HomeScreen extends Component{
         return (
             <SafeAreaView style={styles.container}>
                 <HomeFab handleModal={this.handleModal}/>
-                <Modal 
+                <Modal
+                    statusBarTranslucent
                     animationType="slide"
                     transparent={true}
                     visible={this.state.modalVisible}

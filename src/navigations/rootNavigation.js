@@ -15,8 +15,7 @@ const Stack = createNativeStackNavigator();
 function RootNavigation() {
     return (
       <NavigationContainer>
-        <Stack.Navigator 
-          initialRouteName='MyOffers'>
+        <Stack.Navigator >
           <Stack.Screen 
             name="Main" 
             component={MainNavigation}
