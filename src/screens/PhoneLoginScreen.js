@@ -29,6 +29,7 @@ const PhoneLoginScreen = ({navigation}) => {
     name: 'India',
   });
 
+
   const validateInput = () => {
     if (phoneNumber == null || phoneNumber.trim() == '') {
       setError('* Required');

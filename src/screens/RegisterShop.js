@@ -20,19 +20,24 @@ import {
 import Octicons from 'react-native-vector-icons/Octicons';
 import {launchImageLibrary} from 'react-native-image-picker';
 import ButtonComponent from '../components/ButtonComponent';
-import {TextInput} from 'react-native-paper';
+import {TextInput, Button} from 'react-native-paper';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FontIsto from 'react-native-vector-icons/Fontisto';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import AntIcon from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialComunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import WithNetInfo from '../components/hoc/withNetInfo';
+import SelectDropdown from 'react-native-select-dropdown';
 
 const HEIGHT = Dimensions.get('screen').height;
 
+const idCards = ['Pan Card', 'Aadhaar Card', 'Driving License', 'Voter ID'];
+
 function RegisterShop({route, navigation}) {
   const [ownerName, setOwnerName] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState(route.params.phoneNumber);
-  // const [phoneNumber, setPhoneNumber] = useState('');
+  // const [phoneNumber, setPhoneNumber] = useState(route.params.phoneNumber);
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [shopName, setShopName] = useState('');
   const [location, setLocation] = useState('');
   const [pincode, setPincode] = useState('');
@@ -63,6 +68,7 @@ function RegisterShop({route, navigation}) {
     return false;
   };
 
+  
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.contentContainer}>
@@ -120,7 +126,7 @@ function RegisterShop({route, navigation}) {
           <TextInput
             value={location}
             style={commonstyles.input}
-            placeholder="Location"
+            placeholder="Shop address"
             placeholderTextColor={DARKGREY}
             left={
               <TextInput.Icon
@@ -132,7 +138,12 @@ function RegisterShop({route, navigation}) {
             right={
               <TextInput.Icon
                 name={() => (
-                  <MaterialIcons name="my-location" size={25} color="#000" />
+                  <MaterialIcons
+                    name="my-location"
+                    size={25}
+                    color="#000"
+                    onPress={() => navigation.navigate('Maps')}
+                  />
                 )}
               />
             }
@@ -157,6 +168,42 @@ function RegisterShop({route, navigation}) {
           {error.pincode && <Text style={styles.error}>{error.pincode}</Text>}
         </View>
 
+        <View style={styles.dropdown}>
+          <FontAwesome name="id-card-o" size={18} color="#000" />
+          <SelectDropdown
+            data={idCards}
+            onSelect={(selectedItem, index) => {
+              console.log(selectedItem, index);
+            }}
+            defaultValueByIndex={0}
+            renderDropdownIcon={() => (
+              <EntypoIcon name="chevron-down" size={25} color="#000" />
+            )}
+            buttonStyle={[commonstyles.input, {width: '90%', marginLeft: 0}]}
+            buttonTextStyle={{color: DARKGREY, textAlign: 'left'}}
+            buttonTextAfterSelection={(selectedItem, index) => {
+              // text represented after item is selected
+              // if data array is an array of objects then return selectedItem.property to render after item is selected
+              return selectedItem;
+            }}
+            rowTextForSelection={(item, index) => {
+              // text represented for each item in dropdown
+              // if data array is an array of objects then return item.property to represent item in dropdown
+              return item;
+            }}
+          />
+        </View>
+        <View style={styles.uploadImage}>
+          <Button
+            onPress={() => console.log('image button pressed')}
+            style={{backgroundColor: GREY}}
+            icon="camera">
+            Front Image
+          </Button>
+          <Button style={{backgroundColor: GREY}} icon="camera">
+            Back Image
+          </Button>
+        </View>
         <View style={styles.box}>
           <TextInput
             value={website}
@@ -194,12 +241,13 @@ const commonstyles = {
   input: {
     backgroundColor: 'transparent',
     fontSize: 18,
+    paddingLeft: 10,
   },
 };
 
 const styles = StyleSheet.create({
   container: {
-    height: '100%',
+    height: '130%',
     backgroundColor: 'white',
   },
   input: {
@@ -216,10 +264,24 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
   },
+  uploadImage: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 10,
+  },
   error: {
     marginVertical: 5,
     fontSize: 12,
     color: 'red',
+  },
+  dropdown: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 10,
+    justifyContent: 'flex-end',
+    paddingBottom: 5,
+    borderBottomWidth: 1,
+    borderBottomColor: DARKGREY,
   },
   label: {
     marginVertical: 15,
