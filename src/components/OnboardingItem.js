@@ -1,6 +1,6 @@
 import {StyleSheet, Text, View, Image, useWindowDimensions} from 'react-native';
 import React from 'react';
-import { DARKBLACK, DARKBLUE } from '../assets/colors';
+import { DARKBLACK, DARKBLUE, DARKGREY } from '../assets/colors';
 
 const OnboardingItem = ({item}) => {
   const {width} = useWindowDimensions();
@@ -8,7 +8,7 @@ const OnboardingItem = ({item}) => {
     <View style={[styles.container, {width}]}>
       <Image
         source={item.image}
-        style={[styles.image, {width, resizeMode: 'contain'}]}
+        style={[styles.image, {width: width*.8, resizeMode: 'contain'}]}
       />
       <View style={{flex: 0.3}}>
         <Text style={styles.title}>{item.title}</Text>
@@ -38,9 +38,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   description: {
-    fontWeight: '300',
-    color: DARKBLACK,
+    fontWeight: '500',
+    fontSize: 15,
+    color: DARKGREY,
     textAlign: 'center',
+    lineHeight: 18,
+    letterSpacing: .3,
     paddingHorizontal: 64,
   },
 });

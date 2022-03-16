@@ -19,7 +19,7 @@ import FAB from 'react-native-fab';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {SearchLocation} from '../services/mapService';
 
-const MapScreen = ({navigation}) => {
+const MapScreen = ({navigation, routes}) => {
   const [region, setRegion] = useState({
     latitude: 27.2046,
     longitude: 77.4977,

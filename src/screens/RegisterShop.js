@@ -142,7 +142,9 @@ function RegisterShop({route, navigation}) {
                     name="my-location"
                     size={25}
                     color="#000"
-                    onPress={() => navigation.navigate('Maps')}
+                    onPress={() => navigation.navigate('Maps', {
+                      setLocation: setLocation
+                    })}
                   />
                 )}
               />

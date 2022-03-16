@@ -12,6 +12,7 @@ import OnboardingItem from '../components/OnboardingItem';
 import Paginator from '../components/Paginator';
 import NextButton from '../components/NextButton';
 import SkipButton from '../components/SkipButton';
+import { GREY, GREY_2, GREY_3 } from '../assets/colors';
 
 const OnboardingScreen = ({handleFirstLaunch}) => {
   const {width} = useWindowDimensions();
@@ -76,6 +77,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: GREY_3,
   },
   miniContainer: {
     flex: 3,
