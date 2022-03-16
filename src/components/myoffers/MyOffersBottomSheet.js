@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, Image, Text} from 'react-native';
+import {View, StyleSheet, Image, Text, TouchableOpacity} from 'react-native';
 import { PRIMARY } from '../../assets/colors';
 import BottomsheetIcon from './../../assets/icons/bottomsheet-icon.png';
 
@@ -18,6 +18,11 @@ export default function MyOffersBottomSheet(){
                 style={styles.bottomSheetIcon}
             />
             <Text style={styles.title}>Add Offer</Text>
+            <View style={styles.row}>
+                <TouchableOpacity style={styles.addPhotosButton}>
+                    
+                </TouchableOpacity>
+            </View>
         </View>
     )
 }
@@ -32,7 +37,7 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,
         zIndex: 10,
-        padding: 10
+        paddingHorizontal: 10
     },
     bottomSheetIcon: {
         height: 8,
@@ -44,6 +49,6 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 18,
         fontWeight: '900',
-        color: PRIMARY
+        color: 'black'
     }
 })

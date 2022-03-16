@@ -4,11 +4,12 @@ import {View, Modal, Text, StyleSheet, Pressable, Image} from 'react-native';
 import {DARKBLUE} from '../../assets/colors';
 
 const WithNetInfo = WrappedComponent => {
-  const NewComponent = () => {
+  const NewComponent = (props) => {
     const [networkStatus, setNetworkStatus] = useState(false);
     const networkCheck = () => {
       NetInfo.fetch().then(state => {
-        setNetworkStatus(state.isConnected);
+        // setNetworkStatus(state.isConnected);
+        setNetworkStatus(false);
       });
     };
     useEffect(() => {
@@ -40,11 +41,11 @@ const WithNetInfo = WrappedComponent => {
               </View>
             </View>
           </Modal>
-          <WrappedComponent />
+          <WrappedComponent {...props}/>
         </View>
       );
     }
-    return <WrappedComponent />;
+    return <WrappedComponent {...props}/>;
   };
   return NewComponent;
 };

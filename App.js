@@ -40,7 +40,7 @@ const App = () => {
   };
 
   // return <RegisterShop />;
-  return <HomeScreen />
+  return <RootNavigation />
   // if (isFirstLaunch === null) {
   //   return (<View style={styles.container}><Loading /></View>)
   // } else if (isFirstLaunch === true) {

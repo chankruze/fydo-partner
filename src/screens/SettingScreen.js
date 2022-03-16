@@ -1,5 +1,14 @@
 import React, {Component} from 'react';
-import {Linking, StyleSheet, ScrollView, View, Text, TouchableOpacity} from 'react-native';
+import {
+    Linking, 
+    StyleSheet, 
+    ScrollView, 
+    View, 
+    Text, 
+    TouchableOpacity, 
+    Modal, 
+    Pressable
+} from 'react-native';
 import FAQIcon from './../assets/icons/faq.svg';
 import PrivacyIcon from './../assets/icons/privacypolicy.svg';
 import FeekbackIcon from './../assets/icons/feedback.svg';
@@ -10,6 +19,7 @@ import { PRIMARY } from '../assets/colors';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import { getAppVersion } from '../utils/deviceInfo';
 import WithNetInfo from '../components/hoc/withNetInfo';
+import ChooseLanguageComponent from '../components/common/ChooseLanguageComponent';
 
 const PRIVACY_PAGE = "https://fydo.in/privacy-policy.html";
 
@@ -17,12 +27,29 @@ class SettingScreen extends Component{
 
     constructor(props){
         super(props);
+        this.state = {
+            modalVisible: true
+        }
         this.navigateToFAQScreen = this.navigateToFAQScreen.bind(this);
         this.navigateToFeedbackScreen = this.navigateToFeedbackScreen.bind(this);
         this.navigateToSupportServiceScreen = this.navigateToSupportServiceScreen.bind(this);
         this.navigateToAboutUsScreen = this.navigateToAboutUsScreen.bind(this);
         this.openPrivacyPage = this.openPrivacyPage.bind(this);
+        this.triggerModal = this.triggerModal.bind(this);
     }
+
+    // componentDidMount(){
+    //     this.triggerModal();
+    // }
+    
+
+    triggerModal() {
+        this.setState(prevState => {
+          return {
+            modalVisible: !prevState.modalVisible
+          }
+        });
+     }
 
     navigateToFAQScreen(){
         let {navigation} = this.props;
@@ -48,9 +75,31 @@ class SettingScreen extends Component{
         Linking.openURL(PRIVACY_PAGE).catch(err => console.error("Couldn't load page", err));
     }
 
+    renderModal(){
+        return (
+            <Modal 
+                statusBarTranslucent
+                animationType="fade"
+                transparent={true}
+                visible={this.state.modalVisible}
+                onRequestClose={this.triggerModal}
+                >
+                <Pressable 
+                    activeOpacity={1}
+                    style={styles.modalContainer}
+                    onPress={this.triggerModal}>
+
+                    <ChooseLanguageComponent />
+
+                </Pressable>
+            </Modal>
+        )
+    }
+
     render(){
         return (
             <ScrollView style={styles.container}>
+                {this.state.modalVisible && this.renderModal()}
                 <TouchableOpacity 
                     style={styles.row}
                     onPress={this.navigateToFAQScreen}>
@@ -91,7 +140,9 @@ class SettingScreen extends Component{
                     <Text style={styles.label}>Support and service</Text>
                 </TouchableOpacity>
                 <View style={styles.line}/>
-                <TouchableOpacity style={styles.row}>
+                <TouchableOpacity 
+                    style={styles.row}
+                    onPress={this.triggerModal}>
                     <ChangeLanguageIcon
                         width={22}
                         height={22}
@@ -127,7 +178,8 @@ class SettingScreen extends Component{
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        backgroundColor: 'white'
     },
     row: {
         flexDirection: 'row',
@@ -141,7 +193,7 @@ const styles = StyleSheet.create({
         fontSize: 14
     },
     line: {
-        height: 1,
+        height: .3,
         backgroundColor: 'lightgrey'
     },
     logoutIcon: {
@@ -154,7 +206,11 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         color: PRIMARY,
         fontSize: 15
-    }
+    },
+    modalContainer: {
+        backgroundColor: 'rgba(0, 0, 0, .5)',
+        height: '100%'
+    },
 })
 
 export default WithNetInfo(SettingScreen)
