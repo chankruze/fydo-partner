@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, useRef, useCallback, useMemo, useEffect} from 'react';
 import {
   StyleSheet,
   View,
@@ -13,6 +13,8 @@ import Paginator from '../components/Paginator';
 import NextButton from '../components/NextButton';
 import SkipButton from '../components/SkipButton';
 import { GREY, GREY_2, GREY_3 } from '../assets/colors';
+import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+
 
 const OnboardingScreen = ({handleFirstLaunch}) => {
   const {width} = useWindowDimensions();

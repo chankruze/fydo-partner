@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import OnboardingScreen from './src/screens/OnboardingScreen';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
-import RegisterShop from './src/screens/RegisterShop';
 import HomeScreen from './src/screens/HomeScreen';
 import MapScreen from './src/screens/MapScreen';
 import AuthNavigation from './src/navigations/authNavigation';

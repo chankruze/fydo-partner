@@ -16,10 +16,10 @@ import {
   LIGHTBLACK,
   DARKBLACK,
   DARKBLUE,
-} from '../assets/colors';
+} from '../../assets/colors';
 import Octicons from 'react-native-vector-icons/Octicons';
 import {launchImageLibrary} from 'react-native-image-picker';
-import ButtonComponent from '../components/ButtonComponent';
+import ButtonComponent from '../../components/ButtonComponent';
 import {TextInput, Button} from 'react-native-paper';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FontIsto from 'react-native-vector-icons/Fontisto';
@@ -27,12 +27,17 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialComunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import WithNetInfo from '../components/hoc/withNetInfo';
+import WithNetInfo from '../../components/hoc/withNetInfo';
 import SelectDropdown from 'react-native-select-dropdown';
 
 const HEIGHT = Dimensions.get('screen').height;
 
 const idCards = ['Pan Card', 'Aadhaar Card', 'Driving License', 'Voter ID'];
+const shopTypes = [
+  'Independent store owner',
+  'Franchise store',
+  'Mall representative',
+];
 
 function RegisterShop({route, navigation}) {
   const [ownerName, setOwnerName] = useState('');
@@ -68,11 +73,10 @@ function RegisterShop({route, navigation}) {
     return false;
   };
 
-  
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.contentContainer}>
-        <Text style={styles.title}>Shop details</Text>
+        <Text style={styles.title}>Add shop details</Text>
 
         <View style={styles.box}>
           <TextInput
@@ -142,9 +146,11 @@ function RegisterShop({route, navigation}) {
                     name="my-location"
                     size={25}
                     color="#000"
-                    onPress={() => navigation.navigate('Maps', {
-                      setLocation: setLocation
-                    })}
+                    onPress={() =>
+                      navigation.navigate('Maps', {
+                        setLocation: setLocation,
+                      })
+                    }
                   />
                 )}
               />
@@ -222,11 +228,36 @@ function RegisterShop({route, navigation}) {
             }
           />
         </View>
+        <View style={styles.shoptype}>
+          <SelectDropdown
+            data={shopTypes}
+            onSelect={(selectedItem, index) => {
+              console.log(selectedItem, index);
+            }}
+            defaultValueByIndex={0}
+            renderDropdownIcon={() => (
+              <EntypoIcon name="chevron-down" size={25} color="#000" />
+            )}
+            buttonStyle={[commonstyles.input, {width: '100%', marginLeft: 0}]}
+            buttonTextStyle={{color: DARKGREY, textAlign: 'left'}}
+            buttonTextAfterSelection={(selectedItem, index) => {
+              // text represented after item is selected
+              // if data array is an array of objects then return selectedItem.property to render after item is selected
+              return selectedItem;
+            }}
+            rowTextForSelection={(item, index) => {
+              // text represented for each item in dropdown
+              // if data array is an array of objects then return item.property to represent item in dropdown
+              return item;
+            }}
+          />
+        </View>
 
         <ButtonComponent
           label="Next"
           color="white"
           backgroundColor={DARKBLUE}
+          onPress={()=> navigation.navigate('ShopDetails')}
         />
       </View>
       <View style={styles.footer}>
@@ -249,7 +280,7 @@ const commonstyles = {
 
 const styles = StyleSheet.create({
   container: {
-    height: '130%',
+    height: '135%',
     backgroundColor: 'white',
   },
   input: {
@@ -261,10 +292,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   title: {
-    color: LIGHTBLACK,
+    color: DARKBLACK,
     fontWeight: 'bold',
-    fontSize: 20,
-    textAlign: 'center',
+    fontSize: 22,
+    // textAlign: 'center',
+    paddingLeft: 15,
   },
   uploadImage: {
     flexDirection: 'row',
@@ -284,6 +316,15 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     borderBottomWidth: 1,
     borderBottomColor: DARKGREY,
+  },
+  shoptype: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 15,
+    justifyContent: 'space-between',
+    borderWidth: 1,
+    borderColor: DARKGREY,
+    borderRadius: 10,
   },
   label: {
     marginVertical: 15,
