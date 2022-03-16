@@ -61,6 +61,7 @@ function RootNavigation() {
             component={SupportServiceScreen}
             options={{
               headerTintColor: 'white',
+              title: "Support and service",
               headerStyle: {
                 backgroundColor: PRIMARY,
               }

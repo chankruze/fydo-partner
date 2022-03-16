@@ -4,11 +4,17 @@ import { PRIMARY } from '../../assets/colors';
 import BottomsheetIcon from './../../assets/icons/bottomsheet-icon.png';
 import RadioGroup from 'react-native-radio-buttons-group';
 
+const LANGUAGES = {
+    ENGLISH: 'ENGLISH',
+    HINDI: 'HINDI',
+    ODIA: 'ODIA'
+}
+
 const radioButtonsData = [
     {
         id: '1',
         label: 'English',
-        value: 'english',
+        value: LANGUAGES.ENGLISH,
         color: PRIMARY,
         labelStyle: {
             color: PRIMARY
@@ -17,7 +23,7 @@ const radioButtonsData = [
     {
         id: '2',
         label: 'Hindi/हिन्दी',
-        value: 'hindi',
+        value: LANGUAGES.HINDI,
         color: PRIMARY,
         labelStyle: {
             color: PRIMARY
@@ -26,7 +32,7 @@ const radioButtonsData = [
     {
         id: '3',
         label: 'Odia/ଓଡ଼ିଆ ଭାଷା',
-        value: 'odia',
+        value: LANGUAGES.ODIA,
         color: PRIMARY,
         labelStyle: {
             color: PRIMARY
@@ -34,9 +40,19 @@ const radioButtonsData = [
     }
 ]
 
-export default function ChooseLanguageComponent(){
+export default function ChooseLanguageComponent({toggle}){
 
-    const [radioButtons, setRadioButtons] = useState(radioButtonsData)
+    const [language, setLanguage] = useState(LANGUAGES.ENGLISH);
+
+    const [radioButtons, setRadioButtons] = useState(getButtons(language))
+
+    function getButtons(selectedButton){
+        return radioButtonsData.map((item) => {
+            if(item.value == selectedButton)
+                return Object.assign({...item}, {selected: true})
+            return item;
+        })
+    }
 
     function onPressRadioButton(radioButtonsArray) {
         setRadioButtons(radioButtonsArray);
@@ -45,6 +61,10 @@ export default function ChooseLanguageComponent(){
     const onStartShouldSetResponder = () => {
         return true
     };
+
+    const changeLanguage = () => {
+        toggle();
+    }
 
     return (
         <View 
@@ -62,7 +82,8 @@ export default function ChooseLanguageComponent(){
             />
             <TouchableOpacity
                 activeOpacity={.7} 
-                style={styles.continueButton}>
+                style={styles.continueButton}
+                onPress={changeLanguage}>
                 <Text style={styles.continueButtonLabel}>Continue</Text>
             </TouchableOpacity>
             <Text style={styles.label}>By continuing you agree to our</Text>

@@ -28,7 +28,7 @@ class SettingScreen extends Component{
     constructor(props){
         super(props);
         this.state = {
-            modalVisible: true
+            modalVisible: false
         }
         this.navigateToFAQScreen = this.navigateToFAQScreen.bind(this);
         this.navigateToFeedbackScreen = this.navigateToFeedbackScreen.bind(this);
@@ -37,11 +37,6 @@ class SettingScreen extends Component{
         this.openPrivacyPage = this.openPrivacyPage.bind(this);
         this.triggerModal = this.triggerModal.bind(this);
     }
-
-    // componentDidMount(){
-    //     this.triggerModal();
-    // }
-    
 
     triggerModal() {
         this.setState(prevState => {
@@ -89,7 +84,7 @@ class SettingScreen extends Component{
                     style={styles.modalContainer}
                     onPress={this.triggerModal}>
 
-                    <ChooseLanguageComponent />
+                    <ChooseLanguageComponent toggle={this.triggerModal}/>
 
                 </Pressable>
             </Modal>
