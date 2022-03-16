@@ -39,6 +39,11 @@ const shopTypes = [
   'Mall representative',
 ];
 
+const options = {
+  mediaType: 'photo',
+  quality: 0.5,
+};
+
 function RegisterShop({route, navigation}) {
   const [ownerName, setOwnerName] = useState('');
   // const [phoneNumber, setPhoneNumber] = useState(route.params.phoneNumber);
@@ -49,6 +54,8 @@ function RegisterShop({route, navigation}) {
   const [website, setWebsite] = useState('');
   const [shopType, setShopType] = useState('');
   const [error, setError] = useState({});
+  const [idPicUrl, setIdPicUrl] = useState(null);
+  const [idPicName, setIdPicName] = useState(null);
 
   const isValidate = () => {
     const error = {};
@@ -71,6 +78,14 @@ function RegisterShop({route, navigation}) {
     setError(error);
     if (Object.keys(error).length == 0) return true;
     return false;
+  };
+
+  const pickImage = () => {
+    launchImageLibrary(options, ({assets, didCancel}) => {
+      if (assets) {
+        console.log(assets);
+      }
+    });
   };
 
   return (
@@ -203,12 +218,15 @@ function RegisterShop({route, navigation}) {
         </View>
         <View style={styles.uploadImage}>
           <Button
-            onPress={() => console.log('image button pressed')}
+            onPress={pickImage}
             style={{backgroundColor: GREY}}
             icon="camera">
             Front Image
           </Button>
-          <Button style={{backgroundColor: GREY}} icon="camera">
+          <Button
+            onPress={pickImage}
+            style={{backgroundColor: GREY}}
+            icon="camera">
             Back Image
           </Button>
         </View>
@@ -257,15 +275,15 @@ function RegisterShop({route, navigation}) {
           label="Next"
           color="white"
           backgroundColor={DARKBLUE}
-          onPress={()=> navigation.navigate('ShopDetails')}
+          onPress={() => navigation.navigate('ShopDetails')}
         />
       </View>
-      <View style={styles.footer}>
+      {/* <View style={styles.footer}>
         <Text style={styles.footerLabel}>By continuing you agree to our</Text>
         <TouchableOpacity>
           <Text style={styles.footerOtherLabel}>Terms & Conditions</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
     </ScrollView>
   );
 }

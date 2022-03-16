@@ -16,6 +16,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import PhoneLoginScreen from './src/screens/PhoneLoginScreen';
 import OTPVerifyScreen from './src/screens/OTPVerifyScreen';
+import ChooseLanguage from './src/screens/ChooseLanguage';
+import ShopDetails from './src/screens/shop/ShopDetails';
 
 const Stack = createNativeStackNavigator();
 
@@ -47,20 +49,20 @@ const App = () => {
     setIsFirstLaunch(false);
   };
 
- 
-  if (isFirstLaunch === null) {
-    return (<View style={styles.container}><Loading /></View>)
-  } else if (isFirstLaunch === true) {
-    return (
-      <View style={styles.container}>
-        <OnboardingScreen handleFirstLaunch={handleFirstLaunch}/>
-      </View>
-    );
-  } else {
-    return (
-       <RootNavigation />
-    );
-  }
+ return <ShopDetails />
+  // if (isFirstLaunch === null) {
+  //   return (<View style={styles.container}><Loading /></View>)
+  // } else if (isFirstLaunch === true) {
+  //   return (
+  //     <View style={styles.container}>
+  //       <OnboardingScreen handleFirstLaunch={handleFirstLaunch}/>
+  //     </View>
+  //   );
+  // } else {
+  //   return (
+  //      <RootNavigation />
+  //   );
+  // }
 };
 
 const styles = StyleSheet.create({

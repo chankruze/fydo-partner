@@ -2,32 +2,41 @@ import {StyleSheet, Text, View, SafeAreaView} from 'react-native';
 import React, {useState} from 'react';
 import {RadioButton} from 'react-native-paper';
 import {Checkbox} from 'react-native-paper';
-import {DARKBLACK, DARKBLUE} from '../../assets/colors';
+import {DARKBLACK, DARKBLUE, PRIMARY} from '../../assets/colors';
 import SelectDropdown from 'react-native-select-dropdown';
+import ButtonComponent from '../../components/ButtonComponent';
 
 const ShopDetails = () => {
-  const [checked, setChecked] = React.useState(false);
-  const [radio, setRadio] = React.useState('');
   const [parking, setParking] = useState(false);
   const [wheelchair, setWheelchair] = useState(false);
   const [foodCourt, setFoodCourt] = useState(false);
   const [instoreShopping, setInstoreShopping] = useState(false);
+
+  const [premiumService, setPremiumService] = useState(false);
+  const [salesExecutive, setSalesExecutive] = useState(false);
+  const [homeDelivery, setHomeDelivery] = useState(false);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.premiumCheckbox}>
         <View>
-        <Text style={styles.premiumText}>
-          Do you want to join our channel partner Programme?
-        </Text>
-        <Text style={{color: DARKBLUE, textDecorationLine: 'underline'}}>
-          Premium Service
-        </Text>
+          <Text style={styles.premiumText}>
+            Do you want to join our channel partner Programme?
+          </Text>
+          <Text
+            style={{
+              color: DARKBLUE,
+              fontFamily: 'Gilroy-Medium',
+              textDecorationLine: 'underline',
+            }}>
+            Premium Service
+          </Text>
         </View>
-       
+
         <Checkbox
-          status={checked ? 'checked' : 'unchecked'}
+          color={PRIMARY}
+          status={premiumService ? 'checked' : 'unchecked'}
           onPress={() => {
-            setChecked(!checked);
+            setPremiumService(!premiumService);
           }}
         />
       </View>
@@ -36,17 +45,19 @@ const ShopDetails = () => {
           <View style={styles.radioButton}>
             <Text style={styles.radioText}>Parking availability</Text>
             <RadioButton
-              value={true}
+              color={PRIMARY}
+              value={parking}
               status={parking === true ? 'checked' : 'unchecked'}
-              onPress={() => setParking(true)}
+              onPress={() => setParking(!parking)}
             />
           </View>
           <View style={styles.radioButton}>
             <Text style={styles.radioText}>Wheelchair friendly</Text>
             <RadioButton
-              value={true}
+              color={PRIMARY}
+              value={wheelchair}
               status={wheelchair === true ? 'checked' : 'unchecked'}
-              onPress={() => setWheelchair(true)}
+              onPress={() => setWheelchair(!wheelchair)}
             />
           </View>
         </View>
@@ -55,17 +66,19 @@ const ShopDetails = () => {
           <View style={styles.radioButton}>
             <Text style={styles.radioText}>Food courts</Text>
             <RadioButton
-              value={true}
+              color={PRIMARY}
+              value={foodCourt}
               status={foodCourt === true ? 'checked' : 'unchecked'}
-              onPress={() => setFoodCourt(true)}
+              onPress={() => setFoodCourt(!foodCourt)}
             />
           </View>
           <View style={styles.radioButton}>
             <Text style={styles.radioText}>Instore shopping</Text>
             <RadioButton
-              value={true}
+              color={PRIMARY}
+              value={instoreShopping}
               status={instoreShopping === true ? 'checked' : 'unchecked'}
-              onPress={() => setInstoreShopping(true)}
+              onPress={() => setInstoreShopping(!instoreShopping)}
             />
           </View>
         </View>
@@ -76,36 +89,41 @@ const ShopDetails = () => {
           <Text style={styles.radioText}>
             Do you provide home delivery/service?
           </Text>
-          <Text style={styles.learnMore}>
-            Learn more about home services
-          </Text>
+          <Text style={styles.learnMore}>Learn more about home services</Text>
         </View>
 
         <RadioButton
-          value={true}
-          status={parking === true ? 'checked' : 'unchecked'}
-          onPress={() => setParking(true)}
+          color={PRIMARY}
+          value={homeDelivery}
+          status={homeDelivery === true ? 'checked' : 'unchecked'}
+          onPress={() => setHomeDelivery(!homeDelivery)}
         />
       </View>
 
       <View style={[styles.premiumCheckbox, {marginTop: 30}]}>
         <View>
-        <Text style={styles.premiumText}>
-          Have any sales executive visited your shop?
-        </Text>
-        <Text style={styles.learnMore}>
-          Learn more about Sales executive
-        </Text>
+          <Text style={styles.premiumText}>
+            Have any sales executive visited your shop?
+          </Text>
+          <Text style={styles.learnMore}>Learn more about Sales executive</Text>
         </View>
-       
+
         <Checkbox
-          status={checked ? 'checked' : 'unchecked'}
+          color={PRIMARY}
+          status={salesExecutive ? 'checked' : 'unchecked'}
           onPress={() => {
-            setChecked(!checked);
+            setSalesExecutive(!salesExecutive);
           }}
         />
       </View>
-      
+      <View style={styles.next}>
+        <ButtonComponent
+          label="Next"
+          color="white"
+          backgroundColor={DARKBLUE}
+          //   onPress={()=> navigation.navigate('ShopDetails')}
+        />
+      </View>
     </SafeAreaView>
   );
 };
@@ -116,7 +134,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
     paddingTop: 30,
   },
   premiumCheckbox: {
@@ -148,5 +166,13 @@ const styles = StyleSheet.create({
     fontSize: 10,
     textDecorationLine: 'underline',
     color: DARKBLUE,
+    fontFamily: 'Gilroy-Medium',
+  },
+  next: {
+    width: '100%',
+    position: 'absolute',
+    bottom: 40,
+    right: 15,
+    left: 15,
   },
 });

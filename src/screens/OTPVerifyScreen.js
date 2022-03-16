@@ -65,9 +65,7 @@ const OTPVerifyScreen = ({route, navigation}) => {
         if (data.profileComplete) {
           console.log('User Profile Complete, add suitable route');
         } else {
-          navigation.navigate("RegisterShop", {
-            phoneNumber: phoneNumber
-          })
+          navigation.navigate("Language")
         }
       }
     } catch (error) {
