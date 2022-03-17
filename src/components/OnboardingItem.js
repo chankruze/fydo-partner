@@ -31,11 +31,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
-    fontWeight: '800',
     fontSize: 28,
     marginBottom: 10,
     color: DARKBLUE,
     textAlign: 'center',
+    fontFamily: 'Gilroy-Bold'
   },
   description: {
     fontWeight: '500',
@@ -45,5 +45,6 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     letterSpacing: .3,
     paddingHorizontal: 64,
+    fontFamily: 'Gilroy-Medium'
   },
 });

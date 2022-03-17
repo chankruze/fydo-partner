@@ -94,13 +94,11 @@ const PhoneLoginScreen = ({navigation}) => {
             <Text style={styles.countryCode}>{country.code}</Text>
             <View style={styles.separator} />
             <TextInput
+              style={styles.input}
               maxLength={10}
               value={phoneNumber}
               keyboardType="phone-pad"
               placeholder="Phone number"
-              color={DARKBLACK}
-              fontWeight="600"
-              width="80%"
               placeholderTextColor={DARKGREY}
               onChangeText={handlePhoneNumber}
             />
@@ -134,18 +132,22 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
     paddingHorizontal: 25,
+    paddingTop: 10,
     minHeight: HEIGHT * 0.6,
   },
   title: {
     color: DARKBLACK,
-    fontWeight: 'bold',
     fontSize: 20,
+    fontFamily: 'Gilroy-Bold'
+
   },
   label: {
     marginVertical: 15,
     color: DARKGREY,
     lineHeight: 20,
     fontSize: 13,
+    fontFamily: 'Gilroy-Medium'
+
   },
   countryButton: {
     marginTop: 20,
@@ -157,17 +159,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 15,
+    fontFamily: 'Gilroy-Medium'
+
   },
   countryLabel: {
     fontSize: 12,
     color: LIGHTBLACK,
-    fontWeight: '500',
     marginLeft: 15,
+    fontFamily: 'Gilroy-Medium'
   },
   countryCode: {
     color: LIGHTBLACK,
-    fontWeight: '600',
+    fontFamily: 'Gilroy-Bold',
     paddingLeft: 15,
+    fontFamily: 'Gilroy-Medium'
+
   },
   separator: {
     height: 13,
@@ -183,13 +189,9 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
   },
   input: {
-    backgroundColor: '#F4F5F5',
-    borderRadius: 8,
-    height: 48,
-    fontSize: 13,
-    paddingHorizontal: 10,
-    marginTop: 20,
-    color: DARKGREY,
+    color: DARKBLACK,
+    width: '80%',
+    fontFamily: 'Gilroy-Medium',
   },
   error: {
     marginVertical: 5,
@@ -197,24 +199,30 @@ const styles = StyleSheet.create({
     fontSize: 12,
     paddingLeft: 5,
     color: 'red',
+    fontFamily: 'Gilroy-Medium'
+
   },
   footer: {
-    // position: 'absolute',
-    // bottom: 30,
     padding: 15,
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
+    fontFamily: 'Gilroy-Medium'
+
   },
   footerLabel: {
     fontSize: 12,
     color: DARKGREY,
+    fontFamily: 'Gilroy-Medium'
+
   },
   footerOtherLabel: {
     fontSize: 12,
     color: DARKBLUE,
     fontWeight: '500',
     marginTop: 3,
+    fontFamily: 'Gilroy-Medium'
+
   },
   otherLabel: {
     fontSize: 12,
@@ -222,6 +230,8 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     alignSelf: 'center',
     marginVertical: 20,
+    fontFamily: 'Gilroy-Medium'
+
   },
   buttons: {
     flexDirection: 'row',

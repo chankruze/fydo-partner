@@ -12,7 +12,7 @@ const Stack = createNativeStackNavigator();
 export default function AuthNavigation() {
   return (
       <Stack.Navigator
-        initialRouteName="PhoneLogin"
+        initialRouteName="RegisterShop"
         screenOptions={{headerShown: false}}>
         <Stack.Screen name="PhoneLogin" component={PhoneLoginScreen} />
         <Stack.Screen name="OTPVerify" component={OTPVerifyScreen} />

@@ -26,7 +26,7 @@ const OnboardingScreen = ({handleFirstLaunch}) => {
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef(null);
   const [finished, setFinished] = useState(false);
-  const snapPoints = [HEIGHT < 872 ? '80%' : '70', HEIGHT < 872 ? '80%' : '70'];
+  const snapPoints = [HEIGHT < 872 ? '60%' : '60', HEIGHT < 872 ? '60%' : '60'];
 
   const bottomSheetRef = createRef();
 
@@ -38,14 +38,14 @@ const OnboardingScreen = ({handleFirstLaunch}) => {
     if (currentIndex < slides.length - 1) {
       slidesRef.current.scrollToIndex({index: currentIndex + 1});
     } else {
-      // handleFirstLaunch();
-      setFinished(true);
+      handleFirstLaunch();
+      // setFinished(true);
     }
   };
 
   const skip = () => {
-    // handleFirstLaunch();
-    setFinished(true);
+    handleFirstLaunch();
+    // setFinished(true);
   };
 
   //   const viewConfig = useRef({viewAreaCoveragePercentThresold: 50}).current;
@@ -78,7 +78,7 @@ const OnboardingScreen = ({handleFirstLaunch}) => {
           percentage={(currentIndex + 1) * (100 / slides.length)}
         />
       </View>
-      {finished && (
+      {/* {finished && (
         <BottomSheet
           ref={bottomSheetRef}
           snapPoints={snapPoints}
@@ -86,14 +86,14 @@ const OnboardingScreen = ({handleFirstLaunch}) => {
           enableOverDrag
           handleIndicatorStyle={{backgroundColor: GREY}}>
           <BottomSheetScrollView
-            contentContainerStyle={{height: 400}}
+            contentContainerStyle={{flex: 1}}
             keyboardShouldPersistTaps="always">
             <NavigationContainer>
               <AuthNavigation />
             </NavigationContainer>
           </BottomSheetScrollView>
         </BottomSheet>
-      )}
+      )} */}
     </View>
   );
 };

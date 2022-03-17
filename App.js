@@ -6,6 +6,7 @@ import {
   StyleSheet,
   StatusBar,
   ActivityIndicator,
+  LogBox
 } from 'react-native';
 import OnboardingScreen from './src/screens/OnboardingScreen';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -20,6 +21,10 @@ import ChooseLanguage from './src/screens/ChooseLanguage';
 import ShopDetails from './src/screens/shop/ShopDetails';
 
 const Stack = createNativeStackNavigator();
+
+LogBox.ignoreLogs([
+  "[react-native-gesture-handler] Seems like you\'re using an old API with gesture components, check out new Gestures system!",
+])
 
 
 // const Loading = () => {
@@ -49,20 +54,25 @@ const App = () => {
     setIsFirstLaunch(false);
   };
 
- return <ShopDetails />
-  // if (isFirstLaunch === null) {
-  //   return (<View style={styles.container}><Loading /></View>)
-  // } else if (isFirstLaunch === true) {
-  //   return (
-  //     <View style={styles.container}>
-  //       <OnboardingScreen handleFirstLaunch={handleFirstLaunch}/>
-  //     </View>
-  //   );
-  // } else {
-  //   return (
-  //      <RootNavigation />
-  //   );
-  // }
+//  return (
+//   <NavigationContainer>
+//     <AuthNavigation />
+//   </NavigationContainer>
+//  )
+// return <MapScreen />
+  if (isFirstLaunch === null) {
+    return (<View style={styles.container}><Loading /></View>)
+  } else if (isFirstLaunch === true) {
+    return (
+      <View style={styles.container}>
+        <OnboardingScreen handleFirstLaunch={handleFirstLaunch}/>
+      </View>
+    );
+  } else {
+    return (
+       <RootNavigation />
+    );
+  }
 };
 
 const styles = StyleSheet.create({

@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
   button: {
     fontSize: 21,
     color: 'black',
-    fontWeight: '700',
-    color: DARKBLUE
+    fontFamily: 'Gilroy-Bold',
+    color: DARKBLUE,
   },
 });

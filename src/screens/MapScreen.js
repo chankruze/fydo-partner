@@ -11,15 +11,15 @@ import {
 import React, {useState, useEffect} from 'react';
 import MapView, {Marker} from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
-import {DARKBLUE} from '../assets/colors/index';
+import {DARKBLUE, GREY} from '../assets/colors/index';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import locationPin from '../assets/images/location-pin.png';
 import pinIcon from '../assets/images/pin.png';
 import FAB from 'react-native-fab';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {SearchLocation} from '../services/mapService';
+import {SearchLocation, GetPostalAddress} from '../services/mapService';
 
-const MapScreen = ({navigation, routes}) => {
+const MapScreen = ({navigation, route}) => {
   const [region, setRegion] = useState({
     latitude: 27.2046,
     longitude: 77.4977,
@@ -32,9 +32,12 @@ const MapScreen = ({navigation, routes}) => {
   });
   const [locationChange, setLocationChange] = useState(false);
   const [text, onChangeText] = useState('');
+  const [address, setAddress] = useState(route.params.address);
+  // const [address, setAddress] = useState('Sikar');
 
   useEffect(() => {
     requestLocation();
+    // console.log(routes)
   }, []);
 
   const requestLocation = async () => {
@@ -47,7 +50,11 @@ const MapScreen = ({navigation, routes}) => {
           ({coords}) => {
             let {latitude, longitude} = coords;
             let location = {latitude: latitude, longitude: longitude};
-
+            GetPostalAddress(latitude, longitude)
+              .then(res => {
+                setAddress(res.formatted_address);
+              })
+              .catch(err => console.log(err));
             setSelectedLocation(location);
             setRegion(Object.assign({...region}, {...location}));
             setLocationChange(true);
@@ -78,7 +85,11 @@ const MapScreen = ({navigation, routes}) => {
       ({coords}) => {
         let {latitude, longitude} = coords;
         let location = {latitude: latitude, longitude: longitude};
-
+        GetPostalAddress(latitude, longitude)
+          .then(res => {
+            setAddress(res.formatted_address);
+          })
+          .catch(err => console.log(err));
         setSelectedLocation(location);
         setRegion(Object.assign({...region}, {...location}));
         setLocationChange(true);
@@ -107,19 +118,25 @@ const MapScreen = ({navigation, routes}) => {
   const onSubmit = query => {
     SearchLocation(query)
       .then(res => {
-        const {lat, lng} = res
-        const location = {latitude: lat, longitude: lng}
+        const {lat, lng} = res;
+        const location = {latitude: lat, longitude: lng};
+        GetPostalAddress(lat, lng)
+          .then(res => {
+            setAddress(res.formatted_address);
+          })
+          .catch(err => console.log(err));
         setRegion(Object.assign({...region}, {...location}));
         setSelectedLocation(location);
       })
       .catch(err => console.log(err));
   };
 
-  const handleSearch = e => {
-    if (e.nativeEvent.key == 'Enter') {
-      console.log('Search key pressed');
-    }
+  const confirmAddress = () => {
+    navigation.navigate('RegisterShop', {
+      address: address
+    })
   };
+
   return (
     <SafeAreaView style={styles.container}>
       <MapView style={styles.map} initialRegion={region} region={region}>
@@ -140,21 +157,26 @@ const MapScreen = ({navigation, routes}) => {
           style={styles.input}
           onChangeText={onChangeText}
           value={text}
-          // returnKeyType="search"
+          returnKeyType="search"
           onSubmitEditing={e => onSubmit(e.nativeEvent.text)}
         />
         <Icon name="search-outline" size={25} color="black" />
       </View>
-      <TouchableOpacity
-        activeOpacity={0.7}
-        disabled={!locationChange}
-        onPress={() => navigation.goBack()}
+      <View
         style={Object.assign(
           {...styles.confirmButton},
           {opacity: locationChange ? 1 : 0.8},
         )}>
-        <Text style={styles.confirmLocationLabel}>Confirm location</Text>
-      </TouchableOpacity>
+        <TextInput style={{width: '90%'}} disabled value={address} multiline />
+        <TouchableOpacity
+          activeOpacity={0.7}
+          style={styles.check}
+          disabled={!locationChange}
+          onPress={confirmAddress}>
+          <MaterialIcons name="check" size={25} color={DARKBLUE} />
+        </TouchableOpacity>
+      </View>
+
       <FAB
         onClickAction={setLocation}
         buttonColor="white"
@@ -199,16 +221,23 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   confirmButton: {
-    height: 48,
-    backgroundColor: DARKBLUE,
     borderRadius: 5,
-    width: '90%',
+    width: '100%',
     alignSelf: 'center',
     position: 'absolute',
     bottom: 10,
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 1,
+    flexDirection: 'row',
+    paddingHorizontal: 20,
+    justifyContent: 'space-between',
+    backgroundColor: GREY,
+  },
+  check: {
+    borderRadius: 50,
+    backgroundColor: 'white',
+    padding: 10,
   },
   confirmLocationLabel: {
     color: 'white',
