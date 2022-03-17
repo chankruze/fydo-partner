@@ -157,8 +157,7 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '80%',
-    // borderWidth: 1,
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   partnerProgramme: {
     fontSize: 14,
