@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, SafeAreaView} from 'react-native';
+import {StyleSheet, Text, View, SafeAreaView, TextInput} from 'react-native';
 import React, {useState} from 'react';
 import {RadioButton} from 'react-native-paper';
 import {Checkbox} from 'react-native-paper';
@@ -17,28 +17,28 @@ const ShopDetails = () => {
   const [homeDelivery, setHomeDelivery] = useState(false);
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.premiumCheckbox}>
-        <View>
-          <Text style={styles.premiumText}>
-            Do you want to join our channel partner Programme?
-          </Text>
-          <Text
-            style={{
-              color: DARKBLUE,
-              fontFamily: 'Gilroy-Medium',
-              textDecorationLine: 'underline',
-            }}>
-            Premium Service
-          </Text>
-        </View>
+      <View style={premiumService && styles.subContainer}>
+        <View style={premiumService ? styles.premiumCheckbox2: styles.premiumCheckbox}>
+          <View style={{width: '80%'}}>
+            <Text style={styles.partnerProgramme}>
+              Do you want to join our channel partner Programme?
+              <Text style={[styles.premiumText, {paddingLeft: 10}]}> Premium Service </Text>
+            </Text>
+          </View>
 
-        <Checkbox
-          color={PRIMARY}
-          status={premiumService ? 'checked' : 'unchecked'}
-          onPress={() => {
-            setPremiumService(!premiumService);
-          }}
-        />
+          <Checkbox
+            color={PRIMARY}
+            status={premiumService ? 'checked' : 'unchecked'}
+            onPress={() => {
+              setPremiumService(!premiumService);
+            }}
+          />
+        </View>
+        {premiumService && (
+          <View style={{width: "100%"}}>
+            <TextInput style={styles.input} placeholder='Back Account Number'/>
+          </View>
+        )}
       </View>
       <View style={{marginVertical: 20}}>
         <View style={styles.radioContainer}>
@@ -102,7 +102,7 @@ const ShopDetails = () => {
 
       <View style={[styles.premiumCheckbox, {marginTop: 30}]}>
         <View>
-          <Text style={styles.premiumText}>
+          <Text style={styles.partnerProgramme}>
             Have any sales executive visited your shop?
           </Text>
           <Text style={styles.learnMore}>Learn more about Sales executive</Text>
@@ -142,10 +142,33 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  premiumText: {
+  premiumCheckbox2: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    // padding: 15,
+  },
+  subContainer: {
+    borderRadius: 10,
+    backgroundColor: 'white',
+    borderWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  input: {
+    width: '80%',
+    // borderWidth: 1,
+    alignSelf: 'center'
+  },
+  partnerProgramme: {
     fontSize: 14,
     color: DARKBLACK,
     fontFamily: 'Gilroy-Medium',
+  },
+  premiumText: {
+    color: DARKBLUE,
+    fontFamily: 'Gilroy-Medium',
+    textDecorationLine: 'underline',
   },
   radioContainer: {
     flexDirection: 'row',
