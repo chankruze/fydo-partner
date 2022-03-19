@@ -12,7 +12,6 @@ const Tab = createBottomTabNavigator();
 export default function MainNavigation(){
 
   const headerHeight = useHeaderHeight();
-  console.log(headerHeight)
 
   const navigateToSetting = (navigation) => {
     navigation.navigate('Settings');
@@ -20,6 +19,7 @@ export default function MainNavigation(){
 
     return (
         <Tab.Navigator
+          // initialRouteName='Notification'
           screenOptions={{
             tabBarActiveTintColor: PRIMARY,
             tabBarInactiveTintColor: 'lightgrey'
@@ -58,6 +58,7 @@ export default function MainNavigation(){
             name="Notification" 
             component={NotificationScreen}
             options={{
+              headerShown: true,
               tabBarIcon: ({ color, size }) => (
                 <MaterialIcons 
                   name="notifications"

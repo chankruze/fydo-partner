@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {SafeAreaView, StyleSheet, ScrollView, TouchableOpacity, View, Text, StatusBar, Switch, Modal} from 'react-native';
+import {SafeAreaView, StyleSheet, ScrollView, TouchableOpacity, View, Text, StatusBar, Switch, Modal, Pressable, KeyboardAvoidingView} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import HomeFab from '../components/home/HomeFab';
 import HomeSlider from './../components/home/HomeSlider';
@@ -16,6 +16,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 
 import WithNetInfo from '../components/hoc/withNetInfo';
+import AddTagsBottomSheet from '../components/home/AddTagsBottomSheet';
 
 
 class HomeScreen extends Component{
@@ -23,16 +24,24 @@ class HomeScreen extends Component{
         super();
         this.state = {
             shopOpen: false,
-            modalVisible: false
+            modalVisible: false,
+            tagBottomSheetVisible: false
         }
         this.handleModal = this.handleModal.bind(this);
         this.shareCard = this.shareCard.bind(this);
         this.handleShopStatus = this.handleShopStatus.bind(this);
         this.navigateToMyOffers = this.navigateToMyOffers.bind(this);
+        this.triggerTagModal = this.triggerTagModal.bind(this);
+        this.navigateToReferEarn = this.navigateToReferEarn.bind(this);
+        this.handleTagsBottomSheet = this.handleTagsBottomSheet.bind(this);
     }
 
     handleModal(){
         this.setState({modalVisible: !this.state.modalVisible});
+    }
+
+    handleTagsBottomSheet(){
+        this.setState({tagBottomSheetVisible: !this.state.tagBottomSheetVisible});
     }
 
     async shareCard(){
@@ -51,9 +60,47 @@ class HomeScreen extends Component{
         this.setState({shopOpen: !this.state.shopOpen});
     }
 
+    navigateToReferEarn(){
+        let {navigation} = this.props;
+        navigation.navigate('ReferEarn');
+    }
+
     navigateToMyOffers(){
         let {navigation} = this.props;
         navigation.navigate('MyOffers');
+    }
+
+    triggerTagModal() {
+        this.setState(prevState => {
+          return {
+            tagBottomSheetVisible: !prevState.tagBottomSheetVisible
+          }
+        });
+     }
+
+
+    renderTagBottomSheet(){
+        return (
+            <Modal 
+                statusBarTranslucent
+                animationType="fade"
+                transparent={true}
+                visible={this.state.tagBottomSheetVisible}
+                onRequestClose={this.triggerTagModal}
+                >
+                <Pressable 
+                    activeOpacity={1}
+                    style={styles.addTagsBottomSheetContainer}
+                    onPress={this.triggerTagModal}>
+
+                    <KeyboardAvoidingView
+                        style={{height: 400, position: 'absolute', width: '100%', bottom: 0}}
+                        behavior={Platform.OS === "ios" ? "padding" : "height"}>
+                        <AddTagsBottomSheet />
+                    </KeyboardAvoidingView>
+                </Pressable>
+            </Modal>
+        )
     }
 
     render(){
@@ -118,7 +165,8 @@ class HomeScreen extends Component{
                                 </TouchableOpacity>
                            </View>
                         </View>
-                    </Modal>
+                </Modal>
+                {this.state.tagBottomSheetVisible && this.renderTagBottomSheet()}
                 <ScrollView>
                     <StatusBar backgroundColor={PRIMARY}/>
                     <HomeSlider />
@@ -139,7 +187,9 @@ class HomeScreen extends Component{
                     </View>
                     <View style={styles.line}/>
                     <View style={styles.addTagsCard}>
-                        <TouchableOpacity style={styles.shareCard}>
+                        <TouchableOpacity 
+                            style={styles.shareCard}
+                            onPress={this.triggerTagModal}>
                             <Ionicons 
                                 name='pricetag-outline'
                                 size={26}
@@ -183,7 +233,9 @@ class HomeScreen extends Component{
                                 height={24}/>
                             <Text style={styles.otherLabel}>Support and service</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.referEarn}>
+                        <TouchableOpacity
+                            onPress={this.navigateToReferEarn} 
+                            style={styles.referEarn}>
                             <SupportIcon 
                                 width={24}
                                 height={24}/>
@@ -448,5 +500,12 @@ const styles = StyleSheet.create({
         color: '#000914',
         fontSize: 13,
         fontWeight: '400'
+    },
+    addTagsBottomSheetContainer: {
+        backgroundColor: 'rgba(0, 0, 0, .5)',
+        height: '100%'
+    },
+    bottomSheet: {
+        flexWrap: 'wrap',
     }
 })  

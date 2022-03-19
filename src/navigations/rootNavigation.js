@@ -10,6 +10,7 @@ import FeedbackScreen from '../screens/FeedbackScreen';
 import SupportServiceScreen from '../screens/SupportServiceScreen';
 import AboutUsScreen from '../screens/AboutUsScreen';
 import MyOffersScreen from '../screens/MyOffersScreen';
+import ReferAndEarnScreen from '../screens/ReferAndEarnScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -21,7 +22,7 @@ function RootNavigation() {
           <Stack.Screen name="Auth" component={AuthNavigation} />
           <Stack.Navigator/> */}
         <Stack.Navigator 
-          initialRouteName='Settings'>
+          initialRouteName='Main'>
           <Stack.Screen 
             name="Main" 
             component={MainNavigation}
@@ -83,6 +84,17 @@ function RootNavigation() {
             component={MyOffersScreen}
             options={{
               title: 'My Offers',
+              headerTintColor: 'white',
+              headerStyle: {
+                backgroundColor: PRIMARY,
+              }
+            }}
+          />
+          <Stack.Screen 
+            name='ReferEarn'
+            component={ReferAndEarnScreen}
+            options={{
+              title: 'Refer and earn',
               headerTintColor: 'white',
               headerStyle: {
                 backgroundColor: PRIMARY,
