@@ -65,7 +65,7 @@ const OTPVerifyScreen = ({route, navigation}) => {
         if (data.profileComplete) {
           console.log('User Profile Complete, add suitable route');
         } else {
-          navigation.navigate("Language")
+          navigation.navigate('Language');
         }
       }
     } catch (error) {
@@ -142,31 +142,35 @@ const styles = StyleSheet.create({
   },
   title: {
     color: LIGHTBLACK,
-    fontWeight: 'bold',
     fontSize: 16,
+    fontFamily: 'Gilroy-Bold',
   },
   label: {
     marginVertical: 15,
     color: DARKGREY,
     lineHeight: 20,
     fontSize: 13,
+    fontFamily: 'Gilroy-Medium',
   },
   footer: {
-    position: 'absolute',
+    // position: 'absolute',
     bottom: 30,
     padding: 15,
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
+    fontFamily: 'Gilroy-Medium',
   },
   footerLabel: {
     fontSize: 12,
     color: DARKGREY,
+    fontFamily: 'Gilroy-Medium',
   },
   footerOtherLabel: {
     fontSize: 12,
     color: DARKBLUE,
-    fontWeight: '500',
+    fontFamily: 'Gilroy-Medium',
+
     marginTop: 3,
   },
   row: {
@@ -179,8 +183,8 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   resendLabel: {
-    fontWeight: 'bold',
     color: DARKBLUE,
+    fontFamily: 'Gilroy-Medium',
   },
   otpInput: {
     height: 48,
@@ -188,9 +192,10 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     width: '22%',
     textAlign: 'center',
-    fontWeight: 'bold',
+
     fontSize: 13,
     color: DARKGREY,
+    fontFamily: 'Gilroy-Medium',
   },
   optContainer: {
     flexDirection: 'row',
@@ -211,5 +216,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     paddingLeft: 5,
     color: 'red',
+    fontFamily: 'Gilroy-Medium',
   },
 });

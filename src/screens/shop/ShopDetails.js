@@ -1,10 +1,19 @@
-import {StyleSheet, Text, View, SafeAreaView, TextInput} from 'react-native';
+import {StyleSheet, Text, View, SafeAreaView,} from 'react-native';
 import React, {useState} from 'react';
-import {RadioButton} from 'react-native-paper';
+import {RadioButton, TextInput} from 'react-native-paper';
 import {Checkbox} from 'react-native-paper';
-import {DARKBLACK, DARKBLUE, PRIMARY} from '../../assets/colors';
+import {
+  DARKBLACK,
+  DARKBLUE,
+  PRIMARY,
+  DARKGREY,
+  GREY_3,
+  GREY,
+  GREY_2,
+} from '../../assets/colors';
 import SelectDropdown from 'react-native-select-dropdown';
 import ButtonComponent from '../../components/ButtonComponent';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 const ShopDetails = () => {
   const [parking, setParking] = useState(false);
@@ -18,11 +27,17 @@ const ShopDetails = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={premiumService && styles.subContainer}>
-        <View style={premiumService ? styles.premiumCheckbox2: styles.premiumCheckbox}>
+        <View
+          style={
+            premiumService ? styles.premiumCheckbox2 : styles.premiumCheckbox
+          }>
           <View style={{width: '80%'}}>
             <Text style={styles.partnerProgramme}>
               Do you want to join our channel partner Programme?
-              <Text style={[styles.premiumText, {paddingLeft: 10}]}> Premium Service </Text>
+              <Text style={[styles.premiumText, {paddingLeft: 10}]}>
+                {' '}
+                Premium Service{' '}
+              </Text>
             </Text>
           </View>
 
@@ -35,8 +50,43 @@ const ShopDetails = () => {
           />
         </View>
         {premiumService && (
-          <View style={{width: "100%"}}>
-            <TextInput style={styles.input} placeholder='Back Account Number'/>
+          <View style={{width: '100%', marginTop: 15}}>
+            <TextInput
+              style={styles.input}
+              selectionColor={DARKBLUE}
+              activeUnderlineColor={GREY_2}
+              placeholder="Bank Account Number"
+            />
+            <TextInput
+              style={styles.input}
+              selectionColor={DARKBLUE}
+              activeUnderlineColor={GREY_2}
+              placeholder="Bank Account IFSC"
+            />
+            <TextInput
+              style={styles.input}
+              selectionColor={DARKBLUE}
+              activeUnderlineColor={GREY_2}
+              placeholder="GST ID (optional)"
+            />
+            <TextInput
+              style={styles.input}
+              selectionColor={DARKBLUE}
+              activeUnderlineColor={GREY_2}
+              placeholder="UPI ID"
+              right={
+                <TextInput.Icon
+                  name={() => (
+                    <MaterialIcon
+                      name="qr-code-scanner"
+                      size={25}
+                      color="#000"
+                    />
+                  )}
+                />
+              }
+            />
+            <Text style={styles.upi}>Add More UPI IDs</Text>
           </View>
         )}
       </View>
@@ -100,28 +150,58 @@ const ShopDetails = () => {
         />
       </View>
 
-      <View style={[styles.premiumCheckbox, {marginTop: 30}]}>
-        <View>
-          <Text style={styles.partnerProgramme}>
-            Have any sales executive visited your shop?
-          </Text>
-          <Text style={styles.learnMore}>Learn more about Sales executive</Text>
-        </View>
+      <View style={[salesExecutive && styles.subContainer, {marginTop: 30}]}>
+        <View
+          style={
+            salesExecutive ? styles.premiumCheckbox2 : styles.premiumCheckbox
+          }>
+          <View style={{width: '80%'}}>
+            <Text style={styles.partnerProgramme}>
+              Have any sales executive visited your shop?
+            </Text>
+            <Text style={styles.learnMore}>
+              Learn more about Sales executive
+            </Text>
+          </View>
 
-        <Checkbox
-          color={PRIMARY}
-          status={salesExecutive ? 'checked' : 'unchecked'}
-          onPress={() => {
-            setSalesExecutive(!salesExecutive);
-          }}
-        />
+          <Checkbox
+            color={PRIMARY}
+            status={salesExecutive ? 'checked' : 'unchecked'}
+            onPress={() => {
+              setSalesExecutive(!salesExecutive);
+            }}
+          />
+        </View>
+        {
+          salesExecutive && (
+            <View style={{width: '100%', marginTop: 15}}>
+            <TextInput
+              style={[styles.input, {paddingLeft: 10}]}
+              selectionColor={DARKBLUE}
+              activeUnderlineColor={GREY_2}
+              placeholder="Phone Number"
+              keyboardType='numeric'
+              left={
+                <TextInput.Icon
+                  name={() => (
+                    <MaterialIcon
+                      name="phone"
+                      size={25}
+                      color="#000"
+                    />
+                  )}
+                />
+              }
+            />
+            </View>
+          )
+        }
       </View>
       <View style={styles.next}>
         <ButtonComponent
           label="Next"
           color="white"
           backgroundColor={DARKBLUE}
-          //   onPress={()=> navigation.navigate('ShopDetails')}
         />
       </View>
     </SafeAreaView>
@@ -136,6 +216,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     paddingHorizontal: 15,
     paddingTop: 30,
+    backgroundColor: GREY_3,
   },
   premiumCheckbox: {
     flexDirection: 'row',
@@ -146,18 +227,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    // padding: 15,
+    paddingVertical: 15,
   },
   subContainer: {
     borderRadius: 10,
     backgroundColor: 'white',
-    borderWidth: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   input: {
     width: '80%',
     alignSelf: 'center',
+    height: 30,
+    fontFamily: 'Gilroy-Medium',
+    borderBottomColor: DARKGREY,
+    backgroundColor: 'white',
+    marginBottom: 15,
+    fontSize: 14,
   },
   partnerProgramme: {
     fontSize: 14,
@@ -168,6 +254,15 @@ const styles = StyleSheet.create({
     color: DARKBLUE,
     fontFamily: 'Gilroy-Medium',
     textDecorationLine: 'underline',
+  },
+  upi: {
+    color: DARKBLUE,
+    textDecorationLine: 'underline',
+    fontSize: 12,
+    marginBottom: 25,
+    width: '80%',
+    alignSelf: 'center',
+    fontFamily: 'Gilroy-Medium',
   },
   radioContainer: {
     flexDirection: 'row',

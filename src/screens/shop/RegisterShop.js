@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -29,6 +29,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialComunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import WithNetInfo from '../../components/hoc/withNetInfo';
 import SelectDropdown from 'react-native-select-dropdown';
+import {add, color} from 'react-native-reanimated';
 
 const HEIGHT = Dimensions.get('screen').height;
 
@@ -49,13 +50,22 @@ function RegisterShop({route, navigation}) {
   // const [phoneNumber, setPhoneNumber] = useState(route.params.phoneNumber);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [shopName, setShopName] = useState('');
-  const [location, setLocation] = useState('');
+  const [address, setAddress] = useState(route.params ? route.params.address : null);
   const [pincode, setPincode] = useState('');
   const [website, setWebsite] = useState('');
   const [shopType, setShopType] = useState('');
   const [error, setError] = useState({});
   const [idPicUrl, setIdPicUrl] = useState(null);
   const [idPicName, setIdPicName] = useState(null);
+
+  useEffect(() => {
+    if (route.params !== undefined) {
+      const newAddress = route.params.address;
+      setAddress(newAddress);
+    } else {
+      return;
+    }
+  }, [route]);
 
   const isValidate = () => {
     const error = {};
@@ -91,6 +101,17 @@ function RegisterShop({route, navigation}) {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.contentContainer}>
+        <View style={styles.information}>
+          <MaterialComunityIcons
+            name="information-outline"
+            size={25}
+            color="red"
+          />
+          <Text style={styles.informationText}>
+            Be at your shop while entering information so that we can get exact
+            location of your shop.
+          </Text>
+        </View>
         <Text style={styles.title}>Add shop details</Text>
 
         <View style={styles.box}>
@@ -133,7 +154,7 @@ function RegisterShop({route, navigation}) {
             left={
               <TextInput.Icon
                 name={() => (
-                  <FontIsto name="shopping-store" size={17} color="#000" />
+                  <FontIsto name="shopping-store" size={17} color={DARKBLACK} />
                 )}
               />
             }
@@ -143,14 +164,16 @@ function RegisterShop({route, navigation}) {
 
         <View style={styles.box}>
           <TextInput
-            value={location}
-            style={commonstyles.input}
+            value={address}
+            disabled
+            multiline
+            style={[commonstyles.input, {borderBottomWidth: 0.5}]}
             placeholder="Shop address"
             placeholderTextColor={DARKGREY}
             left={
               <TextInput.Icon
                 name={() => (
-                  <EntypoIcon name="location" size={25} color="#000" />
+                  <EntypoIcon name="location" size={25} color={DARKBLACK} />
                 )}
               />
             }
@@ -160,10 +183,10 @@ function RegisterShop({route, navigation}) {
                   <MaterialIcons
                     name="my-location"
                     size={25}
-                    color="#000"
+                    color={DARKBLACK}
                     onPress={() =>
                       navigation.navigate('Maps', {
-                        setLocation: setLocation,
+                        address: address,
                       })
                     }
                   />
@@ -183,7 +206,11 @@ function RegisterShop({route, navigation}) {
             left={
               <TextInput.Icon
                 name={() => (
-                  <MaterialIcons name="edit-location" size={28} color="#000" />
+                  <MaterialIcons
+                    name="edit-location"
+                    size={28}
+                    color={DARKBLACK}
+                  />
                 )}
               />
             }
@@ -192,7 +219,7 @@ function RegisterShop({route, navigation}) {
         </View>
 
         <View style={styles.dropdown}>
-          <FontAwesome name="id-card-o" size={18} color="#000" />
+          <FontAwesome name="id-card-o" size={18} color={DARKBLACK} />
           <SelectDropdown
             data={idCards}
             onSelect={(selectedItem, index) => {
@@ -200,7 +227,7 @@ function RegisterShop({route, navigation}) {
             }}
             defaultValueByIndex={0}
             renderDropdownIcon={() => (
-              <EntypoIcon name="chevron-down" size={25} color="#000" />
+              <EntypoIcon name="chevron-down" size={25} color={DARKBLACK} />
             )}
             buttonStyle={[commonstyles.input, {width: '90%', marginLeft: 0}]}
             buttonTextStyle={{color: DARKGREY, textAlign: 'left'}}
@@ -300,6 +327,18 @@ const styles = StyleSheet.create({
   container: {
     height: '135%',
     backgroundColor: 'white',
+  },
+  information: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 15,
+  },
+  informationText: {
+    paddingHorizontal: 10,
+    fontFamily: 'Gilroy-Medium',
+    color: 'black',
   },
   input: {
     backgroundColor: 'transparent',

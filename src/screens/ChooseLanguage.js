@@ -60,6 +60,7 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
     paddingTop: 30,
+    backgroundColor: 'white'
   },
   title: {
     fontFamily: 'Gilroy-Bold',
@@ -89,15 +90,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
+    fontFamily: 'Gilroy-Medium',
+
   },
   footerLabel: {
     fontSize: 12,
     color: DARKGREY,
+    fontFamily: 'Gilroy-Medium',
+
   },
   footerOtherLabel: {
     fontSize: 12,
     color: DARKBLUE,
-    fontWeight: '500',
+    fontFamily: 'Gilroy-Medium',
+
     marginTop: 3,
   },
 });
