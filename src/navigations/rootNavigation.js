@@ -22,7 +22,7 @@ function RootNavigation() {
           <Stack.Screen name="Auth" component={AuthNavigation} />
           <Stack.Navigator/> */}
         <Stack.Navigator 
-          initialRouteName='Main'>
+          initialRouteName='MyOffers'>
           <Stack.Screen 
             name="Main" 
             component={MainNavigation}
