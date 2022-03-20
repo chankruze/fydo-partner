@@ -21,7 +21,7 @@ function RootNavigation() {
           <Stack.Screen name="Main" component={MainNavigation} />
           <Stack.Screen name="Auth" component={AuthNavigation} />
           <Stack.Navigator/> */}
-      <Stack.Navigator initialRouteName="Auth">
+      <Stack.Navigator initialRouteName="Main">
         <Stack.Screen
           name="Auth"
           component={AuthNavigation}
@@ -89,6 +89,28 @@ function RootNavigation() {
           component={MyOffersScreen}
           options={{
             title: 'My Offers',
+            headerTintColor: 'white',
+            headerStyle: {
+              backgroundColor: PRIMARY,
+            },
+          }}
+        />
+        <Stack.Screen
+          name="Support"
+          component={SupportServiceScreen}
+          options={{
+            title: 'Support and service',
+            headerTintColor: 'white',
+            headerStyle: {
+              backgroundColor: PRIMARY,
+            },
+          }}
+        />
+        <Stack.Screen
+          name="ReferEarn"
+          component={ReferAndEarnScreen}
+          options={{
+            title: 'Refer and earn',
             headerTintColor: 'white',
             headerStyle: {
               backgroundColor: PRIMARY,

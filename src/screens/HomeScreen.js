@@ -43,6 +43,7 @@ class HomeScreen extends Component{
         this.navigateToMyOffers = this.navigateToMyOffers.bind(this);
         this.triggerTagModal = this.triggerTagModal.bind(this);
         this.navigateToReferEarn = this.navigateToReferEarn.bind(this);
+        this.navigateToSupportScreen = this.navigateToSupportScreen.bind(this);
         this.handleTagsBottomSheet = this.handleTagsBottomSheet.bind(this);
     }
 
@@ -119,6 +120,11 @@ class HomeScreen extends Component{
         navigation.navigate('ReferEarn');
     }
 
+    navigateToSupportScreen(){
+        let {navigation} = this.props;
+        navigation.navigate('Support');
+    }
+
     navigateToMyOffers(){
         let {navigation} = this.props;
         navigation.navigate('MyOffers');
@@ -165,14 +171,17 @@ class HomeScreen extends Component{
                 <HomeFab handleModal={this.handleModal}/>
                 <Modal
                     statusBarTranslucent
-                    animationType="slide"
                     transparent={true}
                     visible={this.state.modalVisible}
                     onRequestClose={() => {
+                        console.log(12)
                     }}>
-                        <View style={styles.modelContainer}>
+                        <TouchableOpacity
+                            activeOpacity={1} 
+                            style={styles.modelContainer}
+                            onPress={() => this.setState({modalVisible: false})}>
                            <View style={styles.modalItems}>
-                                <TouchableOpacity 
+                                {/* <TouchableOpacity 
                                     style={styles.modalItem}
                                     activeOpacity={.9}>
                                     <View style={styles.modalIconContainer}>
@@ -186,10 +195,11 @@ class HomeScreen extends Component{
                                             Add new shop
                                         </Text>
                                     </View>
-                                </TouchableOpacity>
+                                </TouchableOpacity> */}
                                 <TouchableOpacity 
                                     style={styles.modalItem}
-                                    activeOpacity={.9}>
+                                    activeOpacity={.9}
+                                    onPress={this.navigateToMyOffers}>
                                     <View style={styles.modalIconContainer}>
                                         <MyShopIcon 
                                             width={18}
@@ -202,7 +212,7 @@ class HomeScreen extends Component{
                                         </Text>
                                     </View>
                                 </TouchableOpacity>
-                                <TouchableOpacity 
+                                {/* <TouchableOpacity 
                                     style={styles.modalItem}
                                     activeOpacity={.9}>
                                     <View style={styles.modalIconContainer}>
@@ -216,9 +226,9 @@ class HomeScreen extends Component{
                                             Add Sale
                                         </Text>
                                     </View>
-                                </TouchableOpacity>
+                                </TouchableOpacity> */}
                            </View>
-                        </View>
+                        </TouchableOpacity>
                 </Modal>
                 {this.state.tagBottomSheetVisible && this.renderTagBottomSheet()}
                 <ScrollView>
@@ -281,7 +291,9 @@ class HomeScreen extends Component{
                         </TouchableOpacity>
                     </View>
                     <View style={styles.row}>
-                        <TouchableOpacity style={styles.support}>
+                        <TouchableOpacity
+                            onPress={this.navigateToSupportScreen} 
+                            style={styles.support}>
                             <SupportIcon 
                                 width={24}
                                 height={24}/>

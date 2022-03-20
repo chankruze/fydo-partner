@@ -13,3 +13,5 @@ export const SHOP_STATUS_CHANGE= BASE + "shop/set-shop-open-status";
 export const GET_SHOP_STATUS = BASE + "shop/shop-open-status";
 
 export const GET_CAROUSELS = BASE + "shop/homepage-carousel";
+
+export const GET_NOTIFICATIONS = BASE + "notification/all?skip=0";
