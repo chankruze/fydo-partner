@@ -12,11 +12,19 @@ import SupportIcon from './../assets/icons/support.svg';
 import ReferEarnIcon from './../assets/icons/refer and earn.svg';
 import Share from 'react-native-share';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {connect} from 'react-redux';
 // import MyShopIcon from './../assets/icons/myshop.svg';
 
 
 import WithNetInfo from '../components/hoc/withNetInfo';
 import AddTagsBottomSheet from '../components/home/AddTagsBottomSheet';
+import { closeShop, getCarousels, getShopStatus, openShop } from '../services/shopService';
+
+const mapStateToProps = (state) => {
+    return {
+        user: state?.userReducer?.user
+    }
+}
 
 
 class HomeScreen extends Component{
@@ -25,15 +33,61 @@ class HomeScreen extends Component{
         this.state = {
             shopOpen: false,
             modalVisible: false,
-            tagBottomSheetVisible: false
+            tagBottomSheetVisible: false,
+            carousels: []
         }
+        this.openShop = this.openShop.bind(this);
+        this.closeShop = this.closeShop.bind(this);
         this.handleModal = this.handleModal.bind(this);
         this.shareCard = this.shareCard.bind(this);
-        this.handleShopStatus = this.handleShopStatus.bind(this);
         this.navigateToMyOffers = this.navigateToMyOffers.bind(this);
         this.triggerTagModal = this.triggerTagModal.bind(this);
         this.navigateToReferEarn = this.navigateToReferEarn.bind(this);
         this.handleTagsBottomSheet = this.handleTagsBottomSheet.bind(this);
+    }
+
+    componentDidMount(){
+        this.callApis();
+    }
+
+    async callApis(){
+        let {user} = this.props; 
+        console.log("accessToken", user?.accessToken)
+        try {
+            const [shopStatusResponse, carouselsResponse ] = await Promise.all([
+                getShopStatus(user?.accessToken), getCarousels(user?.accessToken)
+            ]);
+            const shopStatusJson = await shopStatusResponse.json();
+            const carouselsJson = await carouselsResponse.json();
+            this.setState({carousels: carouselsJson, shopOpen: shopStatusJson?.isOpen})
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async openShop(){
+        let {user} = this.props;
+        try {
+            const response = await openShop(user?.accessToken);
+            const json = await response.json();
+            console.log(json);
+            this.setState({shopOpen: json?.isOpen});
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async closeShop(){
+        let {user} = this.props;
+        try {
+            const response = await closeShop(user?.accessToken);
+            const json = await response.json();
+            console.log(json);
+            this.setState({shopOpen: json?.isOpen});
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     handleModal(){
@@ -56,9 +110,9 @@ class HomeScreen extends Component{
         }
     }
 
-    handleShopStatus(){
-        this.setState({shopOpen: !this.state.shopOpen});
-    }
+    // handleShopStatus(){
+    //     this.setState({shopOpen: !this.state.shopOpen});
+    // }
 
     navigateToReferEarn(){
         let {navigation} = this.props;
@@ -104,7 +158,7 @@ class HomeScreen extends Component{
     }
 
     render(){
-        let {shopOpen} = this.state;
+        let {shopOpen, carousels} = this.state;
 
         return (
             <SafeAreaView style={styles.container}>
@@ -169,7 +223,7 @@ class HomeScreen extends Component{
                 {this.state.tagBottomSheetVisible && this.renderTagBottomSheet()}
                 <ScrollView>
                     <StatusBar backgroundColor={PRIMARY}/>
-                    <HomeSlider />
+                    <HomeSlider carousels={carousels}/>
                     <View style={styles.shareCardContainer}>
                         <TouchableOpacity 
                             style={styles.shareCard}
@@ -249,7 +303,7 @@ class HomeScreen extends Component{
                             style={styles.switchButton}
                             value={shopOpen}
                             thumbColor={shopOpen ? PRIMARY : 'lightgrey'}
-                            onValueChange={this.handleShopStatus}/>
+                            onValueChange={shopOpen? this.closeShop : this.openShop}/>
                         <View style={Object.assign({...styles.shopStatus}, {backgroundColor: shopOpen? '#66bb6a': '#ff7043'})}>
                             <Text style={styles.shopStatusOtherLabel}>{shopOpen ? 'Opened': 'Closed'}</Text>
                         </View>
@@ -261,7 +315,7 @@ class HomeScreen extends Component{
     }
 }
 
-export default WithNetInfo(HomeScreen);
+export default connect(mapStateToProps)(WithNetInfo(HomeScreen));
 
 const styles = StyleSheet.create({
     container: {

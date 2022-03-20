@@ -1,5 +1,6 @@
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import React from 'react';
+import { DARKBLUE } from '../assets/colors';
 
 const SkipButton = ({skip}) => {
   return (
@@ -13,8 +14,9 @@ export default SkipButton;
 
 const styles = StyleSheet.create({
   button: {
-    fontSize: 20,
+    fontSize: 21,
     color: 'black',
-    fontWeight: '700',
+    fontFamily: 'Gilroy-Bold',
+    color: DARKBLUE,
   },
 });

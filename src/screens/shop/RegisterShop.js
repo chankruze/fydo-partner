@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -16,29 +16,56 @@ import {
   LIGHTBLACK,
   DARKBLACK,
   DARKBLUE,
-} from '../assets/colors';
+} from '../../assets/colors';
 import Octicons from 'react-native-vector-icons/Octicons';
 import {launchImageLibrary} from 'react-native-image-picker';
-import ButtonComponent from '../components/ButtonComponent';
-import {TextInput} from 'react-native-paper';
+import ButtonComponent from '../../components/ButtonComponent';
+import {TextInput, Button} from 'react-native-paper';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FontIsto from 'react-native-vector-icons/Fontisto';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import AntIcon from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialComunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import WithNetInfo from '../components/hoc/withNetInfo';
+import WithNetInfo from '../../components/hoc/withNetInfo';
+import SelectDropdown from 'react-native-select-dropdown';
+import {add, color} from 'react-native-reanimated';
 
 const HEIGHT = Dimensions.get('screen').height;
 
+const idCards = ['Pan Card', 'Aadhaar Card', 'Driving License', 'Voter ID'];
+const shopTypes = [
+  'Independent store owner',
+  'Franchise store',
+  'Mall representative',
+];
+
+const options = {
+  mediaType: 'photo',
+  quality: 0.5,
+};
+
 function RegisterShop({route, navigation}) {
   const [ownerName, setOwnerName] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState(route.params.phoneNumber);
-  // const [phoneNumber, setPhoneNumber] = useState('');
+  // const [phoneNumber, setPhoneNumber] = useState(route.params.phoneNumber);
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [shopName, setShopName] = useState('');
-  const [location, setLocation] = useState('');
+  const [address, setAddress] = useState(route.params ? route.params.address : null);
   const [pincode, setPincode] = useState('');
   const [website, setWebsite] = useState('');
   const [shopType, setShopType] = useState('');
   const [error, setError] = useState({});
+  const [idPicUrl, setIdPicUrl] = useState(null);
+  const [idPicName, setIdPicName] = useState(null);
+
+  useEffect(() => {
+    if (route.params !== undefined) {
+      const newAddress = route.params.address;
+      setAddress(newAddress);
+    } else {
+      return;
+    }
+  }, [route]);
 
   const isValidate = () => {
     const error = {};
@@ -63,10 +90,34 @@ function RegisterShop({route, navigation}) {
     return false;
   };
 
+  const pickImage = () => {
+    launchImageLibrary(options, ({assets, didCancel}) => {
+      if (assets) {
+        console.log(assets);
+      }
+    });
+  };
+
+  const next = () => {
+    if(isValidate())
+      navigation.navigate('ShopDetails');
+  }
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.contentContainer}>
-        <Text style={styles.title}>Shop details</Text>
+        <View style={styles.information}>
+          <MaterialComunityIcons
+            name="information-outline"
+            size={25}
+            color="red"
+          />
+          <Text style={styles.informationText}>
+            Be at your shop while entering information so that we can get exact
+            location of your shop.
+          </Text>
+        </View>
+        <Text style={styles.title}>Add shop details</Text>
 
         <View style={styles.box}>
           <TextInput
@@ -108,7 +159,7 @@ function RegisterShop({route, navigation}) {
             left={
               <TextInput.Icon
                 name={() => (
-                  <FontIsto name="shopping-store" size={17} color="#000" />
+                  <FontIsto name="shopping-store" size={17} color={DARKBLACK} />
                 )}
               />
             }
@@ -118,21 +169,32 @@ function RegisterShop({route, navigation}) {
 
         <View style={styles.box}>
           <TextInput
-            value={location}
-            style={commonstyles.input}
-            placeholder="Location"
+            value={address}
+            disabled
+            multiline
+            style={[commonstyles.input, {borderBottomWidth: 0.5}]}
+            placeholder="Shop address"
             placeholderTextColor={DARKGREY}
             left={
               <TextInput.Icon
                 name={() => (
-                  <EntypoIcon name="location" size={25} color="#000" />
+                  <EntypoIcon name="location" size={25} color={DARKBLACK} />
                 )}
               />
             }
             right={
               <TextInput.Icon
                 name={() => (
-                  <MaterialIcons name="my-location" size={25} color="#000" />
+                  <MaterialIcons
+                    name="my-location"
+                    size={25}
+                    color={DARKBLACK}
+                    onPress={() =>
+                      navigation.navigate('Maps', {
+                        address: address,
+                      })
+                    }
+                  />
                 )}
               />
             }
@@ -149,7 +211,11 @@ function RegisterShop({route, navigation}) {
             left={
               <TextInput.Icon
                 name={() => (
-                  <MaterialIcons name="edit-location" size={28} color="#000" />
+                  <MaterialIcons
+                    name="edit-location"
+                    size={28}
+                    color={DARKBLACK}
+                  />
                 )}
               />
             }
@@ -157,6 +223,45 @@ function RegisterShop({route, navigation}) {
           {error.pincode && <Text style={styles.error}>{error.pincode}</Text>}
         </View>
 
+        <View style={styles.dropdown}>
+          <FontAwesome name="id-card-o" size={18} color={DARKBLACK} />
+          <SelectDropdown
+            data={idCards}
+            onSelect={(selectedItem, index) => {
+              console.log(selectedItem, index);
+            }}
+            defaultValueByIndex={0}
+            renderDropdownIcon={() => (
+              <EntypoIcon name="chevron-down" size={25} color={DARKBLACK} />
+            )}
+            buttonStyle={[commonstyles.input, {width: '90%', marginLeft: 0}]}
+            buttonTextStyle={{color: DARKGREY, textAlign: 'left'}}
+            buttonTextAfterSelection={(selectedItem, index) => {
+              // text represented after item is selected
+              // if data array is an array of objects then return selectedItem.property to render after item is selected
+              return selectedItem;
+            }}
+            rowTextForSelection={(item, index) => {
+              // text represented for each item in dropdown
+              // if data array is an array of objects then return item.property to represent item in dropdown
+              return item;
+            }}
+          />
+        </View>
+        <View style={styles.uploadImage}>
+          <Button
+            onPress={pickImage}
+            style={{backgroundColor: GREY}}
+            icon="camera">
+            Front Image
+          </Button>
+          <Button
+            onPress={pickImage}
+            style={{backgroundColor: GREY}}
+            icon="camera">
+            Back Image
+          </Button>
+        </View>
         <View style={styles.box}>
           <TextInput
             value={website}
@@ -173,19 +278,44 @@ function RegisterShop({route, navigation}) {
             }
           />
         </View>
+        <View style={styles.shoptype}>
+          <SelectDropdown
+            data={shopTypes}
+            onSelect={(selectedItem, index) => {
+              console.log(selectedItem, index);
+            }}
+            defaultValueByIndex={0}
+            renderDropdownIcon={() => (
+              <EntypoIcon name="chevron-down" size={25} color="#000" />
+            )}
+            buttonStyle={[commonstyles.input, {width: '100%', marginLeft: 0}]}
+            buttonTextStyle={{color: DARKGREY, textAlign: 'left'}}
+            buttonTextAfterSelection={(selectedItem, index) => {
+              // text represented after item is selected
+              // if data array is an array of objects then return selectedItem.property to render after item is selected
+              return selectedItem;
+            }}
+            rowTextForSelection={(item, index) => {
+              // text represented for each item in dropdown
+              // if data array is an array of objects then return item.property to represent item in dropdown
+              return item;
+            }}
+          />
+        </View>
 
         <ButtonComponent
           label="Next"
           color="white"
           backgroundColor={DARKBLUE}
+          onPress={next}
         />
       </View>
-      <View style={styles.footer}>
+      {/* <View style={styles.footer}>
         <Text style={styles.footerLabel}>By continuing you agree to our</Text>
         <TouchableOpacity>
           <Text style={styles.footerOtherLabel}>Terms & Conditions</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
     </ScrollView>
   );
 }
@@ -194,13 +324,26 @@ const commonstyles = {
   input: {
     backgroundColor: 'transparent',
     fontSize: 18,
+    paddingLeft: 10,
   },
 };
 
 const styles = StyleSheet.create({
   container: {
-    height: '100%',
+    height: '135%',
     backgroundColor: 'white',
+  },
+  information: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 15,
+  },
+  informationText: {
+    paddingHorizontal: 10,
+    fontFamily: 'Gilroy-Medium',
+    color: 'black',
   },
   input: {
     backgroundColor: 'transparent',
@@ -211,15 +354,39 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   title: {
-    color: LIGHTBLACK,
+    color: DARKBLACK,
     fontWeight: 'bold',
-    fontSize: 20,
-    textAlign: 'center',
+    fontSize: 22,
+    // textAlign: 'center',
+    paddingLeft: 15,
+  },
+  uploadImage: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 10,
   },
   error: {
     marginVertical: 5,
     fontSize: 12,
     color: 'red',
+  },
+  dropdown: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 10,
+    justifyContent: 'flex-end',
+    paddingBottom: 5,
+    borderBottomWidth: 1,
+    borderBottomColor: DARKGREY,
+  },
+  shoptype: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 15,
+    justifyContent: 'space-between',
+    borderWidth: 1,
+    borderColor: DARKGREY,
+    borderRadius: 10,
   },
   label: {
     marginVertical: 15,

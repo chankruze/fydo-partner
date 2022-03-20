@@ -6,6 +6,7 @@ export const DARKGREY = "#7E9298";
 export const DARKBLUE = "#003579";
 // export const PRIMARY = "#FE3838";
 export const DARKBLACK = "#140000";
+export const GREY_3 = "#f7f7f5";
 export const GREY_2 = "#938989";
 export const LIGHTGREEN = "#4BB543";
 export const YELLOW = "#F4BF02";

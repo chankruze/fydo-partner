@@ -11,11 +11,11 @@ const IMAGES = [
     "https://media.istockphoto.com/photos/asian-male-florist-owner-of-small-business-flower-shop-using-digital-picture-id1317277259?b=1&k=20&m=1317277259&s=170667a&w=0&h=K08QBPPiq5_OOZcksriP_3eHEB1z5diqY14KUad3wiU=",
 ]
 
-export default function HomeSlider(){
+export default function HomeSlider({carousels}){
     return (
         <SliderBox
             sliderBoxHeight={HEIGHT * .25} 
-            images={IMAGES}
+            images={carousels}
             autoplay
             circleLoop/>
     )

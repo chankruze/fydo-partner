@@ -6,4 +6,10 @@ export const VERIFY_LOGIN_OTP_API = BASE + 'shop-login/validate-otp-for-auth';
 export const LOGOUT = BASE + 'shop-login/logout';
 
 //upload device info
-export const UPLOAD_DEVICE_DEAILS_API = BASE + "communication/user-device-details"
+export const UPLOAD_DEVICE_DEAILS_API = BASE + "communication/user-device-details";
+
+//shop
+export const SHOP_STATUS_CHANGE= BASE + "shop/set-shop-open-status";
+export const GET_SHOP_STATUS = BASE + "shop/shop-open-status";
+
+export const GET_CAROUSELS = BASE + "shop/homepage-carousel";

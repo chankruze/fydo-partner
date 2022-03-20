@@ -21,7 +21,7 @@ const WithNetInfo = WrappedComponent => {
           <Modal
             animationType="slide"
             transparent={true}
-            visible={networkStatus}
+            visible={!networkStatus}
             onRequestClose={()=> {
                 console.log("Hardware back button pressed(Android)")
             }}>

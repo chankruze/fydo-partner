@@ -35,5 +35,6 @@ const styles = StyleSheet.create({
     label: {
         fontWeight: '600',
         fontSize: 17,
+        fontFamily: 'Gilroy-SemiBold'
     },
 })

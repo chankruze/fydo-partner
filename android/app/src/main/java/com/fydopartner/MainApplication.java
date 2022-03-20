@@ -1,9 +1,14 @@
 package com.fydopartner;
 
 import android.app.Application;
+import com.facebook.react.bridge.JSIModulePackage;
+import com.swmansion.reanimated.ReanimatedJSIModulePackage;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import cx.evermeet.versioninfo.RNVersionInfoPackage;
+import cx.evermeet.versioninfo.RNVersionInfoPackage;
+import com.oblador.vectoricons.VectorIconsPackage;
 import cx.evermeet.versioninfo.RNVersionInfoPackage;
 import cl.json.RNSharePackage;
 import com.horcrux.svg.SvgPackage;
@@ -37,6 +42,10 @@ public class MainApplication extends Application implements ReactApplication {
         protected String getJSMainModuleName() {
           return "index";
         }
+        @Override
+protected JSIModulePackage getJSIModulePackage() { 
+      return new ReanimatedJSIModulePackage(); 
+    }
       };
 
   @Override
