@@ -37,6 +37,7 @@ class MyOffersScreen extends Component{
     renderTabs(){
         return (
             <Tab.Navigator
+                // initialRouteName='RequestedOffers'
                 screenOptions={{
                     tabBarActiveTintColor: PRIMARY,
                     tabBarLabelStyle: {

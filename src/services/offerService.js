@@ -1,4 +1,4 @@
-import { ADD_OFFER } from "../config/endpoints";
+import { ADD_OFFER, GET_OFFERS } from "../config/endpoints";
 
 export function addOffer(token, data){
     return fetch(ADD_OFFER, {
@@ -16,5 +16,16 @@ export function addOffer(token, data){
             type: 'OFFER',
             imageUrl: data?.imageUrl
         })
+    })
+}
+
+export function getOffers(token){
+    return fetch(GET_OFFERS, {
+        method: 'GET',
+        headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
     })
 }
