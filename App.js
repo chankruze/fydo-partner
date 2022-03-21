@@ -10,16 +10,7 @@ import {
 } from 'react-native';
 import OnboardingScreen from './src/screens/OnboardingScreen';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
-import HomeScreen from './src/screens/HomeScreen';
-import MapScreen from './src/screens/MapScreen';
-import AuthNavigation from './src/navigations/authNavigation';
-import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import PhoneLoginScreen from './src/screens/PhoneLoginScreen';
-import OTPVerifyScreen from './src/screens/OTPVerifyScreen';
-import ChooseLanguage from './src/screens/ChooseLanguage';
-import ShopDetails from './src/screens/shop/ShopDetails';
-import ShopTiming from './src/screens/shop/ShopTiming';
 import { Provider } from 'react-redux';
 import store from './src/store';
 
@@ -63,21 +54,23 @@ const App = () => {
   //   </NavigationContainer>
   //  )
   // return <MapScreen />
-  // if (isFirstLaunch === null) {
-  //   return (<View style={styles.container}><Loading /></View>)
-  // } else if (isFirstLaunch === true) {
-  //   return (
-  //     <View style={styles.container}>
-  //       <OnboardingScreen handleFirstLaunch={handleFirstLaunch} />
-  //     </View>
-  //   );
-  // } else {
+  if (isFirstLaunch === null) {
+    return (<View style={styles.container}><Loading /></View>)
+  } 
+  else if (isFirstLaunch === true) {
+    return (
+      <View style={styles.container}>
+        <OnboardingScreen handleFirstLaunch={handleFirstLaunch} />
+      </View>
+    );
+  } 
+  else {
     return (
       <Provider store={store}>
         <RootNavigation />
     </Provider>
     );
-  // }
+  }
 };
 
 const styles = StyleSheet.create({
