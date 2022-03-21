@@ -16,13 +16,40 @@ class SupportServiceScreen extends Component {
     this.state = {
       email: 'support@fydo.in',
       phoneNo: '+918447734227',
+      whatsAppMsg: 'Hi there!'
     };
     this.sendEmail = this.sendEmail.bind(this);
+    this.makeCall = this.makeCall.bind(this);
+    this.whatsappText = this.whatsappText.bind(this);
   }
 
   async sendEmail() {
     try {
       let url = `mailto:${this.state.email}`;
+      const canOpen = await Linking.canOpenURL(url);
+      if (!canOpen) throw new Error('Provided URL can not be handled');
+      await Linking.openURL(url);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async makeCall() {
+    try {
+      let url = `tel:${this.state.phoneNo}`;
+      const canOpen = await Linking.canOpenURL(url);
+      if (!canOpen) throw new Error('Provided URL can not be handled');
+      await Linking.openURL(url);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async whatsappText() {
+    try {
+      let url = 'whatsapp://send?text=' + 
+      whatsAppMsg +
+     '&phone=91' + phoneNo;
       const canOpen = await Linking.canOpenURL(url);
       if (!canOpen) throw new Error('Provided URL can not be handled');
       await Linking.openURL(url);
@@ -39,7 +66,7 @@ class SupportServiceScreen extends Component {
             <Text style={styles.title}>Send us email at</Text>
             <Text style={styles.label}>{this.state.email}</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity onPress={this.makeCall} style={styles.button}>
             <Text style={styles.title}>Contact our customer care</Text>
             <Text style={styles.label}>{this.state.phoneNo}</Text>
           </TouchableOpacity>
@@ -52,6 +79,7 @@ class SupportServiceScreen extends Component {
               label="Message"
               color="white"
               backgroundColor={PRIMARY}
+              onPress={this.whatsappText}
             />
           </View>
         </TouchableOpacity>
