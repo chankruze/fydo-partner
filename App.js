@@ -54,25 +54,25 @@ const App = () => {
     setIsFirstLaunch(false);
   };
 
-//  return (
-//   <NavigationContainer>
-//     <AuthNavigation />
-//   </NavigationContainer>
-//  )
+ return (
+  <NavigationContainer>
+    <AuthNavigation />
+  </NavigationContainer>
+ )
 // return <MapScreen />
-  if (isFirstLaunch === null) {
-    return (<View style={styles.container}><Loading /></View>)
-  } else if (isFirstLaunch === true) {
-    return (
-      <View style={styles.container}>
-        <OnboardingScreen handleFirstLaunch={handleFirstLaunch}/>
-      </View>
-    );
-  } else {
-    return (
-       <RootNavigation />
-    );
-  }
+  // if (isFirstLaunch === null) {
+  //   return (<View style={styles.container}><Loading /></View>)
+  // } else if (isFirstLaunch === true) {
+  //   return (
+  //     <View style={styles.container}>
+  //       <OnboardingScreen handleFirstLaunch={handleFirstLaunch}/>
+  //     </View>
+  //   );
+  // } else {
+  //   return (
+  //      <RootNavigation />
+  //   );
+  // }
 };
 
 const styles = StyleSheet.create({

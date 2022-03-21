@@ -4,6 +4,7 @@ export const GREY = "#E3E1E1";
 export const LIGHTBLACK = "#1F2630";
 export const DARKGREY = "#7E9298";
 export const DARKBLUE = "#003579";
+export const LIGHTBLUE = "#dde5f0"
 // export const PRIMARY = "#FE3838";
 export const DARKBLACK = "#140000";
 export const GREY_3 = "#f7f7f5";
