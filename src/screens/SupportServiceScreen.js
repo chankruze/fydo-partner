@@ -1,47 +1,59 @@
 import React, {Component} from 'react';
-import {Linking, StyleSheet, Text, SafeAreaView, View, TouchableOpacity} from 'react-native';
-import { PRIMARY } from '../assets/colors';
+import {
+  Linking,
+  StyleSheet,
+  Text,
+  SafeAreaView,
+  View,
+  TouchableOpacity,
+} from 'react-native';
+import {LIGHTBLUE, PRIMARY} from '../assets/colors';
 import WithNetInfo from '../components/hoc/withNetInfo';
-
+import ButtonComponent from '../components/ButtonComponent';
 class SupportServiceScreen extends Component {
-
-  constructor(){
+  constructor() {
     super();
     this.state = {
       email: 'support@fydo.in',
-      phoneNo: '+918447734227'
-    }
+      phoneNo: '+918447734227',
+    };
     this.sendEmail = this.sendEmail.bind(this);
   }
 
-  async sendEmail(){
+  async sendEmail() {
     try {
       let url = `mailto:${this.state.email}`;
       const canOpen = await Linking.canOpenURL(url);
-      if (!canOpen)
-          throw new Error('Provided URL can not be handled');
+      if (!canOpen) throw new Error('Provided URL can not be handled');
       await Linking.openURL(url);
     } catch (error) {
-        console.log(error)
+      console.log(error);
     }
   }
-
 
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        <TouchableOpacity
-          onPress={this.sendEmail}
-          style={styles.button}>
-          <Text style={styles.title}>Send us email at</Text>
-          <Text style={styles.label}>{this.state.email}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.title}>Contact our customer care</Text>
-          <Text style={styles.label}>{this.state.phoneNo}</Text>
-        </TouchableOpacity>
+        <View style={styles.phoneEmail}>
+          <TouchableOpacity onPress={this.sendEmail} style={styles.button}>
+            <Text style={styles.title}>Send us email at</Text>
+            <Text style={styles.label}>{this.state.email}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.title}>Contact our customer care</Text>
+            <Text style={styles.label}>{this.state.phoneNo}</Text>
+          </TouchableOpacity>
+        </View>
+
         <TouchableOpacity style={styles.row}>
           <Text style={styles.title}>Chat with us now</Text>
+          <View style={styles.buttonContainer}>
+            <ButtonComponent
+              label="Message"
+              color="white"
+              backgroundColor={PRIMARY}
+            />
+          </View>
         </TouchableOpacity>
       </SafeAreaView>
     );
@@ -54,30 +66,44 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+  },
+  phoneEmail: {
+    flexDirection: 'row',
     justifyContent: 'center',
+    marginVertical: 30,
   },
   button: {
-    height: '20%',
-    backgroundColor: PRIMARY,
-    marginBottom: 20,
+    backgroundColor: LIGHTBLUE,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    borderRadius: 10,
+    height: 150,
+    width: '45%',
+    marginHorizontal: 8,
   },
   row: {
-    height: '20%',
-    backgroundColor: PRIMARY,
+    backgroundColor: LIGHTBLUE,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    height: 130,
+    marginHorizontal: 12,
+    borderRadius: 10,
   },
   title: {
-    fontWeight: '400',
-    color: 'white',
-    fontSize: 22
+    fontSize: 16,
+    textAlign: 'center',
+    fontFamily: 'Gilroy-Medium',
   },
+
   label: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 18,
-    marginVertical: 13
-  }
+    color: PRIMARY,
+    fontSize: 16,
+    marginVertical: 13,
+    fontFamily: 'Gilroy-Medium',
+  },
+  buttonContainer: {
+    width: '85%',
+    marginTop: 18,
+    borderRadius: 10,
+  },
 });

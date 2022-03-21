@@ -57,12 +57,13 @@ const App = () => {
     setIsFirstLaunch(false);
   };
 
-  //  return (
-  //   <NavigationContainer>
-  //     <AuthNavigation />
-  //   </NavigationContainer>
-  //  )
-  // return <MapScreen />
+ return (
+  <Provider store={store}>
+    <RootNavigation />
+</Provider>
+    );
+
+// return <MapScreen />
   // if (isFirstLaunch === null) {
   //   return (<View style={styles.container}><Loading /></View>)
   // } else if (isFirstLaunch === true) {
@@ -72,11 +73,13 @@ const App = () => {
   //     </View>
   //   );
   // } else {
-    return (
-      <Provider store={store}>
-        <RootNavigation />
-    </Provider>
-    );
+  //       <OnboardingScreen handleFirstLaunch={handleFirstLaunch}/>
+  //     </View>
+  //   );
+  // } else {
+  //   return (
+  //      <RootNavigation />
+  //   );
   // }
 };
 
