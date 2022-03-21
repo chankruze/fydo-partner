@@ -3,16 +3,16 @@ import {ScrollView, StyleSheet, Text} from 'react-native';
 import { DARKBLACK } from '../assets/colors';
 import WithNetInfo from '../components/hoc/withNetInfo';
 
-const ABOUT_US = "Fydo Pvt. Ltd. built the fydo app as a Commercial app. This SERVICE is provided by fydo Pvt. Ltd. and is intended for use as is."+
-"This page is used to inform visitors regarding our policies with the collection, use, and disclosure of Personal Information if anyone decided to use our Service."+
-"If you choose to use our Service, then you agree to the collection and use of information in relation to this policy. The Personal Information that we collect is used for providing and improving the Service. We will not use or share your information with anyone except as described in this Privacy Policy."+
-"The terms used in this Privacy Policy have the same meanings as in our Terms and Conditions, which is accessible at fydo unless otherwise defined in this Privacy Policy;"
-
 class AboutUsScreen extends Component {
   render() {
     return (
       <ScrollView style={styles.container}>
-        <Text style={styles.label}>{ABOUT_US}</Text>
+        <Text style={styles.label}>
+        Lfyd is a hyper-local eCommerce and a Business Development company that has been set up to allow the customers to discover exclusive offers and sales happening in their city along with receiving attractive cash backs while paying in partner's shops with the app.
+We are very proud of what we do, for our customers we give them a platform to explore their local shops and get all the information about latest deals and sales happening in the market. People can get real time information about their shop and get other people's reviews about the shop. At the same time it's also a holy grail for businesses and businessmen. From marketing to branding and promotion, our company provides a one-stop solution for growing a business and getting more sales and customers. When a business registers as our partner we provide them complete support and knowledge about running the business so that they always remain ahead in the competition.We aim to help people in generating more profit from their business even if they are a novice.
+
+  
+        </Text>
       </ScrollView>
     );
   }

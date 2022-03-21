@@ -6,10 +6,17 @@ import RequestedOffersScreen from './myoffers/ReqestedOffersScreen';
 import { PRIMARY } from '../assets/colors';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MyOffersBottomSheet from '../components/myoffers/MyOffersBottomSheet';
+import { connect } from 'react-redux';
 
 const Tab = createMaterialTopTabNavigator();
 
-export default class MyOffersScreen extends Component{
+const mapStateToProps = (state) => {
+    return {
+        user: state?.userReducer?.user
+    }
+}
+
+class MyOffersScreen extends Component{
 
     constructor(){
         super();
@@ -30,6 +37,7 @@ export default class MyOffersScreen extends Component{
     renderTabs(){
         return (
             <Tab.Navigator
+                // initialRouteName='RequestedOffers'
                 screenOptions={{
                     tabBarActiveTintColor: PRIMARY,
                     tabBarLabelStyle: {
@@ -59,6 +67,7 @@ export default class MyOffersScreen extends Component{
     }
 
     renderModal(){
+        let {user} = this.props;
         return (
             <Modal 
                 statusBarTranslucent
@@ -72,7 +81,9 @@ export default class MyOffersScreen extends Component{
                     style={styles.modalContainer}
                     onPress={this.triggerModal}>
 
-                    <MyOffersBottomSheet />
+                    <MyOffersBottomSheet 
+                        token={user?.accessToken}
+                        toggle={this.triggerModal}/>
                 </Pressable>
             </Modal>
         )
@@ -100,6 +111,8 @@ export default class MyOffersScreen extends Component{
         )
     }
 }
+
+export default connect(mapStateToProps)(MyOffersScreen);
 
 const styles = StyleSheet.create({
     container: {

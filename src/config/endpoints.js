@@ -15,3 +15,8 @@ export const GET_SHOP_STATUS = BASE + "shop/shop-open-status";
 export const GET_CAROUSELS = BASE + "shop/homepage-carousel";
 
 export const GET_NOTIFICATIONS = BASE + "notification/all?skip=0";
+
+export const ADD_OFFER = BASE + "offer/add-offer-request";
+export const GET_OFFERS = BASE + "offer/my-offers?type=OFFER&limit=0&skip=0";
+
+export const GENERATE_PRESIGN_URL = BASE + "aws-util/generate-presigned-url";
