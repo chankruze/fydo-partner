@@ -126,6 +126,7 @@ class HomeScreen extends Component{
     }
 
     navigateToMyOffers(){
+        this.setState({modalVisible: false});
         let {navigation} = this.props;
         navigation.navigate('MyOffers');
     }
@@ -234,7 +235,7 @@ class HomeScreen extends Component{
                 <ScrollView>
                     <StatusBar backgroundColor={PRIMARY}/>
                     <HomeSlider carousels={carousels}/>
-                    <View style={styles.shareCardContainer}>
+                    {/* <View style={styles.shareCardContainer}>
                         <TouchableOpacity 
                             style={styles.shareCard}
                             onPress={this.shareCard}>
@@ -249,8 +250,8 @@ class HomeScreen extends Component{
                             </View>
                         </TouchableOpacity>
                     </View>
-                    <View style={styles.line}/>
-                    <View style={styles.addTagsCard}>
+                    <View style={styles.line}/> */}
+                    {/* <View style={styles.addTagsCard}>
                         <TouchableOpacity 
                             style={styles.shareCard}
                             onPress={this.triggerTagModal}>
@@ -264,7 +265,7 @@ class HomeScreen extends Component{
                                 <Text style={styles.cardButtonLabel}>Tap to Add</Text>
                             </View>
                         </TouchableOpacity>
-                    </View>
+                    </View> */}
                     <View style={styles.line}/>
                     <View style={styles.row}>
                         <TouchableOpacity style={styles.buttonContainer}>

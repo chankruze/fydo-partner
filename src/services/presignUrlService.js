@@ -10,7 +10,7 @@ export async function generatePresignUrl(token, fileNames){
             'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
-            fileNames: ['sdfdss']
+            fileNames: fileNames
         })
     })
 }

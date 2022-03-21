@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import OnboardingScreen from './src/screens/OnboardingScreen';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Provider } from 'react-redux';
 import store from './src/store';
 
@@ -54,23 +54,23 @@ const App = () => {
   //   </NavigationContainer>
   //  )
   // return <MapScreen />
-  if (isFirstLaunch === null) {
-    return (<View style={styles.container}><Loading /></View>)
-  } 
-  else if (isFirstLaunch === true) {
-    return (
-      <View style={styles.container}>
-        <OnboardingScreen handleFirstLaunch={handleFirstLaunch} />
-      </View>
-    );
-  } 
-  else {
+  // if (isFirstLaunch === null) {
+  //   return (<View style={styles.container}><Loading /></View>)
+  // } 
+  // else if (isFirstLaunch === true) {
+  //   return (
+  //     <View style={styles.container}>
+  //       <OnboardingScreen handleFirstLaunch={handleFirstLaunch} />
+  //     </View>
+  //   );
+  // } 
+  // else {
     return (
       <Provider store={store}>
         <RootNavigation />
     </Provider>
     );
-  }
+  // }
 };
 
 const styles = StyleSheet.create({
