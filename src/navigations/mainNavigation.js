@@ -19,7 +19,7 @@ export default function MainNavigation(){
 
     return (
         <Tab.Navigator
-          initialRouteName='MyOfferss'
+          // initialRouteName='MyOfferss'
           screenOptions={{
             tabBarActiveTintColor: PRIMARY,
             tabBarInactiveTintColor: 'lightgrey',
