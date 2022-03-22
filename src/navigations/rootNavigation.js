@@ -11,6 +11,11 @@ import SupportServiceScreen from '../screens/SupportServiceScreen';
 import AboutUsScreen from '../screens/AboutUsScreen';
 import MyOffersScreen from '../screens/MyOffersScreen';
 import ReferAndEarnScreen from '../screens/ReferAndEarnScreen';
+import RegisterShop from '../screens/shop/RegisterShop';
+import MapScreen from '../screens/MapScreen';
+import ShopDetails from '../screens/shop/ShopDetails';
+import MyShop from '../screens/shop/MyShop';
+import ShopTiming from '../screens/shop/ShopTiming'
 
 const Stack = createNativeStackNavigator();
 
@@ -21,13 +26,18 @@ function RootNavigation() {
           <Stack.Screen name="Main" component={MainNavigation} />
           <Stack.Screen name="Auth" component={AuthNavigation} />
           <Stack.Navigator/> */}
-      <Stack.Navigator initialRouteName="Auth">
+      <Stack.Navigator initialRouteName="ShopTiming">
+      <Stack.Screen options={{ headerShown: false }} name="RegisterShop" component={RegisterShop} />
+        <Stack.Screen options={{ headerShown: false }} name="Maps" component={MapScreen} />
+        <Stack.Screen options={{ headerShown: false }} name="ShopDetails" component={ShopDetails} />
+        <Stack.Screen options={{ headerShown: false }} name="MyShop" component={MyShop} />
+        <Stack.Screen options={{ headerShown: false }}name="ShopTiming" component={ShopTiming} />
         <Stack.Screen
           name="Auth"
           component={AuthNavigation}
           options={{ headerShown: false }}
         />
-        <Stack.Screen
+        <Stack.Screen 
           name="Main"
           component={MainNavigation}
           options={{ headerShown: false }}

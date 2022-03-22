@@ -13,6 +13,7 @@ import OnboardingScreen from './src/screens/OnboardingScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Provider } from 'react-redux';
 import store from './src/store';
+import SplashScreen from './src/screens/SplashScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -48,11 +49,15 @@ const App = () => {
     setIsFirstLaunch(false);
   };
 
- return (
-  <Provider store={store}>
-    <RootNavigation />
-</Provider>
-    );
+  return (
+    <SplashScreen />
+  )
+
+//  return (
+//   <Provider store={store}>
+//     <RootNavigation />
+// </Provider>
+//     );
 
   // if (isFirstLaunch === null) {
   //   return (<View style={styles.container}><Loading /></View>)

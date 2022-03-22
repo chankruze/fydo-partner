@@ -26,7 +26,7 @@ export default function ButtonComponent({label, color, backgroundColor = 'white'
 const styles = StyleSheet.create({
     button: {
         height: 48,
-        borderRadius: 5,
+        borderRadius: 10,
         paddingHorizontal: 5,
         marginTop: 5,
         justifyContent: 'center',
