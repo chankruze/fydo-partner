@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {StyleSheet, View, TextInput, Image, Text, TouchableOpacity, FlatList} from 'react-native';
-import { PRIMARY } from '../../assets/colors';
+import { PRIMARY, DARKBLACK, LIGHTBLUE } from '../../assets/colors';
 import BottomsheetIcon from './../../assets/icons/bottomsheet-icon.png';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -87,7 +87,7 @@ export default function AddTagsBottomSheet(){
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'white',
+        backgroundColor: '#f7f8fa',
         position: 'absolute',
         width: '100%',
         bottom: 0,
@@ -106,15 +106,18 @@ const styles = StyleSheet.create({
         borderRadius: 5
     },
     title: {
-        fontSize: 18,
-        fontWeight: '900',
-        color: 'black'
+        fontFamily: 'Gilroy-Bold',
+        color: DARKBLACK,
+        fontSize: 20,
+        marginBottom: 15,
     },
     label: {
         marginVertical: 10,
         lineHeight: 20,
-        color: 'lightgray',
-        letterSpacing: .5
+        letterSpacing: .5,
+        fontFamily: 'Gilroy-Medium',
+        fontSize: 13,
+        marginBottom: 15,
     },
     inputContainer: {
         height: 40,
@@ -135,15 +138,15 @@ const styles = StyleSheet.create({
         marginLeft: 20
     },
     addButtonLabel: {
-        fontWeight: 'bold',
         color: PRIMARY,
-        fontSize: 15
+        fontSize: 15,
+        fontFamily: 'Gilroy-Bold'
     },
     input: {
         flex: 1
     },
     submitButton: {
-        width: '70%',
+        width: '80%',
         backgroundColor: PRIMARY,
         height: 42,
         borderRadius: 5,
@@ -155,27 +158,30 @@ const styles = StyleSheet.create({
     submitButtonLabel: {
         color: 'white',
         fontSize: 15,
-        letterSpacing: .5
+        letterSpacing: .5,
+        fontFamily: 'Gilroy-Bold'
     },
     tags: {
         flexDirection: 'row',
         flexWrap: 'wrap'
     },
     tag: {
-        backgroundColor: '#F6FAFF',
+        backgroundColor: LIGHTBLUE,
         height: 40,
         paddingHorizontal: 10,
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'row',
         marginRight: 10,
-        marginTop: 10
+        marginTop: 10,
     },
     separator: {
         width: 10,
         borderRadius: 5
     },
     tagLabel: {
-        marginRight: 10
+        marginRight: 10,
+        color: PRIMARY,
+        fontFamily: 'Gilroy-Medium'
     }
 })

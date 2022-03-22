@@ -18,12 +18,7 @@ export default function AuthNavigation() {
         screenOptions={{headerShown: false}}>
         <Stack.Screen name="PhoneLogin" component={PhoneLoginScreen} />
         <Stack.Screen name="OTPVerify" component={OTPVerifyScreen} />
-        <Stack.Screen name="RegisterShop" component={RegisterShop} />
-        <Stack.Screen name="Maps" component={MapScreen} />
-        <Stack.Screen name="ShopDetails" component={ShopDetails} />
         <Stack.Screen name="Language" component={ChooseLanguage} />
-        <Stack.Screen name="MyShop" component={MyShop} />
-        <Stack.Screen name="ShopTiming" component={ShopTiming} />
       </Stack.Navigator>
   );
 }
