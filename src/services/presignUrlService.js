@@ -1,7 +1,6 @@
 import { GENERATE_PRESIGN_URL } from "../config/endpoints";
 
 export async function generatePresignUrl(token, fileNames){
-    console.log(fileNames)
     return fetch(GENERATE_PRESIGN_URL, {
         method: 'POST',
         headers: {
