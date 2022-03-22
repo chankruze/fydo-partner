@@ -33,7 +33,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     label: {
-        fontWeight: '600',
         fontSize: 17,
         fontFamily: 'Gilroy-SemiBold'
     },

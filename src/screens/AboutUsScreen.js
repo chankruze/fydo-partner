@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {ScrollView, StyleSheet, Text} from 'react-native';
+import { DARKBLACK } from '../assets/colors';
 import WithNetInfo from '../components/hoc/withNetInfo';
 
 class AboutUsScreen extends Component {
@@ -25,8 +26,9 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 17,
-    fontWeight: '500',
+    color: DARKBLACK,
     letterSpacing: .3,
+    fontFamily: 'Giroy-Medium',
     lineHeight: 25,
     paddingVertical: 10
   }

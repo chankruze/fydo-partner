@@ -14,8 +14,9 @@ import {
 import SelectDropdown from 'react-native-select-dropdown';
 import ButtonComponent from '../../components/ButtonComponent';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import { NavigationContainer } from '@react-navigation/native';
 
-const ShopDetails = () => {
+const ShopDetails = ({navigation}) => {
   const [parking, setParking] = useState(false);
   const [wheelchair, setWheelchair] = useState(false);
   const [foodCourt, setFoodCourt] = useState(false);
@@ -24,6 +25,10 @@ const ShopDetails = () => {
   const [premiumService, setPremiumService] = useState(false);
   const [salesExecutive, setSalesExecutive] = useState(false);
   const [homeDelivery, setHomeDelivery] = useState(false);
+
+  const next = ()=> {
+    navigation.navigate('ShopTiming')
+  }
   return (
     <SafeAreaView style={styles.container}>
       <View style={premiumService && styles.subContainer}>
@@ -202,6 +207,7 @@ const ShopDetails = () => {
           label="Next"
           color="white"
           backgroundColor={DARKBLUE}
+          onPress={next}
         />
       </View>
     </SafeAreaView>

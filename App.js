@@ -48,29 +48,26 @@ const App = () => {
     setIsFirstLaunch(false);
   };
 
-  //  return (
-  //   <NavigationContainer>
-  //     <AuthNavigation />
-  //   </NavigationContainer>
-  //  )
-  // return <MapScreen />
+ return (
+  <Provider store={store}>
+    <RootNavigation />
+</Provider>
+    );
+
   // if (isFirstLaunch === null) {
   //   return (<View style={styles.container}><Loading /></View>)
-  // } 
-  // else if (isFirstLaunch === true) {
+  // } else if (isFirstLaunch === true) {
   //   return (
   //     <View style={styles.container}>
   //       <OnboardingScreen handleFirstLaunch={handleFirstLaunch} />
   //     </View>
   //   );
-  // } 
-  // else {
-    return (
-      <Provider store={store}>
-        <RootNavigation />
-    </Provider>
-    );
+  // } else {
+  //   return (
+  //      <RootNavigation />
+  //   );
   // }
+ 
 };
 
 const styles = StyleSheet.create({
