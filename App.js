@@ -49,15 +49,15 @@ const App = () => {
     setIsFirstLaunch(false);
   };
 
-  return (
-    <SplashScreen />
-  )
+  // return (
+  //   <SplashScreen />
+  // )
 
-//  return (
-//   <Provider store={store}>
-//     <RootNavigation />
-// </Provider>
-//     );
+ return (
+  <Provider store={store}>
+    <RootNavigation />
+</Provider>
+    );
 
   // if (isFirstLaunch === null) {
   //   return (<View style={styles.container}><Loading /></View>)

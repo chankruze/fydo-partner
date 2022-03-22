@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {TouchableOpacity, StyleSheet, Text, View, FlatList, SafeAreaView} from 'react-native';
 import WithNetInfo from '../components/hoc/withNetInfo';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { PRIMARY } from '../assets/colors';
+import { DARKBLACK, PRIMARY } from '../assets/colors';
 
 const FAQS = [
   {
@@ -129,13 +129,16 @@ const styles = StyleSheet.create({
     backgroundColor: 'lightgrey'
   },
   question: {
-    fontWeight: '500',
     fontSize: 15,
-    flex: 1
+    flex: 1,
+    fontFamily: 'Gilroy-Medium',
+    color: DARKBLACK,
   },
   answer: {
     fontSize: 13,
-    marginTop: 10
+    marginTop: 10,
+    fontFamily: 'Gilroy-Medium',
+
   },
   row: {
     flexDirection: 'row',

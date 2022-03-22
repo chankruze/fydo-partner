@@ -184,8 +184,8 @@ const styles = StyleSheet.create({
     label: {
         marginLeft: 16,
         color: PRIMARY,
-        fontWeight: '500',
-        fontSize: 14
+        fontSize: 14,
+        fontFamily: 'Gilroy-Bold'
     },
     line: {
         height: .3,
