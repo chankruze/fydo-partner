@@ -52,8 +52,7 @@ class HomeScreen extends Component{
     }
 
     async callApis(){
-        let {user} = this.props; 
-        console.log("accessToken", user?.accessToken)
+        let {user} = this.props;
         try {
             const [shopStatusResponse, carouselsResponse ] = await Promise.all([
                 getShopStatus(user?.accessToken), getCarousels(user?.accessToken)

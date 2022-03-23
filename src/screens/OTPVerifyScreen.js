@@ -18,6 +18,7 @@ import {saveUserData} from '../utils/sharedPreferences';
 import ButtonComponent from '../components/ButtonComponent';
 import OTPTextInput from 'react-native-otp-textinput';
 import WithNetInfo from '../components/hoc/withNetInfo';
+import { SCREENS } from '../constants/authScreens';
 
 const HEIGHT = Dimensions.get('screen').height;
 
@@ -27,14 +28,16 @@ const mapDispatchToProps = function (dispatch) {
   };
 };
 
-const OTPVerifyScreen = ({route, navigation}) => {
+const OTPVerifyScreen = ({navigationData, navigation, handleNextScreen}) => {
+  const id = navigationData?.otpId;
   const [otp, setOtp] = useState(null);
-  const [otpId, setOtpId] = useState(route.params.otpId);
-  const {phoneNumber} = route.params.phoneNumber;
+  const [otpId, setOtpId] = useState(id);
+  const phoneNumber = navigationData?.phoneNumber;
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const otpInput = createRef();
+  console.log("234", otpId)
 
   const validateInput = () => {
     if (otp == null || otp.trim() == '') {
@@ -54,7 +57,10 @@ const OTPVerifyScreen = ({route, navigation}) => {
     setLoading(true);
     if (!validateInput()) return;
     try {
+      console.log(otpId);
+      console.log(otp)
       const response = await verifyLoginOTP(otpId, otp);
+      console.log("123", response)
       const {data} = response;
       setLoading(false);
       if (data.message) {
@@ -63,13 +69,15 @@ const OTPVerifyScreen = ({route, navigation}) => {
         setUser(data);
         saveUserData(data);
         if (data.profileComplete) {
-          navigation.navigate('Language');
+          handleNextScreen(SCREENS.LANGUAGE);
+          // navigation.navigate('Language');
           console.log('User Profile Complete, add suitable route');
         } else {
-          navigation.navigate('Language');
+          navigation.navigate('RegisterShop');
         }
       }
     } catch (error) {
+      console.log(error)
       if (error.message == 'Request failed with status code 403') {
         setError('Invalid OTP');
         setLoading(false);

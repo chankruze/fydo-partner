@@ -3,7 +3,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
+  StatusBar,
   View,
   Dimensions,
 } from 'react-native';
@@ -105,6 +105,10 @@ function RegisterShop({route, navigation}) {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <StatusBar  
+        barStyle="light-content"
+        backgroundColor={PRIMARY} 
+      />
       <View style={styles.contentContainer}>
         <View style={styles.information}>
           <MaterialComunityIcons
@@ -330,7 +334,7 @@ const commonstyles = {
 
 const styles = StyleSheet.create({
   container: {
-    height: '135%',
+    height: '130%',
     backgroundColor: 'white',
   },
   information: {

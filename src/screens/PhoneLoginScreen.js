@@ -23,11 +23,12 @@ import ButtonComponent from '../components/ButtonComponent';
 import WithNetInfo from '../components/hoc/withNetInfo';
 
 import {sendLoginOTP} from '../services/authService';
+import { SCREENS } from '../constants/authScreens';
 
 const HEIGHT = Dimensions.get('screen').height;
 const TAB_BAR_HEIGHT = 49;
 
-const PhoneLoginScreen = ({navigation}) => {
+const PhoneLoginScreen = ({navigation, handleNextScreen}) => {
   const [phoneNumber, setPhoneNumber] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -56,10 +57,11 @@ const PhoneLoginScreen = ({navigation}) => {
         const {otpId} = response?.data;
         setLoading(false);
         if (otpId) {
-          navigation.navigate('OTPVerify', {
-            phoneNumber: phoneNumber,
-            otpId: otpId,
-          });
+          // navigation.navigate('OTPVerify', {
+          //   phoneNumber: phoneNumber,
+          //   otpId: otpId,
+          // });
+          handleNextScreen(SCREENS.OTP_VERIFY, {phoneNumber: phoneNumber, otpId: otpId})
         }
       } catch (error) {
         console.log(error);
