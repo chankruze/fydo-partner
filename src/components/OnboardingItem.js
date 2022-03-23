@@ -31,15 +31,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
-    fontSize: 28,
+    fontSize: 26,
     marginBottom: 10,
     color: DARKBLUE,
     textAlign: 'center',
     fontFamily: 'Gilroy-Bold'
   },
   description: {
-    fontWeight: '500',
-    fontSize: 15,
+    fontSize: 16,
     color: DARKGREY,
     textAlign: 'center',
     lineHeight: 18,

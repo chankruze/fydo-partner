@@ -16,6 +16,8 @@ import {
   LIGHTBLACK,
   DARKBLACK,
   DARKBLUE,
+  LIGHTBLUE,
+  GREY_2,
 } from '../../assets/colors';
 import Octicons from 'react-native-vector-icons/Octicons';
 import {launchImageLibrary} from 'react-native-image-picker';
@@ -50,7 +52,9 @@ function RegisterShop({route, navigation}) {
   // const [phoneNumber, setPhoneNumber] = useState(route.params.phoneNumber);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [shopName, setShopName] = useState('');
-  const [address, setAddress] = useState(route.params ? route.params.address : null);
+  const [address, setAddress] = useState(
+    route.params ? route.params.address : null,
+  );
   const [pincode, setPincode] = useState('');
   const [website, setWebsite] = useState('');
   const [shopType, setShopType] = useState('');
@@ -99,9 +103,8 @@ function RegisterShop({route, navigation}) {
   };
 
   const next = () => {
-    if(isValidate())
-      navigation.navigate('ShopDetails');
-  }
+    if (isValidate()) navigation.navigate('ShopDetails');
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -128,7 +131,7 @@ function RegisterShop({route, navigation}) {
             value={ownerName}
             onChangeText={value => setOwnerName(value)}
             style={commonstyles.input}
-            placeholder="Shop Owner's name"
+            placeholder="Your name"
             placeholderTextColor={DARKGREY}
             left={<TextInput.Icon name="account" />}
             required
@@ -175,8 +178,8 @@ function RegisterShop({route, navigation}) {
           <TextInput
             value={address}
             disabled
-            multiline
-            style={[commonstyles.input, {borderBottomWidth: 0.5}]}
+            // multiline
+            style={[commonstyles.input, {borderBottomWidth: 0.5, borderBottomColor: GREY_2}]}
             placeholder="Shop address"
             placeholderTextColor={DARKGREY}
             left={
@@ -239,7 +242,12 @@ function RegisterShop({route, navigation}) {
               <EntypoIcon name="chevron-down" size={25} color={DARKBLACK} />
             )}
             buttonStyle={[commonstyles.input, {width: '90%', marginLeft: 0}]}
-            buttonTextStyle={{color: DARKGREY, textAlign: 'left'}}
+            buttonTextStyle={{
+              color: DARKGREY,
+              textAlign: 'left',
+              fontFamily: 'Gilroy-Medium',
+              fontSize: 16,
+            }}
             buttonTextAfterSelection={(selectedItem, index) => {
               // text represented after item is selected
               // if data array is an array of objects then return selectedItem.property to render after item is selected
@@ -253,18 +261,26 @@ function RegisterShop({route, navigation}) {
           />
         </View>
         <View style={styles.uploadImage}>
-          <Button
+          <TouchableOpacity
             onPress={pickImage}
-            style={{backgroundColor: GREY}}
-            icon="camera">
-            Front Image
-          </Button>
-          <Button
+            style={styles.transparentButton}>
+            <MaterialIcons
+              name="add-circle-outline"
+              size={22}
+              color={PRIMARY}
+            />
+            <Text style={styles.buttonText}>Add Front image</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
             onPress={pickImage}
-            style={{backgroundColor: GREY}}
-            icon="camera">
-            Back Image
-          </Button>
+            style={styles.transparentButton}>
+            <MaterialIcons
+              name="add-circle-outline"
+              size={22}
+              color={PRIMARY}
+            />
+            <Text style={styles.buttonText}>Add Back image</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.box}>
           <TextInput
@@ -293,7 +309,12 @@ function RegisterShop({route, navigation}) {
               <EntypoIcon name="chevron-down" size={25} color="#000" />
             )}
             buttonStyle={[commonstyles.input, {width: '100%', marginLeft: 0}]}
-            buttonTextStyle={{color: DARKGREY, textAlign: 'left'}}
+            buttonTextStyle={{
+              color: DARKGREY,
+              textAlign: 'left',
+              fontFamily: 'Gilroy-Medium',
+              fontSize: 16,
+            }}
             buttonTextAfterSelection={(selectedItem, index) => {
               // text represented after item is selected
               // if data array is an array of objects then return selectedItem.property to render after item is selected
@@ -327,14 +348,15 @@ function RegisterShop({route, navigation}) {
 const commonstyles = {
   input: {
     backgroundColor: 'transparent',
-    fontSize: 18,
+    fontSize: 16,
     paddingLeft: 10,
+    fontFamily: 'Gilroy-Medium',
   },
 };
 
 const styles = StyleSheet.create({
   container: {
-    height: '130%',
+    height: '150%',
     backgroundColor: 'white',
   },
   information: {
@@ -348,6 +370,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     fontFamily: 'Gilroy-Medium',
     color: 'black',
+    fontSize: 14,
   },
   input: {
     backgroundColor: 'transparent',
@@ -359,10 +382,9 @@ const styles = StyleSheet.create({
   },
   title: {
     color: DARKBLACK,
-    fontWeight: 'bold',
     fontSize: 22,
-    // textAlign: 'center',
     paddingLeft: 15,
+    fontFamily: 'Gilroy-Bold',
   },
   uploadImage: {
     flexDirection: 'row',
@@ -413,13 +435,11 @@ const styles = StyleSheet.create({
   footerOtherLabel: {
     fontSize: 12,
     color: PRIMARY,
-    fontWeight: '500',
     marginTop: 3,
   },
   subLabel: {
     color: LIGHTBLACK,
     fontSize: 13,
-    fontWeight: '500',
   },
   optionalLabel: {
     marginLeft: 5,
@@ -445,7 +465,6 @@ const styles = StyleSheet.create({
   uploadButtonLabel: {
     fontSize: 12,
     color: PRIMARY,
-    fontWeight: '600',
   },
   uploadIcon: {
     marginHorizontal: 20,
@@ -458,6 +477,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     fontSize: 13,
     color: DARKGREY,
+    fontFamily: 'Gilroy-Medium',
   },
   nextButton: {
     height: 48,
@@ -469,7 +489,7 @@ const styles = StyleSheet.create({
   },
   nextButtonLabel: {
     color: LIGHTBLACK,
-    fontWeight: '600',
+    fontFamily: 'Gilroy-Bold',
   },
   dobContainer: {
     height: 48,
@@ -502,8 +522,8 @@ const styles = StyleSheet.create({
   },
   boxLabel: {
     color: DARKGREY,
-    fontWeight: '500',
     fontSize: 13,
+    fontFamily: 'Gilroy-Medium',
   },
   arrowIcon: {
     marginLeft: 'auto',
@@ -511,6 +531,22 @@ const styles = StyleSheet.create({
   imagePath: {
     marginVertical: 5,
     fontSize: 12,
+  },
+  transparentButton: {
+    paddingVertical: 4,
+    backgroundColor: LIGHTBLUE,
+    borderRadius: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    width: '45%'
+  },
+  buttonText: {
+    fontFamily: 'Gilroy-Medium',
+    fontSize: 14,
+    color: DARKBLACK,
   },
 });
 

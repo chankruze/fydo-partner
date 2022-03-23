@@ -49,11 +49,21 @@ const App = () => {
     setIsFirstLaunch(false);
   };
 
+<<<<<<< HEAD
+=======
+  // return (
+  //   <SplashScreen />
+  // )
+>>>>>>> 945183753c0b92dbe83e717a380d8648d194e8a9
 
  return (
   <Provider store={store}>
     <RootNavigation />
+<<<<<<< HEAD
   </Provider>
+=======
+</Provider>
+>>>>>>> 945183753c0b92dbe83e717a380d8648d194e8a9
     );
 
   // if (isFirstLaunch === null) {
