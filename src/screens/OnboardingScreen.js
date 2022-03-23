@@ -13,7 +13,7 @@ import OnboardingItem from '../components/OnboardingItem';
 import Paginator from '../components/Paginator';
 import NextButton from '../components/NextButton';
 import SkipButton from '../components/SkipButton';
-import {GREY, GREY_2, GREY_3} from '../assets/colors';
+import {GREY, GREY_2, GREY_3, PRIMARY} from '../assets/colors';
 import BottomSheet, {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 import AuthNavigation from '../navigations/authNavigation';
 import {NavigationContainer} from '@react-navigation/native';
@@ -30,6 +30,10 @@ const OnboardingScreen = ({handleFirstLaunch}) => {
 
   const bottomSheetRef = createRef();
 
+  // React.useEffect(()=>{
+  //   console.log(currentIndex)
+  // }, [currentIndex])
+
   const viewableItemsChanged = useRef(({viewableItems}) => {
     setCurrentIndex(viewableItems[0].index);
   }).current;
@@ -44,17 +48,25 @@ const OnboardingScreen = ({handleFirstLaunch}) => {
   };
 
   const skip = () => {
-    handleFirstLaunch();
-    // setFinished(true);
+    // handleFirstLaunch();
+    setCurrentIndex(3);
+    setFinished(true);
   };
 
-  //   const viewConfig = useRef({viewAreaCoveragePercentThresold: 50}).current;
   return (
-    <View style={styles.container}>
+    <View style={(currentIndex == 3) ? styles.container2 : styles.container1}>
       <View style={styles.miniContainer}>
+        {currentIndex == 3 ? null : (
+          <View style={{alignSelf: 'flex-end', marginRight: 10, marginTop: 10}}>
+            <SkipButton skip={skip} />
+          </View>
+        )}
+
         <FlatList
           data={slides}
-          renderItem={({item}) => <OnboardingItem item={item} />}
+          renderItem={({item}) => (
+            <OnboardingItem item={item} index={currentIndex} finish = {skip}/>
+          )}
           horizontal
           showsHorizontalScrollIndicator={false}
           pagingEnabled
@@ -66,19 +78,18 @@ const OnboardingScreen = ({handleFirstLaunch}) => {
           )}
           scrollEventThrottle={32}
           onViewableItemsChanged={viewableItemsChanged}
-          // viewabilityConfig={viewConfig}
           ref={slidesRef}
         />
       </View>
       <Paginator data={slides} scrollX={scrollX} />
-      <View style={[styles.buttonContainer, {width: width * 0.9}]}>
+      {/* <View style={[styles.buttonContainer]}>
         <SkipButton skip={skip} />
         <NextButton
           scrollTo={scrollTo}
           percentage={(currentIndex + 1) * (100 / slides.length)}
         />
-      </View>
-      {/* {finished && (
+      </View> */}
+      {finished && (
         <BottomSheet
           ref={bottomSheetRef}
           snapPoints={snapPoints}
@@ -93,7 +104,7 @@ const OnboardingScreen = ({handleFirstLaunch}) => {
             </NavigationContainer>
           </BottomSheetScrollView>
         </BottomSheet>
-      )} */}
+      )}
     </View>
   );
 };
@@ -101,11 +112,17 @@ const OnboardingScreen = ({handleFirstLaunch}) => {
 export default OnboardingScreen;
 
 const styles = StyleSheet.create({
-  container: {
+  container1: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: GREY_3,
+    backgroundColor: 'white',
+  },
+  container2: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: PRIMARY,
   },
   miniContainer: {
     flex: 3,

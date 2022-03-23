@@ -53,25 +53,25 @@ const App = () => {
   //   <SplashScreen />
   // )
 
- return (
-  <Provider store={store}>
-    <RootNavigation />
-</Provider>
-    );
+//  return (
+//   <Provider store={store}>
+//     <RootNavigation />
+// </Provider>
+//     );
 
-  // if (isFirstLaunch === null) {
-  //   return (<View style={styles.container}><Loading /></View>)
-  // } else if (isFirstLaunch === true) {
-  //   return (
-  //     <View style={styles.container}>
-  //       <OnboardingScreen handleFirstLaunch={handleFirstLaunch} />
-  //     </View>
-  //   );
-  // } else {
-  //   return (
-  //      <RootNavigation />
-  //   );
-  // }
+  if (isFirstLaunch === null) {
+    return (<View style={styles.container}><Loading /></View>)
+  } else if (isFirstLaunch === true) {
+    return (
+      <View style={styles.container}>
+        <OnboardingScreen handleFirstLaunch={handleFirstLaunch} />
+      </View>
+    );
+  } else {
+    return (
+       <RootNavigation />
+    );
+  }
  
 };
 
