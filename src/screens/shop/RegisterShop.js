@@ -3,7 +3,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
+  StatusBar,
   View,
   Dimensions,
   TextInput,
@@ -111,6 +111,10 @@ function RegisterShop({route, navigation}) {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <StatusBar  
+        barStyle="light-content"
+        backgroundColor={PRIMARY} 
+      />
       <View style={styles.contentContainer}>
         <View style={styles.information}>
           <MaterialComunityIcons

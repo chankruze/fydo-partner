@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import OnboardingScreen from './src/screens/OnboardingScreen';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Provider } from 'react-redux';
 import store from './src/store';
 import SplashScreen from './src/screens/SplashScreen';
@@ -49,29 +49,28 @@ const App = () => {
     setIsFirstLaunch(false);
   };
 
-  // return (
-  //   <SplashScreen />
-  // )
+ 
 
-//  return (
-//   <Provider store={store}>
-//     <RootNavigation />
-// </Provider>
-//     );
 
-  if (isFirstLaunch === null) {
-    return (<View style={styles.container}><Loading /></View>)
-  } else if (isFirstLaunch === true) {
-    return (
-      <View style={styles.container}>
-        <OnboardingScreen handleFirstLaunch={handleFirstLaunch} />
-      </View>
+ return (
+  <Provider store={store}>
+    <RootNavigation />
+  </Provider>
     );
-  } else {
-    return (
-       <RootNavigation />
-    );
-  }
+
+  // if (isFirstLaunch === null) {
+  //   return (<View style={styles.container}><Loading /></View>)
+  // } else if (isFirstLaunch === true) {
+  //   return (
+  //     <View style={styles.container}>
+  //       <OnboardingScreen handleFirstLaunch={handleFirstLaunch} />
+  //     </View>
+  //   );
+  // } else {
+  //   return (
+  //      <RootNavigation />
+  //   );
+  // }
  
 };
 

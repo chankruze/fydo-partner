@@ -6,6 +6,8 @@ import {
   Animated,
   useWindowDimensions,
   Dimensions,
+  StatusBar,
+  Alert
 } from 'react-native';
 
 import slides from '../utils/slides';
@@ -14,19 +16,33 @@ import Paginator from '../components/Paginator';
 import NextButton from '../components/NextButton';
 import SkipButton from '../components/SkipButton';
 import {GREY, GREY_2, GREY_3, PRIMARY} from '../assets/colors';
-import BottomSheet, {BottomSheetScrollView} from '@gorhom/bottom-sheet';
-import AuthNavigation from '../navigations/authNavigation';
-import {NavigationContainer} from '@react-navigation/native';
+import {Modal} from 'react-native';
+import AuthNavigation from './../navigations/authNavigation';
+import PhoneLoginScreen from './PhoneLoginScreen';
+import OTPVerifyScreen from './OTPVerifyScreen';
+import ChooseLanguage from './ChooseLanguage';
+import { SCREENS } from '../constants/authScreens';
+import { connect } from 'react-redux';
 
 const HEIGHT = Dimensions.get('screen').height;
 
-const OnboardingScreen = ({handleFirstLaunch}) => {
+const mapStateToProps = (state) => {
+  return {
+    user: state?.userReducer?.user
+  }
+}
+
+
+const OnboardingScreen = (props) => {
+  let {navigation, user} = props;
+
+  const [navigationData, setNavigationData] = useState(null);
+  const [currentScreen, setCurrentScreen] = useState(SCREENS.PHONE_LOGIN)
   const {width} = useWindowDimensions();
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef(null);
-  const [finished, setFinished] = useState(false);
-  const snapPoints = [HEIGHT < 872 ? '60%' : '60', HEIGHT < 872 ? '60%' : '60'];
+  const [showBottomSheet, setShowBottomSheet] = useState(false);
 
   const bottomSheetRef = createRef();
 
@@ -42,17 +58,29 @@ const OnboardingScreen = ({handleFirstLaunch}) => {
     if (currentIndex < slides.length - 1) {
       slidesRef.current.scrollToIndex({index: currentIndex + 1});
     } else {
-      handleFirstLaunch();
+      // navigateToAuth();
+      setShowBottomSheet(true);
       // setFinished(true);
     }
   };
 
+  const handleNextScreen = (screen, data) => {
+    setCurrentScreen(screen);
+    setNavigationData(data);
+  }
+
   const skip = () => {
     // handleFirstLaunch();
     setCurrentIndex(3);
-    setFinished(true);
-  };
+  //   setFinished(true);
+  // };
 
+    // navigateToAuth();
+    setShowBottomSheet(true);
+    // setFinished(true);
+  };
+  
+  //   const viewConfig = useRef({viewAreaCoveragePercentThresold: 50}).current;
   return (
     <View style={(currentIndex == 3) ? styles.container2 : styles.container1}>
       <View style={styles.miniContainer}>
@@ -82,34 +110,30 @@ const OnboardingScreen = ({handleFirstLaunch}) => {
         />
       </View>
       <Paginator data={slides} scrollX={scrollX} />
-      {/* <View style={[styles.buttonContainer]}>
-        <SkipButton skip={skip} />
-        <NextButton
-          scrollTo={scrollTo}
-          percentage={(currentIndex + 1) * (100 / slides.length)}
-        />
-      </View> */}
-      {finished && (
-        <BottomSheet
-          ref={bottomSheetRef}
-          snapPoints={snapPoints}
-          animateOnMount
-          enableOverDrag
-          handleIndicatorStyle={{backgroundColor: GREY}}>
-          <BottomSheetScrollView
-            contentContainerStyle={{flex: 1}}
-            keyboardShouldPersistTaps="always">
-            <NavigationContainer>
-              <AuthNavigation />
-            </NavigationContainer>
-          </BottomSheetScrollView>
-        </BottomSheet>
-      )}
-    </View>
+      
+       <Modal
+          animationType="slide"
+          transparent={true}
+          visible={showBottomSheet}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+            setShowBottomSheet(false)
+          }}>
+            <StatusBar 
+              backgroundColor={'rgba(0, 0, 0, .3)'} 
+              barStyle="light-content"/>
+          <View style={{flex: 1, backgroundColor: 'rgba(0, 0, 0, .3)'}}></View>
+          
+         {currentScreen == SCREENS.PHONE_LOGIN && (<PhoneLoginScreen {...props} handleNextScreen={handleNextScreen}/>)}
+         {currentScreen == SCREENS.LANGUAGE && (<ChooseLanguage {...props} handleNextScreen={handleNextScreen}/>)}
+         {currentScreen == SCREENS.OTP_VERIFY && (<OTPVerifyScreen {...props} handleNextScreen={handleNextScreen} navigationData={navigationData}/>)}
+      </Modal>
+      </View>
+     
   );
 };
 
-export default OnboardingScreen;
+export default connect(mapStateToProps)(OnboardingScreen);
 
 const styles = StyleSheet.create({
   container1: {

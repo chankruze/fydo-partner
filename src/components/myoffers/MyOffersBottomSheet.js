@@ -39,7 +39,6 @@ export default function MyOffersBottomSheet({token, toggle}){
 
     const addTag = () => {
         tags.push(tag);
-        console.log(tags)
         setTags(tags);
         setTag(null);
     }
@@ -94,7 +93,6 @@ export default function MyOffersBottomSheet({token, toggle}){
                         method: 'PUT',
                         body: imageBody
                     })
-                    console.log("data", data)
                 }
                 const response = await addOffer(token, {
                     title: productName,

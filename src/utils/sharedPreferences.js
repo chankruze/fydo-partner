@@ -1,7 +1,6 @@
 import SharedPreferences from 'react-native-shared-preferences';
 
 export async function saveUserData(data){
-    console.log("Shared preferences " + JSON.stringify(data))
     await SharedPreferences.getItem("user", function(value){
         let profile = {...JSON.parse(value), ...data};
         SharedPreferences.setItem("user", JSON.stringify(profile));

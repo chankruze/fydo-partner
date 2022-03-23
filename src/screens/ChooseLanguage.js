@@ -81,9 +81,11 @@ export default connect(null, mapDispatchToProps)(ChooseLanguage);
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 20,
-    paddingTop: 30,
+    flex: 1,
     backgroundColor: 'white',
+    paddingVertical: 20,
+    paddingHorizontal: 15,
+    // minHeight: HEIGHT * 0.6,
     width: '100%',
     position: 'absolute',
     bottom: 0

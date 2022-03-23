@@ -14,11 +14,11 @@ const Stack = createNativeStackNavigator();
 export default function AuthNavigation() {
   return (
       <Stack.Navigator
-        initialRouteName="PhoneLoginScreen"
+        initialRouteName="RegisterShop"
         screenOptions={{headerShown: false}}>
-        <Stack.Screen name="PhoneLogin" component={PhoneLoginScreen} />
+        {/* <Stack.Screen name="PhoneLogin" component={PhoneLoginScreen} />
         <Stack.Screen name="OTPVerify" component={OTPVerifyScreen} />
-        <Stack.Screen name="Language" component={ChooseLanguage} />
+        <Stack.Screen name="Language" component={ChooseLanguage} /> */}
       </Stack.Navigator>
   );
 }

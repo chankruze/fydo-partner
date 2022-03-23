@@ -85,6 +85,20 @@ class HomeScreen extends Component {
     }
   }
 
+    async callApis(){
+        let {user} = this.props;
+        try {
+            const [shopStatusResponse, carouselsResponse ] = await Promise.all([
+                getShopStatus(user?.accessToken), getCarousels(user?.accessToken)
+            ]);
+            const shopStatusJson = await shopStatusResponse.json();
+            const carouselsJson = await carouselsResponse.json();
+            this.setState({carousels: carouselsJson, shopOpen: shopStatusJson?.isOpen})
+
+        } catch (error) {
+            console.log(error);
+        }
+      }
   async openShop() {
     let {user} = this.props;
     try {
@@ -143,6 +157,11 @@ class HomeScreen extends Component {
     navigation.navigate('Support');
   }
 
+    // navigateToMyOffers(){
+    //     this.setState({modalVisible: false});
+    //     let {navigation} = this.props;
+    //     navigation.navigate('MyOffers');
+    // }
   navigateToMyOffers() {
     let {navigation} = this.props;
     navigation.navigate('MyOffers');
