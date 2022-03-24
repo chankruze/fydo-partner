@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -23,7 +23,7 @@ import {
   GREY_3,
 } from '../../assets/colors';
 import Octicons from 'react-native-vector-icons/Octicons';
-import {launchImageLibrary} from 'react-native-image-picker';
+import { launchImageLibrary } from 'react-native-image-picker';
 import ButtonComponent from '../../components/ButtonComponent';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FontIsto from 'react-native-vector-icons/Fontisto';
@@ -35,7 +35,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialComunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import WithNetInfo from '../../components/hoc/withNetInfo';
 import SelectDropdown from 'react-native-select-dropdown';
-import {add, color} from 'react-native-reanimated';
+import { add, color } from 'react-native-reanimated';
 
 const HEIGHT = Dimensions.get('screen').height;
 
@@ -51,7 +51,7 @@ const options = {
   quality: 0.5,
 };
 
-function RegisterShop({route, navigation}) {
+function RegisterShop({ route, navigation }) {
   const [ownerName, setOwnerName] = useState('');
   // const [phoneNumber, setPhoneNumber] = useState(route.params.phoneNumber);
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -99,7 +99,7 @@ function RegisterShop({route, navigation}) {
   };
 
   const pickImage = () => {
-    launchImageLibrary(options, ({assets, didCancel}) => {
+    launchImageLibrary(options, ({ assets, didCancel }) => {
       if (assets) {
         console.log(assets);
       }
@@ -109,23 +109,23 @@ function RegisterShop({route, navigation}) {
   const next = () => {
     if (isValidate()) {
       let data = {
-        name: shopName,
+        name: ownerName,
         mobile: phoneNumber,
         type: shopType,
-        website: website,
-        pincode: pincode
+        // website: website,
+        // pincode: pincode
         // location: location
 
       }
-      navigation.navigate('ShopDetails', {data: data});
+      navigation.navigate('ShopDetails', { data: data });
     }
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <StatusBar  
+      <StatusBar
         barStyle="light-content"
-        backgroundColor={PRIMARY} 
+        backgroundColor={PRIMARY}
       />
       <View style={styles.contentContainer}>
         <View style={styles.information}>
@@ -179,7 +179,7 @@ function RegisterShop({route, navigation}) {
             multiline
             style={[
               commonstyles.input,
-              {width: '80%', },
+              { width: '80%', },
             ]}
             placeholder="Shop Address"
           />
@@ -216,13 +216,13 @@ function RegisterShop({route, navigation}) {
             renderDropdownIcon={() => (
               <EntypoIcon name="chevron-down" size={25} color={DARKBLACK} />
             )}
-            buttonStyle={[commonstyles.input, {width: '91%', marginLeft: 0}]}
+            buttonStyle={[commonstyles.input, { width: '91%', marginLeft: 0 }]}
             buttonTextStyle={{
               textAlign: 'left',
               fontFamily: 'Gilroy-Medium',
               fontSize: 15,
             }}
-            dropdownStyle={{borderRadius: 10}}
+            dropdownStyle={{ borderRadius: 10 }}
             buttonTextAfterSelection={(selectedItem, index) => {
               return selectedItem;
             }}
@@ -262,7 +262,7 @@ function RegisterShop({route, navigation}) {
             style={commonstyles.input}
           />
         </View>
-        
+
         <View style={styles.shoptype}>
           <SelectDropdown
             data={shopTypes}
@@ -274,8 +274,8 @@ function RegisterShop({route, navigation}) {
             renderDropdownIcon={() => (
               <EntypoIcon name="chevron-down" size={25} color="#000" />
             )}
-            dropdownStyle={{borderRadius: 10}}
-            buttonStyle={[commonstyles.input, {width: '100%', marginLeft: 0}]}
+            dropdownStyle={{ borderRadius: 10 }}
+            buttonStyle={[commonstyles.input, { width: '100%', marginLeft: 0 }]}
             buttonTextStyle={{
               color: DARKGREY,
               textAlign: 'left',
