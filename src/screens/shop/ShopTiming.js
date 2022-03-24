@@ -199,10 +199,42 @@ const ShopTiming = (props) => {
       });
   };
 
+  const renderImages = async () => {
+    let img = [], finalImages = [];
+    if (images.length > 0) {
+      images.map((i) => {
+        img.push(uuid.v4(i))
+      })
+
+      console.log("hj==>", img);
+      const imageResponse = await generatePresignUrl('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaG9wSWQiOiI2MWRmY2VjMTA3YjE0NzZlZGFlYzc3YzIiLCJsb2dpblRpbWUiOjE2NDgxMjYxODE0NzgsImlhdCI6MTY0ODEyNjE4MSwiZXhwIjoxNjUwNzU0MTgxfQ.Cxgfbs_A0R4W7ela7HcGv_8iHRhNqB1ObkKpcUG6LzQ'
+        , img);
+      const data = await imageResponse.json();
+      data.map((i) => {
+        finalImages.push({ uri: i?.split("?")[0] })
+      })
+      return finalImages;
+    } else {
+      return [];
+    }
+  }
+
   const submit = async () => {
-    console.log("er-->", individualTimings);
+    const finalImages = await renderImages();
+
+    const prevParams = props?.route?.params?.data;
+
     try {
-      // const response = await updateShop()
+      const params = {
+        name: prevParams.name,
+        mobile: prevParams.mobile,
+        type: prevParams.type,
+        timing: individualTimings,
+        images: finalImages
+      }
+
+      const response = await updateShop(params);
+
       // if (images.length > 0) {
       //   const imageResponse = await generatePresignUrl('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaG9wSWQiOiI2MWRmY2VjMTA3YjE0NzZlZGFlYzc3YzIiLCJsb2dpblRpbWUiOjE2NDgxMjYxODE0NzgsImlhdCI6MTY0ODEyNjE4MSwiZXhwIjoxNjUwNzU0MTgxfQ.Cxgfbs_A0R4W7ela7HcGv_8iHRhNqB1ObkKpcUG6LzQ'
       //     , [uuid.v4()]);
@@ -308,7 +340,6 @@ const ShopTiming = (props) => {
   };
 
   const setCloseStore = (item, data) => {
-    console.log("df-->", data);
     // list = individualTimings.map(item => {
     //   item.timings.startTime = d;
     //   return item;
@@ -316,7 +347,6 @@ const ShopTiming = (props) => {
   }
 
   const renderTimings = ({ item, index }) => {
-    console.log("df-->", checked[index]);
     return (
       <View
         style={{
