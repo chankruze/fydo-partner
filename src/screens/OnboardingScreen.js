@@ -84,6 +84,7 @@ const OnboardingScreen = (props) => {
   //   const viewConfig = useRef({viewAreaCoveragePercentThresold: 50}).current;
   return (
     <View style={(currentIndex == 3) ? styles.container2 : styles.container1}>
+      <StatusBar translucent={false} backgroundColor={PRIMARY}/>
       <View style={styles.miniContainer}>
         {currentIndex == 3 ? null : (
           <View style={{alignSelf: 'flex-end', marginRight: 10, marginTop: 10}}>

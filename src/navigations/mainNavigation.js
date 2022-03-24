@@ -6,10 +6,18 @@ import { useHeaderHeight } from '@react-navigation/elements';
 import NotificationScreen from '../screens/NotificationScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { PRIMARY } from '../assets/colors';
+import { connect } from 'react-redux';
 
 const Tab = createBottomTabNavigator();
 
-export default function MainNavigation(){
+const mapStateToProps = (state) => {
+  return {
+    language: state?.userReducer?.language,
+    user: state?.userReducer?.user
+  }
+}
+
+function MainNavigation({language, user}){
 
   const headerHeight = useHeaderHeight();
 
@@ -23,13 +31,14 @@ export default function MainNavigation(){
           screenOptions={{
             tabBarActiveTintColor: PRIMARY,
             tabBarInactiveTintColor: 'lightgrey',
-            tabBarShowLabel: false,
+            // tabBarShowLabel: false,
           }}>
           <Tab.Screen 
             name="Home" 
             component={HomeScreen}
             options={(({navigation}) => (
               {
+                title: user?.name,
                 tabBarIcon: ({ color, size, focused }) => (
                   <Ionicons 
                     name={focused ? "home": "home-outline"}
@@ -41,6 +50,10 @@ export default function MainNavigation(){
                   paddingBottom: 5
                 },
                 headerTintColor: PRIMARY,
+                headerTitleStyle: {
+                  fontSize: 15
+                },
+                tabBarLabel: language == 'HINDI'? 'घर': 'HOme' ,
                 headerRight: () => (
                   <TouchableOpacity
                     onPress={navigateToSetting.bind(this, navigation)}>
@@ -59,6 +72,7 @@ export default function MainNavigation(){
             name="Notification" 
             component={NotificationScreen}
             options={{
+              tabBarLabel: language == 'HINDI'? 'अधिसूचना': 'Notification' ,
               headerShown: true,
               tabBarIcon: ({ color, size, focused }) => (
                 <Ionicons 
@@ -83,6 +97,8 @@ export default function MainNavigation(){
         </Tab.Navigator>
       );
 }
+
+export default connect(mapStateToProps)(MainNavigation);
 
 const styles = StyleSheet.create({
   header: {

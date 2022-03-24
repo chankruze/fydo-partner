@@ -1,10 +1,17 @@
 import React, {Component} from 'react';
 import {ScrollView, StyleSheet, Text, Image, TextInput, TouchableOpacity, ActivityIndicator, ToastAndroid} from 'react-native';
+import { connect } from 'react-redux';
 import { PRIMARY } from '../assets/colors';
 import { refer } from '../services/referearnService';
 import ReferEarnImage from './../assets/images/referearn.png';
 
-export default class ReferAndEarnScreen extends Component{
+const mapStateToProps = (state) => {
+    return {
+        user: state?.userReducer?.user
+    }
+}
+
+class ReferAndEarnScreen extends Component{
     
     constructor(){
         super();
@@ -19,16 +26,17 @@ export default class ReferAndEarnScreen extends Component{
     }
 
     async onReferClick(){
+        let {user} = this.props;
         let {shopName, contactNumber} = this.state;
         try {
             this.setState({loading: true});
-            const data = await refer(shopName, contactNumber);
-
-            setTimeout(() => {
-                this.setState({loading: false});
-                ToastAndroid.show('Refered', ToastAndroid.SHORT);
-            }, 2000)
-            console.log(data);
+            const response = await refer(user?.accessToken, shopName, contactNumber);
+            const json = await response.json();
+            if(json){
+                ToastAndroid.show('Successfully refer', ToastAndroid.SHORT);
+                this.setState({shopName: null, contactNumber: null})
+            }
+            this.setState({loading: false});
         } catch (error) {
             console.log(error);
             this.setState({loading: false});
@@ -58,6 +66,7 @@ export default class ReferAndEarnScreen extends Component{
                     onChangeText={this.handleShopName}
                     placeholder="Shop name"
                     placeholderTextColor="gray"
+                    value={this.state.shopName}
                 />
                 <TextInput 
                     style={styles.input}
@@ -65,6 +74,8 @@ export default class ReferAndEarnScreen extends Component{
                     placeholder="Shop contact number"
                     placeholderTextColor="gray"
                     keyboardType="phone-pad"
+                    value={this.state.contactNumber}
+                    maxLength={10}
                 />
                 <TouchableOpacity 
                     activeOpacity={.8}
@@ -77,6 +88,8 @@ export default class ReferAndEarnScreen extends Component{
         )
     }
 }
+
+export default connect(mapStateToProps)(ReferAndEarnScreen);
 
 const styles = StyleSheet.create({
     container: {

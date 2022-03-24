@@ -1,4 +1,4 @@
-import { GET_CAROUSELS, GET_SHOP_STATUS, SHOP_STATUS_CHANGE, UPDATE_SHOP } from "../config/endpoints"
+import { GET_CAROUSELS, GET_MY_SHOP, GET_SHOP_STATUS, SHOP_STATUS_CHANGE, UPDATE_SHOP } from "../config/endpoints"
 
 export function getShopStatus(token){
     return fetch(GET_SHOP_STATUS, {
@@ -58,5 +58,15 @@ export function updateShop(token, data){
             "Content-Type": "application/json",
         },
         body: JSON.stringify(data)
+    })
+}
+
+export function getMyShop(token){
+    return fetch(GET_MY_SHOP, {
+        headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
     })
 }

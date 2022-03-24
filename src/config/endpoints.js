@@ -23,4 +23,6 @@ export const GENERATE_PRESIGN_URL = BASE + "aws-util/generate-presigned-url";
 
 export const FEEDBACK = BASE + "shop/form-response";
 
-export const UPDATE_SHOP = BASE + "shop/update"
+export const UPDATE_SHOP = BASE + "shop/update";
+export const GET_MY_SHOP = BASE + "shop/my-shop";
+export const REFER_EARN = BASE + "shop/form-response";

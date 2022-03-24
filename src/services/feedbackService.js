@@ -1,6 +1,6 @@
 import { FEEDBACK } from "../config/endpoints";
 
-export function feedback(userId, feedback, ratingCount){
+export function sendFeedback(token, feedback, ratingCount){
     return fetch(FEEDBACK, {
         method: 'POST',
         headers: {
@@ -9,7 +9,11 @@ export function feedback(userId, feedback, ratingCount){
             'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
-            fileNames: fileNames
+            "type": "FEEDBACK",
+            "response": {
+                "feedbackText": feedback,
+                "rating": ratingCount
+            }
         })
     })
 }

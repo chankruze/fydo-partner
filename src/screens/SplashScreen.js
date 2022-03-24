@@ -36,7 +36,7 @@ const SplashScreen = ({navigation, setUser}) => {
       else {
         navigation.navigate('OnBoarding');
       }
-    }, 5000)
+    }, 3000)
     return () => {
       clearTimeout(timeout)
     }

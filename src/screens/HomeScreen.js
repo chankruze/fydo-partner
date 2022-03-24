@@ -10,6 +10,7 @@ import {
   Switch,
   Modal,
   Pressable,
+  Image,
   KeyboardAvoidingView,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -25,7 +26,8 @@ import ReferEarnIcon from './../assets/icons/refer and earn.svg';
 import Share from 'react-native-share';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {connect} from 'react-redux';
-// import MyShopIcon from './../assets/icons/myshop.svg';
+import AddOfferIcon from './../assets/icons/addoffer.png';
+
 
 import WithNetInfo from '../components/hoc/withNetInfo';
 import AddTagsBottomSheet from '../components/home/AddTagsBottomSheet';
@@ -39,6 +41,7 @@ import {
 const mapStateToProps = state => {
   return {
     user: state?.userReducer?.user,
+    language: state?.userReducer?.language
   };
 };
 
@@ -68,7 +71,6 @@ class HomeScreen extends Component {
 
   async callApis() {
     let {user} = this.props;
-    console.log('accessToken', user?.accessToken);
     try {
       const [shopStatusResponse, carouselsResponse] = await Promise.all([
         getShopStatus(user?.accessToken),
@@ -104,7 +106,6 @@ class HomeScreen extends Component {
     try {
       const response = await openShop(user?.accessToken);
       const json = await response.json();
-      console.log(json);
       this.setState({shopOpen: json?.isOpen});
     } catch (error) {
       console.log(error);
@@ -204,6 +205,7 @@ class HomeScreen extends Component {
 
   render() {
     let {shopOpen, carousels} = this.state;
+    let {language} = this.props;
 
     return (
       <SafeAreaView style={styles.container}>
@@ -211,10 +213,7 @@ class HomeScreen extends Component {
         <Modal
           statusBarTranslucent
           transparent={true}
-          visible={this.state.modalVisible}
-          onRequestClose={() => {
-            console.log(12);
-          }}>
+          visible={this.state.modalVisible}>
           <TouchableOpacity
             activeOpacity={1}
             style={styles.modelContainer}
@@ -224,12 +223,12 @@ class HomeScreen extends Component {
                 style={styles.modalItem}
                 activeOpacity={0.9}
                 onPress={this.navigateToMyOffers}>
-                <View style={styles.modalIconContainer}>
-                  <MyShopIcon width={18} height={18} />
-                </View>
-                <View style={styles.modalLabelContainer}>
-                  <Text style={styles.modalLabel}>Add Offer</Text>
-                </View>
+                  <Image 
+                    source={AddOfferIcon}
+                    style={styles.addOfferIcon}/>
+                  <View style={styles.modalLabelContainer}>
+                    <Text style={styles.modalLabel}>{language == 'HINDI'? 'प्रस्ताव जोड़ें' : 'Add Offer'}</Text>
+                  </View>
               </TouchableOpacity>
               {/* <TouchableOpacity 
                                     style={styles.modalItem}
@@ -249,11 +248,11 @@ class HomeScreen extends Component {
             </View>
           </TouchableOpacity>
         </Modal>
-        {this.state.tagBottomSheetVisible && this.renderTagBottomSheet()}
+        {/* {this.state.tagBottomSheetVisible && this.renderTagBottomSheet()} */}
         <ScrollView>
           <StatusBar backgroundColor={PRIMARY} />
           <HomeSlider carousels={carousels} />
-          <View style={styles.shareCardContainer}>
+          {/* <View style={styles.shareCardContainer}>
             <TouchableOpacity style={styles.shareCard} onPress={this.shareCard}>
               <MaterialIcons name="card-giftcard" size={26} color={PRIMARY} />
               <View style={styles.cardLabelContainer}>
@@ -277,7 +276,7 @@ class HomeScreen extends Component {
                 <Text style={styles.cardButtonLabel}>Tap to Add</Text>
               </View>
             </TouchableOpacity>
-          </View>
+          </View> */}
           <View style={styles.line} />
           <View style={styles.row}>
             <TouchableOpacity 
@@ -286,7 +285,7 @@ class HomeScreen extends Component {
               <View style={styles.button}>
                 <MyShopIcon width={24} height={24} />
               </View>
-              <Text style={styles.label}>My Shops</Text>
+              <Text style={styles.label}>{language == 'HINDI' ? 'मेरी दुकान' : 'My Shops'}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.buttonContainer}
@@ -294,7 +293,7 @@ class HomeScreen extends Component {
               <View style={styles.button}>
                 <OfferIcon width={24} height={24} />
               </View>
-              <Text style={styles.label}>My Offers</Text>
+              <Text style={styles.label}>{language == 'HINDI' ? 'मेरे प्रस्ताव' : 'My Offers'}</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.row}>
@@ -302,18 +301,18 @@ class HomeScreen extends Component {
               onPress={this.navigateToSupportScreen}
               style={styles.support}>
               <SupportIcon width={24} height={24} />
-              <Text style={styles.otherLabel}>Support and service</Text>
+              <Text style={styles.otherLabel}>{language == 'HINDI'? 'समर्थन और सेवा' : 'Support and service'}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={this.navigateToReferEarn}
               style={styles.referEarn}>
               <SupportIcon width={24} height={24} />
-              <Text style={styles.otherLabel}>Refer and earn</Text>
+              <Text style={styles.otherLabel}>{language == 'HINDI'? 'देखें और कमाएं': 'Refer and earn'}</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.line} />
           <View style={styles.shopStatusRow}>
-            <Text style={styles.shopStatusLabel}>Your shop status</Text>
+            <Text style={styles.shopStatusLabel}>{language == 'HINDI'? 'आपकी दुकान की स्थिति': 'Your shop status'}</Text>
             <Switch
               style={styles.switchButton}
               value={shopOpen}
@@ -326,7 +325,7 @@ class HomeScreen extends Component {
                 {backgroundColor: shopOpen ? '#66bb6a' : '#ff7043'},
               )}>
               <Text style={styles.shopStatusOtherLabel}>
-                {shopOpen ? 'Opened' : 'Closed'}
+                {shopOpen ? (language == 'HINDI' ? 'खुल गया' : 'Opened') : (language == 'HINDI' ? 'बंद किया हुआ' : 'Closed')}
               </Text>
             </View>
           </View>
@@ -454,7 +453,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Gilroy-Medium',
   },
   modelContainer: {
-    backgroundColor: 'rgba(255, 255, 255, .8)',
+    backgroundColor: 'rgba(0, 0, 0, .3)',
     height: '100%',
   },
   modalItems: {
@@ -585,4 +584,8 @@ const styles = StyleSheet.create({
   bottomSheet: {
     flexWrap: 'wrap',
   },
+  addOfferIcon: {
+    width: 40,
+    height: 40
+  }
 });
