@@ -6,6 +6,7 @@ import {
   StatusBar,
   View,
   Dimensions,
+  TouchableOpacity
 } from 'react-native';
 import {
   PRIMARY,
@@ -103,7 +104,18 @@ function RegisterShop({route, navigation}) {
   };
 
   const next = () => {
-    if (isValidate()) navigation.navigate('ShopDetails');
+    if (isValidate()) {
+      let data = {
+        name: shopName,
+        mobile: phoneNumber,
+        type: shopType,
+        website: website,
+        pincode: pincode
+        // location: location
+
+      }
+      navigation.navigate('ShopDetails', {data: data});
+    }
   };
 
   return (
@@ -303,6 +315,7 @@ function RegisterShop({route, navigation}) {
             data={shopTypes}
             onSelect={(selectedItem, index) => {
               console.log(selectedItem, index);
+              setShopType(selectedItem)
             }}
             defaultValueByIndex={0}
             renderDropdownIcon={() => (

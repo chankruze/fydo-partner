@@ -62,6 +62,7 @@ const OnboardingScreen = (props) => {
 
   const handleNextScreen = (screen, data) => {
     setCurrentScreen(screen);
+    console.log("navigationData", data )
     setNavigationData(data);
   }
 

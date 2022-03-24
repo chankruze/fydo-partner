@@ -85,21 +85,6 @@ class HomeScreen extends Component {
     }
   }
 
-<<<<<<< HEAD
-    async callApis(){
-        let {user} = this.props;
-        try {
-            const [shopStatusResponse, carouselsResponse ] = await Promise.all([
-                getShopStatus(user?.accessToken), getCarousels(user?.accessToken)
-            ]);
-            const shopStatusJson = await shopStatusResponse.json();
-            const carouselsJson = await carouselsResponse.json();
-            this.setState({carousels: carouselsJson, shopOpen: shopStatusJson?.isOpen})
-
-        } catch (error) {
-            console.log(error);
-        }
-=======
   async openShop() {
     let {user} = this.props;
     try {
@@ -109,7 +94,6 @@ class HomeScreen extends Component {
       this.setState({shopOpen: json?.isOpen});
     } catch (error) {
       console.log(error);
->>>>>>> 945183753c0b92dbe83e717a380d8648d194e8a9
     }
   }
 
@@ -159,18 +143,10 @@ class HomeScreen extends Component {
     navigation.navigate('Support');
   }
 
-<<<<<<< HEAD
-    navigateToMyOffers(){
-        this.setState({modalVisible: false});
-        let {navigation} = this.props;
-        navigation.navigate('MyOffers');
-    }
-=======
   navigateToMyOffers() {
     let {navigation} = this.props;
     navigation.navigate('MyOffers');
   }
->>>>>>> 945183753c0b92dbe83e717a380d8648d194e8a9
 
   triggerTagModal() {
     this.setState(prevState => {
@@ -225,21 +201,6 @@ class HomeScreen extends Component {
             style={styles.modelContainer}
             onPress={() => this.setState({modalVisible: false})}>
             <View style={styles.modalItems}>
-              {/* <TouchableOpacity 
-                                    style={styles.modalItem}
-                                    activeOpacity={.9}>
-                                    <View style={styles.modalIconContainer}>
-                                        <MyShopIcon 
-                                            width={18}
-                                            height={18}
-                                        />
-                                    </View>
-                                    <View style={styles.modalLabelContainer}>
-                                        <Text style={styles.modalLabel}>
-                                            Add new shop
-                                        </Text>
-                                    </View>
-                                </TouchableOpacity> */}
               <TouchableOpacity
                 style={styles.modalItem}
                 activeOpacity={0.9}
@@ -251,121 +212,6 @@ class HomeScreen extends Component {
                   <Text style={styles.modalLabel}>Add Offer</Text>
                 </View>
               </TouchableOpacity>
-              {/* <TouchableOpacity 
-                                    style={styles.modalItem}
-                                    activeOpacity={.9}>
-                                    <View style={styles.modalIconContainer}>
-                                        <MyShopIcon 
-                                            width={18}
-                                            height={18}
-                                        />
-                                    </View>
-                                    <View style={styles.modalLabelContainer}>
-                                        <Text style={styles.modalLabel}>
-                                            Add Sale
-                                        </Text>
-                                    </View>
-                                </TouchableOpacity> */}
-<<<<<<< HEAD
-                           </View>
-                        </TouchableOpacity>
-                </Modal>
-                {this.state.tagBottomSheetVisible && this.renderTagBottomSheet()}
-                <ScrollView>
-                    <StatusBar backgroundColor={PRIMARY}/>
-                    <HomeSlider carousels={carousels}/>
-                    {/* <View style={styles.shareCardContainer}>
-                        <TouchableOpacity 
-                            style={styles.shareCard}
-                            onPress={this.shareCard}>
-                            <MaterialIcons 
-                                name='card-giftcard'
-                                size={26}
-                                color={PRIMARY}
-                            />
-                            <View style={styles.cardLabelContainer}>
-                                <Text style={styles.cardLabel}>Share your business card to get more customer!</Text>
-                                <Text style={styles.cardButtonLabel}>Tap to share</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.line}/> */}
-                    {/* <View style={styles.addTagsCard}>
-                        <TouchableOpacity 
-                            style={styles.shareCard}
-                            onPress={this.triggerTagModal}>
-                            <Ionicons 
-                                name='pricetag-outline'
-                                size={26}
-                                color={PRIMARY}
-                            />
-                            <View style={styles.cardLabelContainer}>
-                                <Text style={styles.cardLabel}>Add Tags to your shops to make user search you</Text>
-                                <Text style={styles.cardButtonLabel}>Tap to Add</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View> */}
-                    <View style={styles.line}/>
-                    <View style={styles.row}>
-                        <TouchableOpacity style={styles.buttonContainer}>
-                            <View
-                                style={styles.button}>
-                                <MyShopIcon 
-                                    width={24}
-                                    height={24}
-                                />
-                            </View>
-                            <Text style={styles.label}>My Shops</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity 
-                            style={styles.buttonContainer}
-                            onPress={this.navigateToMyOffers}>
-                            <View
-                                style={styles.button}>
-                                <OfferIcon 
-                                    width={24}
-                                    height={24}
-                                />
-                            </View>
-                            <Text style={styles.label}>My Offers</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.row}>
-                        <TouchableOpacity
-                            onPress={this.navigateToSupportScreen} 
-                            style={styles.support}>
-                            <SupportIcon 
-                                width={24}
-                                height={24}/>
-                            <Text style={styles.otherLabel}>Support and service</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={this.navigateToReferEarn} 
-                            style={styles.referEarn}>
-                            <SupportIcon 
-                                width={24}
-                                height={24}/>
-                            <Text style={styles.otherLabel}>Refer and earn</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.line}/>
-                    <View style={styles.shopStatusRow}>
-                        <Text style={styles.shopStatusLabel}>Your shop status</Text>
-                        <Switch
-                            style={styles.switchButton}
-                            value={shopOpen}
-                            thumbColor={shopOpen ? PRIMARY : 'lightgrey'}
-                            onValueChange={shopOpen? this.closeShop : this.openShop}/>
-                        <View style={Object.assign({...styles.shopStatus}, {backgroundColor: shopOpen? '#66bb6a': '#ff7043'})}>
-                            <Text style={styles.shopStatusOtherLabel}>{shopOpen ? 'Opened': 'Closed'}</Text>
-                        </View>
-                    </View>
-                    <View style={styles.line}/>
-                </ScrollView>
-            </SafeAreaView>
-        )
-    }
-=======
             </View>
           </TouchableOpacity>
         </Modal>
@@ -400,7 +246,9 @@ class HomeScreen extends Component {
           </View>
           <View style={styles.line} />
           <View style={styles.row}>
-            <TouchableOpacity style={styles.buttonContainer}>
+            <TouchableOpacity 
+              style={styles.buttonContainer}
+              onPress={() => this.props?.navigation?.navigate('MyShop')}>
               <View style={styles.button}>
                 <MyShopIcon width={24} height={24} />
               </View>
@@ -453,7 +301,6 @@ class HomeScreen extends Component {
       </SafeAreaView>
     );
   }
->>>>>>> 945183753c0b92dbe83e717a380d8648d194e8a9
 }
 
 export default connect(mapStateToProps)(WithNetInfo(HomeScreen));

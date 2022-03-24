@@ -11,12 +11,11 @@ import {
   GREY,
   GREY_2,
 } from '../../assets/colors';
-import SelectDropdown from 'react-native-select-dropdown';
+
 import ButtonComponent from '../../components/ButtonComponent';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import { NavigationContainer } from '@react-navigation/native';
 
-const ShopDetails = ({navigation}) => {
+const ShopDetails = ({navigation, route}) => {
   const [parking, setParking] = useState(false);
   const [wheelchair, setWheelchair] = useState(false);
   const [foodCourt, setFoodCourt] = useState(false);
@@ -27,7 +26,7 @@ const ShopDetails = ({navigation}) => {
   const [homeDelivery, setHomeDelivery] = useState(false);
 
   const next = ()=> {
-    navigation.navigate('ShopTiming')
+    navigation.navigate('ShopTiming', {data: route?.params?.data})
   }
   return (
     <SafeAreaView style={styles.container}>

@@ -73,12 +73,12 @@ export default function MainNavigation(){
               headerStyle: {
                 backgroundColor: PRIMARY,
               },
-              headerTitle: (props) => (
-                <View style={styles.titleContainer}>
-                  <Text style={styles.title}>Notifications</Text>
-                  <Text style={styles.label}>1 New Notification</Text>
-                </View>
-              )
+              // headerTitle: (props) => (
+              //   <View style={styles.titleContainer}>
+              //     <Text style={styles.title}>Notifications</Text>
+              //     <Text style={styles.label}>1 New Notification</Text>
+              //   </View>
+              // )
             }} />
         </Tab.Navigator>
       );

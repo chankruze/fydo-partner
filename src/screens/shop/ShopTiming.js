@@ -35,11 +35,19 @@ import AddTags from './AddTags';
 import AddBreaks from './AddBreaksBottomSheet';
 import AddTagsBottomSheet from '../../components/home/AddTagsBottomSheet';
 import AddBreaksBottomSheet from './AddBreaksBottomSheet';
+import { updateShop } from '../../services/shopService';
+import { connect } from 'react-redux';
 
 const HEIGHT = Dimensions.get('screen').height;
 
 const snapPoints = [HEIGHT < 872 ? '60%' : '60', HEIGHT < 872 ? '70%' : '70'];
 const bottomSheetRef = createRef();
+
+const mapStateToProps = (state) => {
+  return {
+    user: state?.userReducer?.user
+  }
+}
 
 const ShopTiming = () => {
   let rbSheet = useRef();
@@ -145,10 +153,7 @@ const ShopTiming = () => {
             uri:
               Platform.OS === 'android'
                 ? i.path
-                : i.path.replace('file://', ''),
-            width: i.width,
-            height: i.height,
-            mime: i.mime,
+                : i.path.replace('file://', '')
           };
         });
 
@@ -181,9 +186,6 @@ const ShopTiming = () => {
               Platform.OS === 'android'
                 ? i.path
                 : i.path.replace('file://', ''),
-            width: i.width,
-            height: i.height,
-            mime: i.mime,
           };
         });
         const newImages = [...images, ...data];
@@ -193,6 +195,15 @@ const ShopTiming = () => {
         console.log(' Error fetching images from gallery ', err);
       });
   };
+
+  const submit = async () => {
+      try {
+        // const response = await updateShop()
+        console.log(images)
+      } catch (error) {
+        
+      }
+  }
 
   const renderImage = image => {
     return (
@@ -435,6 +446,7 @@ const ShopTiming = () => {
             label="Done"
             color="white"
             backgroundColor={PRIMARY}
+            onPress={submit}
           />
         </View>
         <View style={styles.footer}>
@@ -505,7 +517,7 @@ const ShopTiming = () => {
   );
 };
 
-export default ShopTiming;
+export default connect(mapStateToProps)(ShopTiming);
 
 const styles = StyleSheet.create({
   container: {

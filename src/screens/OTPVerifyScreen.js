@@ -37,7 +37,6 @@ const OTPVerifyScreen = ({navigationData, navigation, handleNextScreen}) => {
   const [loading, setLoading] = useState(false);
 
   const otpInput = createRef();
-  console.log("234", otpId)
 
   const validateInput = () => {
     if (otp == null || otp.trim() == '') {
@@ -57,10 +56,8 @@ const OTPVerifyScreen = ({navigationData, navigation, handleNextScreen}) => {
     setLoading(true);
     if (!validateInput()) return;
     try {
-      console.log(otpId);
-      console.log(otp)
-      const response = await verifyLoginOTP(otpId, otp);
-      console.log("123", response)
+      console.log(otpId || id, otp)
+      const response = await verifyLoginOTP(otpId || id, otp);
       const {data} = response;
       setLoading(false);
       if (data.message) {
