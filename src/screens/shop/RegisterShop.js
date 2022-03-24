@@ -6,11 +6,7 @@ import {
   StatusBar,
   View,
   Dimensions,
-<<<<<<< HEAD
-  TouchableOpacity
-=======
   TextInput,
->>>>>>> 35ba68ccf55b451a80824e087a3c292af03a41b8
 } from 'react-native';
 import {
   PRIMARY,
