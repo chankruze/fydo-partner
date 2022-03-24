@@ -233,7 +233,8 @@ const ShopTiming = (props) => {
         images: finalImages
       }
 
-      const response = await updateShop(params);
+      const response = await updateShop('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaG9wSWQiOiI2MWRmY2VjMTA3YjE0NzZlZGFlYzc3YzIiLCJsb2dpblRpbWUiOjE2NDgxMjYxODE0NzgsImlhdCI6MTY0ODEyNjE4MSwiZXhwIjoxNjUwNzU0MTgxfQ.Cxgfbs_A0R4W7ela7HcGv_8iHRhNqB1ObkKpcUG6LzQ', params);
+      console.log("sd-->", await response.json());
 
       // if (images.length > 0) {
       //   const imageResponse = await generatePresignUrl('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaG9wSWQiOiI2MWRmY2VjMTA3YjE0NzZlZGFlYzc3YzIiLCJsb2dpblRpbWUiOjE2NDgxMjYxODE0NzgsImlhdCI6MTY0ODEyNjE4MSwiZXhwIjoxNjUwNzU0MTgxfQ.Cxgfbs_A0R4W7ela7HcGv_8iHRhNqB1ObkKpcUG6LzQ'
