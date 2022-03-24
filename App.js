@@ -49,6 +49,7 @@ const App = () => {
     setIsFirstLaunch(false);
   };
 
+<<<<<<< HEAD
   // return (
   //   <SplashScreen />
   // )
@@ -56,6 +57,14 @@ const App = () => {
  return (
   <Provider store={store}>
       <RootNavigation />
+=======
+ 
+
+
+ return (
+  <Provider store={store}>
+    <RootNavigation />
+>>>>>>> 35ba68ccf55b451a80824e087a3c292af03a41b8
   </Provider>
     );
 

@@ -146,8 +146,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     // minHeight: HEIGHT * 0.6,
     width: '100%',
-    position: 'absolute',
-    bottom: 0
   },
   title: {
     color: LIGHTBLACK,

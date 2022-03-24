@@ -85,6 +85,20 @@ class HomeScreen extends Component {
     }
   }
 
+    async callApis(){
+        let {user} = this.props;
+        try {
+            const [shopStatusResponse, carouselsResponse ] = await Promise.all([
+                getShopStatus(user?.accessToken), getCarousels(user?.accessToken)
+            ]);
+            const shopStatusJson = await shopStatusResponse.json();
+            const carouselsJson = await carouselsResponse.json();
+            this.setState({carousels: carouselsJson, shopOpen: shopStatusJson?.isOpen})
+
+        } catch (error) {
+            console.log(error);
+        }
+      }
   async openShop() {
     let {user} = this.props;
     try {
@@ -143,6 +157,11 @@ class HomeScreen extends Component {
     navigation.navigate('Support');
   }
 
+    // navigateToMyOffers(){
+    //     this.setState({modalVisible: false});
+    //     let {navigation} = this.props;
+    //     navigation.navigate('MyOffers');
+    // }
   navigateToMyOffers() {
     let {navigation} = this.props;
     navigation.navigate('MyOffers');
@@ -212,6 +231,21 @@ class HomeScreen extends Component {
                   <Text style={styles.modalLabel}>Add Offer</Text>
                 </View>
               </TouchableOpacity>
+              {/* <TouchableOpacity 
+                                    style={styles.modalItem}
+                                    activeOpacity={.9}>
+                                    <View style={styles.modalIconContainer}>
+                                        <MyShopIcon 
+                                            width={18}
+                                            height={18}
+                                        />
+                                    </View>
+                                    <View style={styles.modalLabelContainer}>
+                                        <Text style={styles.modalLabel}>
+                                            Add Sale
+                                        </Text>
+                                    </View>
+                                </TouchableOpacity> */}
             </View>
           </TouchableOpacity>
         </Modal>

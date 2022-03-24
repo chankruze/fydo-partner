@@ -137,9 +137,9 @@ const styles = StyleSheet.create({
     info: {
         alignSelf: 'center',
         marginTop: 15,
-        fontWeight: 'bold',
         fontSize: 16,
-        letterSpacing: .2
+        letterSpacing: .2,
+        fontFamily: 'Gilroy-Bold'
     },
     notifications: {
         marginTop: 10

@@ -15,7 +15,7 @@ import OnboardingItem from '../components/OnboardingItem';
 import Paginator from '../components/Paginator';
 import NextButton from '../components/NextButton';
 import SkipButton from '../components/SkipButton';
-import {GREY, GREY_2, GREY_3} from '../assets/colors';
+import {GREY, GREY_2, GREY_3, PRIMARY} from '../assets/colors';
 import {Modal} from 'react-native';
 import AuthNavigation from './../navigations/authNavigation';
 import PhoneLoginScreen from './PhoneLoginScreen';
@@ -46,6 +46,10 @@ const OnboardingScreen = (props) => {
 
   const bottomSheetRef = createRef();
 
+  // React.useEffect(()=>{
+  //   console.log(currentIndex)
+  // }, [currentIndex])
+
   const viewableItemsChanged = useRef(({viewableItems}) => {
     setCurrentIndex(viewableItems[0].index);
   }).current;
@@ -67,6 +71,11 @@ const OnboardingScreen = (props) => {
   }
 
   const skip = () => {
+    // handleFirstLaunch();
+    setCurrentIndex(3);
+  //   setFinished(true);
+  // };
+
     // navigateToAuth();
     setShowBottomSheet(true);
     // setFinished(true);
@@ -74,11 +83,19 @@ const OnboardingScreen = (props) => {
   
   //   const viewConfig = useRef({viewAreaCoveragePercentThresold: 50}).current;
   return (
-    <View style={styles.container}>
+    <View style={(currentIndex == 3) ? styles.container2 : styles.container1}>
       <View style={styles.miniContainer}>
+        {currentIndex == 3 ? null : (
+          <View style={{alignSelf: 'flex-end', marginRight: 10, marginTop: 10}}>
+            <SkipButton skip={skip} />
+          </View>
+        )}
+
         <FlatList
           data={slides}
-          renderItem={({item}) => <OnboardingItem item={item} />}
+          renderItem={({item}) => (
+            <OnboardingItem item={item} index={currentIndex} finish = {skip}/>
+          )}
           horizontal
           showsHorizontalScrollIndicator={false}
           pagingEnabled
@@ -90,19 +107,12 @@ const OnboardingScreen = (props) => {
           )}
           scrollEventThrottle={32}
           onViewableItemsChanged={viewableItemsChanged}
-          // viewabilityConfig={viewConfig}
           ref={slidesRef}
         />
       </View>
       <Paginator data={slides} scrollX={scrollX} />
-      <View style={[styles.buttonContainer, {width: width * 0.9}]}>
-        <SkipButton skip={skip} />
-        <NextButton
-          scrollTo={scrollTo}
-          percentage={(currentIndex + 1) * (100 / slides.length)}
-        />
-      </View>
-      <Modal
+      
+       <Modal
           animationType="slide"
           transparent={true}
           visible={showBottomSheet}
@@ -119,18 +129,25 @@ const OnboardingScreen = (props) => {
          {currentScreen == SCREENS.LANGUAGE && (<ChooseLanguage {...props} handleNextScreen={handleNextScreen}/>)}
          {currentScreen == SCREENS.OTP_VERIFY && (<OTPVerifyScreen {...props} handleNextScreen={handleNextScreen} navigationData={navigationData}/>)}
       </Modal>
-    </View>
+      </View>
+     
   );
 };
 
 export default connect(mapStateToProps)(OnboardingScreen);
 
 const styles = StyleSheet.create({
-  container: {
+  container1: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: GREY_3,
+    backgroundColor: 'white',
+  },
+  container2: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: PRIMARY,
   },
   miniContainer: {
     flex: 3,
