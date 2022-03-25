@@ -594,15 +594,14 @@ const ShopTiming = (props) => {
         </RBSheet>
         {addTags && (
           <View>
-            <AddTagsBottomSheet />
-
+              <AddTagsBottomSheet handleClosePress={handleClosePress}/>
           </View>
 
         )}
         {addBreaks && (
-          <View>
-            <AddBreaksBottomSheet />
-          </View>
+         <View>
+           <AddBreaksBottomSheet handleClosePress={handleClosePress}/>
+         </View>
         )}
       </SafeAreaView>
     </ScrollView>

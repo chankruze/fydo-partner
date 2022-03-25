@@ -15,8 +15,9 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {set} from 'react-native-reanimated';
 import {Checkbox} from 'react-native-paper';
+import ButtonComponent from '../../components/ButtonComponent';
 
-export default function AddBreaksBottomSheet() {
+export default function AddBreaksBottomSheet({handleClosePress}) {
   const onStartShouldSetResponder = () => {
     return true;
   };
@@ -62,7 +63,6 @@ export default function AddBreaksBottomSheet() {
         It is a time like that of lunch hour or something that you considered as
         break for your shop
       </Text>
-
 
       {/* This could be done using FlatList but never mind :( */}
 
@@ -110,7 +110,7 @@ export default function AddBreaksBottomSheet() {
           </View>
         </View>
         <View style={styles.right}>
-        <View style={styles.checkboxContainer}>
+          <View style={styles.checkboxContainer}>
             <Text>Tuesday</Text>
             <Checkbox
               color={PRIMARY}
@@ -185,9 +185,14 @@ export default function AddBreaksBottomSheet() {
           />
         </View>
       </View>
-      <TouchableOpacity style={styles.submitButton}>
-        <Text style={styles.submitButtonLabel}>Submit</Text>
-      </TouchableOpacity>
+      <View style={styles.submitButton}>
+        <ButtonComponent
+          label="Submit"
+          color="white"
+          backgroundColor={PRIMARY}
+          onPress={handleClosePress}
+        />
+      </View>
     </View>
   );
 }
@@ -269,20 +274,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   submitButton: {
-    width: '80%',
-    backgroundColor: PRIMARY,
-    height: 42,
-    borderRadius: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
     marginTop: 40,
+    width: '80%',
     alignSelf: 'center',
-  },
-  submitButtonLabel: {
-    color: 'white',
-    fontSize: 15,
-    letterSpacing: 0.5,
-    fontFamily: 'Gilroy-Bold',
   },
 
   separator: {
@@ -296,15 +290,15 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   days: {
-      flexDirection: 'row',
-      width: '100%',
-      justifyContent: 'space-between',
-      marginBottom: 20,
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'space-between',
+    marginBottom: 20,
   },
   left: {
-      width: '45%'
+    width: '45%',
   },
   right: {
-      width: '45%'
-  }
+    width: '45%',
+  },
 });

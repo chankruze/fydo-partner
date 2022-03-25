@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -7,7 +7,7 @@ import {
   View,
   Dimensions,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,
 } from 'react-native';
 import {
   PRIMARY,
@@ -23,7 +23,7 @@ import {
   GREY_3,
 } from '../../assets/colors';
 import Octicons from 'react-native-vector-icons/Octicons';
-import { launchImageLibrary } from 'react-native-image-picker';
+import {launchImageLibrary} from 'react-native-image-picker';
 import ButtonComponent from '../../components/ButtonComponent';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FontIsto from 'react-native-vector-icons/Fontisto';
@@ -35,7 +35,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialComunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import WithNetInfo from '../../components/hoc/withNetInfo';
 import SelectDropdown from 'react-native-select-dropdown';
-import { add, color } from 'react-native-reanimated';
+import {add, color} from 'react-native-reanimated';
 
 const HEIGHT = Dimensions.get('screen').height;
 
@@ -51,7 +51,7 @@ const options = {
   quality: 0.5,
 };
 
-function RegisterShop({ route, navigation }) {
+function RegisterShop({route, navigation}) {
   const [ownerName, setOwnerName] = useState('');
   // const [phoneNumber, setPhoneNumber] = useState(route.params.phoneNumber);
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -93,14 +93,16 @@ function RegisterShop({ route, navigation }) {
     if (shopName == null || shopName?.trim() == '') {
       error.shopName = 'Enter shop name';
     }
-    console.log(error)
+    if (address == null || address?.trim() == '') {
+      error.address = 'Enter the shop address';
+    }
     setError(error);
     if (Object.keys(error).length == 0) return true;
     return false;
   };
 
   const pickImage = () => {
-    launchImageLibrary(options, ({ assets, didCancel }) => {
+    launchImageLibrary(options, ({assets, didCancel}) => {
       if (assets) {
         console.log(assets);
       }
@@ -108,24 +110,22 @@ function RegisterShop({ route, navigation }) {
   };
 
   const next = () => {
-    console.log(isValidate())
-    if (isValidate()) {
+    if (true) {
       let data = {
         name: ownerName,
         mobile: phoneNumber,
         type: shopType,
-      }
-      navigation.navigate('ShopDetails', { data: data });
+        // website: website,
+        // pincode: pincode
+        // location: location
+      };
+      navigation.navigate('ShopDetails', {data: data});
     }
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <StatusBar
-        barStyle="light-content"
-        backgroundColor={PRIMARY}
-        translucent={false}
-      />
+      <StatusBar barStyle="light-content" backgroundColor={PRIMARY} />
       <View style={styles.contentContainer}>
         <View style={styles.information}>
           <MaterialComunityIcons
@@ -149,6 +149,9 @@ function RegisterShop({ route, navigation }) {
             style={commonstyles.input}
           />
         </View>
+        {error.ownerName && (
+          <Text style={styles.error}>{error.ownerName}</Text>
+        )}
 
         <View style={styles.box}>
           <FoundationIcon name="telephone" size={28} color="black" />
@@ -159,6 +162,9 @@ function RegisterShop({ route, navigation }) {
             style={commonstyles.input}
           />
         </View>
+        {error.phoneNumber && (
+          <Text style={styles.error}>{error.phoneNumber}</Text>
+        )}
 
         <View style={styles.box}>
           <FontIsto name="shopping-store" size={20} color="black" />
@@ -169,6 +175,9 @@ function RegisterShop({ route, navigation }) {
             style={commonstyles.input}
           />
         </View>
+        {error.shopName && (
+          <Text style={styles.error}>{error.shopName}</Text>
+        )}
 
         <View style={styles.box}>
           <EntypoIcon name="location" size={25} color={DARKBLACK} />
@@ -176,10 +185,7 @@ function RegisterShop({ route, navigation }) {
             value={address}
             disabled
             multiline
-            style={[
-              commonstyles.input,
-              { width: '80%', },
-            ]}
+            style={[commonstyles.input, {width: '80%'}]}
             placeholder="Shop Address"
           />
           <MaterialIcons
@@ -193,6 +199,7 @@ function RegisterShop({ route, navigation }) {
             }
           />
         </View>
+        {error.address && <Text style={styles.error}>{error.address}</Text>}
 
         <View style={styles.box}>
           <MaterialIcons name="location-pin" size={28} color={DARKBLACK} />
@@ -203,6 +210,8 @@ function RegisterShop({ route, navigation }) {
             style={commonstyles.input}
           />
         </View>
+        {error.pincode && <Text style={styles.error}>{error.pincode}</Text>}
+
 
         <View style={styles.dropdown}>
           <FontAwesome name="id-card-o" size={18} color={DARKBLACK} />
@@ -215,13 +224,13 @@ function RegisterShop({ route, navigation }) {
             renderDropdownIcon={() => (
               <EntypoIcon name="chevron-down" size={25} color={DARKBLACK} />
             )}
-            buttonStyle={[commonstyles.input, { width: '91%', marginLeft: 0 }]}
+            buttonStyle={[commonstyles.input, {width: '91%', marginLeft: 0}]}
             buttonTextStyle={{
               textAlign: 'left',
               fontFamily: 'Gilroy-Medium',
               fontSize: 15,
             }}
-            dropdownStyle={{ borderRadius: 10 }}
+            dropdownStyle={{borderRadius: 10}}
             buttonTextAfterSelection={(selectedItem, index) => {
               return selectedItem;
             }}
@@ -267,14 +276,14 @@ function RegisterShop({ route, navigation }) {
             data={shopTypes}
             onSelect={(selectedItem, index) => {
               console.log(selectedItem, index);
-              setShopType(selectedItem)
+              setShopType(selectedItem);
             }}
             defaultValueByIndex={0}
             renderDropdownIcon={() => (
               <EntypoIcon name="chevron-down" size={25} color="#000" />
             )}
-            dropdownStyle={{ borderRadius: 10 }}
-            buttonStyle={[commonstyles.input, { width: '100%', marginLeft: 0 }]}
+            dropdownStyle={{borderRadius: 10}}
+            buttonStyle={[commonstyles.input, {width: '100%', marginLeft: 0}]}
             buttonTextStyle={{
               color: DARKGREY,
               textAlign: 'left',
@@ -319,14 +328,14 @@ const commonstyles = {
 
 const styles = StyleSheet.create({
   container: {
-    height: '150%',
-    backgroundColor: 'white',
+    height: '140%',
+    backgroundColor: 'white'
   },
   information: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 15,
     marginBottom: 15,
   },
   informationText: {
@@ -352,9 +361,10 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   error: {
-    marginVertical: 5,
     fontSize: 12,
     color: 'red',
+    fontFamily: 'Gilroy-Regular',
+    paddingLeft: 15,
   },
   dropdown: {
     flexDirection: 'row',
