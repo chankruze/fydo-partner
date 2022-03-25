@@ -11,7 +11,6 @@ function userReducer(state = intialState, action){
     switch(type){
         case SET_USER: {
             let object = Object.assign({...state}, {user: payload.user});
-            console.log("userReducer", SET_USER)
             saveUserData(object);
             return object;
         }

@@ -2,7 +2,6 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import MainNavigation from './mainNavigation';
-import AuthNavigation from './authNavigation';
 import SettingScreen from '../screens/SettingScreen';
 import { PRIMARY } from '../assets/colors';
 import FAQScreen from '../screens/FAQScreen';
@@ -36,11 +35,11 @@ function RootNavigation() {
         <Stack.Screen options={{ headerShown: false }} name="ShopTiming" component={ShopTiming} />
         <Stack.Screen options={{headerShown: false}} name="Splash" component={SplashScreen}/>
         <Stack.Screen options={{headerShown: false}} name="OnBoarding" component={OnboardingScreen}/>
-        <Stack.Screen
+        {/* <Stack.Screen
           name="Auth"
           component={AuthNavigation}
           options={{ headerShown: false}}
-        />
+        /> */}
         <Stack.Screen 
           name="Main"
           component={MainNavigation}

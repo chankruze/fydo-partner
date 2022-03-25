@@ -22,6 +22,7 @@ import WithNetInfo from '../components/hoc/withNetInfo';
 import ChooseLanguageComponent from '../components/common/ChooseLanguageComponent';
 import { connect } from 'react-redux';
 import { setLanguage, setUser } from '../store/actions/user.action';
+import { CommonActions } from '@react-navigation/native';
 
 const PRIVACY_PAGE = "https://fydo.in/privacy-policy.html";
 
@@ -91,7 +92,14 @@ class SettingScreen extends Component{
         try {
             changeLanguage(null);
             setUser(null);
-            navigation.replace('OnBoarding')
+            navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [
+                    { name: 'OnBoarding' },
+                  ],
+                })
+              );
 
         } catch (error) {
             console.log(error);

@@ -26,9 +26,7 @@ class SupportServiceScreen extends Component {
   async sendEmail() {
     try {
       let url = `mailto:${this.state.email}`;
-      const canOpen = await Linking.canOpenURL(url);
-      if (!canOpen) throw new Error('Provided URL can not be handled');
-      await Linking.openURL(url);
+        Linking.openURL(url)
     } catch (error) {
       console.log(error);
     }
@@ -37,9 +35,7 @@ class SupportServiceScreen extends Component {
   async makeCall() {
     try {
       let url = `tel:${this.state.phoneNo}`;
-      const canOpen = await Linking.canOpenURL(url);
-      if (!canOpen) throw new Error('Provided URL can not be handled');
-      await Linking.openURL(url);
+      Linking.openURL(url)
     } catch (error) {
       console.log(error);
     }
@@ -47,12 +43,8 @@ class SupportServiceScreen extends Component {
 
   async whatsappText() {
     try {
-      let url = 'whatsapp://send?text=' + 
-      whatsAppMsg +
-     '&phone=91' + phoneNo;
-      const canOpen = await Linking.canOpenURL(url);
-      if (!canOpen) throw new Error('Provided URL can not be handled');
-      await Linking.openURL(url);
+      let url = 'whatsapp://send?text=' + '&phone=' + this.state.phoneNo;
+      Linking.openURL(url);
     } catch (error) {
       console.log(error);
     }

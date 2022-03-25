@@ -35,7 +35,6 @@ const ChooseLanguage = ({changeLangauge, navigation, user}) => {
       else {
         navigation.navigate('RegisterShop'); 
       }
-
     }
   }
 

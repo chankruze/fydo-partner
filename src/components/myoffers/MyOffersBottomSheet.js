@@ -102,7 +102,6 @@ export default function MyOffersBottomSheet({token, toggle}){
                     imageUrl: [imagePath]
                 });
                 const json = await response.json();
-                console.log(json)
                 setLoading(false);
                 toggle();
             } catch (error) {
