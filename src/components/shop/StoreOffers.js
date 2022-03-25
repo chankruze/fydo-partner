@@ -14,24 +14,24 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { GREY, LIGHTGREEN } from '../../assets/colors';
 const WIDTH = Dimensions.get('screen').width;
 
-const StoreOffers = ({storeId, token, navigation}) => {
-    const dealsDiscounts = merchantOffers
+const StoreOffers = ({offers, navigation}) => {
+  console.log(offers?.length)
   return (
     <View style={styles.container}>
         <View style={styles.titleContainer}>
         <Text style={styles.title}>My Offers</Text>
-        <TouchableOpacity>
-        <Text style={styles.viewAll}>View all</Text>
-        </TouchableOpacity>
+        {/* <TouchableOpacity>
+          <Text style={styles.viewAll}>View all</Text>
+        </TouchableOpacity> */}
         </View>
     
     <FlatList
       horizontal
       style={styles.list}
-      data={dealsDiscounts}
+      data={offers}
       renderItem={({item}) => (
         <OfferComponent
-          token={token}
+          // token={token}
           item={item}
           navigation={navigation}
           type={'storeOffer'}

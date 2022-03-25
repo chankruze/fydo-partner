@@ -115,11 +115,7 @@ const OnboardingScreen = (props) => {
        <Modal
           animationType="slide"
           transparent={true}
-          visible={showBottomSheet}
-          onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-            setShowBottomSheet(false)
-          }}>
+          visible={showBottomSheet}>
             <StatusBar 
               backgroundColor={'rgba(0, 0, 0, .3)'} 
               barStyle="light-content"/>

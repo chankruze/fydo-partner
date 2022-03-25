@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, SafeAreaView,} from 'react-native';
+import {StyleSheet, Text, View, SafeAreaView, StatusBar} from 'react-native';
 import React, {useState} from 'react';
 import {RadioButton, TextInput} from 'react-native-paper';
 import {Checkbox} from 'react-native-paper';
@@ -30,6 +30,7 @@ const ShopDetails = ({navigation, route}) => {
   }
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar backgroundColor={PRIMARY} translucent={false}/>
       <View style={premiumService && styles.subContainer}>
         <View
           style={

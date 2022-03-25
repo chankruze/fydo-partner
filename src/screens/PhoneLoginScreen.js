@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
     // paddingTop: 10,
     paddingVertical: 20,
-    minHeight: HEIGHT * 0.6,
+    // minHeight: HEIGHT * 0.6,
   },
   title: {
     color: DARKBLACK,

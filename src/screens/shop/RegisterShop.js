@@ -93,6 +93,7 @@ function RegisterShop({ route, navigation }) {
     if (shopName == null || shopName?.trim() == '') {
       error.shopName = 'Enter shop name';
     }
+    console.log(error)
     setError(error);
     if (Object.keys(error).length == 0) return true;
     return false;
@@ -107,6 +108,7 @@ function RegisterShop({ route, navigation }) {
   };
 
   const next = () => {
+    console.log(isValidate())
     if (isValidate()) {
       let data = {
         name: ownerName,
@@ -122,6 +124,7 @@ function RegisterShop({ route, navigation }) {
       <StatusBar
         barStyle="light-content"
         backgroundColor={PRIMARY}
+        translucent={false}
       />
       <View style={styles.contentContainer}>
         <View style={styles.information}>

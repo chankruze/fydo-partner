@@ -26,3 +26,5 @@ export const FEEDBACK = BASE + "shop/form-response";
 export const UPDATE_SHOP = BASE + "shop/update";
 export const GET_MY_SHOP = BASE + "shop/my-shop";
 export const REFER_EARN = BASE + "shop/form-response";
+
+export const GET_AMENITIES = BASE + "amenity/all";
