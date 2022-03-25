@@ -7,6 +7,7 @@ import {
   View,
   Dimensions,
   TextInput,
+  TouchableOpacity
 } from 'react-native';
 import {
   PRIMARY,

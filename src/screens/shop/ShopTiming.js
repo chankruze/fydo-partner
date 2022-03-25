@@ -238,7 +238,13 @@ const ShopTiming = () => {
         let object = item;
         object.timings.startTime = d;
         return object;
-      } else return item;
+      }
+      else if(selectedDay == null){
+        let object = item;
+        object.timings.startTime = d;
+        return object;
+      }      
+      else return item;
     });
     setIndividualTimings(list);
     console.log(JSON.stringify(list, null, 2));
@@ -490,14 +496,13 @@ const ShopTiming = () => {
         </RBSheet>
         {addTags && (
           <View>
-              <AddTagsBottomSheet />
-
+              <AddTagsBottomSheet handleClosePress={handleClosePress}/>
           </View>
         
         )}
         {addBreaks && (
          <View>
-           <AddBreaksBottomSheet />
+           <AddBreaksBottomSheet handleClosePress={handleClosePress}/>
          </View>
         )}
       </SafeAreaView>
