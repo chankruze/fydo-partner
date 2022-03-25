@@ -72,6 +72,7 @@ const ImageSlider = ({images, navigation}) => {
           <View style={styles.indicators}>{renderIndicators()}</View>
           <View style={styles.toolbar}>
             <TouchableOpacity
+              onPress={() => navigation.goBack()}
               style={{
                 padding: 5,
               }}>

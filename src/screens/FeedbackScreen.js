@@ -1,10 +1,17 @@
 import React, {Component} from 'react';
-import {ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
+import {ScrollView, StyleSheet, Text, TextInput, View, ToastAndroid} from 'react-native';
 import WithNetInfo from '../components/hoc/withNetInfo';
 import {AirbnbRating} from 'react-native-ratings';
 import {PRIMARY} from '../assets/colors';
-import {feedback} from '../services/feedbackService';
+import {feedback, sendFeedback} from '../services/feedbackService';
 import ButtonComponent from '../components/ButtonComponent';
+import { connect } from 'react-redux';
+
+const mapStateToProps = (state) => {
+  return {
+    user: state?.userReducer?.user
+  }
+}
 
 class FeedbackScreen extends Component {
   constructor() {
@@ -12,10 +19,22 @@ class FeedbackScreen extends Component {
     this.state = {
       ratingCount: 0,
       feedback: null,
+      loading: false,
+      error: null
     };
     this.onFinishRating = this.onFinishRating.bind(this);
-    this.sendFeedback = this.sendFeedback.bind(this);
+    this.submitFeedback = this.submitFeedback.bind(this);
     this.handleFeedback = this.handleFeedback.bind(this);
+  }
+
+  isValidated(){
+    let {feedback} = this.state;
+    if(feedback == null || feedback?.length == 0){
+      this.setState({error: 'Enter feedback'});
+      return false
+    }
+    return true;
+
   }
 
   onFinishRating(rating) {
@@ -26,8 +45,24 @@ class FeedbackScreen extends Component {
     this.setState({feedback: feedback});
   }
 
-  async sendFeedback() {
-    feedback();
+  async submitFeedback() {
+    let {user} = this.props;
+    let {feedback, ratingCount} = this.state;
+    if(!this.isValidated()) return;
+
+    this.setState({loading: true, error: null});
+    try {
+      const response = await sendFeedback(user?.accessToken, feedback, ratingCount);
+      const json = await response.json();
+      if(json){
+        ToastAndroid.show('Feedback submitted', ToastAndroid.SHORT);
+        this.setState({loading: false, feedback: null, ratingCount: null})
+      }
+      else this.setState({loading: false})
+    } catch (error) {
+      console.log(error);
+      this.setState({loading: false})
+    }
   }
 
   render() {
@@ -38,9 +73,11 @@ class FeedbackScreen extends Component {
           style={styles.input}
           placeholder="Tell us your experience"
           numberOfLines={13}
+          value={this.state.feedback}
           onChangeText={this.handleFeedback}
           multiline
         />
+        {this.state.error && <Text style={styles.error}>{this.state.error}</Text>}
         <Text style={styles.subTitle}>Rate us</Text>
         <Text style={styles.label}>Your opinion matters</Text>
         <View style={styles.starContainer}>
@@ -62,13 +99,16 @@ class FeedbackScreen extends Component {
             label="Submit"
             color="white"
             backgroundColor={PRIMARY}
-            onPress={this.sendFeedback}
+            onPress={this.submitFeedback}
+            loading={this.state.loading}
           />
         </View>
       </ScrollView>
     );
   }
 }
+
+export default connect(mapStateToProps)(WithNetInfo(FeedbackScreen));
 
 const styles = StyleSheet.create({
   container: {
@@ -84,7 +124,7 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: '#eeeeee',
     borderRadius: 5,
-    marginVertical: 20,
+    marginVertical: 10,
     padding: 10,
     fontSize: 15,
     textAlignVertical: 'top',
@@ -113,7 +153,11 @@ const styles = StyleSheet.create({
   starContainer: {
     marginTop: 20,
     alignSelf: 'center',
+  },
+  error: {
+    marginBottom: 20,
+    color: 'red',
+    fontSize: 12
   }
 });
 
-export default WithNetInfo(FeedbackScreen);

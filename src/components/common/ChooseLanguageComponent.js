@@ -3,6 +3,8 @@ import {View, StyleSheet, Image, Text, TouchableOpacity} from 'react-native';
 import {PRIMARY} from '../../assets/colors';
 import BottomsheetIcon from './../../assets/icons/bottomsheet-icon.png';
 import RadioGroup from 'react-native-radio-buttons-group';
+import { connect } from 'react-redux';
+import { setLanguage } from '../../store/actions/user.action';
 
 const LANGUAGES = {
   ENGLISH: 'ENGLISH',
@@ -40,10 +42,21 @@ const radioButtonsData = [
   },
 ];
 
-export default function ChooseLanguageComponent({toggle}) {
-  const [language, setLanguage] = useState(LANGUAGES.ENGLISH);
+const mapStateToProps = (state) => {
+  return {
+    language: state?.userReducer?.language
+  }
+}
 
-  const [radioButtons, setRadioButtons] = useState(getButtons(language));
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setLanguage: (language) => dispatch(setLanguage(language))
+  }
+}
+
+function ChooseLanguageComponent({toggle, language, setLanguage}) {
+  const [userLanguage, setUserLanguage] = useState(language);
+  const [radioButtons, setRadioButtons] = useState(radioButtonsData);
 
   function getButtons(selectedButton) {
     return radioButtonsData.map(item => {
@@ -54,14 +67,27 @@ export default function ChooseLanguageComponent({toggle}) {
   }
 
   function onPressRadioButton(radioButtonsArray) {
+    setUserLanguage(getSelectedLanguage(radioButtonsArray))
     setRadioButtons(radioButtonsArray);
   }
+
+  function getSelectedLanguage(array){
+    let language = null;
+    array?.map(item => {
+      if(item?.selected == true){
+        language = item?.value;
+        return;
+      }
+    })
+    return language;
+  } 
 
   const onStartShouldSetResponder = () => {
     return true;
   };
 
   const changeLanguage = () => {
+    setLanguage(userLanguage);
     toggle();
   };
 
@@ -89,6 +115,8 @@ export default function ChooseLanguageComponent({toggle}) {
     </View>
   );
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(ChooseLanguageComponent);
 
 const styles = StyleSheet.create({
   container: {

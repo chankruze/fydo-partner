@@ -18,19 +18,21 @@ import {DARKBLUE, LIGHTBLUE} from '../../assets/colors';
 import {response} from '../../utils/dummyStore';
 import StoreOffers from '../../components/shop/StoreOffers';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
+import { connect } from 'react-redux';
 
-const MyShop = ({navigation}) => {
+const mapStateToProps = (state) => {
+  return {
+    user: state?.userReducer?.user
+  }
+}
+
+const MyShop = ({navigation, user}) => {
  const store = response
   const [isOpen, setIsOpen] = useState(true);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [timeView, setTimeView] = useState(false);
-
-  const accessToken =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaG9wSWQiOiI2MjA0ZTRiYWRiZDJkN2QzODgzNmYwZGUiLCJsb2dpblRpbWUiOjE2NDc3NjA5NjU0ODUsImlhdCI6MTY0Nzc2MDk2NSwiZXhwIjoxNjUwMzg4OTY1fQ.vI4WWLr7ZzcjedC4izPLw9dk1W0VR41Nk840U40pbdo';
-
-  const id = '6204e4badbd2d7d38836f0de';
-
+  const [data, setData] = useState(null);
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -39,6 +41,17 @@ const MyShop = ({navigation}) => {
   const handleTiming = () => {
     setTimeView(!timeView);
   };
+
+  useEffect(() => {
+    async function fetchData(){
+      try {
+        // const response = await getp();
+        const json = await response.json
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }, []);
 
   const renderTag = item => {
     let {_id, name} = item;
@@ -204,8 +217,8 @@ const MyShop = ({navigation}) => {
           </View>
           <View>
             <StoreOffers
-              storeId={id}
-              token={accessToken}
+              storeId={user?.id}
+              token={user?.accessToken}
               navigation={navigation}
             />
           </View>
@@ -220,7 +233,7 @@ const MyShop = ({navigation}) => {
   );
 };
 
-export default MyShop;
+export default connect(mapStateToProps)(MyShop);
 
 const styles = StyleSheet.create({
   container: {

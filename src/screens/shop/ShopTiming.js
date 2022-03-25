@@ -9,8 +9,8 @@ import {
   FlatList,
   Dimensions,
 } from 'react-native';
-import React, {createRef, useRef, useState} from 'react';
-import {Checkbox} from 'react-native-paper';
+import React, { createRef, useRef, useState } from 'react';
+import { Checkbox } from 'react-native-paper';
 import {
   DARKBLACK,
   DARKBLUE,
@@ -25,23 +25,33 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import ImagePicker from 'react-native-image-crop-picker';
 import Cross from '../../assets/icons/cross.svg';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import {RadioButton} from 'react-native-paper';
+import { RadioButton } from 'react-native-paper';
 import moment from 'moment';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ButtonComponent from '../../components/ButtonComponent';
-import BottomSheet, {BottomSheetScrollView} from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import AddTags from './AddTags';
 import AddBreaks from './AddBreaksBottomSheet';
 import AddTagsBottomSheet from '../../components/home/AddTagsBottomSheet';
 import AddBreaksBottomSheet from './AddBreaksBottomSheet';
+import { updateShop } from '../../services/shopService';
+import { connect } from 'react-redux';
+import { generatePresignUrl } from '../../services/presignUrlService';
+import uuid from 'react-native-uuid';
 
 const HEIGHT = Dimensions.get('screen').height;
 
 const snapPoints = [HEIGHT < 872 ? '60%' : '60', HEIGHT < 872 ? '70%' : '70'];
 const bottomSheetRef = createRef();
 
-const ShopTiming = () => {
+const mapStateToProps = (state) => {
+  return {
+    user: state?.userReducer?.user
+  }
+}
+
+const ShopTiming = (props) => {
   let rbSheet = useRef();
   const [images, setImages] = useState([]);
   const [timePicker, setTimePicker] = useState(false);
@@ -145,10 +155,7 @@ const ShopTiming = () => {
             uri:
               Platform.OS === 'android'
                 ? i.path
-                : i.path.replace('file://', ''),
-            width: i.width,
-            height: i.height,
-            mime: i.mime,
+                : i.path.replace('file://', '')
           };
         });
 
@@ -173,6 +180,7 @@ const ShopTiming = () => {
     })
       .then(res => {
         let imageData = [res];
+        console.log("sdf-->", imageData);
 
         const data = imageData.map((i, index) => {
           return {
@@ -181,9 +189,6 @@ const ShopTiming = () => {
               Platform.OS === 'android'
                 ? i.path
                 : i.path.replace('file://', ''),
-            width: i.width,
-            height: i.height,
-            mime: i.mime,
           };
         });
         const newImages = [...images, ...data];
@@ -193,6 +198,56 @@ const ShopTiming = () => {
         console.log(' Error fetching images from gallery ', err);
       });
   };
+
+  const renderImages = async () => {
+    let img = [], finalImages = [];
+    if (images.length > 0) {
+      images.map((i) => {
+        img.push(uuid.v4(i))
+      })
+
+      console.log("hj==>", img);
+      const imageResponse = await generatePresignUrl('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaG9wSWQiOiI2MWRmY2VjMTA3YjE0NzZlZGFlYzc3YzIiLCJsb2dpblRpbWUiOjE2NDgxMjYxODE0NzgsImlhdCI6MTY0ODEyNjE4MSwiZXhwIjoxNjUwNzU0MTgxfQ.Cxgfbs_A0R4W7ela7HcGv_8iHRhNqB1ObkKpcUG6LzQ'
+        , img);
+      const data = await imageResponse.json();
+      data.map((i) => {
+        finalImages.push({ uri: i?.split("?")[0] })
+      })
+      return finalImages;
+    } else {
+      return [];
+    }
+  }
+
+  const submit = async () => {
+    const finalImages = await renderImages();
+
+    const prevParams = props?.route?.params?.data;
+
+    try {
+      const params = {
+        name: prevParams.name,
+        mobile: prevParams.mobile,
+        type: prevParams.type,
+        timing: individualTimings,
+        images: finalImages
+      }
+
+      const response = await updateShop('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaG9wSWQiOiI2MWRmY2VjMTA3YjE0NzZlZGFlYzc3YzIiLCJsb2dpblRpbWUiOjE2NDgxMjYxODE0NzgsImlhdCI6MTY0ODEyNjE4MSwiZXhwIjoxNjUwNzU0MTgxfQ.Cxgfbs_A0R4W7ela7HcGv_8iHRhNqB1ObkKpcUG6LzQ', params);
+      console.log("sd-->", await response.json());
+
+      // if (images.length > 0) {
+      //   const imageResponse = await generatePresignUrl('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaG9wSWQiOiI2MWRmY2VjMTA3YjE0NzZlZGFlYzc3YzIiLCJsb2dpblRpbWUiOjE2NDgxMjYxODE0NzgsImlhdCI6MTY0ODEyNjE4MSwiZXhwIjoxNjUwNzU0MTgxfQ.Cxgfbs_A0R4W7ela7HcGv_8iHRhNqB1ObkKpcUG6LzQ'
+      //     , [uuid.v4()]);
+      //   const data = await imageResponse.json();
+      //   imagePath = data[0]?.split("?")[0];
+      //   console.log("fgg-->", imagePath);
+      // }
+      // console.log(images)
+    } catch (error) {
+
+    }
+  }
 
   const renderImage = image => {
     return (
@@ -232,41 +287,67 @@ const ShopTiming = () => {
 
   const setGlobalOpenTime = item => {
     const d = moment(item).format('hh:mm A');
-    setUsualOpen(d);
-    let list = individualTimings.map(item => {
-      if (item._id == selectedDay) {
-        let object = item;
-        object.timings.startTime = d;
-        return object;
-      }
-      else if(selectedDay == null){
-        let object = item;
-        object.timings.startTime = d;
-        return object;
-      }      
-      else return item;
-    });
+    let list = [];
+    if (selectedDay == 'all') {
+      setUsualOpen(d);
+
+      list = individualTimings.map(item => {
+        item.timings.startTime = d;
+        return item;
+      });
+    } else {
+      list = individualTimings.map(item => {
+        if (item._id == selectedDay) {
+          let object = item;
+          object.timings.startTime = d;
+          return object;
+        }
+        else {
+          return item;
+        }
+      });
+    }
+    setIndividualTimings(list);
+    console.log(JSON.stringify(list, null, 2));
+    console.log('12-->', d);
+
+  };
+
+  const setGlobalCloseTime = item => {
+    const d = moment(item).format('hh:mm A');
+    let list = [];
+    if (selectedDay == 'all') {
+      setUsualClose(d);
+
+      list = individualTimings.map(item => {
+        item.timings.endTime = d;
+        return item;
+      });
+    } else {
+      list = individualTimings.map(item => {
+        if (item._id == selectedDay) {
+          let object = item;
+          object.timings.endTime = d;
+          return object;
+        }
+        else {
+          return item;
+        }
+      });
+    }
     setIndividualTimings(list);
     console.log(JSON.stringify(list, null, 2));
     console.log('12-->', d);
   };
 
-  const setGlobalCloseTime = item => {
-    const d = moment(item).format('hh:mm A');
-    setUsualClose(d);
-    let list = individualTimings.map(item => {
-      if (item._id == selectedDay) {
-        let object = item;
-        object.timings.endTime = d;
-        return object;
-      } else return item;
-    });
+  const setCloseStore = (item, data) => {
+    // list = individualTimings.map(item => {
+    //   item.timings.startTime = d;
+    //   return item;
+    // });
+  }
 
-    setIndividualTimings(list);
-    console.log('12-->', d);
-  };
-
-  const renderTimings = ({item, index}) => {
+  const renderTimings = ({ item, index }) => {
     return (
       <View
         style={{
@@ -276,8 +357,8 @@ const ShopTiming = () => {
         }}>
         <Text
           style={{
-            width: '21%',
-            marginLeft: 8.5,
+            width: '22%',
+            // marginLeft: 8.5,
             fontFamily: 'Gilroy-Regular',
             fontSize: 14,
             color: '#383B3F',
@@ -315,7 +396,7 @@ const ShopTiming = () => {
           <RadioButton
             color={PRIMARY}
             status={checked ? 'checked' : 'unchecked'}
-            onPress={() => setChecked(!checked)}
+            onPress={(data) => setCloseStore(item, data)}
           />
         </View>
       </View>
@@ -359,10 +440,10 @@ const ShopTiming = () => {
               showsHorizontalScrollIndicator={false}>
               {images
                 ? images.map(i => (
-                    <View style={styles.imgView} key={i.uri}>
-                      {renderImage(i)}
-                    </View>
-                  ))
+                  <View style={styles.imgView} key={i.uri}>
+                    {renderImage(i)}
+                  </View>
+                ))
                 : null}
             </ScrollView>
           </View>
@@ -381,7 +462,7 @@ const ShopTiming = () => {
             <Text style={styles.usualText}>Usual Timing</Text>
             <TouchableOpacity
               style={styles.timeButton}
-              onPress={handleOpenTimePicker}>
+              onPress={handleOpenTimePicker.bind(this, 'all')}>
               {usualOpen ? (
                 <Text style={styles.timeTxt}>{usualOpen}</Text>
               ) : (
@@ -390,7 +471,7 @@ const ShopTiming = () => {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.timeButton}
-              onPress={handleCloseTimePicker}>
+              onPress={handleCloseTimePicker.bind(this, 'all')}>
               {usualClose ? (
                 <Text style={styles.timeTxt}>{usualClose}</Text>
               ) : (
@@ -417,7 +498,7 @@ const ShopTiming = () => {
             <FlatList data={individualTimings} renderItem={renderTimings} />
           </View>
         </View>
-        <View style={styles.buttonContainer}>
+        {/* <View style={styles.buttonContainer}>
           <TouchableOpacity
             onPress={handleAddBreaks}
             style={styles.transparentButton}>
@@ -434,13 +515,14 @@ const ShopTiming = () => {
             <Text style={styles.buttonText}>Add Tags</Text>
             <Ionicons name="pricetag-outline" size={19} color={PRIMARY} />
           </TouchableOpacity>
-        </View>
+        </View> */}
 
         <View style={styles.btn}>
           <ButtonComponent
             label="Done"
             color="white"
             backgroundColor={PRIMARY}
+            onPress={submit}
           />
         </View>
         <View style={styles.footer}>
@@ -498,7 +580,7 @@ const ShopTiming = () => {
           <View>
               <AddTagsBottomSheet handleClosePress={handleClosePress}/>
           </View>
-        
+
         )}
         {addBreaks && (
          <View>
@@ -510,7 +592,7 @@ const ShopTiming = () => {
   );
 };
 
-export default ShopTiming;
+export default connect(mapStateToProps)(ShopTiming);
 
 const styles = StyleSheet.create({
   container: {

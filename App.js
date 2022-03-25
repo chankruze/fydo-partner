@@ -49,9 +49,6 @@ const App = () => {
     setIsFirstLaunch(false);
   };
 
- 
-
-
  return (
   <Provider store={store}>
     <RootNavigation />

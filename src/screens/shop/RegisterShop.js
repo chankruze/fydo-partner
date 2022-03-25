@@ -7,7 +7,7 @@ import {
   View,
   Dimensions,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,
 } from 'react-native';
 import {
   PRIMARY,
@@ -93,6 +93,9 @@ function RegisterShop({route, navigation}) {
     if (shopName == null || shopName?.trim() == '') {
       error.shopName = 'Enter shop name';
     }
+    if (address == null || address?.trim() == '') {
+      error.address = 'Enter the shop address';
+    }
     setError(error);
     if (Object.keys(error).length == 0) return true;
     return false;
@@ -107,15 +110,22 @@ function RegisterShop({route, navigation}) {
   };
 
   const next = () => {
-    if (isValidate()) navigation.navigate('ShopDetails');
+    if (isValidate()) {
+      let data = {
+        name: ownerName,
+        mobile: phoneNumber,
+        type: shopType,
+        // website: website,
+        // pincode: pincode
+        // location: location
+      };
+      navigation.navigate('ShopDetails', {data: data});
+    }
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <StatusBar  
-        barStyle="light-content"
-        backgroundColor={PRIMARY} 
-      />
+      <StatusBar barStyle="light-content" backgroundColor={PRIMARY} />
       <View style={styles.contentContainer}>
         <View style={styles.information}>
           <MaterialComunityIcons
@@ -139,6 +149,9 @@ function RegisterShop({route, navigation}) {
             style={commonstyles.input}
           />
         </View>
+        {error.ownerName && (
+          <Text style={styles.error}>{error.ownerName}</Text>
+        )}
 
         <View style={styles.box}>
           <FoundationIcon name="telephone" size={28} color="black" />
@@ -149,6 +162,9 @@ function RegisterShop({route, navigation}) {
             style={commonstyles.input}
           />
         </View>
+        {error.phoneNumber && (
+          <Text style={styles.error}>{error.phoneNumber}</Text>
+        )}
 
         <View style={styles.box}>
           <FontIsto name="shopping-store" size={20} color="black" />
@@ -159,6 +175,9 @@ function RegisterShop({route, navigation}) {
             style={commonstyles.input}
           />
         </View>
+        {error.shopName && (
+          <Text style={styles.error}>{error.shopName}</Text>
+        )}
 
         <View style={styles.box}>
           <EntypoIcon name="location" size={25} color={DARKBLACK} />
@@ -166,10 +185,7 @@ function RegisterShop({route, navigation}) {
             value={address}
             disabled
             multiline
-            style={[
-              commonstyles.input,
-              {width: '80%', },
-            ]}
+            style={[commonstyles.input, {width: '80%'}]}
             placeholder="Shop Address"
           />
           <MaterialIcons
@@ -183,6 +199,7 @@ function RegisterShop({route, navigation}) {
             }
           />
         </View>
+        {error.address && <Text style={styles.error}>{error.address}</Text>}
 
         <View style={styles.box}>
           <MaterialIcons name="location-pin" size={28} color={DARKBLACK} />
@@ -193,6 +210,8 @@ function RegisterShop({route, navigation}) {
             style={commonstyles.input}
           />
         </View>
+        {error.pincode && <Text style={styles.error}>{error.pincode}</Text>}
+
 
         <View style={styles.dropdown}>
           <FontAwesome name="id-card-o" size={18} color={DARKBLACK} />
@@ -251,12 +270,13 @@ function RegisterShop({route, navigation}) {
             style={commonstyles.input}
           />
         </View>
-        
+
         <View style={styles.shoptype}>
           <SelectDropdown
             data={shopTypes}
             onSelect={(selectedItem, index) => {
               console.log(selectedItem, index);
+              setShopType(selectedItem);
             }}
             defaultValueByIndex={0}
             renderDropdownIcon={() => (
@@ -341,9 +361,10 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   error: {
-    marginVertical: 5,
     fontSize: 12,
     color: 'red',
+    fontFamily: 'Gilroy-Regular',
+    paddingLeft: 15,
   },
   dropdown: {
     flexDirection: 'row',

@@ -10,6 +10,7 @@ export function setUser(user){
 }
 
 export function setLanguage(language){
+    console.log(language)
     return {
         type: SET_LANGUAGE,
         payload: {

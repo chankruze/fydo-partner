@@ -1,6 +1,6 @@
-import {StyleSheet, Text, View, SafeAreaView,} from 'react-native';
+import {StyleSheet, Text, View, SafeAreaView, TextInput} from 'react-native';
 import React, {useState} from 'react';
-import {RadioButton, TextInput} from 'react-native-paper';
+import {RadioButton} from 'react-native-paper';
 import {Checkbox} from 'react-native-paper';
 import {
   DARKBLACK,
@@ -11,12 +11,11 @@ import {
   GREY,
   GREY_2,
 } from '../../assets/colors';
-import SelectDropdown from 'react-native-select-dropdown';
+
 import ButtonComponent from '../../components/ButtonComponent';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import { NavigationContainer } from '@react-navigation/native';
 
-const ShopDetails = ({navigation}) => {
+const ShopDetails = ({navigation, route}) => {
   const [parking, setParking] = useState(false);
   const [wheelchair, setWheelchair] = useState(false);
   const [foodCourt, setFoodCourt] = useState(false);
@@ -26,9 +25,9 @@ const ShopDetails = ({navigation}) => {
   const [salesExecutive, setSalesExecutive] = useState(false);
   const [homeDelivery, setHomeDelivery] = useState(false);
 
-  const next = ()=> {
-    navigation.navigate('ShopTiming')
-  }
+  const next = () => {
+    navigation.navigate('ShopTiming', {data: route?.params?.data});
+  };
   return (
     <SafeAreaView style={styles.container}>
       <View style={premiumService && styles.subContainer}>
@@ -177,30 +176,24 @@ const ShopDetails = ({navigation}) => {
             }}
           />
         </View>
-        {
-          salesExecutive && (
-            <View style={{width: '100%', marginTop: 15}}>
+        {salesExecutive && (
+          <View style={{width: '100%', marginTop: 15}}>
             <TextInput
               style={[styles.input, {paddingLeft: 10}]}
               selectionColor={DARKBLUE}
               activeUnderlineColor={GREY_2}
               placeholder="Phone Number"
-              keyboardType='numeric'
+              keyboardType="numeric"
               left={
                 <TextInput.Icon
                   name={() => (
-                    <MaterialIcon
-                      name="phone"
-                      size={25}
-                      color="#000"
-                    />
+                    <MaterialIcon name="phone" size={25} color="#000" />
                   )}
                 />
               }
             />
-            </View>
-          )
-        }
+          </View>
+        )}
       </View>
       <View style={styles.next}>
         <ButtonComponent

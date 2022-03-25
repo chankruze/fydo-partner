@@ -20,8 +20,15 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import { getAppVersion } from '../utils/deviceInfo';
 import WithNetInfo from '../components/hoc/withNetInfo';
 import ChooseLanguageComponent from '../components/common/ChooseLanguageComponent';
+import { connect } from 'react-redux';
 
 const PRIVACY_PAGE = "https://fydo.in/privacy-policy.html";
+
+const mapStateToProps = (state) => {
+    return {
+        language: state?.userReducer?.language
+    }
+}
 
 class SettingScreen extends Component{
 
@@ -92,6 +99,7 @@ class SettingScreen extends Component{
     }
 
     render(){
+        let {language} = this.props;
         return (
             <ScrollView style={styles.container}>
                 {this.state.modalVisible && this.renderModal()}
@@ -102,7 +110,7 @@ class SettingScreen extends Component{
                         width={22}
                         height={22}
                     />
-                    <Text style={styles.label}>FAQ</Text>
+                    <Text style={styles.label}>{language == 'HINDI'? 'सामान्य प्रश्न': 'FAQ'}</Text>
                 </TouchableOpacity>
                 <View style={styles.line}/>
                 <TouchableOpacity 
@@ -112,7 +120,7 @@ class SettingScreen extends Component{
                         width={22}
                         height={22}
                     />
-                    <Text style={styles.label}>Privacy policy</Text>
+                    <Text style={styles.label}>{language == 'HINDI'? 'गोपनीयता नीति': 'Privacy policy'}</Text>
                 </TouchableOpacity>
                 <View style={styles.line}/>
                 <TouchableOpacity 
@@ -122,7 +130,7 @@ class SettingScreen extends Component{
                         width={22}
                         height={22}
                     />
-                    <Text style={styles.label}>Feedback</Text>
+                    <Text style={styles.label}>{language == 'HINDI'? 'प्रतिक्रिया': 'Feedback'}</Text>
                 </TouchableOpacity>
                 <View style={styles.line}/>
                 <TouchableOpacity 
@@ -132,7 +140,7 @@ class SettingScreen extends Component{
                         width={22}
                         height={22}
                     />
-                    <Text style={styles.label}>Support and service</Text>
+                    <Text style={styles.label}>{language == 'HINDI'? 'समर्थन और सेवा' :'Support and service'}</Text>
                 </TouchableOpacity>
                 <View style={styles.line}/>
                 <TouchableOpacity 
@@ -142,7 +150,7 @@ class SettingScreen extends Component{
                         width={22}
                         height={22}
                     />
-                    <Text style={styles.label}>Change language</Text>
+                    <Text style={styles.label}>{language == 'HINDI'? 'भाषा बदलें': 'Change language'}</Text>
                 </TouchableOpacity>
                 <View style={styles.line}/>
                 <TouchableOpacity 
@@ -152,7 +160,7 @@ class SettingScreen extends Component{
                         width={22}
                         height={22}
                     />
-                    <Text style={styles.label}>About us</Text>
+                    <Text style={styles.label}> {language == 'HINDI'? 'हमारे बारे में': 'About us'}</Text>
                 </TouchableOpacity>
                 <View style={styles.line}/>
                 <TouchableOpacity style={styles.row}>
@@ -162,7 +170,7 @@ class SettingScreen extends Component{
                         name="logout"
                         color={'#FE3838'}
                     />
-                    <Text style={styles.label}>Logout</Text>
+                    <Text style={styles.label}>{language == 'HINDI'? 'लॉग आउट' :'Logout'}</Text>
                 </TouchableOpacity>
                 <View style={styles.line}/>
                 <Text style={styles.version}>v {getAppVersion()}</Text>
@@ -170,6 +178,8 @@ class SettingScreen extends Component{
         )
     }
 }
+
+export default connect(mapStateToProps)(WithNetInfo(SettingScreen));
 
 const styles = StyleSheet.create({
     container: {
@@ -207,5 +217,3 @@ const styles = StyleSheet.create({
         height: '100%'
     },
 })
-
-export default WithNetInfo(SettingScreen)
