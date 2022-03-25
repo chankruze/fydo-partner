@@ -12,7 +12,13 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const ChooseLanguage = ({changeLangauge, navigation}) => {
+const mapStateToProps = (state) => {
+  return {
+    user: state?.userReducer?.user
+  }
+}
+
+const ChooseLanguage = ({changeLangauge, navigation, user}) => {
   const [language, setLanguage] = useState(null);
   const [error, setError] = useState(null);
 
@@ -23,7 +29,13 @@ const ChooseLanguage = ({changeLangauge, navigation}) => {
     else{
       setError(null);
       changeLangauge(language);
-      navigation.navigate('Main'); 
+      if(user?.profileComplete){
+        navigation.navigate('Main');         
+      }
+      else {
+        navigation.navigate('RegisterShop'); 
+      }
+
     }
   }
 
@@ -33,28 +45,28 @@ const ChooseLanguage = ({changeLangauge, navigation}) => {
       <Text style={styles.title}>Choose Language</Text>
       <View style={styles.radioButton}>
         <RadioButton
-          value="English"
+          value="ENGLISH"
           color={PRIMARY}
-          status={language === 'English' ? 'checked' : 'unchecked'}
-          onPress={() => setLanguage('English')}
+          status={language === 'ENGLISH' ? 'checked' : 'unchecked'}
+          onPress={() => setLanguage('ENGLISH')}
         />
         <Text style={styles.radioText}>English</Text>
       </View>
       <View style={styles.radioButton}>
         <RadioButton
-          value="Hindi"
+          value="HINDI"
           color={PRIMARY}
-          status={language === 'Hindi' ? 'checked' : 'unchecked'}
-          onPress={() => setLanguage('Hindi')}
+          status={language === 'HINDI' ? 'checked' : 'unchecked'}
+          onPress={() => setLanguage('HINDI')}
         />
         <Text style={styles.radioText}>Hindi/हिन्दी</Text>
       </View>
       <View style={styles.radioButton}>
         <RadioButton
-          value="Odia"
+          value="ODIA"
           color={PRIMARY}
-          status={language === 'Odia' ? 'checked' : 'unchecked'}
-          onPress={() => setLanguage('Odia')}
+          status={language === 'ODIA' ? 'checked' : 'unchecked'}
+          onPress={() => setLanguage('ODIA')}
         />
         <Text style={styles.radioText}>Odia/ଓଡ଼ିଆ</Text>
       </View>
@@ -77,7 +89,7 @@ const ChooseLanguage = ({changeLangauge, navigation}) => {
   );
 };
 
-export default connect(null, mapDispatchToProps)(ChooseLanguage);
+export default connect(mapStateToProps, mapDispatchToProps)(ChooseLanguage);
 
 const styles = StyleSheet.create({
   container: {

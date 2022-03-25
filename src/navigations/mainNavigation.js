@@ -53,7 +53,7 @@ function MainNavigation({language, user}){
                 headerTitleStyle: {
                   fontSize: 15
                 },
-                tabBarLabel: language == 'HINDI'? 'घर': 'HOme' ,
+                tabBarLabel: language == 'HINDI'? 'घर': 'Home' ,
                 headerRight: () => (
                   <TouchableOpacity
                     onPress={navigateToSetting.bind(this, navigation)}>

@@ -110,7 +110,7 @@ function RegisterShop({route, navigation}) {
   };
 
   const next = () => {
-    if (isValidate()) {
+    if (true) {
       let data = {
         name: ownerName,
         mobile: phoneNumber,
@@ -328,14 +328,14 @@ const commonstyles = {
 
 const styles = StyleSheet.create({
   container: {
-    height: '150%',
-    backgroundColor: 'white',
+    height: '140%',
+    backgroundColor: 'white'
   },
   information: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 15,
     marginBottom: 15,
   },
   informationText: {

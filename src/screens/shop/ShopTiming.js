@@ -24,6 +24,7 @@ import {
 import RBSheet from 'react-native-raw-bottom-sheet';
 import ImagePicker from 'react-native-image-crop-picker';
 import Cross from '../../assets/icons/cross.svg';
+import { CommonActions } from '@react-navigation/native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { RadioButton } from 'react-native-paper';
 import moment from 'moment';
@@ -233,19 +234,22 @@ const ShopTiming = (props) => {
         images: finalImages
       }
 
-      const response = await updateShop('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaG9wSWQiOiI2MWRmY2VjMTA3YjE0NzZlZGFlYzc3YzIiLCJsb2dpblRpbWUiOjE2NDgxMjYxODE0NzgsImlhdCI6MTY0ODEyNjE4MSwiZXhwIjoxNjUwNzU0MTgxfQ.Cxgfbs_A0R4W7ela7HcGv_8iHRhNqB1ObkKpcUG6LzQ', params);
-      console.log("sd-->", await response.json());
+      let {accessToken, navigation} = props;
+      const response = await updateShop(accessToken, params);
 
-      // if (images.length > 0) {
-      //   const imageResponse = await generatePresignUrl('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaG9wSWQiOiI2MWRmY2VjMTA3YjE0NzZlZGFlYzc3YzIiLCJsb2dpblRpbWUiOjE2NDgxMjYxODE0NzgsImlhdCI6MTY0ODEyNjE4MSwiZXhwIjoxNjUwNzU0MTgxfQ.Cxgfbs_A0R4W7ela7HcGv_8iHRhNqB1ObkKpcUG6LzQ'
-      //     , [uuid.v4()]);
-      //   const data = await imageResponse.json();
-      //   imagePath = data[0]?.split("?")[0];
-      //   console.log("fgg-->", imagePath);
-      // }
-      // console.log(images)
+      const json = await response.json();
+      if(json){
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [
+              { name: 'Main' },
+            ],
+          })
+        );
+      }
     } catch (error) {
-
+      console.log(error)
     }
   }
 
