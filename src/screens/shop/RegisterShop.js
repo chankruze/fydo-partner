@@ -112,10 +112,6 @@ function RegisterShop({ route, navigation }) {
         name: ownerName,
         mobile: phoneNumber,
         type: shopType,
-        // website: website,
-        // pincode: pincode
-        // location: location
-
       }
       navigation.navigate('ShopDetails', { data: data });
     }

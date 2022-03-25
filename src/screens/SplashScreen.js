@@ -12,7 +12,13 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const SplashScreen = ({navigation, setUser}) => {
+const mapStateToProps = (state) => {
+  return {
+    user: state?.userReducer?.user
+  }
+}
+
+const SplashScreen = ({navigation, setUser, user}) => {
   const [userData, setUserInfo] = useState(null);
 
   useEffect(() => {
@@ -26,21 +32,27 @@ const SplashScreen = ({navigation, setUser}) => {
       }
     }
     setUserData();
+  }, []);
+
+  useEffect(() => {
 
     let timeout = setTimeout(() => {
-      console.log("23", userData)
-      // console.log("43", user?.profileComplete)
-      if(userData){
-        navigation.navigate('Main');        
+      console.log(user?.profileComplete);
+      if(user == null){
+        navigation.navigate('OnBoarding')
+      }
+      else if(user?.profileComplete == false){
+        navigation.navigate('RegisterShop');
       }
       else {
-        navigation.navigate('OnBoarding');
+        navigation.navigate('Main');
       }
     }, 3000)
     return () => {
       clearTimeout(timeout)
     }
-  }, []);
+    
+  })
 
   return (
     <LinearGradient
@@ -52,7 +64,7 @@ const SplashScreen = ({navigation, setUser}) => {
   );
 };
 
-export default connect(null, mapDispatchToProps)(SplashScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(SplashScreen);
 
 const styles = StyleSheet.create({
   container: {

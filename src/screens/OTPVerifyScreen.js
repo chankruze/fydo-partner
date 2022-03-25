@@ -28,7 +28,7 @@ const mapDispatchToProps = function (dispatch) {
   };
 };
 
-const OTPVerifyScreen = ({navigationData, navigation, handleNextScreen}) => {
+const OTPVerifyScreen = ({navigationData, navigation, handleNextScreen, setUser}) => {
   const id = navigationData?.otpId;
   const [otp, setOtp] = useState(null);
   const [otpId, setOtpId] = useState(id);
@@ -136,7 +136,7 @@ const OTPVerifyScreen = ({navigationData, navigation, handleNextScreen}) => {
   );
 };
 
-export default WithNetInfo(OTPVerifyScreen);
+export default connect(null, mapDispatchToProps)(WithNetInfo(OTPVerifyScreen))
 
 const styles = StyleSheet.create({
   container: {

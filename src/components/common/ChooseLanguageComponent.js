@@ -56,11 +56,11 @@ const mapDispatchToProps = (dispatch) => {
 
 function ChooseLanguageComponent({toggle, language, setLanguage}) {
   const [userLanguage, setUserLanguage] = useState(language);
-  const [radioButtons, setRadioButtons] = useState(radioButtonsData);
+  const [radioButtons, setRadioButtons] = useState(getButtons());
 
-  function getButtons(selectedButton) {
+  function getButtons() {
     return radioButtonsData.map(item => {
-      if (item.value == selectedButton)
+      if (item.value == language)
         return Object.assign({...item}, {selected: true});
       return item;
     });

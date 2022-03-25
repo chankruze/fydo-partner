@@ -21,12 +21,20 @@ import { getAppVersion } from '../utils/deviceInfo';
 import WithNetInfo from '../components/hoc/withNetInfo';
 import ChooseLanguageComponent from '../components/common/ChooseLanguageComponent';
 import { connect } from 'react-redux';
+import { setLanguage, setUser } from '../store/actions/user.action';
 
 const PRIVACY_PAGE = "https://fydo.in/privacy-policy.html";
 
 const mapStateToProps = (state) => {
     return {
-        language: state?.userReducer?.language
+        language: state?.userReducer?.language,
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        changeLanguage: (language) => dispatch(setLanguage(language)),
+        setUser: (user) => dispatch(setUser(user))
     }
 }
 
@@ -37,6 +45,7 @@ class SettingScreen extends Component{
         this.state = {
             modalVisible: false
         }
+        this.logout = this.logout.bind(this);
         this.navigateToFAQScreen = this.navigateToFAQScreen.bind(this);
         this.navigateToFeedbackScreen = this.navigateToFeedbackScreen.bind(this);
         this.navigateToSupportServiceScreen = this.navigateToSupportServiceScreen.bind(this);
@@ -75,6 +84,18 @@ class SettingScreen extends Component{
 
     openPrivacyPage(){
         Linking.openURL(PRIVACY_PAGE).catch(err => console.error("Couldn't load page", err));
+    }
+
+    async logout(){
+        let {changeLanguage, setUser, navigation} = this.props;
+        try {
+            changeLanguage(null);
+            setUser(null);
+            navigation.replace('OnBoarding')
+
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     renderModal(){
@@ -163,7 +184,9 @@ class SettingScreen extends Component{
                     <Text style={styles.label}> {language == 'HINDI'? 'हमारे बारे में': 'About us'}</Text>
                 </TouchableOpacity>
                 <View style={styles.line}/>
-                <TouchableOpacity style={styles.row}>
+                <TouchableOpacity 
+                    style={styles.row}
+                    onPress={this.logout}>
                     <SimpleLineIcons
                         style={styles.logoutIcon}
                         size={18}
@@ -179,7 +202,7 @@ class SettingScreen extends Component{
     }
 }
 
-export default connect(mapStateToProps)(WithNetInfo(SettingScreen));
+export default connect(mapStateToProps, mapDispatchToProps)(WithNetInfo(SettingScreen));
 
 const styles = StyleSheet.create({
     container: {

@@ -36,11 +36,11 @@ function RootNavigation() {
         <Stack.Screen options={{ headerShown: false }} name="ShopTiming" component={ShopTiming} />
         <Stack.Screen options={{headerShown: false}} name="Splash" component={SplashScreen}/>
         <Stack.Screen options={{headerShown: false}} name="OnBoarding" component={OnboardingScreen}/>
-        {/* <Stack.Screen
+        <Stack.Screen
           name="Auth"
           component={AuthNavigation}
-          options={{ headerShown: false s}}
-        /> */}
+          options={{ headerShown: false}}
+        />
         <Stack.Screen 
           name="Main"
           component={MainNavigation}
