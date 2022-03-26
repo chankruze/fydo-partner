@@ -160,14 +160,14 @@ const MapScreen = ({navigation, route}) => {
           returnKeyType="search"
           onSubmitEditing={e => onSubmit(e.nativeEvent.text)}
         />
-        <Icon name="search-outline" size={25} color="black" />
+        <Icon name="search-outline" size={22} color="black" />
       </View>
       <View
         style={Object.assign(
           {...styles.confirmButton},
           {opacity: locationChange ? 1 : 0.8},
         )}>
-        <TextInput style={{width: '90%'}} disabled value={address} multiline />
+        <TextInput style={styles.selectedLocation} disabled value={address} multiline />
         <TouchableOpacity
           activeOpacity={0.7}
           style={styles.check}
@@ -215,7 +215,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 10,
     borderRadius: 10,
-    // justifyContent: 'space-between',
     paddingHorizontal: 25,
     alignItems: 'center',
     zIndex: 10,
@@ -246,16 +245,21 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   input: {
-    fontSize: 20,
+    fontSize: 18,
     color: 'black',
     width: '95%',
-    // borderWidth: 1,
     paddingHorizontal: 20,
-    // color: '#938989',
+    fontFamily: 'Gilroy-Medium',
+    letterSpacing: 0.2,
   },
   pinIcon: {
     width: 20,
     height: 20,
     resizeMode: 'center',
   },
+  selectedLocation: {
+    fontFamily: 'Gilroy-Medium',
+    width: '90%',
+    letterSpacing: 0.3,
+  }
 });

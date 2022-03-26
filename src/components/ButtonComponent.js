@@ -34,6 +34,8 @@ const styles = StyleSheet.create({
     },
     label: {
         fontSize: 17,
-        fontFamily: 'Gilroy-SemiBold'
+        fontFamily: 'Gilroy-SemiBold',
+    letterSpacing: 0.3,
+
     },
 })

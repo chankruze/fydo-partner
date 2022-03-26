@@ -364,6 +364,7 @@ const styles = StyleSheet.create({
     marginTop: 7,
     fontFamily: 'Gilroy-Bold',
     color: PRIMARY,
+    letterSpacing: 0.3,
   },
   support: {
     alignItems: 'center',
@@ -392,6 +393,8 @@ const styles = StyleSheet.create({
     fontSize: 13,
     marginTop: 5,
     fontWeight: 'Gilroy-Medium',
+    letterSpacing: 0.3,
+
   },
   line: {
     backgroundColor: 'lightgrey',
@@ -401,6 +404,8 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 13,
     fontFamily: 'Gilroy-Medium',
+    letterSpacing: 0.3,
+
   },
   shopStatusRow: {
     padding: 10,
@@ -422,6 +427,8 @@ const styles = StyleSheet.create({
   shopStatusOtherLabel: {
     fontSize: 13,
     fontFamily: 'Gilroy-Medium',
+    letterSpacing: 0.3,
+
   },
   shareCardContainer: {
     padding: 20,
@@ -445,12 +452,16 @@ const styles = StyleSheet.create({
   },
   cardLabel: {
     color: 'white',
-    fontFamily: 'Gilroy-Medium'
+    fontFamily: 'Gilroy-Medium',
+    letterSpacing: 0.3,
+
   },
   cardButtonLabel: {
     color: 'white',
     fontSize: 15,
     fontFamily: 'Gilroy-Medium',
+    letterSpacing: 0.3,
+
   },
   modelContainer: {
     backgroundColor: 'rgba(0, 0, 0, .3)',
@@ -497,6 +508,8 @@ const styles = StyleSheet.create({
     fontSize: 13,
     marginTop: 5,
     fontFamily: 'Gilroy-Medium',
+    letterSpacing: 0.3,
+
   },
   line: {
     backgroundColor: 'lightgrey',
@@ -506,6 +519,8 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 13,
     fontFamily: 'Gilroy-Medium',
+    letterSpacing: 0.3,
+
   },
   shopStatusRow: {
     padding: 10,
@@ -527,6 +542,8 @@ const styles = StyleSheet.create({
   shopStatusOtherLabel: {
     fontSize: 13,
     fontFamily: 'Gilroy-Medium',
+    letterSpacing: 0.3,
+
   },
   shareCardContainer: {
     padding: 20,
@@ -553,6 +570,8 @@ const styles = StyleSheet.create({
   },
   cardButtonLabel: {
     fontFamily: 'Gilroy-Medium',
+    letterSpacing: 0.3,
+
 
     color: 'white',
     fontSize: 15,
@@ -576,6 +595,8 @@ const styles = StyleSheet.create({
     color: '#000914',
     fontSize: 13,
     fontFamily: 'Gilroy-Medium',
+    letterSpacing: 0.3,
+
   },
   addTagsBottomSheetContainer: {
     backgroundColor: 'rgba(0, 0, 0, .5)',

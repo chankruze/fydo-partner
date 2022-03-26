@@ -361,8 +361,8 @@ const ShopTiming = (props) => {
         }}>
         <Text
           style={{
-            width: '22%',
-            // marginLeft: 8.5,
+            width: '23%',
+            marginLeft: 5,
             fontFamily: 'Gilroy-Regular',
             fontSize: 14,
             color: '#383B3F',
@@ -423,7 +423,7 @@ const ShopTiming = (props) => {
   };
 
   return (
-    <ScrollView>
+    <ScrollView showsVerticalScrollIndicator={false}>
       <SafeAreaView style={styles.container}>
         <View>
           <Text style={styles.imageTitle}>Add Shop Images</Text>
@@ -545,8 +545,8 @@ const ShopTiming = (props) => {
               borderTopRightRadius: 10,
             },
           }}>
-          <View style={styles.chosseTextStyle}>
-            <Text style={styles.chooseContianer}>Choose Images from</Text>
+          <View style={styles.chooseTextStyle}>
+            <Text style={styles.chooseContainer}>Choose Images from</Text>
           </View>
 
           <View
@@ -648,13 +648,14 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: 10,
   },
-  chooseContianer: {
+  chooseContainer: {
     color: '#282828',
     fontFamily: 'Gilroy-SemiBold',
     marginVertical: 7,
     fontSize: 16,
+    letterSpacing: 0.3,
   },
-  chosseTextStyle: {
+  chooseTextStyle: {
     padding: 10,
   },
   row: {
@@ -709,27 +710,37 @@ const styles = StyleSheet.create({
     fontFamily: 'Gilroy-Medium',
     fontSize: 15,
     color: '#4D535BCC',
+    letterSpacing: 0.3,
+
   },
   timeTxt: {
     fontFamily: 'Gilroy-Medium',
     fontSize: 12,
     color: 'black',
+    letterSpacing: 0.3,
+
   },
   openTime: {
     fontFamily: 'Gilroy-Medium',
     fontSize: 12,
     color: GREEN,
+    letterSpacing: 0.3,
+
   },
   closeTime: {
     fontFamily: 'Gilroy-Medium',
     fontSize: 12,
     color: 'red',
+    letterSpacing: 0.3,
+
   },
   closeTxt: {
     marginLeft: 30,
     fontFamily: 'Gilroy-Regular',
     fontSize: 14,
     color: '#383B3F',
+    letterSpacing: 0.3,
+
   },
   buttonContainer: {
     marginTop: 20,
@@ -743,6 +754,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: PRIMARY,
     marginRight: 10,
+    letterSpacing: 0.3,
+
   },
   transparentButton: {
     paddingVertical: 4,
@@ -769,6 +782,8 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: DARKGREY,
     fontFamily: 'Gilroy-Medium',
+    letterSpacing: 0.3,
+
   },
   footerOtherLabel: {
     fontSize: 13,
@@ -776,5 +791,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     marginTop: 3,
     fontFamily: 'Gilroy-Medium',
+    letterSpacing: 0.3,
+
   },
 });
