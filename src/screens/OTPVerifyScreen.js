@@ -66,7 +66,9 @@ const OTPVerifyScreen = ({ navigationData, navigation, handleNextScreen, setUser
         setUser(data);
         saveUserData(data);
         if (data.profileComplete) {
-          handleNextScreen(SCREENS.LANGUAGE);
+          // handleNextScreen(SCREENS.LANGUAGE);
+          navigation.navigate('RegisterShop');
+
           // navigation.navigate('Language');
           console.log('User Profile Complete, add suitable route');
         } else {

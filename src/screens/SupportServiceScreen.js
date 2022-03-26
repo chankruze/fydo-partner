@@ -113,6 +113,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
     fontFamily: 'Gilroy-Medium',
+    letterSpacing: 0.3,
+
   },
 
   label: {
@@ -120,6 +122,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginVertical: 13,
     fontFamily: 'Gilroy-Medium',
+    letterSpacing: 0.3,
+
   },
   buttonContainer: {
     width: '85%',

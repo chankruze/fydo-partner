@@ -8,7 +8,7 @@ import {
   Dimensions,
   TextInput,
   TouchableOpacity,
-  SafeAreaView
+  SafeAreaView,
 } from 'react-native';
 import {
   PRIMARY,
@@ -125,12 +125,11 @@ function RegisterShop({ route, navigation }) {
   };
 
   return (
-    <SafeAreaView style={{
-      backgroundColor: 'white'
-    }}>
-      <ScrollView contentContainerStyle={styles.container}>
-        <StatusBar barStyle="light-content" backgroundColor={PRIMARY} />
-        <View style={styles.contentContainer}>
+    <SafeAreaView style={{ backgroundColor: 'white' }}>
+      <StatusBar barStyle="light-content" backgroundColor={PRIMARY} />
+      <View style={styles.contentContainer}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}>
           <View style={styles.information}>
             <MaterialComunityIcons
               name="information-outline"
@@ -138,8 +137,8 @@ function RegisterShop({ route, navigation }) {
               color="red"
             />
             <Text style={styles.informationText}>
-              Be at your shop while entering information so that we can get exact
-              location of your shop.
+              Be at your shop while entering information so that we can get
+              exact location of your shop.
             </Text>
           </View>
           <Text style={styles.title}>Add shop details</Text>
@@ -150,7 +149,7 @@ function RegisterShop({ route, navigation }) {
               value={ownerName}
               onChangeText={value => setOwnerName(value)}
               placeholder="Your Name"
-              style={commonstyles.input}
+              style={styles.input}
             />
           </View>
           {error.ownerName && (
@@ -163,7 +162,7 @@ function RegisterShop({ route, navigation }) {
               value={phoneNumber}
               onChangeText={value => setPhoneNumber(value)}
               placeholder="Phone Number"
-              style={commonstyles.input}
+              style={styles.input}
             />
           </View>
           {error.phoneNumber && (
@@ -176,20 +175,18 @@ function RegisterShop({ route, navigation }) {
               value={shopName}
               onChangeText={value => setShopName(value)}
               placeholder="Shop Name"
-              style={commonstyles.input}
+              style={styles.input}
             />
           </View>
-          {error.shopName && (
-            <Text style={styles.error}>{error.shopName}</Text>
-          )}
+          {error.shopName && <Text style={styles.error}>{error.shopName}</Text>}
 
           <View style={styles.box}>
             <EntypoIcon name="location" size={25} color={DARKBLACK} />
             <TextInput
               value={address}
-              disabled
+              editable={false}
               multiline
-              style={[commonstyles.input, { width: '80%' }]}
+              style={[styles.input, { width: '80%' }]}
               placeholder="Shop Address"
             />
             <MaterialIcons
@@ -211,11 +208,10 @@ function RegisterShop({ route, navigation }) {
               value={pincode}
               onChangeText={value => setPincode(value)}
               placeholder="Pincode"
-              style={commonstyles.input}
+              style={styles.input}
             />
           </View>
           {error.pincode && <Text style={styles.error}>{error.pincode}</Text>}
-
 
           <View style={styles.dropdown}>
             <FontAwesome name="id-card-o" size={18} color={DARKBLACK} />
@@ -225,14 +221,15 @@ function RegisterShop({ route, navigation }) {
               onSelect={(selectedItem, index) => {
                 console.log(selectedItem, index);
               }}
+              button
               renderDropdownIcon={() => (
                 <EntypoIcon name="chevron-down" size={25} color={DARKBLACK} />
               )}
-              buttonStyle={[commonstyles.input, { width: '91%', marginLeft: 0 }]}
+              buttonStyle={[styles.input, { width: '91%', marginLeft: 0 }]}
               buttonTextStyle={{
                 textAlign: 'left',
                 fontFamily: 'Gilroy-Medium',
-                fontSize: 15,
+                fontSize: 14,
               }}
               dropdownStyle={{ borderRadius: 10 }}
               buttonTextAfterSelection={(selectedItem, index) => {
@@ -271,7 +268,7 @@ function RegisterShop({ route, navigation }) {
               value={website}
               onChangeText={value => setWebsite(value)}
               placeholder="Website (if any)"
-              style={commonstyles.input}
+              style={styles.input}
             />
           </View>
 
@@ -282,17 +279,17 @@ function RegisterShop({ route, navigation }) {
                 console.log(selectedItem, index);
                 setShopType(selectedItem);
               }}
-              defaultValueByIndex={0}
+              defaultButtonText="Type of store"
               renderDropdownIcon={() => (
                 <EntypoIcon name="chevron-down" size={25} color="#000" />
               )}
               dropdownStyle={{ borderRadius: 10 }}
-              buttonStyle={[commonstyles.input, { width: '100%', marginLeft: 0 }]}
+              buttonStyle={[styles.input, { width: '100%', marginLeft: 0 }]}
               buttonTextStyle={{
                 color: DARKGREY,
                 textAlign: 'left',
                 fontFamily: 'Gilroy-Medium',
-                fontSize: 16,
+                fontSize: 14,
               }}
               buttonTextAfterSelection={(selectedItem, index) => {
                 return selectedItem;
@@ -309,55 +306,38 @@ function RegisterShop({ route, navigation }) {
             backgroundColor={DARKBLUE}
             onPress={next}
           />
-        </View>
-        {/* <View style={styles.footer}>
-        <Text style={styles.footerLabel}>By continuing you agree to our</Text>
-        <TouchableOpacity>
-          <Text style={styles.footerOtherLabel}>Terms & Conditions</Text>
-        </TouchableOpacity>
-      </View> */}
-      </ScrollView>
+        </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
 
-const commonstyles = {
-  input: {
-    backgroundColor: 'transparent',
-    fontSize: 16,
-    paddingLeft: 10,
-    fontFamily: 'Gilroy-Medium',
-    width: '90%',
-  },
-};
-
 const styles = StyleSheet.create({
   container: {
-    height: '140%',
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   information: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 15,
-    marginBottom: 15,
+    marginVertical: 15,
+    paddingHorizontal: 10,
   },
   informationText: {
     paddingHorizontal: 10,
     fontFamily: 'Gilroy-Medium',
     color: 'black',
     fontSize: 14,
+    letterSpacing: 0.3
   },
   contentContainer: {
-    minHeight: HEIGHT * 0.6,
     paddingVertical: 10,
-    paddingHorizontal: 15,
+    paddingHorizontal: 13,
   },
   title: {
     color: DARKBLACK,
-    fontSize: 22,
-    paddingLeft: 15,
+    fontSize: 18,
+    paddingLeft: 10,
     fontFamily: 'Gilroy-Bold',
   },
   uploadImage: {
@@ -451,14 +431,13 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   input: {
-    height: 48,
-    backgroundColor: '#F4F5F5',
-    marginTop: 10,
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    fontSize: 13,
-    color: DARKGREY,
+    backgroundColor: 'transparent',
+    fontSize: 14,
+    paddingLeft: 10,
     fontFamily: 'Gilroy-Medium',
+    width: '90%',
+    color: 'black',
+    letterSpacing: 0.3
   },
   nextButton: {
     height: 48,
@@ -526,7 +505,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontFamily: 'Gilroy-Medium',
-    fontSize: 14,
+    fontSize: 12,
     color: DARKBLACK,
   },
 });

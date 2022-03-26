@@ -120,6 +120,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: 'black',
     fontFamily: 'Gilroy-Medium',
+    letterSpacing: 0.3,
+
   },
   input: {
     backgroundColor: '#eeeeee',
@@ -129,17 +131,22 @@ const styles = StyleSheet.create({
     fontSize: 15,
     textAlignVertical: 'top',
     fontFamily: 'Gilroy-Medium',
+    letterSpacing: 0.3,
   },
   subTitle: {
     fontSize: 16,
     color: 'black',
     fontFamily: 'Gilroy-Medium',
+    letterSpacing: 0.3,
+
   },
   label: {
     marginVertical: 10,
     color: 'black',
     fontSize: 13,
     fontFamily: 'Gilroy-Medium',
+    letterSpacing: 0.3,
+
   },
   ratingContainer: {
     alignSelf: 'flex-start',

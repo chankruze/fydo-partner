@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 import {
-    Linking, 
-    StyleSheet, 
-    ScrollView, 
-    View, 
-    Text, 
-    TouchableOpacity, 
-    Modal, 
-    Pressable
+  Linking,
+  StyleSheet,
+  ScrollView,
+  View,
+  Text,
+  TouchableOpacity,
+  Modal,
+  Pressable,
 } from 'react-native';
 import FAQIcon from './../assets/icons/faq.svg';
 import PrivacyIcon from './../assets/icons/privacypolicy.svg';
@@ -15,9 +15,9 @@ import FeekbackIcon from './../assets/icons/feedback.svg';
 import SupportServiceIcon from './../assets/icons/support.svg';
 import ChangeLanguageIcon from './../assets/icons/websitesvg.svg';
 import AboutUsIcon from './../assets/icons/about us.svg';
-import { PRIMARY } from '../assets/colors';
+import {PRIMARY} from '../assets/colors';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import { getAppVersion } from '../utils/deviceInfo';
+import {getAppVersion} from '../utils/deviceInfo';
 import WithNetInfo from '../components/hoc/withNetInfo';
 import ChooseLanguageComponent from '../components/common/ChooseLanguageComponent';
 import { connect } from 'react-redux';
@@ -208,43 +208,48 @@ class SettingScreen extends Component{
             </ScrollView>
         )
     }
-}
+  }
 
-export default connect(mapStateToProps, mapDispatchToProps)(WithNetInfo(SettingScreen));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(WithNetInfo(SettingScreen));
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: 'white'
-    },
-    row: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: 20,
-    },
-    label: {
-        marginLeft: 16,
-        color: PRIMARY,
-        fontSize: 14,
-        fontFamily: 'Gilroy-Bold'
-    },
-    line: {
-        height: .3,
-        backgroundColor: 'lightgrey'
-    },
-    logoutIcon: {
-        width: 22
-    },
-    version: {
-        alignSelf: 'center',
-        marginTop: 60,
-        marginBottom: 20,
-        fontWeight: '500',
-        color: PRIMARY,
-        fontSize: 15
-    },
-    modalContainer: {
-        backgroundColor: 'rgba(0, 0, 0, .5)',
-        height: '100%'
-    },
-})
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 20,
+  },
+  label: {
+    marginLeft: 14,
+    color: PRIMARY,
+    fontSize: 14,
+    fontFamily: 'Gilroy-Medium',
+    letterSpacing: 0.25,
+    color: 'black',
+  },
+  line: {
+    height: 0.3,
+    backgroundColor: 'lightgrey',
+  },
+  logoutIcon: {
+    width: 22,
+  },
+  version: {
+    alignSelf: 'center',
+    marginTop: 60,
+    marginBottom: 20,
+    fontWeight: '500',
+    color: PRIMARY,
+    fontSize: 15,
+  },
+  modalContainer: {
+    backgroundColor: 'rgba(0, 0, 0, .5)',
+    height: '100%',
+  },
+});

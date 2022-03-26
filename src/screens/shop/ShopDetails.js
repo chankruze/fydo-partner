@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, SafeAreaView, ScrollView} from 'react-native';
+import {StyleSheet, Text, View, SafeAreaView, ScrollView, Dimensions} from 'react-native';
 import React, {useState} from 'react';
 import {RadioButton, TextInput} from 'react-native-paper';
 import {Checkbox} from 'react-native-paper';
@@ -15,6 +15,9 @@ import {
 import ButtonComponent from '../../components/ButtonComponent';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
+const WIDTH = Dimensions.get('screen').width;
+
+
 const ShopDetails = ({navigation, route}) => {
   const [parking, setParking] = useState(false);
   const [wheelchair, setWheelchair] = useState(false);
@@ -30,7 +33,7 @@ const ShopDetails = ({navigation, route}) => {
   const [UPI, setUPI] = useState(null);
 
   const next = () => {
-    if (isValidate() || !premiumService)
+    // if (isValidate() || !premiumService)
       navigation.navigate('ShopTiming', {data: route?.params?.data});
   };
 
@@ -53,7 +56,7 @@ const ShopDetails = ({navigation, route}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View style={premiumService && styles.subContainer}>
           <View
             style={
@@ -81,11 +84,20 @@ const ShopDetails = ({navigation, route}) => {
             <View style={{width: '100%'}}>
               <TextInput
                 value={accountNumber}
-                style={styles.input}
+                style={[styles.input]}
                 selectionColor={DARKBLUE}
                 onChangeText={value => setAccountNumber(value)}
                 activeUnderlineColor={GREY_2}
                 placeholder="Bank Account Number"
+                theme={
+                  {
+                    fonts: {
+                      regular: {
+                        fontFamily: 'Gilroy-Medium'
+                      }
+                    }
+                  }
+                }
               />
               {/* {error.accountNumber && (
                 <Text style={styles.error}>{error.accountNumber}</Text>
@@ -95,6 +107,15 @@ const ShopDetails = ({navigation, route}) => {
                 selectionColor={DARKBLUE}
                 activeUnderlineColor={GREY_2}
                 placeholder="Bank Account IFSC"
+                theme={
+                  {
+                    fonts: {
+                      regular: {
+                        fontFamily: 'Gilroy-Medium'
+                      }
+                    }
+                  }
+                }
               />
               {/* {error.IFSC && (
                 <Text style={styles.error}>{error.IFSC}</Text>
@@ -104,12 +125,30 @@ const ShopDetails = ({navigation, route}) => {
                 selectionColor={DARKBLUE}
                 activeUnderlineColor={GREY_2}
                 placeholder="GST ID (optional)"
+                theme={
+                  {
+                    fonts: {
+                      regular: {
+                        fontFamily: 'Gilroy-Medium'
+                      }
+                    }
+                  }
+                }
               />
               <TextInput
                 style={styles.input}
                 selectionColor={DARKBLUE}
                 activeUnderlineColor={GREY_2}
                 placeholder="UPI ID"
+                theme={
+                  {
+                    fonts: {
+                      regular: {
+                        fontFamily: 'Gilroy-Medium'
+                      }
+                    }
+                  }
+                }
                 right={
                   <TextInput.Icon
                     name={() => (
@@ -222,6 +261,15 @@ const ShopDetails = ({navigation, route}) => {
                 activeUnderlineColor={GREY_2}
                 placeholder="Phone Number"
                 keyboardType="numeric"
+                theme={
+                  {
+                    fonts: {
+                      regular: {
+                        fontFamily: 'Gilroy-Medium'
+                      }
+                    }
+                  }
+                }
                 left={
                   <TextInput.Icon
                     name={() => (
@@ -275,8 +323,8 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '80%',
-    alignSelf: 'center',
     height: 30,
+    alignSelf: 'center',
     fontFamily: 'Gilroy-Medium',
     borderBottomColor: DARKGREY,
     backgroundColor: 'white',
@@ -287,11 +335,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: DARKBLACK,
     fontFamily: 'Gilroy-Medium',
+    letterSpacing: 0.3,
   },
   premiumText: {
     color: DARKBLUE,
     fontFamily: 'Gilroy-Medium',
     textDecorationLine: 'underline',
+    letterSpacing: 0.3,
+
   },
   upi: {
     color: DARKBLUE,
@@ -301,14 +352,17 @@ const styles = StyleSheet.create({
     width: '80%',
     alignSelf: 'center',
     fontFamily: 'Gilroy-Medium',
+    letterSpacing: 0.3,
+
   },
   radioContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    width: WIDTH*.93,
   },
   radioButton: {
     flexDirection: 'row',
-    width: '45%',
+    width: '47%',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
@@ -316,12 +370,16 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: DARKBLACK,
     fontFamily: 'Gilroy-Medium',
+    letterSpacing: 0.3,
+
   },
   learnMore: {
     fontSize: 10,
     textDecorationLine: 'underline',
     color: DARKBLUE,
     fontFamily: 'Gilroy-Medium',
+    letterSpacing: 0.3,
+
   },
   next: {
     width: '100%',
@@ -334,5 +392,7 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     width: '80%',
     alignSelf: 'center',
+    letterSpacing: 0.3,
+
   },
 });
