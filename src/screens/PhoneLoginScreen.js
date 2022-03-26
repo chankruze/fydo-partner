@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -23,13 +23,13 @@ import {
 import ButtonComponent from '../components/ButtonComponent';
 import WithNetInfo from '../components/hoc/withNetInfo';
 
-import {sendLoginOTP} from '../services/authService';
+import { sendLoginOTP } from '../services/authService';
 import { SCREENS } from '../constants/authScreens';
 
 const HEIGHT = Dimensions.get('screen').height;
 const TAB_BAR_HEIGHT = 49;
 
-const PhoneLoginScreen = ({navigation, handleNextScreen}) => {
+const PhoneLoginScreen = ({ navigation, handleNextScreen }) => {
   const [phoneNumber, setPhoneNumber] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -55,14 +55,14 @@ const PhoneLoginScreen = ({navigation, handleNextScreen}) => {
     if (validateInput()) {
       try {
         const response = await sendLoginOTP(phoneNumber);
-        const {otpId} = response?.data;
+        const { otpId } = response?.data;
         setLoading(false);
         if (otpId) {
           // navigation.navigate('OTPVerify', {
           //   phoneNumber: phoneNumber,
           //   otpId: otpId,
           // });
-          handleNextScreen(SCREENS.OTP_VERIFY, {phoneNumber: phoneNumber, otpId: otpId})
+          handleNextScreen(SCREENS.OTP_VERIFY, { phoneNumber: phoneNumber, otpId: otpId })
         }
       } catch (error) {
         console.log(error);
@@ -85,47 +85,47 @@ const PhoneLoginScreen = ({navigation, handleNextScreen}) => {
   };
 
   return (
-     
-        <SafeAreaView style={styles.container}>
-          <StatusBar backgroundColor={PRIMARY} translucent={false}/>
-          <Text style={styles.title}>Enter phone number</Text>
-          <Text style={styles.label}>
-            We will send you a 4-digit OTP to your phone number for
-            verification.
-          </Text>
-          <TouchableOpacity style={styles.countryButton} activeOpacity={0.8}>
-            <Image source={flag} style={styles.flagIcon} />
-            <Text style={styles.countryCode}>{country.code}</Text>
-            <View style={styles.separator} />
-            <TextInput
-              style={styles.input}
-              maxLength={10}
-              value={phoneNumber}
-              keyboardType="phone-pad"
-              placeholder="Phone number"
-              placeholderTextColor={DARKGREY}
-              onChangeText={handlePhoneNumber}
-            />
-          </TouchableOpacity>
 
-          <Text style={styles.error}>{error}</Text>
-          <ButtonComponent
-            backgroundColor={PRIMARY}
-            color="white"
-            label="Send OTP"
-            onPress={sendOTP}
-            loading={loading}
-          />
+    <View style={styles.container}>
+      <StatusBar backgroundColor={PRIMARY} translucent={false} />
+      <Text style={styles.title}>Enter phone number</Text>
+      <Text style={styles.label}>
+        We will send you a 4-digit OTP to your phone number for
+        verification.
+      </Text>
+      <TouchableOpacity style={styles.countryButton} activeOpacity={0.8}>
+        <Image source={flag} style={styles.flagIcon} />
+        <Text style={styles.countryCode}>{country.code}</Text>
+        <View style={styles.separator} />
+        <TextInput
+          style={styles.input}
+          maxLength={10}
+          value={phoneNumber}
+          keyboardType="phone-pad"
+          placeholder="Phone number"
+          placeholderTextColor={DARKGREY}
+          onChangeText={handlePhoneNumber}
+        />
+      </TouchableOpacity>
 
-          <View style={styles.footer}>
-            <Text style={styles.footerLabel}>
-              By continuing you agree to our
-            </Text>
-            <TouchableOpacity>
-              <Text style={styles.footerOtherLabel}>Terms & Conditions</Text>
-            </TouchableOpacity>
-          </View>
-        </SafeAreaView>
+      <Text style={styles.error}>{error}</Text>
+      <ButtonComponent
+        backgroundColor={PRIMARY}
+        color="white"
+        label="Send OTP"
+        onPress={sendOTP}
+        loading={loading}
+      />
+
+      <View style={styles.footer}>
+        <Text style={styles.footerLabel}>
+          By continuing you agree to our
+        </Text>
+        <TouchableOpacity>
+          <Text style={styles.footerOtherLabel}>Terms & Conditions</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 };
 

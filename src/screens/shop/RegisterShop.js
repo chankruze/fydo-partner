@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -8,6 +8,7 @@ import {
   Dimensions,
   TextInput,
   TouchableOpacity,
+  SafeAreaView
 } from 'react-native';
 import {
   PRIMARY,
@@ -23,7 +24,7 @@ import {
   GREY_3,
 } from '../../assets/colors';
 import Octicons from 'react-native-vector-icons/Octicons';
-import {launchImageLibrary} from 'react-native-image-picker';
+import { launchImageLibrary } from 'react-native-image-picker';
 import ButtonComponent from '../../components/ButtonComponent';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FontIsto from 'react-native-vector-icons/Fontisto';
@@ -35,7 +36,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialComunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import WithNetInfo from '../../components/hoc/withNetInfo';
 import SelectDropdown from 'react-native-select-dropdown';
-import {add, color} from 'react-native-reanimated';
+import { add, color } from 'react-native-reanimated';
 
 const HEIGHT = Dimensions.get('screen').height;
 
@@ -51,7 +52,7 @@ const options = {
   quality: 0.5,
 };
 
-function RegisterShop({route, navigation}) {
+function RegisterShop({ route, navigation }) {
   const [ownerName, setOwnerName] = useState('');
   // const [phoneNumber, setPhoneNumber] = useState(route.params.phoneNumber);
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -102,7 +103,7 @@ function RegisterShop({route, navigation}) {
   };
 
   const pickImage = () => {
-    launchImageLibrary(options, ({assets, didCancel}) => {
+    launchImageLibrary(options, ({ assets, didCancel }) => {
       if (assets) {
         console.log(assets);
       }
@@ -119,200 +120,204 @@ function RegisterShop({route, navigation}) {
         // pincode: pincode
         // location: location
       };
-      navigation.navigate('ShopDetails', {data: data});
+      navigation.navigate('ShopDetails', { data: data });
     }
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor={PRIMARY} />
-      <View style={styles.contentContainer}>
-        <View style={styles.information}>
-          <MaterialComunityIcons
-            name="information-outline"
-            size={25}
-            color="red"
-          />
-          <Text style={styles.informationText}>
-            Be at your shop while entering information so that we can get exact
-            location of your shop.
-          </Text>
-        </View>
-        <Text style={styles.title}>Add shop details</Text>
-
-        <View style={styles.box}>
-          <FontAwesome5 name="user-circle" size={25} color="black" />
-          <TextInput
-            value={ownerName}
-            onChangeText={value => setOwnerName(value)}
-            placeholder="Your Name"
-            style={commonstyles.input}
-          />
-        </View>
-        {error.ownerName && (
-          <Text style={styles.error}>{error.ownerName}</Text>
-        )}
-
-        <View style={styles.box}>
-          <FoundationIcon name="telephone" size={28} color="black" />
-          <TextInput
-            value={phoneNumber}
-            onChangeText={value => setPhoneNumber(value)}
-            placeholder="Phone Number"
-            style={commonstyles.input}
-          />
-        </View>
-        {error.phoneNumber && (
-          <Text style={styles.error}>{error.phoneNumber}</Text>
-        )}
-
-        <View style={styles.box}>
-          <FontIsto name="shopping-store" size={20} color="black" />
-          <TextInput
-            value={shopName}
-            onChangeText={value => setShopName(value)}
-            placeholder="Shop Name"
-            style={commonstyles.input}
-          />
-        </View>
-        {error.shopName && (
-          <Text style={styles.error}>{error.shopName}</Text>
-        )}
-
-        <View style={styles.box}>
-          <EntypoIcon name="location" size={25} color={DARKBLACK} />
-          <TextInput
-            value={address}
-            disabled
-            multiline
-            style={[commonstyles.input, {width: '80%'}]}
-            placeholder="Shop Address"
-          />
-          <MaterialIcons
-            name="my-location"
-            size={25}
-            color={DARKBLACK}
-            onPress={() =>
-              navigation.navigate('Maps', {
-                address: address,
-              })
-            }
-          />
-        </View>
-        {error.address && <Text style={styles.error}>{error.address}</Text>}
-
-        <View style={styles.box}>
-          <MaterialIcons name="location-pin" size={28} color={DARKBLACK} />
-          <TextInput
-            value={pincode}
-            onChangeText={value => setPincode(value)}
-            placeholder="Pincode"
-            style={commonstyles.input}
-          />
-        </View>
-        {error.pincode && <Text style={styles.error}>{error.pincode}</Text>}
-
-
-        <View style={styles.dropdown}>
-          <FontAwesome name="id-card-o" size={18} color={DARKBLACK} />
-          <SelectDropdown
-            data={idCards}
-            defaultButtonText="Your ID Proof"
-            onSelect={(selectedItem, index) => {
-              console.log(selectedItem, index);
-            }}
-            renderDropdownIcon={() => (
-              <EntypoIcon name="chevron-down" size={25} color={DARKBLACK} />
-            )}
-            buttonStyle={[commonstyles.input, {width: '91%', marginLeft: 0}]}
-            buttonTextStyle={{
-              textAlign: 'left',
-              fontFamily: 'Gilroy-Medium',
-              fontSize: 15,
-            }}
-            dropdownStyle={{borderRadius: 10}}
-            buttonTextAfterSelection={(selectedItem, index) => {
-              return selectedItem;
-            }}
-            rowTextForSelection={(item, index) => {
-              return item;
-            }}
-          />
-        </View>
-        <View style={styles.uploadImage}>
-          <TouchableOpacity
-            onPress={pickImage}
-            style={styles.transparentButton}>
-            <MaterialIcons
-              name="add-circle-outline"
-              size={22}
-              color={PRIMARY}
+    <SafeAreaView style={{
+      backgroundColor: 'white'
+    }}>
+      <ScrollView contentContainerStyle={styles.container}>
+        <StatusBar barStyle="light-content" backgroundColor={PRIMARY} />
+        <View style={styles.contentContainer}>
+          <View style={styles.information}>
+            <MaterialComunityIcons
+              name="information-outline"
+              size={25}
+              color="red"
             />
-            <Text style={styles.buttonText}>Add Front image</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={pickImage}
-            style={styles.transparentButton}>
-            <MaterialIcons
-              name="add-circle-outline"
-              size={22}
-              color={PRIMARY}
+            <Text style={styles.informationText}>
+              Be at your shop while entering information so that we can get exact
+              location of your shop.
+            </Text>
+          </View>
+          <Text style={styles.title}>Add shop details</Text>
+
+          <View style={styles.box}>
+            <FontAwesome5 name="user-circle" size={25} color="black" />
+            <TextInput
+              value={ownerName}
+              onChangeText={value => setOwnerName(value)}
+              placeholder="Your Name"
+              style={commonstyles.input}
             />
-            <Text style={styles.buttonText}>Add Back image</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.box}>
-          <MaterialComunityIcons name="web" size={22} color="#000" />
-          <TextInput
-            value={website}
-            onChangeText={value => setWebsite(value)}
-            placeholder="Website (if any)"
-            style={commonstyles.input}
+          </View>
+          {error.ownerName && (
+            <Text style={styles.error}>{error.ownerName}</Text>
+          )}
+
+          <View style={styles.box}>
+            <FoundationIcon name="telephone" size={28} color="black" />
+            <TextInput
+              value={phoneNumber}
+              onChangeText={value => setPhoneNumber(value)}
+              placeholder="Phone Number"
+              style={commonstyles.input}
+            />
+          </View>
+          {error.phoneNumber && (
+            <Text style={styles.error}>{error.phoneNumber}</Text>
+          )}
+
+          <View style={styles.box}>
+            <FontIsto name="shopping-store" size={20} color="black" />
+            <TextInput
+              value={shopName}
+              onChangeText={value => setShopName(value)}
+              placeholder="Shop Name"
+              style={commonstyles.input}
+            />
+          </View>
+          {error.shopName && (
+            <Text style={styles.error}>{error.shopName}</Text>
+          )}
+
+          <View style={styles.box}>
+            <EntypoIcon name="location" size={25} color={DARKBLACK} />
+            <TextInput
+              value={address}
+              disabled
+              multiline
+              style={[commonstyles.input, { width: '80%' }]}
+              placeholder="Shop Address"
+            />
+            <MaterialIcons
+              name="my-location"
+              size={25}
+              color={DARKBLACK}
+              onPress={() =>
+                navigation.navigate('Maps', {
+                  address: address,
+                })
+              }
+            />
+          </View>
+          {error.address && <Text style={styles.error}>{error.address}</Text>}
+
+          <View style={styles.box}>
+            <MaterialIcons name="location-pin" size={28} color={DARKBLACK} />
+            <TextInput
+              value={pincode}
+              onChangeText={value => setPincode(value)}
+              placeholder="Pincode"
+              style={commonstyles.input}
+            />
+          </View>
+          {error.pincode && <Text style={styles.error}>{error.pincode}</Text>}
+
+
+          <View style={styles.dropdown}>
+            <FontAwesome name="id-card-o" size={18} color={DARKBLACK} />
+            <SelectDropdown
+              data={idCards}
+              defaultButtonText="Your ID Proof"
+              onSelect={(selectedItem, index) => {
+                console.log(selectedItem, index);
+              }}
+              renderDropdownIcon={() => (
+                <EntypoIcon name="chevron-down" size={25} color={DARKBLACK} />
+              )}
+              buttonStyle={[commonstyles.input, { width: '91%', marginLeft: 0 }]}
+              buttonTextStyle={{
+                textAlign: 'left',
+                fontFamily: 'Gilroy-Medium',
+                fontSize: 15,
+              }}
+              dropdownStyle={{ borderRadius: 10 }}
+              buttonTextAfterSelection={(selectedItem, index) => {
+                return selectedItem;
+              }}
+              rowTextForSelection={(item, index) => {
+                return item;
+              }}
+            />
+          </View>
+          <View style={styles.uploadImage}>
+            <TouchableOpacity
+              onPress={pickImage}
+              style={styles.transparentButton}>
+              <MaterialIcons
+                name="add-circle-outline"
+                size={22}
+                color={PRIMARY}
+              />
+              <Text style={styles.buttonText}>Add Front image</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={pickImage}
+              style={styles.transparentButton}>
+              <MaterialIcons
+                name="add-circle-outline"
+                size={22}
+                color={PRIMARY}
+              />
+              <Text style={styles.buttonText}>Add Back image</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.box}>
+            <MaterialComunityIcons name="web" size={22} color="#000" />
+            <TextInput
+              value={website}
+              onChangeText={value => setWebsite(value)}
+              placeholder="Website (if any)"
+              style={commonstyles.input}
+            />
+          </View>
+
+          <View style={styles.shoptype}>
+            <SelectDropdown
+              data={shopTypes}
+              onSelect={(selectedItem, index) => {
+                console.log(selectedItem, index);
+                setShopType(selectedItem);
+              }}
+              defaultValueByIndex={0}
+              renderDropdownIcon={() => (
+                <EntypoIcon name="chevron-down" size={25} color="#000" />
+              )}
+              dropdownStyle={{ borderRadius: 10 }}
+              buttonStyle={[commonstyles.input, { width: '100%', marginLeft: 0 }]}
+              buttonTextStyle={{
+                color: DARKGREY,
+                textAlign: 'left',
+                fontFamily: 'Gilroy-Medium',
+                fontSize: 16,
+              }}
+              buttonTextAfterSelection={(selectedItem, index) => {
+                return selectedItem;
+              }}
+              rowTextForSelection={(item, index) => {
+                return item;
+              }}
+            />
+          </View>
+
+          <ButtonComponent
+            label="Next"
+            color="white"
+            backgroundColor={DARKBLUE}
+            onPress={next}
           />
         </View>
-
-        <View style={styles.shoptype}>
-          <SelectDropdown
-            data={shopTypes}
-            onSelect={(selectedItem, index) => {
-              console.log(selectedItem, index);
-              setShopType(selectedItem);
-            }}
-            defaultValueByIndex={0}
-            renderDropdownIcon={() => (
-              <EntypoIcon name="chevron-down" size={25} color="#000" />
-            )}
-            dropdownStyle={{borderRadius: 10}}
-            buttonStyle={[commonstyles.input, {width: '100%', marginLeft: 0}]}
-            buttonTextStyle={{
-              color: DARKGREY,
-              textAlign: 'left',
-              fontFamily: 'Gilroy-Medium',
-              fontSize: 16,
-            }}
-            buttonTextAfterSelection={(selectedItem, index) => {
-              return selectedItem;
-            }}
-            rowTextForSelection={(item, index) => {
-              return item;
-            }}
-          />
-        </View>
-
-        <ButtonComponent
-          label="Next"
-          color="white"
-          backgroundColor={DARKBLUE}
-          onPress={next}
-        />
-      </View>
-      {/* <View style={styles.footer}>
+        {/* <View style={styles.footer}>
         <Text style={styles.footerLabel}>By continuing you agree to our</Text>
         <TouchableOpacity>
           <Text style={styles.footerOtherLabel}>Terms & Conditions</Text>
         </TouchableOpacity>
       </View> */}
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 

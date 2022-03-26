@@ -8,13 +8,13 @@ import {
   TextInput,
   Dimensions,
 } from 'react-native';
-import React, {useState} from 'react';
-import {DARKBLUE, DARKGREY, GREY, LIGHTBLACK, PRIMARY} from '../assets/colors';
-import {sendLoginOTP, verifyLoginOTP} from '../services/authService';
-import {setUser} from '../store/actions/user.action';
-import {createRef} from 'react';
-import {connect} from 'react-redux';
-import {saveUserData} from '../utils/sharedPreferences';
+import React, { useState } from 'react';
+import { DARKBLUE, DARKGREY, GREY, LIGHTBLACK, PRIMARY } from '../assets/colors';
+import { sendLoginOTP, verifyLoginOTP } from '../services/authService';
+import { setUser } from '../store/actions/user.action';
+import { createRef } from 'react';
+import { connect } from 'react-redux';
+import { saveUserData } from '../utils/sharedPreferences';
 import ButtonComponent from '../components/ButtonComponent';
 import OTPTextInput from 'react-native-otp-textinput';
 import WithNetInfo from '../components/hoc/withNetInfo';
@@ -28,7 +28,7 @@ const mapDispatchToProps = function (dispatch) {
   };
 };
 
-const OTPVerifyScreen = ({navigationData, navigation, handleNextScreen, setUser}) => {
+const OTPVerifyScreen = ({ navigationData, navigation, handleNextScreen, setUser }) => {
   const id = navigationData?.otpId;
   const [otp, setOtp] = useState(null);
   const [otpId, setOtpId] = useState(id);
@@ -58,7 +58,7 @@ const OTPVerifyScreen = ({navigationData, navigation, handleNextScreen, setUser}
     try {
       console.log(otpId || id, otp)
       const response = await verifyLoginOTP(otpId || id, otp);
-      const {data} = response;
+      const { data } = response;
       setLoading(false);
       if (data.message) {
         setError(data.message);
@@ -88,7 +88,7 @@ const OTPVerifyScreen = ({navigationData, navigation, handleNextScreen, setUser}
   const resendOTP = async () => {
     try {
       const response = await sendLoginOTP(phoneNumber);
-      const {otpId} = response?.data;
+      const { otpId } = response?.data;
       setOtp(null);
       setOtpId(otpId);
       otpInput.clear();
@@ -97,7 +97,7 @@ const OTPVerifyScreen = ({navigationData, navigation, handleNextScreen, setUser}
     }
   };
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Text style={styles.title}>Verify OTP</Text>
       <Text style={styles.label}>
         Please enter the 6-digit OTP sent to you at {phoneNumber}
@@ -132,7 +132,7 @@ const OTPVerifyScreen = ({navigationData, navigation, handleNextScreen, setUser}
           <Text style={styles.footerOtherLabel}>Terms & Conditions</Text>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

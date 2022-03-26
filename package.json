@@ -28,6 +28,7 @@
     "moment": "^2.29.1",
     "react": "17.0.2",
     "react-native": "0.67.3",
+    "react-native-default-preference": "^1.4.3",
     "react-native-device-info": "^8.5.0",
     "react-native-dialog": "^9.2.1",
     "react-native-fab": "^1.0.18",

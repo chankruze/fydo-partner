@@ -1,4 +1,4 @@
-import React, {useState, useRef, createRef} from 'react';
+import React, { useState, useRef, createRef } from 'react';
 import {
   StyleSheet,
   View,
@@ -7,7 +7,8 @@ import {
   useWindowDimensions,
   Dimensions,
   StatusBar,
-  Alert
+  Alert,
+  SafeAreaView
 } from 'react-native';
 
 import slides from '../utils/slides';
@@ -15,8 +16,8 @@ import OnboardingItem from '../components/OnboardingItem';
 import Paginator from '../components/Paginator';
 import NextButton from '../components/NextButton';
 import SkipButton from '../components/SkipButton';
-import {GREY, GREY_2, GREY_3, PRIMARY} from '../assets/colors';
-import {Modal} from 'react-native';
+import { GREY, GREY_2, GREY_3, PRIMARY } from '../assets/colors';
+import { Modal } from 'react-native';
 import PhoneLoginScreen from './PhoneLoginScreen';
 import OTPVerifyScreen from './OTPVerifyScreen';
 import ChooseLanguage from './ChooseLanguage';
@@ -33,11 +34,11 @@ const mapStateToProps = (state) => {
 
 
 const OnboardingScreen = (props) => {
-  let {navigation, user} = props;
+  let { navigation, user } = props;
 
   const [navigationData, setNavigationData] = useState(null);
   const [currentScreen, setCurrentScreen] = useState(SCREENS.PHONE_LOGIN)
-  const {width} = useWindowDimensions();
+  const { width } = useWindowDimensions();
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef(null);
@@ -49,13 +50,13 @@ const OnboardingScreen = (props) => {
   //   console.log(currentIndex)
   // }, [currentIndex])
 
-  const viewableItemsChanged = useRef(({viewableItems}) => {
+  const viewableItemsChanged = useRef(({ viewableItems }) => {
     setCurrentIndex(viewableItems[0].index);
   }).current;
 
   const scrollTo = () => {
     if (currentIndex < slides.length - 1) {
-      slidesRef.current.scrollToIndex({index: currentIndex + 1});
+      slidesRef.current.scrollToIndex({ index: currentIndex + 1 });
     } else {
       // navigateToAuth();
       setShowBottomSheet(true);
@@ -71,29 +72,29 @@ const OnboardingScreen = (props) => {
   const skip = () => {
     // handleFirstLaunch();
     setCurrentIndex(3);
-  //   setFinished(true);
-  // };
+    //   setFinished(true);
+    // };
 
     // navigateToAuth();
     setShowBottomSheet(true);
     // setFinished(true);
   };
-  
+
   //   const viewConfig = useRef({viewAreaCoveragePercentThresold: 50}).current;
   return (
-    <View style={(currentIndex == 3) ? styles.container2 : styles.container1}>
-      <StatusBar translucent={false} backgroundColor={PRIMARY}/>
+    <SafeAreaView style={(currentIndex == 3) ? styles.container2 : styles.container1}>
+      <StatusBar translucent={false} backgroundColor={PRIMARY} />
       <View style={styles.miniContainer}>
         {currentIndex == 3 ? null : (
-          <View style={{alignSelf: 'flex-end', marginRight: 10, marginTop: 10}}>
+          <View style={{ alignSelf: 'flex-end', marginRight: 10, marginTop: 10 }}>
             <SkipButton skip={skip} />
           </View>
         )}
 
         <FlatList
           data={slides}
-          renderItem={({item}) => (
-            <OnboardingItem item={item} index={currentIndex} finish = {skip}/>
+          renderItem={({ item }) => (
+            <OnboardingItem item={item} index={currentIndex} finish={skip} />
           )}
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -101,8 +102,8 @@ const OnboardingScreen = (props) => {
           bounces={false}
           keyExtractor={item => item.id}
           onScroll={Animated.event(
-            [{nativeEvent: {contentOffset: {x: scrollX}}}],
-            {useNativeDriver: false},
+            [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+            { useNativeDriver: false },
           )}
           scrollEventThrottle={32}
           onViewableItemsChanged={viewableItemsChanged}
@@ -110,22 +111,22 @@ const OnboardingScreen = (props) => {
         />
       </View>
       <Paginator data={slides} scrollX={scrollX} />
-      
-       <Modal
-          animationType="slide"
-          transparent={true}
-          visible={showBottomSheet}>
-            <StatusBar 
-              backgroundColor={'rgba(0, 0, 0, .3)'} 
-              barStyle="light-content"/>
-          <View style={{flex: 1, backgroundColor: 'rgba(0, 0, 0, .3)'}}></View>
-          
-         {currentScreen == SCREENS.PHONE_LOGIN && (<PhoneLoginScreen {...props} handleNextScreen={handleNextScreen}/>)}
-         {currentScreen == SCREENS.LANGUAGE && (<ChooseLanguage {...props} handleNextScreen={handleNextScreen}/>)}
-         {currentScreen == SCREENS.OTP_VERIFY && (<OTPVerifyScreen {...props} handleNextScreen={handleNextScreen} navigationData={navigationData}/>)}
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={showBottomSheet}>
+        <StatusBar
+          backgroundColor={'rgba(0, 0, 0, .3)'}
+          barStyle="light-content" />
+        <View style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, .3)' }}></View>
+
+        {currentScreen == SCREENS.PHONE_LOGIN && (<PhoneLoginScreen {...props} handleNextScreen={handleNextScreen} />)}
+        {currentScreen == SCREENS.LANGUAGE && (<ChooseLanguage {...props} handleNextScreen={handleNextScreen} />)}
+        {currentScreen == SCREENS.OTP_VERIFY && (<OTPVerifyScreen {...props} handleNextScreen={handleNextScreen} navigationData={navigationData} />)}
       </Modal>
-      </View>
-     
+    </SafeAreaView>
+
   );
 };
 
