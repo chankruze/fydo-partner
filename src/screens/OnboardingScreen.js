@@ -17,7 +17,6 @@ import NextButton from '../components/NextButton';
 import SkipButton from '../components/SkipButton';
 import {GREY, GREY_2, GREY_3, PRIMARY} from '../assets/colors';
 import {Modal} from 'react-native';
-import AuthNavigation from './../navigations/authNavigation';
 import PhoneLoginScreen from './PhoneLoginScreen';
 import OTPVerifyScreen from './OTPVerifyScreen';
 import ChooseLanguage from './ChooseLanguage';
@@ -115,11 +114,7 @@ const OnboardingScreen = (props) => {
        <Modal
           animationType="slide"
           transparent={true}
-          visible={showBottomSheet}
-          onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-            setShowBottomSheet(false)
-          }}>
+          visible={showBottomSheet}>
             <StatusBar 
               backgroundColor={'rgba(0, 0, 0, .3)'} 
               barStyle="light-content"/>

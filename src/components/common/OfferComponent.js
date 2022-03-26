@@ -8,7 +8,7 @@ import React, {useState} from 'react'
 const WIDTH = Dimensions.get('screen').width;
 
 const OfferComponent = ({token, item, navigation, type}) => {
-  const { _id, pics, title, extra, icon, isFavourite, description } = item;
+  const { _id, pics, title, extra, imageUrl, isFavourite, description } = item;
   const [favourite, setFavourite] = useState(true)
   return (
     <Shadow
@@ -27,7 +27,7 @@ const OfferComponent = ({token, item, navigation, type}) => {
         style={styles.listItem}
         >
         <Image
-            source={{ uri: pics?.[0] }}
+            source={{ uri: imageUrl?.[0] }}
             style={styles.image}
         />
         <View style={styles.content}>

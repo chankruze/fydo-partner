@@ -20,174 +20,195 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import {getAppVersion} from '../utils/deviceInfo';
 import WithNetInfo from '../components/hoc/withNetInfo';
 import ChooseLanguageComponent from '../components/common/ChooseLanguageComponent';
-import {connect} from 'react-redux';
-import {setLanguage, setUser} from '../store/actions/user.action';
+import { connect } from 'react-redux';
+import { setLanguage, setUser } from '../store/actions/user.action';
+import { CommonActions } from '@react-navigation/native';
 
-const PRIVACY_PAGE = 'https://fydo.in/privacy-policy.html';
+const PRIVACY_PAGE = "https://fydo.in/privacy-policy.html";
 
-const mapStateToProps = state => {
-  return {
-    language: state?.userReducer?.language,
-  };
-};
+const mapStateToProps = (state) => {
+    return {
+        language: state?.userReducer?.language,
+    }
+}
 
-const mapDispatchToProps = dispatch => {
-  return {
-    changeLanguage: language => dispatch(setLanguage(language)),
-    setUser: user => dispatch(setUser(user)),
-  };
-};
+const mapDispatchToProps = (dispatch) => {
+    return {
+        changeLanguage: (language) => dispatch(setLanguage(language)),
+        setUser: (user) => dispatch(setUser(user))
+    }
+}
 
-class SettingScreen extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      modalVisible: false,
-    };
-    this.logout = this.logout.bind(this);
-    this.navigateToFAQScreen = this.navigateToFAQScreen.bind(this);
-    this.navigateToFeedbackScreen = this.navigateToFeedbackScreen.bind(this);
-    this.navigateToSupportServiceScreen =
-      this.navigateToSupportServiceScreen.bind(this);
-    this.navigateToAboutUsScreen = this.navigateToAboutUsScreen.bind(this);
-    this.openPrivacyPage = this.openPrivacyPage.bind(this);
-    this.triggerModal = this.triggerModal.bind(this);
-  }
+class SettingScreen extends Component{
 
-  triggerModal() {
-    this.setState(prevState => {
-      return {
-        modalVisible: !prevState.modalVisible,
-      };
-    });
-  }
+    constructor(props){
+        super(props);
+        this.state = {
+            modalVisible: false
+        }
+        this.logout = this.logout.bind(this);
+        this.navigateToFAQScreen = this.navigateToFAQScreen.bind(this);
+        this.navigateToFeedbackScreen = this.navigateToFeedbackScreen.bind(this);
+        this.navigateToSupportServiceScreen = this.navigateToSupportServiceScreen.bind(this);
+        this.navigateToAboutUsScreen = this.navigateToAboutUsScreen.bind(this);
+        this.openPrivacyPage = this.openPrivacyPage.bind(this);
+        this.triggerModal = this.triggerModal.bind(this);
+    }
 
-  navigateToFAQScreen() {
-    let {navigation} = this.props;
-    navigation.navigate('FAQ');
-  }
+    triggerModal() {
+        this.setState(prevState => {
+          return {
+            modalVisible: !prevState.modalVisible
+          }
+        });
+     }
 
-  navigateToFeedbackScreen() {
-    let {navigation} = this.props;
-    navigation.navigate('Feedback');
-  }
+    navigateToFAQScreen(){
+        let {navigation} = this.props;
+        navigation.navigate('FAQ');
+    }
 
-  navigateToSupportServiceScreen() {
-    let {navigation} = this.props;
-    navigation.navigate('SupportService');
-  }
+    navigateToFeedbackScreen(){
+        let {navigation} = this.props;
+        navigation.navigate('Feedback');
+    }
 
-  navigateToAboutUsScreen() {
-    let {navigation} = this.props;
-    navigation.navigate('AboutUs');
-  }
+    navigateToSupportServiceScreen(){
+        let {navigation} = this.props;
+        navigation.navigate('SupportService');
+    }
 
-  openPrivacyPage() {
-    Linking.openURL(PRIVACY_PAGE).catch(err =>
-      console.error("Couldn't load page", err),
-    );
-  }
+    navigateToAboutUsScreen(){
+        let {navigation} = this.props;
+        navigation.navigate('AboutUs');
+    }
 
-  async logout() {
-    let {changeLanguage, setUser, navigation} = this.props;
-    try {
-      changeLanguage(null);
-      setUser(null);
-      navigation.replace('OnBoarding');
-    } catch (error) {
-      console.log(error);
+    openPrivacyPage(){
+        Linking.openURL(PRIVACY_PAGE).catch(err => console.error("Couldn't load page", err));
+    }
+
+    async logout(){
+        let {changeLanguage, setUser, navigation} = this.props;
+        try {
+            changeLanguage(null);
+            setUser(null);
+            navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [
+                    { name: 'OnBoarding' },
+                  ],
+                })
+              );
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    renderModal(){
+        return (
+            <Modal 
+                statusBarTranslucent
+                animationType="fade"
+                transparent={true}
+                visible={this.state.modalVisible}
+                onRequestClose={this.triggerModal}
+                >
+                <Pressable 
+                    activeOpacity={1}
+                    style={styles.modalContainer}
+                    onPress={this.triggerModal}>
+
+                    <ChooseLanguageComponent toggle={this.triggerModal}/>
+
+                </Pressable>
+            </Modal>
+        )
+    }
+
+    render(){
+        let {language} = this.props;
+        return (
+            <ScrollView style={styles.container}>
+                {this.state.modalVisible && this.renderModal()}
+                <TouchableOpacity 
+                    style={styles.row}
+                    onPress={this.navigateToFAQScreen}>
+                    <FAQIcon
+                        width={22}
+                        height={22}
+                    />
+                    <Text style={styles.label}>{language == 'HINDI'? 'सामान्य प्रश्न': 'FAQ'}</Text>
+                </TouchableOpacity>
+                <View style={styles.line}/>
+                <TouchableOpacity 
+                    style={styles.row}
+                    onPress={this.openPrivacyPage}>
+                    <PrivacyIcon
+                        width={22}
+                        height={22}
+                    />
+                    <Text style={styles.label}>{language == 'HINDI'? 'गोपनीयता नीति': 'Privacy policy'}</Text>
+                </TouchableOpacity>
+                <View style={styles.line}/>
+                <TouchableOpacity 
+                    style={styles.row}
+                    onPress={this.navigateToFeedbackScreen}>
+                    <FeekbackIcon
+                        width={22}
+                        height={22}
+                    />
+                    <Text style={styles.label}>{language == 'HINDI'? 'प्रतिक्रिया': 'Feedback'}</Text>
+                </TouchableOpacity>
+                <View style={styles.line}/>
+                <TouchableOpacity 
+                    style={styles.row}
+                    onPress={this.navigateToSupportServiceScreen}>
+                    <SupportServiceIcon
+                        width={22}
+                        height={22}
+                    />
+                    <Text style={styles.label}>{language == 'HINDI'? 'समर्थन और सेवा' :'Support and service'}</Text>
+                </TouchableOpacity>
+                <View style={styles.line}/>
+                <TouchableOpacity 
+                    style={styles.row}
+                    onPress={this.triggerModal}>
+                    <ChangeLanguageIcon
+                        width={22}
+                        height={22}
+                    />
+                    <Text style={styles.label}>{language == 'HINDI'? 'भाषा बदलें': 'Change language'}</Text>
+                </TouchableOpacity>
+                <View style={styles.line}/>
+                <TouchableOpacity 
+                    style={styles.row}
+                    onPress={this.navigateToAboutUsScreen}>
+                    <AboutUsIcon
+                        width={22}
+                        height={22}
+                    />
+                    <Text style={styles.label}> {language == 'HINDI'? 'हमारे बारे में': 'About us'}</Text>
+                </TouchableOpacity>
+                <View style={styles.line}/>
+                <TouchableOpacity 
+                    style={styles.row}
+                    onPress={this.logout}>
+                    <SimpleLineIcons
+                        style={styles.logoutIcon}
+                        size={18}
+                        name="logout"
+                        color={'#FE3838'}
+                    />
+                    <Text style={styles.label}>{language == 'HINDI'? 'लॉग आउट' :'Logout'}</Text>
+                </TouchableOpacity>
+                <View style={styles.line}/>
+                <Text style={styles.version}>v {getAppVersion()}</Text>
+            </ScrollView>
+        )
     }
   }
-
-  renderModal() {
-    return (
-      <Modal
-        statusBarTranslucent
-        animationType="fade"
-        transparent={true}
-        visible={this.state.modalVisible}
-        onRequestClose={this.triggerModal}>
-        <Pressable
-          activeOpacity={1}
-          style={styles.modalContainer}
-          onPress={this.triggerModal}>
-          <ChooseLanguageComponent toggle={this.triggerModal} />
-        </Pressable>
-      </Modal>
-    );
-  }
-
-  render() {
-    let {language} = this.props;
-    return (
-      <ScrollView style={styles.container}>
-        {this.state.modalVisible && this.renderModal()}
-        <TouchableOpacity style={styles.row} onPress={this.navigateToFAQScreen}>
-          <FAQIcon width={22} height={22} />
-          <Text style={styles.label}>
-            {language == 'HINDI' ? 'सामान्य प्रश्न' : 'FAQ'}
-          </Text>
-        </TouchableOpacity>
-        <View style={styles.line} />
-        <TouchableOpacity style={styles.row} onPress={this.openPrivacyPage}>
-          <PrivacyIcon width={22} height={22} />
-          <Text style={styles.label}>
-            {language == 'HINDI' ? 'गोपनीयता नीति' : 'Privacy policy'}
-          </Text>
-        </TouchableOpacity>
-        <View style={styles.line} />
-        <TouchableOpacity
-          style={styles.row}
-          onPress={this.navigateToFeedbackScreen}>
-          <FeekbackIcon width={22} height={22} />
-          <Text style={styles.label}>
-            {language == 'HINDI' ? 'प्रतिक्रिया' : 'Feedback'}
-          </Text>
-        </TouchableOpacity>
-        <View style={styles.line} />
-        <TouchableOpacity
-          style={styles.row}
-          onPress={this.navigateToSupportServiceScreen}>
-          <SupportServiceIcon width={22} height={22} />
-          <Text style={styles.label}>
-            {language == 'HINDI' ? 'समर्थन और सेवा' : 'Support and service'}
-          </Text>
-        </TouchableOpacity>
-        <View style={styles.line} />
-        {/* <TouchableOpacity style={styles.row} onPress={this.triggerModal}>
-          <ChangeLanguageIcon width={22} height={22} />
-          <Text style={styles.label}>
-            {language == 'HINDI' ? 'भाषा बदलें' : 'Change language'}
-          </Text>
-        </TouchableOpacity> */}
-        <View style={styles.line} />
-        <TouchableOpacity
-          style={styles.row}
-          onPress={this.navigateToAboutUsScreen}>
-          <AboutUsIcon width={22} height={22} />
-          <Text style={styles.label}>
-            {' '}
-            {language == 'HINDI' ? 'हमारे बारे में' : 'About us'}
-          </Text>
-        </TouchableOpacity>
-        <View style={styles.line} />
-        <TouchableOpacity style={styles.row} onPress={this.logout}>
-          <SimpleLineIcons
-            style={styles.logoutIcon}
-            size={18}
-            name="logout"
-            color={'#FE3838'}
-          />
-          <Text style={styles.label}>
-            {language == 'HINDI' ? 'लॉग आउट' : 'Logout'}
-          </Text>
-        </TouchableOpacity>
-        <View style={styles.line} />
-        <Text style={styles.version}>v {getAppVersion()}</Text>
-      </ScrollView>
-    );
-  }
-}
 
 export default connect(
   mapStateToProps,

@@ -14,11 +14,15 @@ import {
   View,
 } from 'react-native';
 import ImageSlider from '../../components/ImageSlider';
-import {DARKBLUE, LIGHTBLUE} from '../../assets/colors';
+import {DARKBLUE, LIGHTBLUE, PRIMARY} from '../../assets/colors';
 import {response} from '../../utils/dummyStore';
 import StoreOffers from '../../components/shop/StoreOffers';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { connect } from 'react-redux';
+import { getAmenities, getMyShop } from '../../services/shopService';
+import { SvgUri } from 'react-native-svg';
+import { getOffers } from '../../services/offerService';
+
 
 const mapStateToProps = (state) => {
   return {
@@ -33,6 +37,8 @@ const MyShop = ({navigation, user}) => {
   const [refreshing, setRefreshing] = useState(false);
   const [timeView, setTimeView] = useState(false);
   const [data, setData] = useState(null);
+  const [amenities, setAmenities] = useState([]);
+  const [offers, setOffers] = useState([]);
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -45,12 +51,49 @@ const MyShop = ({navigation, user}) => {
   useEffect(() => {
     async function fetchData(){
       try {
-        // const response = await getp();
-        const json = await response.json
+        const response = await getMyShop(user?.accessToken);
+        const json = await response.json();
+        if(json){
+          setData(json);
+        }
       } catch (error) {
         console.log(error);
       }
     }
+    fetchData();
+    
+  }, []);
+
+  useEffect(() => {
+    async function getAmenitiesData(){
+      try {
+        const amenitiesResponse = await getAmenities(user?.accessToken);
+        const json = await amenitiesResponse.json();
+        if(json){
+          setAmenities(json);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    getAmenitiesData();
+  }, [])
+
+  useEffect(() => {
+    async function fetchOffers(){
+      try {
+        const offerResponse = await getOffers(user?.accessToken);
+        const json = await offerResponse.json();
+        if(json){
+          setOffers(json);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    fetchOffers();
   }, []);
 
   const renderTag = item => {
@@ -70,6 +113,7 @@ const MyShop = ({navigation, user}) => {
 
     return (
       <View
+        key={index}
         style={{
           flexDirection: 'row',
           alignItems: 'center',
@@ -120,6 +164,7 @@ const MyShop = ({navigation, user}) => {
     );
   }
 
+
   return (
     <FlatList
       refreshControl={
@@ -133,21 +178,21 @@ const MyShop = ({navigation, user}) => {
             barStyle="dark-content"
             translucent={true}
           />
-          <ImageSlider images={store?.images} navigation={navigation} />
+          <ImageSlider images={data?.images} navigation={navigation} />
           <View style={styles.contentContainer}>
             <View style={styles.nameRow}>
-              <Text style={styles.name}>{store?.name}</Text>
+              <Text style={styles.name}>{data?.name}</Text>
             </View>
-            {store?.address?.addressLine1 && (
-              <Text style={styles.address}>{store?.address?.addressLine1}</Text>
+            {data?.address?.addressLine1 && (
+              <Text style={styles.address}>{data?.address?.addressLine1}</Text>
             )}
-            <View style={styles.tags}>
+            {/* <View style={styles.tags}>
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                {store?.categories.map(renderTag)}
+                {data?.categories.map(renderTag)}
               </ScrollView>
-            </View>
-            {store?.description && (
-              <Text style={styles.about}>{store?.description}</Text>
+            </View> */}
+            {data?.description && (
+              <Text style={styles.about}>{data?.description}</Text>
             )}
 
             <View style={styles.row}>
@@ -170,6 +215,7 @@ const MyShop = ({navigation, user}) => {
               <View style={styles.timeView}>
                 <FlatList
                   data={store?.timing}
+                  keyExtractor={item => item?._id.toString()}
                   renderItem={item => renderTiming(item)}
                   ItemSeparatorComponent={() => <View style={{height: 5}} />}
                 />
@@ -191,14 +237,14 @@ const MyShop = ({navigation, user}) => {
               }}
             /> */}
             <Text style={styles.amenities}>My Amenities</Text>
-            {store?.amenities?.length > 0 && (
+            {amenities?.length > 0 && (
               <View style={styles.options}>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                  {store?.amenities?.map(({_id, name, iconUrl}) => (
+                  {amenities?.map(({_id, name, iconUrl}) => (
                     <View style={styles.option} key={_id}>
                       {iconUrl &&
                         (iconUrl?.split('.').pop() == 'svg' ? (
-                          <SvgCssUri width={50} height={50} uri={iconUrl} />
+                          <SvgUri width={50} height={50} uri={iconUrl} />
                         ) : (
                           <Image
                             source={{uri: iconUrl}}
@@ -217,8 +263,7 @@ const MyShop = ({navigation, user}) => {
           </View>
           <View>
             <StoreOffers
-              storeId={user?.id}
-              token={user?.accessToken}
+              offers={offers}
               navigation={navigation}
             />
           </View>
@@ -307,11 +352,12 @@ const styles = StyleSheet.create({
     height: 24,
   },
   optionName: {
-    fontSize: 12,
+    fontSize: 14,
     lineHeight: 16,
-    color: '#5E7278',
+    color: PRIMARY,
     textAlign: 'center',
     marginVertical: 7,
+    fontWeight: '600',
     fontFamily: 'Gilroy-Regular',
   },
   title: {

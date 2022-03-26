@@ -40,6 +40,8 @@ import { updateShop } from '../../services/shopService';
 import { connect } from 'react-redux';
 import { generatePresignUrl } from '../../services/presignUrlService';
 import uuid from 'react-native-uuid';
+import { setUser } from '../../store/actions/user.action';
+import { saveUserData } from '../../utils/sharedPreferences';
 
 const HEIGHT = Dimensions.get('screen').height;
 
@@ -49,6 +51,12 @@ const bottomSheetRef = createRef();
 const mapStateToProps = (state) => {
   return {
     user: state?.userReducer?.user
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setUser: (user) => dispatch(setUser(user))
   }
 }
 
@@ -208,8 +216,7 @@ const ShopTiming = (props) => {
       })
 
       console.log("hj==>", img);
-      const imageResponse = await generatePresignUrl('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaG9wSWQiOiI2MWRmY2VjMTA3YjE0NzZlZGFlYzc3YzIiLCJsb2dpblRpbWUiOjE2NDgxMjYxODE0NzgsImlhdCI6MTY0ODEyNjE4MSwiZXhwIjoxNjUwNzU0MTgxfQ.Cxgfbs_A0R4W7ela7HcGv_8iHRhNqB1ObkKpcUG6LzQ'
-        , img);
+      const imageResponse = await generatePresignUrl(props?.user?.accessToken, img);
       const data = await imageResponse.json();
       data.map((i) => {
         finalImages.push({ uri: i?.split("?")[0] })
@@ -221,6 +228,7 @@ const ShopTiming = (props) => {
   }
 
   const submit = async () => {
+    let {setUser} = props;
     const finalImages = await renderImages();
 
     const prevParams = props?.route?.params?.data;
@@ -239,6 +247,10 @@ const ShopTiming = (props) => {
 
       const json = await response.json();
       if(json){
+        let object = Object.assign({...props?.user}, {...json});
+        console.log()
+        setUser(object);
+        saveUserData(object);
         navigation.dispatch(
           CommonActions.reset({
             index: 0,
@@ -596,7 +608,7 @@ const ShopTiming = (props) => {
   );
 };
 
-export default connect(mapStateToProps)(ShopTiming);
+export default connect(mapStateToProps, mapDispatchToProps)(ShopTiming);
 
 const styles = StyleSheet.create({
   container: {

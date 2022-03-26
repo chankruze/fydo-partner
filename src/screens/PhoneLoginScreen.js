@@ -9,6 +9,7 @@ import {
   TextInput,
   Dimensions,
   Keyboard,
+  StatusBar
 } from 'react-native';
 import flag from '../assets/images/flag.png';
 import {
@@ -86,6 +87,7 @@ const PhoneLoginScreen = ({navigation, handleNextScreen}) => {
   return (
      
         <SafeAreaView style={styles.container}>
+          <StatusBar backgroundColor={PRIMARY} translucent={false}/>
           <Text style={styles.title}>Enter phone number</Text>
           <Text style={styles.label}>
             We will send you a 6-digit OTP to your phone number for
@@ -136,7 +138,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
     // paddingTop: 10,
     paddingVertical: 20,
-    minHeight: HEIGHT * 0.6,
+    // minHeight: HEIGHT * 0.6,
   },
   title: {
     color: DARKBLACK,

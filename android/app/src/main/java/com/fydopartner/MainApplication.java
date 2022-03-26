@@ -6,6 +6,8 @@ import com.swmansion.reanimated.ReanimatedJSIModulePackage;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import cx.evermeet.versioninfo.RNVersionInfoPackage;
+import com.horcrux.svg.SvgPackage;
 import com.imagepicker.ImagePickerPackage;
 import cx.evermeet.versioninfo.RNVersionInfoPackage;
 import cx.evermeet.versioninfo.RNVersionInfoPackage;
