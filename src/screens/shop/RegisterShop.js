@@ -125,7 +125,7 @@ function RegisterShop({ route, navigation }) {
   };
 
   return (
-    <SafeAreaView style={{ backgroundColor: 'white' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
       <StatusBar barStyle="light-content" backgroundColor={PRIMARY} />
       <View style={styles.contentContainer}>
         <ScrollView
@@ -338,12 +338,13 @@ const styles = StyleSheet.create({
     color: DARKBLACK,
     fontSize: 18,
     paddingLeft: 10,
+    marginVertical: 5,
     fontFamily: 'Gilroy-Bold',
   },
   uploadImage: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginTop: 10,
+    marginVertical: 10,
   },
   error: {
     fontSize: 12,
@@ -401,6 +402,7 @@ const styles = StyleSheet.create({
     color: DARKGREY,
   },
   box: {
+    paddingBottom: 8,
     marginVertical: 10,
     marginHorizontal: 10,
     flexDirection: 'row',

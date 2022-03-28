@@ -1,7 +1,7 @@
-import {StyleSheet, Text, View, SafeAreaView, ScrollView, Dimensions} from 'react-native';
-import React, {useState} from 'react';
-import {RadioButton, TextInput} from 'react-native-paper';
-import {Checkbox} from 'react-native-paper';
+import { StyleSheet, Text, View, SafeAreaView, ScrollView, Dimensions } from 'react-native';
+import React, { useState } from 'react';
+import { RadioButton, TextInput } from 'react-native-paper';
+import { Checkbox } from 'react-native-paper';
 import {
   DARKBLACK,
   DARKBLUE,
@@ -18,7 +18,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 const WIDTH = Dimensions.get('screen').width;
 
 
-const ShopDetails = ({navigation, route}) => {
+const ShopDetails = ({ navigation, route }) => {
   const [parking, setParking] = useState(false);
   const [wheelchair, setWheelchair] = useState(false);
   const [foodCourt, setFoodCourt] = useState(false);
@@ -34,7 +34,7 @@ const ShopDetails = ({navigation, route}) => {
 
   const next = () => {
     // if (isValidate() || !premiumService)
-      navigation.navigate('ShopTiming', {data: route?.params?.data});
+    navigation.navigate('ShopTiming', { data: route?.params?.data });
   };
 
   const isValidate = () => {
@@ -55,241 +55,244 @@ const ShopDetails = ({navigation, route}) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={premiumService && styles.subContainer}>
-          <View
-            style={
-              premiumService ? styles.premiumCheckbox2 : styles.premiumCheckbox
-            }>
-            <View style={{width: '80%'}}>
-              <Text style={styles.partnerProgramme}>
-                Do you want to join our channel partner Programme?
-                <Text style={[styles.premiumText, {paddingLeft: 10}]}>
-                  {' '}
-                  Premium Service{' '}
+    <SafeAreaView style={{ flex: 1, backgroundColor: premiumService ? GREY_3 : 'white' }}>
+      <View style={[styles.container,
+      { backgroundColor: premiumService ? GREY_3 : 'white' }]}>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View style={premiumService && styles.subContainer}>
+            <View
+              style={
+                premiumService ? styles.premiumCheckbox2 : styles.premiumCheckbox
+              }>
+              <View style={{ width: '80%' }}>
+                <Text style={styles.partnerProgramme}>
+                  Do you want to join our channel partner Programme?
+                  <Text style={[styles.premiumText, { paddingLeft: 10 }]}>
+                    {' '}
+                    Premium Service{' '}
+                  </Text>
                 </Text>
-              </Text>
-            </View>
+              </View>
 
-            <Checkbox
-              color={PRIMARY}
-              status={premiumService ? 'checked' : 'unchecked'}
-              onPress={() => {
-                setPremiumService(!premiumService);
-              }}
-            />
-          </View>
-          {premiumService && (
-            <View style={{width: '100%'}}>
-              <TextInput
-                value={accountNumber}
-                style={[styles.input]}
-                selectionColor={DARKBLUE}
-                onChangeText={value => setAccountNumber(value)}
-                activeUnderlineColor={GREY_2}
-                placeholder="Bank Account Number"
-                theme={
-                  {
-                    fonts: {
-                      regular: {
-                        fontFamily: 'Gilroy-Medium'
+              <Checkbox
+                color={PRIMARY}
+                status={premiumService ? 'checked' : 'unchecked'}
+                onPress={() => {
+                  setPremiumService(!premiumService);
+                }}
+              />
+            </View>
+            {premiumService && (
+              <View style={{ width: '100%' }}>
+                <TextInput
+                  value={accountNumber}
+                  style={[styles.input]}
+                  selectionColor={DARKBLUE}
+                  onChangeText={value => setAccountNumber(value)}
+                  activeUnderlineColor={GREY_2}
+                  placeholder="Bank Account Number"
+                  theme={
+                    {
+                      fonts: {
+                        regular: {
+                          fontFamily: 'Gilroy-Medium'
+                        }
                       }
                     }
                   }
-                }
-              />
-              {/* {error.accountNumber && (
+                />
+                {/* {error.accountNumber && (
                 <Text style={styles.error}>{error.accountNumber}</Text>
               )} */}
-              <TextInput
-                style={styles.input}
-                selectionColor={DARKBLUE}
-                activeUnderlineColor={GREY_2}
-                placeholder="Bank Account IFSC"
-                theme={
-                  {
-                    fonts: {
-                      regular: {
-                        fontFamily: 'Gilroy-Medium'
+                <TextInput
+                  style={styles.input}
+                  selectionColor={DARKBLUE}
+                  activeUnderlineColor={GREY_2}
+                  placeholder="Bank Account IFSC"
+                  theme={
+                    {
+                      fonts: {
+                        regular: {
+                          fontFamily: 'Gilroy-Medium'
+                        }
                       }
                     }
                   }
-                }
-              />
-              {/* {error.IFSC && (
+                />
+                {/* {error.IFSC && (
                 <Text style={styles.error}>{error.IFSC}</Text>
               )} */}
-              <TextInput
-                style={styles.input}
-                selectionColor={DARKBLUE}
-                activeUnderlineColor={GREY_2}
-                placeholder="GST ID (optional)"
-                theme={
-                  {
-                    fonts: {
-                      regular: {
-                        fontFamily: 'Gilroy-Medium'
+                <TextInput
+                  style={styles.input}
+                  selectionColor={DARKBLUE}
+                  activeUnderlineColor={GREY_2}
+                  placeholder="GST ID (optional)"
+                  theme={
+                    {
+                      fonts: {
+                        regular: {
+                          fontFamily: 'Gilroy-Medium'
+                        }
                       }
                     }
                   }
-                }
-              />
-              <TextInput
-                style={styles.input}
-                selectionColor={DARKBLUE}
-                activeUnderlineColor={GREY_2}
-                placeholder="UPI ID"
-                theme={
-                  {
-                    fonts: {
-                      regular: {
-                        fontFamily: 'Gilroy-Medium'
+                />
+                <TextInput
+                  style={styles.input}
+                  selectionColor={DARKBLUE}
+                  activeUnderlineColor={GREY_2}
+                  placeholder="UPI ID"
+                  theme={
+                    {
+                      fonts: {
+                        regular: {
+                          fontFamily: 'Gilroy-Medium'
+                        }
                       }
                     }
                   }
-                }
-                right={
-                  <TextInput.Icon
-                    name={() => (
-                      <MaterialIcon
-                        name="qr-code-scanner"
-                        size={25}
-                        color="#000"
-                      />
-                    )}
-                  />
-                }
-              />
-              {/* {error.UPI && (
+                  right={
+                    <TextInput.Icon
+                      name={() => (
+                        <MaterialIcon
+                          name="qr-code-scanner"
+                          size={25}
+                          color="#000"
+                        />
+                      )}
+                    />
+                  }
+                />
+                {/* {error.UPI && (
                 <Text style={styles.error}>{error.UPI}</Text>
               )} */}
-              <Text style={styles.upi}>Add More UPI IDs</Text>
+                <Text style={styles.upi}>Add More UPI IDs</Text>
+              </View>
+            )}
+          </View>
+          <View style={{ marginVertical: 20 }}>
+            <View style={styles.radioContainer}>
+              <View style={styles.radioButton}>
+                <Text style={styles.radioText}>Parking availability</Text>
+                <RadioButton
+                  color={PRIMARY}
+                  value={parking}
+                  status={parking === true ? 'checked' : 'unchecked'}
+                  onPress={() => setParking(!parking)}
+                />
+              </View>
+              <View style={styles.radioButton}>
+                <Text style={styles.radioText}>Wheelchair friendly</Text>
+                <RadioButton
+                  color={PRIMARY}
+                  value={wheelchair}
+                  status={wheelchair === true ? 'checked' : 'unchecked'}
+                  onPress={() => setWheelchair(!wheelchair)}
+                />
+              </View>
             </View>
-          )}
-        </View>
-        <View style={{marginVertical: 20}}>
-          <View style={styles.radioContainer}>
-            <View style={styles.radioButton}>
-              <Text style={styles.radioText}>Parking availability</Text>
-              <RadioButton
-                color={PRIMARY}
-                value={parking}
-                status={parking === true ? 'checked' : 'unchecked'}
-                onPress={() => setParking(!parking)}
-              />
-            </View>
-            <View style={styles.radioButton}>
-              <Text style={styles.radioText}>Wheelchair friendly</Text>
-              <RadioButton
-                color={PRIMARY}
-                value={wheelchair}
-                status={wheelchair === true ? 'checked' : 'unchecked'}
-                onPress={() => setWheelchair(!wheelchair)}
-              />
+
+            <View style={styles.radioContainer}>
+              <View style={styles.radioButton}>
+                <Text style={styles.radioText}>Food courts</Text>
+                <RadioButton
+                  color={PRIMARY}
+                  value={foodCourt}
+                  status={foodCourt === true ? 'checked' : 'unchecked'}
+                  onPress={() => setFoodCourt(!foodCourt)}
+                />
+              </View>
+              <View style={styles.radioButton}>
+                <Text style={styles.radioText}>Instore shopping</Text>
+                <RadioButton
+                  color={PRIMARY}
+                  value={instoreShopping}
+                  status={instoreShopping === true ? 'checked' : 'unchecked'}
+                  onPress={() => setInstoreShopping(!instoreShopping)}
+                />
+              </View>
             </View>
           </View>
 
-          <View style={styles.radioContainer}>
-            <View style={styles.radioButton}>
-              <Text style={styles.radioText}>Food courts</Text>
-              <RadioButton
-                color={PRIMARY}
-                value={foodCourt}
-                status={foodCourt === true ? 'checked' : 'unchecked'}
-                onPress={() => setFoodCourt(!foodCourt)}
-              />
-            </View>
-            <View style={styles.radioButton}>
-              <Text style={styles.radioText}>Instore shopping</Text>
-              <RadioButton
-                color={PRIMARY}
-                value={instoreShopping}
-                status={instoreShopping === true ? 'checked' : 'unchecked'}
-                onPress={() => setInstoreShopping(!instoreShopping)}
-              />
-            </View>
-          </View>
-        </View>
-
-        <View style={[styles.radioButton, {width: '100%'}]}>
-          <View>
-            <Text style={styles.radioText}>
-              Do you provide home delivery/service?
-            </Text>
-            <Text style={styles.learnMore}>Learn more about home services</Text>
-          </View>
-
-          <RadioButton
-            color={PRIMARY}
-            value={homeDelivery}
-            status={homeDelivery === true ? 'checked' : 'unchecked'}
-            onPress={() => setHomeDelivery(!homeDelivery)}
-          />
-        </View>
-
-        <View style={[salesExecutive && styles.subContainer, {marginTop: 30}]}>
-          <View
-            style={
-              salesExecutive ? styles.premiumCheckbox2 : styles.premiumCheckbox
-            }>
-            <View style={{width: '80%'}}>
-              <Text style={styles.partnerProgramme}>
-                Have any sales executive visited your shop?
+          <View style={[styles.radioButton, { width: '100%' }]}>
+            <View>
+              <Text style={styles.radioText}>
+                Do you provide home delivery/service?
               </Text>
-              <Text style={styles.learnMore}>
-                Learn more about Sales executive
-              </Text>
+              <Text style={styles.learnMore}>Learn more about home services</Text>
             </View>
 
-            <Checkbox
+            <RadioButton
               color={PRIMARY}
-              status={salesExecutive ? 'checked' : 'unchecked'}
-              onPress={() => {
-                setSalesExecutive(!salesExecutive);
-              }}
+              value={homeDelivery}
+              status={homeDelivery === true ? 'checked' : 'unchecked'}
+              onPress={() => setHomeDelivery(!homeDelivery)}
             />
           </View>
-          {salesExecutive && (
-            <View style={{width: '100%', marginTop: 15}}>
-              <TextInput
-                style={[
-                  styles.input,
-                  {paddingLeft: 10, marginBottom: 25,},
-                ]}
-                selectionColor={DARKBLUE}
-                activeUnderlineColor={GREY_2}
-                placeholder="Phone Number"
-                keyboardType="numeric"
-                theme={
-                  {
-                    fonts: {
-                      regular: {
-                        fontFamily: 'Gilroy-Medium'
+
+          <View style={[salesExecutive && styles.subContainer, { marginTop: 30 }]}>
+            <View
+              style={
+                salesExecutive ? styles.premiumCheckbox2 : styles.premiumCheckbox
+              }>
+              <View style={{ width: '80%' }}>
+                <Text style={styles.partnerProgramme}>
+                  Have any sales executive visited your shop?
+                </Text>
+                <Text style={styles.learnMore}>
+                  Learn more about Sales executive
+                </Text>
+              </View>
+
+              <Checkbox
+                color={PRIMARY}
+                status={salesExecutive ? 'checked' : 'unchecked'}
+                onPress={() => {
+                  setSalesExecutive(!salesExecutive);
+                }}
+              />
+            </View>
+            {salesExecutive && (
+              <View style={{ width: '100%', marginTop: 15 }}>
+                <TextInput
+                  style={[
+                    styles.input,
+                    { paddingLeft: 10, marginBottom: 25, },
+                  ]}
+                  selectionColor={DARKBLUE}
+                  activeUnderlineColor={GREY_2}
+                  placeholder="Phone Number"
+                  keyboardType="numeric"
+                  theme={
+                    {
+                      fonts: {
+                        regular: {
+                          fontFamily: 'Gilroy-Medium'
+                        }
                       }
                     }
                   }
-                }
-                left={
-                  <TextInput.Icon
-                    name={() => (
-                      <MaterialIcon name="phone" size={25} color="#000" />
-                    )}
-                  />
-                }
-              />
-            </View>
-          )}
-        </View>
-        <View style={styles.next}>
-          <ButtonComponent
-            label="Next"
-            color="white"
-            backgroundColor={DARKBLUE}
-            onPress={next}
-          />
-        </View>
-      </ScrollView>
+                  left={
+                    <TextInput.Icon
+                      name={() => (
+                        <MaterialIcon name="phone" size={25} color="#000" />
+                      )}
+                    />
+                  }
+                />
+              </View>
+            )}
+          </View>
+          <View style={styles.next}>
+            <ButtonComponent
+              label="Next"
+              color="white"
+              backgroundColor={DARKBLUE}
+              onPress={next}
+            />
+          </View>
+        </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };
@@ -299,10 +302,9 @@ export default ShopDetails;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
     paddingHorizontal: 15,
-    paddingTop: 30,
-    backgroundColor: GREY_3,
+    // paddingTop: 30,
+    // backgroundColor: GREY_3,
   },
   premiumCheckbox: {
     flexDirection: 'row',
@@ -358,7 +360,7 @@ const styles = StyleSheet.create({
   radioContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: WIDTH*.93,
+    width: WIDTH * .93,
   },
   radioButton: {
     flexDirection: 'row',

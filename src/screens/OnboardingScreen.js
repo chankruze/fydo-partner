@@ -112,19 +112,29 @@ const OnboardingScreen = (props) => {
       </View>
       <Paginator data={slides} scrollX={scrollX} />
 
-      <Modal
+      {/* <Modal
         animationType="slide"
         transparent={true}
-        visible={showBottomSheet}>
-        <StatusBar
-          backgroundColor={'rgba(0, 0, 0, .3)'}
-          barStyle="light-content" />
-        <View style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, .3)' }}></View>
+        visible={showBottomSheet}> */}
+      {showBottomSheet && (
+        <View style={{
+          backgroundColor: 'red',
+          position: 'absolute',
+          bottom: 0,
+          height: HEIGHT * 0.6,
+          width: '100%'
+        }}>
+          <StatusBar
+            backgroundColor={'rgba(0, 0, 0, .3)'}
+            barStyle="light-content" />
+          {/* <View style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, .3)' }}></View> */}
 
-        {currentScreen == SCREENS.PHONE_LOGIN && (<PhoneLoginScreen {...props} handleNextScreen={handleNextScreen} />)}
-        {currentScreen == SCREENS.LANGUAGE && (<ChooseLanguage {...props} handleNextScreen={handleNextScreen} />)}
-        {currentScreen == SCREENS.OTP_VERIFY && (<OTPVerifyScreen {...props} handleNextScreen={handleNextScreen} navigationData={navigationData} />)}
-      </Modal>
+          {currentScreen == SCREENS.PHONE_LOGIN && (<PhoneLoginScreen {...props} handleNextScreen={handleNextScreen} />)}
+          {currentScreen == SCREENS.LANGUAGE && (<ChooseLanguage {...props} handleNextScreen={handleNextScreen} />)}
+          {currentScreen == SCREENS.OTP_VERIFY && (<OTPVerifyScreen {...props} handleNextScreen={handleNextScreen} navigationData={navigationData} />)}
+          {/* </Modal> */}
+        </View>
+      )}
     </SafeAreaView>
 
   );

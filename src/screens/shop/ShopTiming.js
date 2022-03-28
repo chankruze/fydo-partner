@@ -41,7 +41,7 @@ import { connect } from 'react-redux';
 import { generatePresignUrl } from '../../services/presignUrlService';
 import uuid from 'react-native-uuid';
 import { setUser } from '../../store/actions/user.action';
-import { saveUserData } from '../../utils/sharedPreferences';
+import { saveUserData } from '../../utils/defaultPreference';
 
 const HEIGHT = Dimensions.get('screen').height;
 
@@ -228,7 +228,7 @@ const ShopTiming = (props) => {
   }
 
   const submit = async () => {
-    let {setUser} = props;
+    let { setUser } = props;
     const finalImages = await renderImages();
 
     const prevParams = props?.route?.params?.data;
@@ -242,12 +242,12 @@ const ShopTiming = (props) => {
         images: finalImages
       }
 
-      let {accessToken, navigation} = props;
+      let { accessToken, navigation } = props;
       const response = await updateShop(accessToken, params);
 
       const json = await response.json();
-      if(json){
-        let object = Object.assign({...props?.user}, {...json});
+      if (json) {
+        let object = Object.assign({ ...props?.user }, { ...json });
         console.log()
         setUser(object);
         saveUserData(object);
@@ -302,6 +302,7 @@ const ShopTiming = (props) => {
   };
 
   const setGlobalOpenTime = item => {
+    setOpenTimePicker(!opentimePicker);
     const d = moment(item).format('hh:mm A');
     let list = [];
     if (selectedDay == 'all') {
@@ -330,6 +331,7 @@ const ShopTiming = (props) => {
   };
 
   const setGlobalCloseTime = item => {
+    setCloseTimePicker(!closetimePicker);
     const d = moment(item).format('hh:mm A');
     let list = [];
     if (selectedDay == 'all') {
@@ -435,86 +437,87 @@ const ShopTiming = (props) => {
   };
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <SafeAreaView style={styles.container}>
-        <View>
-          <Text style={styles.imageTitle}>Add Shop Images</Text>
-          <View style={styles.btnViewContainer}>
-            <TouchableOpacity style={styles.button} onPress={selectImages}>
-              <Image
-                source={require('../../assets/images/add_image.png')}
-                style={{
-                  width: 29,
-                  height: 29,
-                }}
-              />
-            </TouchableOpacity>
+    <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+      <View style={styles.container}>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View>
+            <Text style={styles.imageTitle}>Add Shop Images</Text>
+            <View style={styles.btnViewContainer}>
+              <TouchableOpacity style={styles.button} onPress={selectImages}>
+                <Image
+                  source={require('../../assets/images/add_image.png')}
+                  style={{
+                    width: 29,
+                    height: 29,
+                  }}
+                />
+              </TouchableOpacity>
 
-            <ScrollView
-              style={styles.imgContainer}
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}>
-              {images
-                ? images.map(i => (
-                  <View style={styles.imgView} key={i.uri}>
-                    {renderImage(i)}
-                  </View>
-                ))
-                : null}
-            </ScrollView>
-          </View>
-        </View>
-        <View
-          style={{
-            marginTop: 20,
-          }}>
-          <Text style={styles.imageTitle}>Add Timing</Text>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginTop: 10,
-            }}>
-            <Text style={styles.usualText}>Usual Timing</Text>
-            <TouchableOpacity
-              style={styles.timeButton}
-              onPress={handleOpenTimePicker.bind(this, 'all')}>
-              {usualOpen ? (
-                <Text style={styles.timeTxt}>{usualOpen}</Text>
-              ) : (
-                <Text style={styles.timeTxt}>Open Time</Text>
-              )}
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.timeButton}
-              onPress={handleCloseTimePicker.bind(this, 'all')}>
-              {usualClose ? (
-                <Text style={styles.timeTxt}>{usualClose}</Text>
-              ) : (
-                <Text style={styles.timeTxt}>Close Time</Text>
-              )}
-            </TouchableOpacity>
-            <DateTimePickerModal
-              isVisible={opentimePicker}
-              mode="time"
-              onConfirm={setGlobalOpenTime}
-              onCancel={setOpenTimePicker}
-            />
-            <DateTimePickerModal
-              isVisible={closetimePicker}
-              mode="time"
-              onConfirm={setGlobalCloseTime}
-              onCancel={setCloseTimePicker}
-            />
+              <ScrollView
+                style={styles.imgContainer}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}>
+                {images
+                  ? images.map(i => (
+                    <View style={styles.imgView} key={i.uri}>
+                      {renderImage(i)}
+                    </View>
+                  ))
+                  : null}
+              </ScrollView>
+            </View>
           </View>
           <View
             style={{
-              marginTop: 15,
+              marginTop: 20,
             }}>
-            <FlatList data={individualTimings} renderItem={renderTimings} />
+            <Text style={styles.imageTitle}>Add Timing</Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginTop: 10,
+              }}>
+              <Text style={styles.usualText}>Usual Timing</Text>
+              <TouchableOpacity
+                style={styles.timeButton}
+                onPress={handleOpenTimePicker.bind(this, 'all')}>
+                {usualOpen ? (
+                  <Text style={styles.timeTxt}>{usualOpen}</Text>
+                ) : (
+                  <Text style={styles.timeTxt}>Open Time</Text>
+                )}
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.timeButton}
+                onPress={handleCloseTimePicker.bind(this, 'all')}>
+                {usualClose ? (
+                  <Text style={styles.timeTxt}>{usualClose}</Text>
+                ) : (
+                  <Text style={styles.timeTxt}>Close Time</Text>
+                )}
+              </TouchableOpacity>
+              <DateTimePickerModal
+                isVisible={opentimePicker}
+                mode="time"
+                onConfirm={setGlobalOpenTime}
+                onCancel={setOpenTimePicker}
+              />
+              <DateTimePickerModal
+                isVisible={closetimePicker}
+                mode="time"
+                onConfirm={setGlobalCloseTime}
+                onCancel={setCloseTimePicker}
+              />
+            </View>
+            <View
+              style={{
+                marginTop: 15,
+              }}>
+              <FlatList data={individualTimings} renderItem={renderTimings} />
+            </View>
           </View>
-        </View>
-        {/* <View style={styles.buttonContainer}>
+          {/* <View style={styles.buttonContainer}>
           <TouchableOpacity
             onPress={handleAddBreaks}
             style={styles.transparentButton}>
@@ -533,78 +536,79 @@ const ShopTiming = (props) => {
           </TouchableOpacity>
         </View> */}
 
-        <View style={styles.btn}>
-          <ButtonComponent
-            label="Done"
-            color="white"
-            backgroundColor={PRIMARY}
-            onPress={submit}
-          />
-        </View>
-        <View style={styles.footer}>
-          <Text style={styles.footerLabel}>By continuing you agree to our</Text>
-          <TouchableOpacity>
-            <Text style={styles.footerOtherLabel}>Terms & Conditions</Text>
-          </TouchableOpacity>
-        </View>
-        <RBSheet
-          ref={ref => (rbSheet = ref)}
-          height={200}
-          openDuration={150}
-          customStyles={{
-            container: {
-              borderTopLeftRadius: 10,
-              borderTopRightRadius: 10,
-            },
-          }}>
-          <View style={styles.chooseTextStyle}>
-            <Text style={styles.chooseContainer}>Choose Images from</Text>
+          <View style={styles.btn}>
+            <ButtonComponent
+              label="Done"
+              color="white"
+              backgroundColor={PRIMARY}
+              onPress={submit}
+            />
           </View>
-
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-evenly',
+          <View style={styles.footer}>
+            <Text style={styles.footerLabel}>By continuing you agree to our</Text>
+            <TouchableOpacity>
+              <Text style={styles.footerOtherLabel}>Terms & Conditions</Text>
+            </TouchableOpacity>
+          </View>
+          <RBSheet
+            ref={ref => (rbSheet = ref)}
+            height={200}
+            openDuration={150}
+            customStyles={{
+              container: {
+                borderTopLeftRadius: 10,
+                borderTopRightRadius: 10,
+              },
             }}>
-            <TouchableOpacity
-              style={styles.buttonChoose}
-              onPress={takePhotoFromCamera}>
-              <Image
-                source={require('../../assets/images/camera.png')}
-                style={{
-                  width: 30,
-                  height: 30,
-                  tintColor: PRIMARY,
-                }}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.buttonChoose}
-              onPress={choosePhotosFromGallery}>
-              <Image
-                source={require('../../assets/images/gallery.png')}
-                style={{
-                  width: 30,
-                  height: 30,
-                  tintColor: PRIMARY,
-                }}
-              />
-            </TouchableOpacity>
-          </View>
-        </RBSheet>
-        {addTags && (
-          <View>
-              <AddTagsBottomSheet handleClosePress={handleClosePress}/>
-          </View>
+            <View style={styles.chooseTextStyle}>
+              <Text style={styles.chooseContainer}>Choose Images from</Text>
+            </View>
 
-        )}
-        {addBreaks && (
-         <View>
-           <AddBreaksBottomSheet handleClosePress={handleClosePress}/>
-         </View>
-        )}
-      </SafeAreaView>
-    </ScrollView>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-evenly',
+              }}>
+              <TouchableOpacity
+                style={styles.buttonChoose}
+                onPress={takePhotoFromCamera}>
+                <Image
+                  source={require('../../assets/images/camera.png')}
+                  style={{
+                    width: 30,
+                    height: 30,
+                    tintColor: PRIMARY,
+                  }}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.buttonChoose}
+                onPress={choosePhotosFromGallery}>
+                <Image
+                  source={require('../../assets/images/gallery.png')}
+                  style={{
+                    width: 30,
+                    height: 30,
+                    tintColor: PRIMARY,
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+          </RBSheet>
+          {addTags && (
+            <View>
+              <AddTagsBottomSheet handleClosePress={handleClosePress} />
+            </View>
+
+          )}
+          {addBreaks && (
+            <View>
+              <AddBreaksBottomSheet handleClosePress={handleClosePress} />
+            </View>
+          )}
+        </ScrollView>
+      </View>
+    </SafeAreaView>
   );
 };
 
@@ -615,7 +619,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
     paddingHorizontal: 15,
-    paddingTop: 30,
+    // paddingTop: 30,
   },
   imageTitle: {
     fontFamily: 'Gilroy-SemiBold',

@@ -14,7 +14,7 @@ import { sendLoginOTP, verifyLoginOTP } from '../services/authService';
 import { setUser } from '../store/actions/user.action';
 import { createRef } from 'react';
 import { connect } from 'react-redux';
-import { saveUserData } from '../utils/sharedPreferences';
+import { saveUserData } from '../utils/defaultPreference';
 import ButtonComponent from '../components/ButtonComponent';
 import OTPTextInput from 'react-native-otp-textinput';
 import WithNetInfo from '../components/hoc/withNetInfo';
@@ -65,6 +65,7 @@ const OTPVerifyScreen = ({ navigationData, navigation, handleNextScreen, setUser
       } else {
         setUser(data);
         saveUserData(data);
+        console.log("as-->", data);
         if (data.profileComplete) {
           // handleNextScreen(SCREENS.LANGUAGE);
           navigation.navigate('RegisterShop');

@@ -27,20 +27,20 @@ function RootNavigation() {
           <Stack.Screen name="Main" component={MainNavigation} />
           <Stack.Screen name="Auth" component={AuthNavigation} />
           <Stack.Navigator/> */}
-      <Stack.Navigator initialRouteName="Main">
-      <Stack.Screen options={{ headerShown: false }} name="RegisterShop" component={RegisterShop} />
+      <Stack.Navigator initialRouteName="Splash">
+        <Stack.Screen options={{ headerShown: false }} name="RegisterShop" component={RegisterShop} />
         <Stack.Screen options={{ headerShown: false }} name="Maps" component={MapScreen} />
         <Stack.Screen options={{ headerShown: false }} name="ShopDetails" component={ShopDetails} />
         <Stack.Screen options={{ headerShown: false }} name="MyShop" component={MyShop} />
         <Stack.Screen options={{ headerShown: false }} name="ShopTiming" component={ShopTiming} />
-        <Stack.Screen options={{headerShown: false}} name="Splash" component={SplashScreen}/>
-        <Stack.Screen options={{headerShown: false}} name="OnBoarding" component={OnboardingScreen}/>
+        <Stack.Screen options={{ headerShown: false }} name="Splash" component={SplashScreen} />
+        <Stack.Screen options={{ headerShown: false }} name="OnBoarding" component={OnboardingScreen} />
         {/* <Stack.Screen
           name="Auth"
           component={AuthNavigation}
           options={{ headerShown: false}}
         /> */}
-        <Stack.Screen 
+        <Stack.Screen
           name="Main"
           component={MainNavigation}
           options={{ headerShown: false }}

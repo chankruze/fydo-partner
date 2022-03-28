@@ -1,5 +1,5 @@
 import React from 'react';
-import {TouchableOpacity, Text, View, StyleSheet} from 'react-native';
+import { TouchableOpacity, Text, View, StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from '../screens/HomeScreen';
 import { useHeaderHeight } from '@react-navigation/elements';
@@ -17,7 +17,7 @@ const mapStateToProps = (state) => {
   }
 }
 
-function MainNavigation({language, user}){
+function MainNavigation({ language, user }) {
 
   const headerHeight = useHeaderHeight();
 
@@ -25,77 +25,77 @@ function MainNavigation({language, user}){
     navigation.navigate('Settings');
   }
 
-    return (
-        <Tab.Navigator
-          // initialRouteName='MyOfferss'
-          screenOptions={{
-            tabBarActiveTintColor: PRIMARY,
-            tabBarInactiveTintColor: 'lightgrey',
-            // tabBarShowLabel: false,
-          }}>
-          <Tab.Screen 
-            name="Home" 
-            component={HomeScreen}
-            options={(({navigation}) => (
-              {
-                title: user?.name,
-                tabBarIcon: ({ color, size, focused }) => (
-                  <Ionicons 
-                    name={focused ? "home": "home-outline"}
-                    size={20}
-                    color={PRIMARY}
-                  />
-                ),
-                tabBarStyle: {
-                  paddingBottom: 5
-                },
-                headerTintColor: PRIMARY,
-                headerTitleStyle: {
-                  fontSize: 15
-                },
-                tabBarLabel: language == 'HINDI'? 'घर': 'Home' ,
-                headerRight: () => (
-                  <TouchableOpacity
-                    onPress={navigateToSetting.bind(this, navigation)}>
-                    <Ionicons 
-                      name='settings'
-                      size={22}
-                      color={PRIMARY}/>
-                  </TouchableOpacity>
-                ),
-                headerRightContainerStyle: {
-                  paddingRight: 10
-                }
-              }
-            ))} />
-          <Tab.Screen 
-            name="Notification" 
-            component={NotificationScreen}
-            options={{
-              tabBarLabel: language == 'HINDI'? 'अधिसूचना': 'Notification' ,
-              headerShown: true,
-              tabBarIcon: ({ color, size, focused }) => (
-                <Ionicons 
-                  name={focused ? "notifications": "notifications-outline"}
-                  size={20}
-                  color={PRIMARY}/>
-              ),
-              tabBarStyle: {
-                paddingBottom: 5
-              },
-              headerTintColor: 'white',
-              headerStyle: {
-                backgroundColor: PRIMARY,
-              },
-              // headerTitle: (props) => (
-              //   <View style={styles.titleContainer}>
-              //     <Text style={styles.title}>Notifications</Text>
-              //     <Text style={styles.label}>1 New Notification</Text>
-              //   </View>
-              // )
-            }} />
-        </Tab.Navigator>
-      );
+  return (
+    <Tab.Navigator
+      // initialRouteName='MyOfferss'
+      screenOptions={{
+        tabBarActiveTintColor: PRIMARY,
+        tabBarInactiveTintColor: 'lightgrey',
+        // tabBarShowLabel: false,
+      }}>
+      <Tab.Screen
+        name="Home"
+        component={HomeScreen}
+        options={(({ navigation }) => (
+          {
+            title: user?.name,
+            tabBarIcon: ({ color, size, focused }) => (
+              <Ionicons
+                name={focused ? "home" : "home-outline"}
+                size={20}
+                color={PRIMARY}
+              />
+            ),
+            tabBarStyle: {
+              // paddingBottom: 5
+            },
+            headerTintColor: PRIMARY,
+            headerTitleStyle: {
+              fontSize: 15
+            },
+            tabBarLabel: language == 'HINDI' ? 'घर' : 'Home',
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={navigateToSetting.bind(this, navigation)}>
+                <Ionicons
+                  name='settings'
+                  size={22}
+                  color={PRIMARY} />
+              </TouchableOpacity>
+            ),
+            headerRightContainerStyle: {
+              paddingRight: 10
+            }
+          }
+        ))} />
+      <Tab.Screen
+        name="Notification"
+        component={NotificationScreen}
+        options={{
+          tabBarLabel: language == 'HINDI' ? 'अधिसूचना' : 'Notification',
+          headerShown: true,
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons
+              name={focused ? "notifications" : "notifications-outline"}
+              size={20}
+              color={PRIMARY} />
+          ),
+          tabBarStyle: {
+            paddingBottom: 5
+          },
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: PRIMARY,
+          },
+          // headerTitle: (props) => (
+          //   <View style={styles.titleContainer}>
+          //     <Text style={styles.title}>Notifications</Text>
+          //     <Text style={styles.label}>1 New Notification</Text>
+          //   </View>
+          // )
+        }} />
+    </Tab.Navigator>
+  );
 }
 
 export default connect(mapStateToProps)(MainNavigation);

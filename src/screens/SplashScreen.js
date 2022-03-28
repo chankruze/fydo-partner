@@ -1,10 +1,10 @@
-import {StyleSheet, StatusBar, Image} from 'react-native';
+import { StyleSheet, StatusBar, Image } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import appIcon from '../assets/images/app-icon.png';
 import { setUser } from '../store/actions/user.action';
 import { connect } from 'react-redux';
-import { getUser } from '../utils/sharedPreferences';
+import { getUser } from '../utils/defaultPreference';
 
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -18,11 +18,11 @@ const mapStateToProps = (state) => {
   }
 }
 
-const SplashScreen = ({navigation, setUser, user}) => {
+const SplashScreen = ({ navigation, setUser, user }) => {
   const [userData, setUserInfo] = useState(null);
 
   useEffect(() => {
-    async function setUserData(){
+    async function setUserData() {
       try {
         const user = await getUser();
         setUserInfo(user);
@@ -38,10 +38,10 @@ const SplashScreen = ({navigation, setUser, user}) => {
 
     let timeout = setTimeout(() => {
       console.log(user?.profileComplete);
-      if(user == null){
+      if (user == null) {
         navigation.navigate('OnBoarding')
       }
-      else if(user?.profileComplete == false){
+      else if (user?.profileComplete == false) {
         navigation.navigate('RegisterShop');
       }
       else {
@@ -51,7 +51,7 @@ const SplashScreen = ({navigation, setUser, user}) => {
     return () => {
       clearTimeout(timeout)
     }
-    
+
   })
 
   return (
