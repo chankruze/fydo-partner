@@ -20,6 +20,7 @@ import pinIcon from '../assets/images/pin.png';
 import FAB from 'react-native-fab';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { SearchLocation, GetPostalAddress } from '../services/mapService';
+import { isNotchDevice } from '../utils/deviceInfo';
 import Permissions, { PERMISSIONS, RESULTS, request } from 'react-native-permissions'
 
 const MapScreen = ({ navigation, route }) => {
@@ -148,59 +149,56 @@ const MapScreen = ({ navigation, route }) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      {/* <StatusBar barStyle='dark-content' backgroundColor={PRIMARY} /> */}
-      <View style={styles.container}>
-        <MapView style={styles.map} initialRegion={region} region={region}>
-          <Marker
-            draggable={true}
-            coordinate={{
-              latitude: selectedLocation.latitude,
-              longitude: selectedLocation.longitude,
-            }}
-            onDragEnd={onDragEnd}
-            // image={locationPin}
-            title="You'll need to long press the marker to drag it.."
-          />
-        </MapView>
-        <View style={styles.searchView}>
-          <TextInput
-            placeholder="Enter the city"
-            style={styles.input}
-            onChangeText={onChangeText}
-            value={text}
-            returnKeyType="search"
-            onSubmitEditing={e => onSubmit(e.nativeEvent.text)}
-          />
-          <Icon name="search-outline" size={22} color="black" />
-        </View>
-        <View
-          style={Object.assign(
-            { ...styles.confirmButton },
-            { opacity: locationChange ? 1 : 0.8 },
-          )}>
-          <TextInput style={styles.selectedLocation} disabled value={address} multiline />
-          <TouchableOpacity
-            activeOpacity={0.7}
-            style={styles.check}
-            disabled={!locationChange}
-            onPress={confirmAddress}>
-            <MaterialIcons name="check" size={25} color={DARKBLUE} />
-          </TouchableOpacity>
-        </View>
-
-        <FAB
-          onClickAction={setLocation}
-          buttonColor="white"
-          iconTextColor={DARKBLUE}
-          snackOffset={80}
-          iconTextComponent={
-            <MaterialIcons name="my-location" color="red" size={20} />
-          }
-          visible={true}
+    <View style={styles.container}>
+      <MapView style={styles.map} initialRegion={region} region={region}>
+        <Marker
+          draggable={true}
+          coordinate={{
+            latitude: selectedLocation.latitude,
+            longitude: selectedLocation.longitude,
+          }}
+          onDragEnd={onDragEnd}
+          // image={locationPin}
+          title="You'll need to long press the marker to drag it.."
         />
+      </MapView>
+      <View style={styles.searchView}>
+        <TextInput
+          placeholder="Enter the city"
+          style={styles.input}
+          onChangeText={onChangeText}
+          value={text}
+          returnKeyType="search"
+          onSubmitEditing={e => onSubmit(e.nativeEvent.text)}
+        />
+        <Icon name="search-outline" size={22} color="black" />
       </View>
-    </SafeAreaView>
+      <View
+        style={Object.assign(
+          { ...styles.confirmButton },
+          { opacity: locationChange ? 1 : 0.8 },
+        )}>
+        <TextInput style={styles.selectedLocation} disabled value={address} multiline />
+        <TouchableOpacity
+          activeOpacity={0.7}
+          style={styles.check}
+          disabled={!locationChange}
+          onPress={confirmAddress}>
+          <MaterialIcons name="check" size={25} color={DARKBLUE} />
+        </TouchableOpacity>
+      </View>
+
+      <FAB
+        onClickAction={setLocation}
+        buttonColor="white"
+        iconTextColor={DARKBLUE}
+        snackOffset={80}
+        iconTextComponent={
+          <MaterialIcons name="my-location" color="red" size={20} />
+        }
+        visible={true}
+      />
+    </View>
   );
 };
 
@@ -226,7 +224,7 @@ const styles = StyleSheet.create({
     width: '95%',
     alignSelf: 'center',
     position: 'absolute',
-    top: 10,
+    top: isNotchDevice ? 50 : 10,
     height: 45,
     borderRadius: 10,
     paddingHorizontal: 25,
@@ -238,7 +236,7 @@ const styles = StyleSheet.create({
     width: '100%',
     alignSelf: 'center',
     position: 'absolute',
-    bottom: 10,
+    bottom: isNotchDevice ? 20 : 10,
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 1,

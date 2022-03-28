@@ -111,7 +111,7 @@ function RegisterShop({ route, navigation }) {
   };
 
   const next = () => {
-    if (true) {
+    if (isValidate()) {
       let data = {
         name: ownerName,
         mobile: phoneNumber,

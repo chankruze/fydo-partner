@@ -43,12 +43,15 @@ const OnboardingScreen = (props) => {
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef(null);
   const [showBottomSheet, setShowBottomSheet] = useState(false);
+  const [scrollEnable, setScrollEnable] = useState(true);
 
   const bottomSheetRef = createRef();
 
-  // React.useEffect(()=>{
-  //   console.log(currentIndex)
-  // }, [currentIndex])
+  React.useEffect(() => {
+    if (showBottomSheet) {
+      setScrollEnable(false)
+    }
+  }, [showBottomSheet])
 
   const viewableItemsChanged = useRef(({ viewableItems }) => {
     setCurrentIndex(viewableItems[0].index);
@@ -70,14 +73,9 @@ const OnboardingScreen = (props) => {
   }
 
   const skip = () => {
-    // handleFirstLaunch();
     setCurrentIndex(3);
-    //   setFinished(true);
-    // };
 
-    // navigateToAuth();
     setShowBottomSheet(true);
-    // setFinished(true);
   };
 
   //   const viewConfig = useRef({viewAreaCoveragePercentThresold: 50}).current;
@@ -86,12 +84,13 @@ const OnboardingScreen = (props) => {
       <StatusBar translucent={false} backgroundColor={PRIMARY} />
       <View style={styles.miniContainer}>
         {currentIndex == 3 ? null : (
-          <View style={{ alignSelf: 'flex-end', marginRight: 10, marginTop: 10 }}>
+          <View style={styles.skipBtn}>
             <SkipButton skip={skip} />
           </View>
         )}
-
+        {console.log("ass-->", scrollEnable)}
         <FlatList
+          scrollEnabled={scrollEnable}
           data={slides}
           renderItem={({ item }) => (
             <OnboardingItem item={item} index={currentIndex} finish={skip} />
@@ -130,7 +129,7 @@ const OnboardingScreen = (props) => {
           {/* <View style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, .3)' }}></View> */}
 
           {currentScreen == SCREENS.PHONE_LOGIN && (<PhoneLoginScreen {...props} handleNextScreen={handleNextScreen} />)}
-          {currentScreen == SCREENS.LANGUAGE && (<ChooseLanguage {...props} handleNextScreen={handleNextScreen} />)}
+          {/* {currentScreen == SCREENS.LANGUAGE && (<ChooseLanguage {...props} handleNextScreen={handleNextScreen} />)} */}
           {currentScreen == SCREENS.OTP_VERIFY && (<OTPVerifyScreen {...props} handleNextScreen={handleNextScreen} navigationData={navigationData} />)}
           {/* </Modal> */}
         </View>
@@ -164,4 +163,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+  skipBtn: {
+    alignSelf: 'flex-end',
+    marginRight: 20,
+    marginTop: 10
+  }
 });
