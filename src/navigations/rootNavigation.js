@@ -27,7 +27,7 @@ function RootNavigation() {
           <Stack.Screen name="Main" component={MainNavigation} />
           <Stack.Screen name="Auth" component={AuthNavigation} />
           <Stack.Navigator/> */}
-      <Stack.Navigator initialRouteName="Main">
+      <Stack.Navigator initialRouteName="Splash">
       <Stack.Screen options={{ headerShown: false }} name="RegisterShop" component={RegisterShop} />
         <Stack.Screen options={{ headerShown: false }} name="Maps" component={MapScreen} />
         <Stack.Screen options={{ headerShown: false }} name="ShopDetails" component={ShopDetails} />

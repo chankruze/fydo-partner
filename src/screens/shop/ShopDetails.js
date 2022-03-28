@@ -1,7 +1,8 @@
 import {StyleSheet, Text, View, SafeAreaView, ScrollView, Dimensions} from 'react-native';
 import React, {useState} from 'react';
 import {RadioButton, TextInput} from 'react-native-paper';
-import {Checkbox} from 'react-native-paper';
+import CheckBox from '@react-native-community/checkbox';
+
 import {
   DARKBLACK,
   DARKBLUE,
@@ -60,7 +61,7 @@ const ShopDetails = ({navigation, route}) => {
         <View style={premiumService && styles.subContainer}>
           <View
             style={
-              premiumService ? styles.premiumCheckbox2 : styles.premiumCheckbox
+              premiumService ? styles.premiumCheckBox2 : styles.premiumCheckBox
             }>
             <View style={{width: '80%'}}>
               <Text style={styles.partnerProgramme}>
@@ -72,10 +73,11 @@ const ShopDetails = ({navigation, route}) => {
               </Text>
             </View>
 
-            <Checkbox
-              color={PRIMARY}
-              status={premiumService ? 'checked' : 'unchecked'}
-              onPress={() => {
+            <CheckBox
+              value={premiumService}
+              tintColors={{true: PRIMARY, false: DARKGREY}}
+              disabled={false}
+              onValueChange={() => {
                 setPremiumService(!premiumService);
               }}
             />
@@ -231,7 +233,7 @@ const ShopDetails = ({navigation, route}) => {
         <View style={[salesExecutive && styles.subContainer, {marginTop: 30}]}>
           <View
             style={
-              salesExecutive ? styles.premiumCheckbox2 : styles.premiumCheckbox
+              salesExecutive ? styles.premiumCheckBox2 : styles.premiumCheckBox
             }>
             <View style={{width: '80%'}}>
               <Text style={styles.partnerProgramme}>
@@ -242,10 +244,11 @@ const ShopDetails = ({navigation, route}) => {
               </Text>
             </View>
 
-            <Checkbox
-              color={PRIMARY}
-              status={salesExecutive ? 'checked' : 'unchecked'}
-              onPress={() => {
+            <CheckBox
+              value={salesExecutive}
+              tintColors={{true: PRIMARY, false: DARKGREY}}
+              disabled={false}
+              onValueChange={() => {
                 setSalesExecutive(!salesExecutive);
               }}
             />
@@ -304,12 +307,12 @@ const styles = StyleSheet.create({
     paddingTop: 30,
     backgroundColor: GREY_3,
   },
-  premiumCheckbox: {
+  premiumCheckBox: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  premiumCheckbox2: {
+  premiumCheckBox2: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
