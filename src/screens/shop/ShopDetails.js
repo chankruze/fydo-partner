@@ -174,42 +174,50 @@ const ShopDetails = ({navigation, route}) => {
           <View style={styles.radioContainer}>
             <View style={styles.radioButton}>
               <Text style={styles.radioText}>Parking availability</Text>
-              <RadioButton
-                color={PRIMARY}
-                value={parking}
-                status={parking === true ? 'checked' : 'unchecked'}
-                onPress={() => setParking(!parking)}
-              />
+              <CheckBox
+              value={parking}
+              tintColors={{true: PRIMARY, false: DARKGREY}}
+              disabled={false}
+              onValueChange={() => {
+                setParking(!parking);
+              }}
+            />
             </View>
             <View style={styles.radioButton}>
               <Text style={styles.radioText}>Wheelchair friendly</Text>
-              <RadioButton
-                color={PRIMARY}
-                value={wheelchair}
-                status={wheelchair === true ? 'checked' : 'unchecked'}
-                onPress={() => setWheelchair(!wheelchair)}
-              />
+              <CheckBox
+              value={wheelchair}
+              tintColors={{true: PRIMARY, false: DARKGREY}}
+              disabled={false}
+              onValueChange={() => {
+                setWheelchair(!wheelchair);
+              }}
+            />
             </View>
           </View>
 
           <View style={styles.radioContainer}>
             <View style={styles.radioButton}>
               <Text style={styles.radioText}>Food courts</Text>
-              <RadioButton
-                color={PRIMARY}
-                value={foodCourt}
-                status={foodCourt === true ? 'checked' : 'unchecked'}
-                onPress={() => setFoodCourt(!foodCourt)}
-              />
+              <CheckBox
+              value={foodCourt}
+              tintColors={{true: PRIMARY, false: DARKGREY}}
+              disabled={false}
+              onValueChange={() => {
+                setFoodCourt(!foodCourt);
+              }}
+            />
             </View>
             <View style={styles.radioButton}>
               <Text style={styles.radioText}>Instore shopping</Text>
-              <RadioButton
-                color={PRIMARY}
-                value={instoreShopping}
-                status={instoreShopping === true ? 'checked' : 'unchecked'}
-                onPress={() => setInstoreShopping(!instoreShopping)}
-              />
+              <CheckBox
+              value={instoreShopping}
+              tintColors={{true: PRIMARY, false: DARKGREY}}
+              disabled={false}
+              onValueChange={() => {
+                setInstoreShopping(!instoreShopping);
+              }}
+            />
             </View>
           </View>
         </View>
@@ -222,12 +230,14 @@ const ShopDetails = ({navigation, route}) => {
             <Text style={styles.learnMore}>Learn more about home services</Text>
           </View>
 
-          <RadioButton
-            color={PRIMARY}
-            value={homeDelivery}
-            status={homeDelivery === true ? 'checked' : 'unchecked'}
-            onPress={() => setHomeDelivery(!homeDelivery)}
-          />
+          <CheckBox
+              value={homeDelivery}
+              tintColors={{true: PRIMARY, false: DARKGREY}}
+              disabled={false}
+              onValueChange={() => {
+                setHomeDelivery(!homeDelivery);
+              }}
+            />
         </View>
 
         <View style={[salesExecutive && styles.subContainer, {marginTop: 30}]}>
