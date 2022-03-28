@@ -42,6 +42,7 @@
     "react-native-modal-datetime-picker": "^13.1.0",
     "react-native-otp-textinput": "^0.0.8",
     "react-native-paper": "^4.11.2",
+    "react-native-permissions": "^3.3.1",
     "react-native-radio-buttons-group": "^2.2.10",
     "react-native-ratings": "^8.1.0",
     "react-native-raw-bottom-sheet": "^2.2.0",
