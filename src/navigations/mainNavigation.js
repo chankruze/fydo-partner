@@ -81,7 +81,7 @@ function MainNavigation({ language, user }) {
               color={PRIMARY} />
           ),
           tabBarStyle: {
-            paddingBottom: 5
+            // paddingBottom: 5
           },
           headerTintColor: 'white',
           headerStyle: {

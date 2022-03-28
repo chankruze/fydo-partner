@@ -7,19 +7,22 @@ import {
   TextInput,
   TouchableOpacity,
   SafeAreaView,
+  Platform,
+  StatusBar
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
-import MapView, {Marker} from 'react-native-maps';
+import React, { useState, useEffect } from 'react';
+import MapView, { Marker } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
-import {DARKBLUE, GREY} from '../assets/colors/index';
+import { DARKBLUE, GREY, PRIMARY } from '../assets/colors/index';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import locationPin from '../assets/images/location-pin.png';
 import pinIcon from '../assets/images/pin.png';
 import FAB from 'react-native-fab';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {SearchLocation, GetPostalAddress} from '../services/mapService';
+import { SearchLocation, GetPostalAddress } from '../services/mapService';
+import Permissions, { PERMISSIONS, RESULTS, request } from 'react-native-permissions'
 
-const MapScreen = ({navigation, route}) => {
+const MapScreen = ({ navigation, route }) => {
   const [region, setRegion] = useState({
     latitude: 27.2046,
     longitude: 77.4977,
@@ -42,21 +45,28 @@ const MapScreen = ({navigation, route}) => {
 
   const requestLocation = async () => {
     try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-      );
+      let granted;
+      if (Platform.OS == 'android') {
+        granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        );
+      } else {
+        granted = await request(PERMISSIONS.IOS.LOCATION_ALWAYS).then((result) => {
+          return result
+        });
+      }
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         Geolocation.getCurrentPosition(
-          ({coords}) => {
-            let {latitude, longitude} = coords;
-            let location = {latitude: latitude, longitude: longitude};
+          ({ coords }) => {
+            let { latitude, longitude } = coords;
+            let location = { latitude: latitude, longitude: longitude };
             GetPostalAddress(latitude, longitude)
               .then(res => {
                 setAddress(res.formatted_address);
               })
               .catch(err => console.log(err));
             setSelectedLocation(location);
-            setRegion(Object.assign({...region}, {...location}));
+            setRegion(Object.assign({ ...region }, { ...location }));
             setLocationChange(true);
           },
           error => {
@@ -82,16 +92,16 @@ const MapScreen = ({navigation, route}) => {
 
   const setLocation = () => {
     Geolocation.getCurrentPosition(
-      ({coords}) => {
-        let {latitude, longitude} = coords;
-        let location = {latitude: latitude, longitude: longitude};
+      ({ coords }) => {
+        let { latitude, longitude } = coords;
+        let location = { latitude: latitude, longitude: longitude };
         GetPostalAddress(latitude, longitude)
           .then(res => {
             setAddress(res.formatted_address);
           })
           .catch(err => console.log(err));
         setSelectedLocation(location);
-        setRegion(Object.assign({...region}, {...location}));
+        setRegion(Object.assign({ ...region }, { ...location }));
         setLocationChange(true);
       },
       error => {
@@ -111,21 +121,21 @@ const MapScreen = ({navigation, route}) => {
   const onDragEnd = e => {
     let coordinate = e.nativeEvent.coordinate;
     setSelectedLocation(coordinate);
-    setRegion(Object.assign({...region}, {...coordinate}));
+    setRegion(Object.assign({ ...region }, { ...coordinate }));
     setLocationChange(true);
   };
 
   const onSubmit = query => {
     SearchLocation(query)
       .then(res => {
-        const {lat, lng} = res;
-        const location = {latitude: lat, longitude: lng};
+        const { lat, lng } = res;
+        const location = { latitude: lat, longitude: lng };
         GetPostalAddress(lat, lng)
           .then(res => {
             setAddress(res.formatted_address);
           })
           .catch(err => console.log(err));
-        setRegion(Object.assign({...region}, {...location}));
+        setRegion(Object.assign({ ...region }, { ...location }));
         setSelectedLocation(location);
       })
       .catch(err => console.log(err));
@@ -138,55 +148,58 @@ const MapScreen = ({navigation, route}) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <MapView style={styles.map} initialRegion={region} region={region}>
-        <Marker
-          draggable={true}
-          coordinate={{
-            latitude: selectedLocation.latitude,
-            longitude: selectedLocation.longitude,
-          }}
-          onDragEnd={onDragEnd}
-          // image={locationPin}
-          title="You'll need to long press the marker to drag it.."
-        />
-      </MapView>
-      <View style={styles.searchView}>
-        <TextInput
-          placeholder="Enter the city"
-          style={styles.input}
-          onChangeText={onChangeText}
-          value={text}
-          returnKeyType="search"
-          onSubmitEditing={e => onSubmit(e.nativeEvent.text)}
-        />
-        <Icon name="search-outline" size={22} color="black" />
-      </View>
-      <View
-        style={Object.assign(
-          {...styles.confirmButton},
-          {opacity: locationChange ? 1 : 0.8},
-        )}>
-        <TextInput style={styles.selectedLocation} disabled value={address} multiline />
-        <TouchableOpacity
-          activeOpacity={0.7}
-          style={styles.check}
-          disabled={!locationChange}
-          onPress={confirmAddress}>
-          <MaterialIcons name="check" size={25} color={DARKBLUE} />
-        </TouchableOpacity>
-      </View>
+    <SafeAreaView style={{ flex: 1 }}>
+      {/* <StatusBar barStyle='dark-content' backgroundColor={PRIMARY} /> */}
+      <View style={styles.container}>
+        <MapView style={styles.map} initialRegion={region} region={region}>
+          <Marker
+            draggable={true}
+            coordinate={{
+              latitude: selectedLocation.latitude,
+              longitude: selectedLocation.longitude,
+            }}
+            onDragEnd={onDragEnd}
+            // image={locationPin}
+            title="You'll need to long press the marker to drag it.."
+          />
+        </MapView>
+        <View style={styles.searchView}>
+          <TextInput
+            placeholder="Enter the city"
+            style={styles.input}
+            onChangeText={onChangeText}
+            value={text}
+            returnKeyType="search"
+            onSubmitEditing={e => onSubmit(e.nativeEvent.text)}
+          />
+          <Icon name="search-outline" size={22} color="black" />
+        </View>
+        <View
+          style={Object.assign(
+            { ...styles.confirmButton },
+            { opacity: locationChange ? 1 : 0.8 },
+          )}>
+          <TextInput style={styles.selectedLocation} disabled value={address} multiline />
+          <TouchableOpacity
+            activeOpacity={0.7}
+            style={styles.check}
+            disabled={!locationChange}
+            onPress={confirmAddress}>
+            <MaterialIcons name="check" size={25} color={DARKBLUE} />
+          </TouchableOpacity>
+        </View>
 
-      <FAB
-        onClickAction={setLocation}
-        buttonColor="white"
-        iconTextColor={DARKBLUE}
-        snackOffset={80}
-        iconTextComponent={
-          <MaterialIcons name="my-location" color="red" size={20} />
-        }
-        visible={true}
-      />
+        <FAB
+          onClickAction={setLocation}
+          buttonColor="white"
+          iconTextColor={DARKBLUE}
+          snackOffset={80}
+          iconTextComponent={
+            <MaterialIcons name="my-location" color="red" size={20} />
+          }
+          visible={true}
+        />
+      </View>
     </SafeAreaView>
   );
 };
@@ -214,6 +227,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     position: 'absolute',
     top: 10,
+    height: 45,
     borderRadius: 10,
     paddingHorizontal: 25,
     alignItems: 'center',

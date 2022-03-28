@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, SafeAreaView, ScrollView, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, ScrollView, Dimensions, StatusBar } from 'react-native';
 import React, { useState } from 'react';
 import { RadioButton, TextInput } from 'react-native-paper';
 import { Checkbox } from 'react-native-paper';
@@ -56,6 +56,7 @@ const ShopDetails = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: premiumService ? GREY_3 : 'white' }}>
+      <StatusBar barStyle="dark-content" backgroundColor={PRIMARY} />
       <View style={[styles.container,
       { backgroundColor: premiumService ? GREY_3 : 'white' }]}>
         <ScrollView showsVerticalScrollIndicator={false}>
