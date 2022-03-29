@@ -21,8 +21,9 @@ import {getAppVersion} from '../utils/deviceInfo';
 import WithNetInfo from '../components/hoc/withNetInfo';
 import ChooseLanguageComponent from '../components/common/ChooseLanguageComponent';
 import { connect } from 'react-redux';
-import { setLanguage, setUser } from '../store/actions/user.action';
+import { clearUser, setLanguage, setUser } from '../store/actions/user.action';
 import { CommonActions } from '@react-navigation/native';
+import { clearData, saveUserData } from '../utils/defaultPreference';
 
 const PRIVACY_PAGE = "https://fydo.in/privacy-policy.html";
 
@@ -34,8 +35,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        changeLanguage: (language) => dispatch(setLanguage(language)),
-        setUser: (user) => dispatch(setUser(user))
+        clearData: () => dispatch(clearUser())
     }
 }
 
@@ -88,10 +88,9 @@ class SettingScreen extends Component{
     }
 
     async logout(){
-        let {changeLanguage, setUser, navigation} = this.props;
+        let { clearData, navigation} = this.props;
         try {
-            changeLanguage(null);
-            setUser(null);
+            await clearData();
             navigation.dispatch(
                 CommonActions.reset({
                   index: 0,

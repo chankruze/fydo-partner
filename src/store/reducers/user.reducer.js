@@ -1,4 +1,4 @@
-import { saveUserData } from './../../utils/defaultPreference';
+import { clearData, saveUserData } from './../../utils/defaultPreference';
 import { CLEAR_USER, SET_LANGUAGE, SET_USER } from "../types";
 
 const intialState = {
@@ -11,18 +11,17 @@ function userReducer(state = intialState, action) {
     switch (type) {
         case SET_USER: {
             let object = Object.assign({ ...state }, { user: payload.user });
-            console.log("use-->", object)
-            saveUserData(object);
             return object;
         }
         case SET_LANGUAGE: {
             console.log(payload?.language)
             let object = Object.assign({ ...state }, { language: payload?.language });
             console.log("use2-->", object)
-            saveUserData(object);
+            // saveUserData(object);
             return object;
         }
         case CLEAR_USER: {
+            clearData()
             return { user: null }
         }
         default:

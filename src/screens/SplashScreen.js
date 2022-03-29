@@ -27,28 +27,38 @@ const SplashScreen = ({ navigation, setUser, user }) => {
         const user = await getUser();
         setUserInfo(user);
         setUser(user);
+        console.log("user", user)
+        if (user == null) {
+          navigation.navigate('OnBoarding')
+        }
+        else if (user?.profileComplete == false) {
+          navigation.navigate('RegisterShop');
+        }
+        else {
+          navigation.navigate('Main');
+        }
       } catch (error) {
         console.log(error);
       }
     }
     setUserData();
 
-    let timeout = setTimeout(async () => {
-      // let user = await getUser();
-      console.log("jj--.", user);
-      if (user == null) {
-        navigation.navigate('OnBoarding')
-      }
-      else if (user?.profileComplete == false) {
-        navigation.navigate('RegisterShop');
-      }
-      else {
-        navigation.navigate('Main');
-      }
-    }, 3000)
-    return () => {
-      clearTimeout(timeout)
-    }
+    // let timeout = setTimeout(async () => {
+    //   // let user = await getUser();
+    //   console.log("jj--.", user);
+    //   if (user == null) {
+    //     navigation.navigate('OnBoarding')
+    //   }
+    //   else if (user?.profileComplete == false) {
+    //     navigation.navigate('RegisterShop');
+    //   }
+    //   else {
+    //     navigation.navigate('Main');
+    //   }
+    // }, 3000)
+    // return () => {
+    //   clearTimeout(timeout)
+    // }
   }, []);
 
   return (
