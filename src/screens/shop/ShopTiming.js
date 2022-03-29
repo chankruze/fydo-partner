@@ -10,7 +10,6 @@ import {
   Dimensions,
 } from 'react-native';
 import React, { createRef, useEffect, useRef, useState } from 'react';
-import { Checkbox } from 'react-native-paper';
 import {
   DARKBLACK,
   DARKBLUE,
@@ -22,11 +21,11 @@ import {
   PRIMARY,
 } from '../../assets/colors';
 import RBSheet from 'react-native-raw-bottom-sheet';
-import ImagePicker from 'react-native-image-crop-picker';
+import ImagePicker, { openPicker } from 'react-native-image-crop-picker';
 import Cross from '../../assets/icons/cross.svg';
 import { CommonActions } from '@react-navigation/native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import { RadioButton } from 'react-native-paper';
+import CheckBox from '@react-native-community/checkbox';
 import moment from 'moment';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -48,30 +47,30 @@ const HEIGHT = Dimensions.get('screen').height;
 const snapPoints = [HEIGHT < 872 ? '60%' : '60', HEIGHT < 872 ? '70%' : '70'];
 const bottomSheetRef = createRef();
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
-    user: state?.userReducer?.user
-  }
-}
+    user: state?.userReducer?.user,
+  };
+};
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    setUser: (user) => dispatch(setUser(user))
-  }
-}
+    setUser: user => dispatch(setUser(user)),
+  };
+};
 
-const ShopTiming = (props) => {
+const ShopTiming = props => {
   let rbSheet = useRef();
   const [images, setImages] = useState([]);
   const [timePicker, setTimePicker] = useState(false);
   const [opentimePicker, setOpenTimePicker] = useState(false);
   const [closetimePicker, setCloseTimePicker] = useState(false);
-  const [checked, setChecked] = useState(false);
   const [usualOpen, setUsualOpen] = useState(null);
   const [usualClose, setUsualClose] = useState(null);
   const [addTags, setAddTags] = useState(false);
   const [addBreaks, setAddBreaks] = useState(false);
   const [selectedDay, setSelectedDay] = useState(null);
+  const [checked, setChecked] = useState(new Array(7).fill(false));
   const days = [
     'Sunday',
     'Monday',
@@ -174,7 +173,7 @@ const ShopTiming = (props) => {
             uri:
               Platform.OS === 'android'
                 ? i.path
-                : i.path.replace('file://', '')
+                : i.path.replace('file://', ''),
           };
         });
 
@@ -199,7 +198,7 @@ const ShopTiming = (props) => {
     })
       .then(res => {
         let imageData = [res];
-        console.log("sdf-->", imageData);
+        console.log('sdf-->', imageData);
 
         const data = imageData.map((i, index) => {
           return {
@@ -252,7 +251,7 @@ const ShopTiming = (props) => {
     } else {
       return [];
     }
-  }
+  };
 
   const submit = async () => {
     let { setUser } = props;
@@ -291,9 +290,9 @@ const ShopTiming = (props) => {
         // );
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   const renderImage = image => {
     return (
@@ -315,10 +314,6 @@ const ShopTiming = (props) => {
         </View>
       </View>
     );
-  };
-
-  const setGlobalTime = () => {
-    setTimePicker(!timePicker);
   };
 
   const handleOpenTimePicker = id => {
@@ -348,16 +343,12 @@ const ShopTiming = (props) => {
           let object = item;
           object.timings.startTime = d;
           return object;
-        }
-        else {
+        } else {
           return item;
         }
       });
     }
     setIndividualTimings(list);
-    console.log(JSON.stringify(list, null, 2));
-    console.log('12-->', d);
-
   };
 
   const setGlobalCloseTime = item => {
@@ -377,23 +368,39 @@ const ShopTiming = (props) => {
           let object = item;
           object.timings.endTime = d;
           return object;
-        }
-        else {
+        } else {
           return item;
         }
       });
     }
     setIndividualTimings(list);
-    console.log(JSON.stringify(list, null, 2));
-    console.log('12-->', d);
   };
 
-  const setCloseStore = (item, data) => {
-    // list = individualTimings.map(item => {
-    //   item.timings.startTime = d;
-    //   return item;
-    // });
-  }
+
+  const handleClosedCheckbox = id => {
+    const tempArray = checked.map((item, index) => {
+      if (index == id) {
+        let bool = !item;
+        return bool;
+      } else {
+        return item;
+      }
+    });
+    setChecked(tempArray);
+
+    let list = [];
+    list = individualTimings.map((item, index) => {
+      if (index == id) {
+        let object = item;
+        object.timings.startTime = null;
+        object.timings.endTime = null;
+        return object;
+      } else {
+        return item;
+      }
+    });
+    setIndividualTimings(list);
+  };
 
   const renderTimings = ({ item, index }) => {
     return (
@@ -414,7 +421,12 @@ const ShopTiming = (props) => {
           {item.dayOfWeek}
         </Text>
         <TouchableOpacity
-          style={styles.timeButton}
+          style={
+            checked[index]
+              ? [styles.timeButton, { opacity: 0.5 }]
+              : styles.timeButton
+          }
+          disabled={checked[index]}
           onPress={handleOpenTimePicker.bind(this, item._id)}>
           {individualTimings[index].timings.startTime ? (
             <Text style={styles.openTime}>
@@ -425,7 +437,12 @@ const ShopTiming = (props) => {
           )}
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.timeButton}
+          style={
+            checked[index]
+              ? [styles.timeButton, { opacity: 0.5 }]
+              : styles.timeButton
+          }
+          disabled={checked[index]}
           onPress={handleCloseTimePicker.bind(this, item._id)}>
           {individualTimings[index].timings.endTime ? (
             <Text style={styles.closeTime}>
@@ -439,24 +456,19 @@ const ShopTiming = (props) => {
           style={{
             flexDirection: 'row',
             alignItems: 'center',
+            right: 5,
           }}>
           <Text style={styles.closeTxt}>Closed</Text>
-          <RadioButton
-            color={PRIMARY}
-            status={checked ? 'checked' : 'unchecked'}
-            onPress={(data) => setCloseStore(item, data)}
+          <CheckBox
+            style={[styles.radioBtn, { marginLeft: 5 }]}
+            value={checked[index]}
+            tintColors={{ true: PRIMARY, false: DARKGREY }}
+            disabled={false}
+            onValueChange={handleClosedCheckbox.bind(this, index)}
           />
         </View>
       </View>
     );
-  };
-
-  const handleAddTags = () => {
-    setAddTags(true);
-  };
-
-  const handleAddBreaks = () => {
-    setAddBreaks(true);
   };
 
   const removeImage = uri => {
@@ -757,28 +769,24 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#4D535BCC',
     letterSpacing: 0.3,
-
   },
   timeTxt: {
     fontFamily: 'Gilroy-Medium',
     fontSize: 12,
     color: 'black',
     letterSpacing: 0.3,
-
   },
   openTime: {
     fontFamily: 'Gilroy-Medium',
     fontSize: 12,
     color: GREEN,
     letterSpacing: 0.3,
-
   },
   closeTime: {
     fontFamily: 'Gilroy-Medium',
     fontSize: 12,
     color: 'red',
     letterSpacing: 0.3,
-
   },
   closeTxt: {
     marginLeft: 30,
@@ -786,7 +794,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#383B3F',
     letterSpacing: 0.3,
-
   },
   buttonContainer: {
     marginTop: 20,
@@ -801,7 +808,6 @@ const styles = StyleSheet.create({
     color: PRIMARY,
     marginRight: 10,
     letterSpacing: 0.3,
-
   },
   transparentButton: {
     paddingVertical: 4,
@@ -829,7 +835,6 @@ const styles = StyleSheet.create({
     color: DARKGREY,
     fontFamily: 'Gilroy-Medium',
     letterSpacing: 0.3,
-
   },
   footerOtherLabel: {
     fontSize: 13,
@@ -838,6 +843,9 @@ const styles = StyleSheet.create({
     marginTop: 3,
     fontFamily: 'Gilroy-Medium',
     letterSpacing: 0.3,
-
   },
+  radioBtn: {
+    width: 20,
+    height: 20,
+  }
 });
