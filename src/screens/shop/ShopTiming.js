@@ -262,12 +262,15 @@ const ShopTiming = (props) => {
 
     try {
       const params = {
-        name: prevParams.name,
-        mobile: prevParams.mobile,
-        type: prevParams.type,
+        // name: prevParams.name,
+        // mobile: prevParams.mobile,
+        // type: prevParams.type,
         timing: individualTimings,
-        images: finalImages
+        images: finalImages,
+        ...prevParams
       }
+
+      console.log("aspp-->", params);
 
       let { accessToken, navigation } = props;
       const response = await updateShop(accessToken, params);
