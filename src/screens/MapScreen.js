@@ -144,7 +144,11 @@ const MapScreen = ({ navigation, route }) => {
 
   const confirmAddress = () => {
     navigation.navigate('RegisterShop', {
-      address: address
+      address: address,
+      coordinates: {
+        latitude: region.latitude,
+        longitude: region.longitude
+      }
     })
   };
 

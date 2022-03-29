@@ -11,12 +11,14 @@ function userReducer(state = intialState, action) {
     switch (type) {
         case SET_USER: {
             let object = Object.assign({ ...state }, { user: payload.user });
+            console.log("use-->", object)
             saveUserData(object);
             return object;
         }
         case SET_LANGUAGE: {
             console.log(payload?.language)
             let object = Object.assign({ ...state }, { language: payload?.language });
+            console.log("use2-->", object)
             saveUserData(object);
             return object;
         }

@@ -9,7 +9,7 @@ import {
   FlatList,
   Dimensions,
 } from 'react-native';
-import React, { createRef, useRef, useState } from 'react';
+import React, { createRef, useEffect, useRef, useState } from 'react';
 import { Checkbox } from 'react-native-paper';
 import {
   DARKBLACK,
@@ -41,7 +41,7 @@ import { connect } from 'react-redux';
 import { generatePresignUrl } from '../../services/presignUrlService';
 import uuid from 'react-native-uuid';
 import { setUser } from '../../store/actions/user.action';
-import { saveUserData } from '../../utils/defaultPreference';
+import { getUser, saveUserData } from '../../utils/defaultPreference';
 
 const HEIGHT = Dimensions.get('screen').height;
 
@@ -139,6 +139,16 @@ const ShopTiming = (props) => {
       _id: '62137c449c5674a6e62aed1a',
     },
   ]);
+  const [user, setUser] = useState('');
+
+  useEffect(() => {
+    getUsers();
+  });
+
+  const getUsers = async () => {
+    const user = await getUser();
+    setUser(user)
+  }
 
   const selectImages = () => {
     rbSheet.open();
@@ -198,6 +208,7 @@ const ShopTiming = (props) => {
               Platform.OS === 'android'
                 ? i.path
                 : i.path.replace('file://', ''),
+            fileName: i.filename
           };
         });
         const newImages = [...images, ...data];
@@ -208,17 +219,33 @@ const ShopTiming = (props) => {
       });
   };
 
+  const getBlob = async (fileUri) => {
+    const resp = await fetch(fileUri);
+    const imageBody = await resp.blob();
+    return imageBody;
+  };
+
   const renderImages = async () => {
-    let img = [], finalImages = [];
+    let fileNames = [], finalImages = [];
     if (images.length > 0) {
       images.map((i) => {
-        img.push(uuid.v4(i))
+        fileNames.push(i.fileName.split(".")[0])
+      })
+      const imageResponse = await generatePresignUrl(user?.accessToken, fileNames);
+      const data = await imageResponse.json();
+
+      data.map(async (i) => {
+        images.map(async (j) => {
+          const imageBody = await getBlob(j.uri);
+
+          await fetch(i, {
+            method: 'PUT',
+            body: imageBody
+          });
+        })
       })
 
-      console.log("hj==>", img);
-      const imageResponse = await generatePresignUrl(props?.user?.accessToken, img);
-      const data = await imageResponse.json();
-      data.map((i) => {
+      await data.map((i) => {
         finalImages.push({ uri: i?.split("?")[0] })
       })
       return finalImages;
@@ -251,14 +278,14 @@ const ShopTiming = (props) => {
         console.log()
         setUser(object);
         saveUserData(object);
-        navigation.dispatch(
-          CommonActions.reset({
-            index: 0,
-            routes: [
-              { name: 'Main' },
-            ],
-          })
-        );
+        // navigation.dispatch(
+        //   CommonActions.reset({
+        //     index: 0,
+        //     routes: [
+        //       { name: 'Main' },
+        //     ],
+        //   })
+        // );
       }
     } catch (error) {
       console.log(error)

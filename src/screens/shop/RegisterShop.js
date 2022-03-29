@@ -9,6 +9,8 @@ import {
   TextInput,
   TouchableOpacity,
   SafeAreaView,
+  Platform,
+  ToastAndroid,
 } from 'react-native';
 import {
   PRIMARY,
@@ -24,7 +26,7 @@ import {
   GREY_3,
 } from '../../assets/colors';
 import Octicons from 'react-native-vector-icons/Octicons';
-import { launchImageLibrary } from 'react-native-image-picker';
+import ImagePicker from 'react-native-image-crop-picker';
 import ButtonComponent from '../../components/ButtonComponent';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FontIsto from 'react-native-vector-icons/Fontisto';
@@ -37,6 +39,11 @@ import MaterialComunityIcons from 'react-native-vector-icons/MaterialCommunityIc
 import WithNetInfo from '../../components/hoc/withNetInfo';
 import SelectDropdown from 'react-native-select-dropdown';
 import { add, color } from 'react-native-reanimated';
+import { generatePresignUrl } from '../../services/presignUrlService';
+import { connect } from 'react-redux';
+import Toast from 'react-native-simple-toast';
+import { getUser } from '../../utils/defaultPreference';
+
 
 const HEIGHT = Dimensions.get('screen').height;
 
@@ -52,7 +59,14 @@ const options = {
   quality: 0.5,
 };
 
-function RegisterShop({ route, navigation }) {
+const mapStateToProps = (state) => {
+  return {
+    user: state?.userReducer?.user
+  }
+}
+
+function RegisterShop({ route, navigation, user }) {
+
   const [ownerName, setOwnerName] = useState('');
   // const [phoneNumber, setPhoneNumber] = useState(route.params.phoneNumber);
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -60,21 +74,33 @@ function RegisterShop({ route, navigation }) {
   const [address, setAddress] = useState(
     route.params ? route.params.address : null,
   );
+  const [coordinates, setCoordinates] = useState(
+    route.params ? route.params.coordinates : null,
+  );
   const [pincode, setPincode] = useState('');
   const [website, setWebsite] = useState('');
   const [shopType, setShopType] = useState('');
   const [error, setError] = useState({});
-  const [idPicUrl, setIdPicUrl] = useState(null);
-  const [idPicName, setIdPicName] = useState(null);
+  const [frontImg, setFrontImg] = useState(null);
+  const [backImg, setBacktImg] = useState(null);
+  const [idType, setIdType] = useState('');
+  // const [user, setUser] = useState('');
 
   useEffect(() => {
+    // getUsers();
     if (route.params !== undefined) {
       const newAddress = route.params.address;
+      setCoordinates(route.params?.coordinates)
       setAddress(newAddress);
     } else {
       return;
     }
-  }, [route]);
+  }, []);
+
+  // const getUsers = async () => {
+  //   const user = await getUser();
+  //   setUser(user)
+  // }
 
   const isValidate = () => {
     const error = {};
@@ -102,23 +128,99 @@ function RegisterShop({ route, navigation }) {
     return false;
   };
 
-  const pickImage = () => {
-    launchImageLibrary(options, ({ assets, didCancel }) => {
-      if (assets) {
-        console.log(assets);
-      }
-    });
+  const pickImage = (type) => {
+    ImagePicker.openPicker({
+      // width: 300,
+      // height: 400,
+      // multiple: true,
+      waitAnimationEnd: false,
+      cropping: true,
+      // includeExif: true,
+      forceJpg: true,
+    })
+      .then((assets) => {
+        if (assets) {
+          let imageData = [assets];
+          console.log("sss=-->", imageData);
+          const data = imageData.map((i, index) => {
+            return {
+              // uri: i.path,
+              uri:
+                Platform.OS === 'android'
+                  ? i.path
+                  : i.path.replace('file://', ''),
+              fileName: i.filename
+            };
+          });
+          setImages(data, type)
+        }
+      });
   };
 
-  const next = () => {
-    if (isValidate()) {
+  setImages = async (res, type) => {
+    const shortUri = [res[0].fileName.split(".")[0]];
+    const imageResponse = await generatePresignUrl(user?.accessToken, shortUri);
+    const data = await imageResponse.json();
+    const imageBody = await getBlob(res[0]?.uri);
+
+    const final = await fetch(data[0], {
+      method: 'PUT',
+      body: imageBody
+    });
+    console.log("ddd-->", final.status);
+    if (final.status == "200") {
+      if (Platform.OS == 'android') {
+        ToastAndroid.show('Image upload Successfully', ToastAndroid.SHORT);
+      } else {
+        Toast.show('Image upload Successfully', Toast.SHORT);
+      }
+      if (type == 'front') {
+        const frontImage = data[0]?.split("?")[0];
+        setFrontImg(frontImage)
+      } else {
+        const backImg = data[0]?.split("?")[0];
+        setFrontImg(backImg)
+      }
+    } else {
+      if (Platform.OS == 'android') {
+        ToastAndroid.show('Unable To Upload Image', ToastAndroid.SHORT);
+      } else {
+        Toast.show('Unable To Upload Image', Toast.SHORT);
+      }
+    }
+  }
+
+  getBlob = async (fileUri) => {
+    const resp = await fetch(fileUri);
+    const imageBody = await resp.blob();
+    return imageBody;
+  };
+
+  const next = async () => {
+    if (true) {
       let data = {
-        name: ownerName,
+        name: shopName,
         mobile: phoneNumber,
         type: shopType,
-        // website: website,
-        // pincode: pincode
-        // location: location
+        owner: {
+          ownerName: ownerName,
+          ownerMobile: phoneNumber
+        },
+        // location: [
+        //   coordinates.longitude,
+        //   coordinates.latitude
+        // ],
+        address: {
+          addressLine1: address,
+          pin: pincode
+        },
+        documents: [
+          {
+            documentType: idType,
+            documentBackUrl: backImg,
+            documentFrontUrl: frontImg,
+          }
+        ]
       };
       navigation.navigate('ShopDetails', { data: data });
     }
@@ -126,6 +228,7 @@ function RegisterShop({ route, navigation }) {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+      {console.log('ssa==>', user)}
       <StatusBar barStyle="dark-content" backgroundColor={PRIMARY} translucent />
       <View style={styles.contentContainer}>
         <ScrollView
@@ -219,7 +322,7 @@ function RegisterShop({ route, navigation }) {
               data={idCards}
               defaultButtonText="Your ID Proof"
               onSelect={(selectedItem, index) => {
-                console.log(selectedItem, index);
+                setIdType(selectedItem)
               }}
               button
               renderDropdownIcon={() => (
@@ -242,7 +345,7 @@ function RegisterShop({ route, navigation }) {
           </View>
           <View style={styles.uploadImage}>
             <TouchableOpacity
-              onPress={pickImage}
+              onPress={() => pickImage('front')}
               style={styles.transparentButton}>
               <MaterialIcons
                 name="add-circle-outline"
@@ -252,7 +355,7 @@ function RegisterShop({ route, navigation }) {
               <Text style={styles.buttonText}>Add Front image</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={pickImage}
+              onPress={() => pickImage('back')}
               style={styles.transparentButton}>
               <MaterialIcons
                 name="add-circle-outline"
@@ -512,4 +615,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default WithNetInfo(RegisterShop);
+export default connect(mapStateToProps)(WithNetInfo(RegisterShop));

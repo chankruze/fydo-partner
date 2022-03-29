@@ -56,17 +56,15 @@ const ShopDetails = ({ navigation, route }) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: premiumService ? GREY_3 : 'white' }}>
-      <StatusBar barStyle="dark-content" backgroundColor={PRIMARY} />
-      <View style={[styles.container,
-      { backgroundColor: premiumService ? GREY_3 : 'white' }]}>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={premiumService && styles.subContainer}>
             <View
               style={
-                premiumService ? styles.premiumCheckbox2 : styles.premiumCheckbox
+                premiumService ? styles.premiumCheckBox2 : styles.premiumCheckBox
               }>
-              <View style={{ width: '80%' }}>
+              <View style={{ width: '80%', marginLeft: premiumService ? 20 : 0 }}>
                 <Text style={styles.partnerProgramme}>
                   Do you want to join our channel partner Programme?
                   <Text style={[styles.premiumText, { paddingLeft: 10 }]}>
@@ -75,15 +73,21 @@ const ShopDetails = ({ navigation, route }) => {
                   </Text>
                 </Text>
               </View>
+              <View style={[styles.radioBtnView,
+              {
+                right: premiumService ? 20 : 5,
+              }]}>
+                <CheckBox
+                  style={styles.radioBtn}
+                  value={premiumService}
+                  tintColors={{ true: PRIMARY, false: DARKGREY }}
+                  disabled={false}
+                  onValueChange={() => {
+                    setPremiumService(!premiumService);
+                  }}
+                />
+              </View>
 
-              <CheckBox
-                value={premiumService}
-                tintColors={{ true: PRIMARY, false: DARKGREY }}
-                disabled={false}
-                onValueChange={() => {
-                  setPremiumService(!premiumService);
-                }}
-              />
             </View>
             {premiumService && (
               <View style={{ width: '100%' }}>
@@ -104,6 +108,9 @@ const ShopDetails = ({ navigation, route }) => {
                     }
                   }
                 />
+                {/* {error.accountNumber && (
+                <Text style={styles.error}>{error.accountNumber}</Text>
+              )} */}
                 <TextInput
                   style={styles.input}
                   selectionColor={DARKBLUE}
@@ -175,6 +182,7 @@ const ShopDetails = ({ navigation, route }) => {
               <View style={styles.radioButton}>
                 <Text style={styles.radioText}>Parking availability</Text>
                 <CheckBox
+                  style={styles.radioBtn}
                   value={parking}
                   tintColors={{ true: PRIMARY, false: DARKGREY }}
                   disabled={false}
@@ -183,9 +191,10 @@ const ShopDetails = ({ navigation, route }) => {
                   }}
                 />
               </View>
-              <View style={styles.radioButton}>
+              <View style={[styles.radioButton, { right: 5, position: 'absolute' }]}>
                 <Text style={styles.radioText}>Wheelchair friendly</Text>
                 <CheckBox
+                  style={[styles.radioBtn]}
                   value={wheelchair}
                   tintColors={{ true: PRIMARY, false: DARKGREY }}
                   disabled={false}
@@ -196,10 +205,11 @@ const ShopDetails = ({ navigation, route }) => {
               </View>
             </View>
 
-            <View style={styles.radioContainer}>
+            <View style={[styles.radioContainer, { marginTop: 8 }]}>
               <View style={styles.radioButton}>
                 <Text style={styles.radioText}>Food courts</Text>
                 <CheckBox
+                  style={styles.radioBtn}
                   value={foodCourt}
                   tintColors={{ true: PRIMARY, false: DARKGREY }}
                   disabled={false}
@@ -208,9 +218,10 @@ const ShopDetails = ({ navigation, route }) => {
                   }}
                 />
               </View>
-              <View style={styles.radioButton}>
+              <View style={[styles.radioButton, { right: 5, position: 'absolute' }]}>
                 <Text style={styles.radioText}>Instore shopping</Text>
                 <CheckBox
+                  style={styles.radioBtn}
                   value={instoreShopping}
                   tintColors={{ true: PRIMARY, false: DARKGREY }}
                   disabled={false}
@@ -219,30 +230,19 @@ const ShopDetails = ({ navigation, route }) => {
                   }}
                 />
               </View>
+            </View>
+          </View>
 
-              <View style={styles.radioContainer}>
-                <View style={styles.radioButton}>
-                  <Text style={styles.radioText}>Food courts</Text>
-                  <RadioButton
-                    color={PRIMARY}
-                    value={foodCourt}
-                    status={foodCourt === true ? 'checked' : 'unchecked'}
-                    onPress={() => setFoodCourt(!foodCourt)}
-                  />
-                </View>
-                <View style={styles.radioButton}>
-                  <Text style={styles.radioText}>Instore shopping</Text>
-                  <RadioButton
-                    color={PRIMARY}
-                    value={instoreShopping}
-                    status={instoreShopping === true ? 'checked' : 'unchecked'}
-                    onPress={() => setInstoreShopping(!instoreShopping)}
-                  />
-                </View>
-              </View>
+          <View style={[styles.radioButton, { width: '100%' }]}>
+            <View>
+              <Text style={styles.radioText}>
+                Do you provide home delivery/service?
+              </Text>
+              <Text style={styles.learnMore}>Learn more about home services</Text>
             </View>
 
             <CheckBox
+              style={[styles.radioBtn, { marginRight: 5 }]}
               value={homeDelivery}
               tintColors={{ true: PRIMARY, false: DARKGREY }}
               disabled={false}
@@ -257,17 +257,17 @@ const ShopDetails = ({ navigation, route }) => {
               style={
                 salesExecutive ? styles.premiumCheckBox2 : styles.premiumCheckBox
               }>
-              <View style={{ width: '80%' }}>
+              <View style={{ width: '80%', marginLeft: salesExecutive ? 20 : 0 }}>
                 <Text style={styles.partnerProgramme}>
                   Have any sales executive visited your shop?
                 </Text>
                 <Text style={styles.learnMore}>
                   Learn more about Sales executive
                 </Text>
-                <Text style={styles.learnMore}>Learn more about home services</Text>
               </View>
 
               <CheckBox
+                style={[styles.radioBtn, { right: 5 }]}
                 value={salesExecutive}
                 tintColors={{ true: PRIMARY, false: DARKGREY }}
                 disabled={false}
@@ -276,68 +276,44 @@ const ShopDetails = ({ navigation, route }) => {
                 }}
               />
             </View>
-
-            <View style={[salesExecutive && styles.subContainer, { marginTop: 30 }]}>
-              <View
-                style={
-                  salesExecutive ? styles.premiumCheckbox2 : styles.premiumCheckbox
-                }>
-                <View style={{ width: '80%' }}>
-                  <Text style={styles.partnerProgramme}>
-                    Have any sales executive visited your shop?
-                  </Text>
-                  <Text style={styles.learnMore}>
-                    Learn more about Sales executive
-                  </Text>
-                </View>
-
-                <Checkbox
-                  color={PRIMARY}
-                  status={salesExecutive ? 'checked' : 'unchecked'}
-                  onPress={() => {
-                    setSalesExecutive(!salesExecutive);
-                  }}
-                />
-              </View>
-              {salesExecutive && (
-                <View style={{ width: '100%', marginTop: 15 }}>
-                  <TextInput
-                    style={[
-                      styles.input,
-                      { paddingLeft: 10, marginBottom: 25, },
-                    ]}
-                    selectionColor={DARKBLUE}
-                    activeUnderlineColor={GREY_2}
-                    placeholder="Phone Number"
-                    keyboardType="numeric"
-                    theme={
-                      {
-                        fonts: {
-                          regular: {
-                            fontFamily: 'Gilroy-Medium'
-                          }
+            {salesExecutive && (
+              <View style={{ width: '100%', marginTop: 15 }}>
+                <TextInput
+                  style={[
+                    styles.input,
+                    { paddingLeft: 10, marginBottom: 25, },
+                  ]}
+                  selectionColor={DARKBLUE}
+                  activeUnderlineColor={GREY_2}
+                  placeholder="Phone Number"
+                  keyboardType="numeric"
+                  theme={
+                    {
+                      fonts: {
+                        regular: {
+                          fontFamily: 'Gilroy-Medium'
                         }
                       }
                     }
-                    left={
-                      <TextInput.Icon
-                        name={() => (
-                          <MaterialIcon name="phone" size={25} color="#000" />
-                        )}
-                      />
-                    }
-                  />
-                </View>
-              )}
-            </View>
-            <View style={styles.next}>
-              <ButtonComponent
-                label="Next"
-                color="white"
-                backgroundColor={DARKBLUE}
-                onPress={next}
-              />
-            </View>
+                  }
+                  left={
+                    <TextInput.Icon
+                      name={() => (
+                        <MaterialIcon name="phone" size={25} color="#000" />
+                      )}
+                    />
+                  }
+                />
+              </View>
+            )}
+          </View>
+          <View style={styles.next}>
+            <ButtonComponent
+              label="Next"
+              color="white"
+              backgroundColor={DARKBLUE}
+              onPress={next}
+            />
           </View>
         </ScrollView>
       </View>
@@ -350,9 +326,10 @@ export default ShopDetails;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'white',
     paddingHorizontal: 15,
-    // paddingTop: 30,
-    // backgroundColor: GREY_3,
+    paddingTop: 30,
+    backgroundColor: GREY_3,
   },
   premiumCheckBox: {
     flexDirection: 'row',
@@ -361,9 +338,10 @@ const styles = StyleSheet.create({
   },
   premiumCheckBox2: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 15,
+    width: '100%',
   },
   subContainer: {
     borderRadius: 10,
@@ -407,8 +385,8 @@ const styles = StyleSheet.create({
   },
   radioContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: WIDTH * .93,
+    // justifyContent: 'space-between',
+    // width: WIDTH * .93,
   },
   radioButton: {
     flexDirection: 'row',
@@ -421,7 +399,6 @@ const styles = StyleSheet.create({
     color: DARKBLACK,
     fontFamily: 'Gilroy-Medium',
     letterSpacing: 0.3,
-
   },
   learnMore: {
     fontSize: 10,
@@ -443,6 +420,13 @@ const styles = StyleSheet.create({
     width: '80%',
     alignSelf: 'center',
     letterSpacing: 0.3,
-
   },
+  radioBtnView: {
+    // right: 10,
+    position: 'absolute'
+  },
+  radioBtn: {
+    width: 20,
+    height: 20,
+  }
 });

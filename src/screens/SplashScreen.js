@@ -22,19 +22,19 @@ const SplashScreen = ({ navigation, setUser, user }) => {
   const [userData, setUserInfo] = useState(null);
 
   useEffect(() => {
-    // async function setUserData() {
-    //   try {
-    //     const user = await getUser();
-    //     setUserInfo(user);
-    //     setUser(user);
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // }
-    // setUserData();
+    async function setUserData() {
+      try {
+        const user = await getUser();
+        setUserInfo(user);
+        setUser(user);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    setUserData();
 
     let timeout = setTimeout(async () => {
-      let user = await getUser();
+      // let user = await getUser();
       console.log("jj--.", user);
       if (user == null) {
         navigation.navigate('OnBoarding')
@@ -50,26 +50,6 @@ const SplashScreen = ({ navigation, setUser, user }) => {
       clearTimeout(timeout)
     }
   }, []);
-
-  useEffect(() => {
-
-    // let timeout = setTimeout(() => {
-    //   console.log("jj--.", user);
-    //   if (user == null) {
-    //     navigation.navigate('OnBoarding')
-    //   }
-    //   else if (user?.profileComplete == false) {
-    //     navigation.navigate('RegisterShop');
-    //   }
-    //   else {
-    //     navigation.navigate('Main');
-    //   }
-    // }, 3000)
-    // return () => {
-    //   clearTimeout(timeout)
-    // }
-
-  })
 
   return (
     <LinearGradient
