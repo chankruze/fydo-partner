@@ -87,20 +87,15 @@ function RegisterShop({ route, navigation, user }) {
   // const [user, setUser] = useState('');
 
   useEffect(() => {
-    // getUsers();
+    console.log("add-->", route.params?.address);
     if (route.params !== undefined) {
-      const newAddress = route.params.address;
+      // const newAddress = route.params.address;
       setCoordinates(route.params?.coordinates)
-      setAddress(newAddress);
+      // setAddress(newAddress);
     } else {
       return;
     }
   }, []);
-
-  // const getUsers = async () => {
-  //   const user = await getUser();
-  //   setUser(user)
-  // }
 
   const isValidate = () => {
     const error = {};
@@ -228,7 +223,7 @@ function RegisterShop({ route, navigation, user }) {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
-      {console.log('ssa==>', user)}
+      {/* {console.log("dd-->", route.params?.address)} */}
       <StatusBar barStyle="dark-content" backgroundColor={PRIMARY} translucent />
       <View style={styles.contentContainer}>
         <ScrollView

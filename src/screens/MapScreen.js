@@ -36,7 +36,7 @@ const MapScreen = ({ navigation, route }) => {
   });
   const [locationChange, setLocationChange] = useState(false);
   const [text, onChangeText] = useState('');
-  const [address, setAddress] = useState(route.params.address);
+  const [address, setAddress] = useState(route.params?.address);
   // const [address, setAddress] = useState('Sikar');
 
   useEffect(() => {
@@ -121,6 +121,11 @@ const MapScreen = ({ navigation, route }) => {
 
   const onDragEnd = e => {
     let coordinate = e.nativeEvent.coordinate;
+    GetPostalAddress(coordinate.latitude, coordinate.longitude)
+      .then(res => {
+        setAddress(res.formatted_address);
+      })
+      .catch(err => console.log(err));
     setSelectedLocation(coordinate);
     setRegion(Object.assign({ ...region }, { ...coordinate }));
     setLocationChange(true);
