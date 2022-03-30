@@ -32,7 +32,7 @@ const SplashScreen = ({ navigation, setUser, user }) => {
           navigation.navigate('OnBoarding')
         }
         else if (user?.profileComplete == false) {
-          navigation.navigate('Main');
+          navigation.navigate('RegisterShop');
         }
         else {
           navigation.navigate('Main');
