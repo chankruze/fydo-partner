@@ -267,12 +267,12 @@ const MyShop = ({ navigation, user }) => {
               navigation={navigation}
             />
           </View>
-          {/* <View style={styles.editButton}>
-              <TouchableOpacity onPress={()=> navigation.navigate('RegisterShop')}>
+          <View style={styles.editButton}>
+              <TouchableOpacity onPress={()=> navigation.navigate('RegisterShop', {data: data})}>
               <FontAwesomeIcon name="edit" color="white" size={25}/>
 
               </TouchableOpacity>
-          </View> */}
+          </View>
         </View>
       }></FlatList>
   );

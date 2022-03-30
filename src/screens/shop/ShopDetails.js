@@ -1,6 +1,14 @@
-import { StyleSheet, Text, View, SafeAreaView, ScrollView, Dimensions, FlatList } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { RadioButton, TextInput } from 'react-native-paper';
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  ScrollView,
+  Dimensions,
+  FlatList,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {RadioButton, TextInput} from 'react-native-paper';
 import CheckBox from '@react-native-community/checkbox';
 
 import {
@@ -15,18 +23,18 @@ import {
 
 import ButtonComponent from '../../components/ButtonComponent';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import { getAmenities } from '../../services/shopService';
-import { connect } from 'react-redux';
+import {getAmenities} from '../../services/shopService';
+import {connect} from 'react-redux';
 
 const WIDTH = Dimensions.get('screen').width;
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
-    user: state?.userReducer?.user
-  }
-}
+    user: state?.userReducer?.user,
+  };
+};
 
-const ShopDetails = ({ navigation, route, user }) => {
+const ShopDetails = ({navigation, route, user}) => {
   const [parking, setParking] = useState(false);
   const [wheelchair, setWheelchair] = useState(false);
   const [foodCourt, setFoodCourt] = useState(false);
@@ -42,78 +50,93 @@ const ShopDetails = ({ navigation, route, user }) => {
   const [UPI, setUPI] = useState(null);
   const [amenities, setAmenities] = useState([]);
   const [newAmenities, setNewAmenities] = useState([]);
+  const [amenityCheckbox, setAmenityCheckbox] = useState([]);
 
   useEffect(() => {
     fetchAllAmenities();
-    // setNewAmenities([])
-  }, [])
+  }, []);
 
   fetchAllAmenities = async () => {
     try {
-      const response = await getAmenities(user?.accessToken)
+      const response = await getAmenities(user?.accessToken);
       const data = await response.json();
-      console.log("jj-->", data);
+      console.log('jj-->', data);
       setAmenities(data);
+      setAmenityCheckbox(new Array(data.length).fill(false));
     } catch (error) {
       console.log(error);
     }
-  }
+    console.log('length-->', amenities.length);
+  };
 
-  const renderAmenities = ({ item, index }) => {
-    return (
-      <View style={{
-        flexDirection: 'row',
-        width: '50%',
-        alignItems: 'center',
-        justifyContent: 'space-around',
-        paddingVertical: 5
-      }}>
-        <Text style={styles.radioText}>{item.name}</Text>
-        <CheckBox
-          style={styles.radioBtn}
-          value={parking}
-          tintColors={{ true: PRIMARY, false: DARKGREY }}
-          disabled={false}
-          onValueChange={(e) => {
-            console.log("ffds-->", e);
-            checkAmenities(e, item);
-            // setParking(!parking);
-          }}
-        />
-      </View>
-    )
-  }
+  const handleAmenityCheckbox = id => {
+    const tempArray = amenityCheckbox.map((item, index) => {
+      if (index == id) {
+        let bool = !item;
+        return bool;
+      } else {
+        return item;
+      }
+    });
+    setAmenityCheckbox(tempArray);
+    console.log('TempArray---> ', tempArray);
+    checkAmenities(tempArray[id], amenities[id]);
+  };
 
   const checkAmenities = (checked, item) => {
+    console.log('checked---> ', checked);
+    console.log('item--->', item);
     if (checked) {
       newAmenities.push({
         _id: item._id,
         name: item.name,
-        iconUrl: item.iconUrl
-      })
+        iconUrl: item.iconUrl,
+      });
+      console.log(JSON.stringify(newAmenities, null, 3));
       return;
     }
-    const remove = newAmenities.filter((i) => {
-      return i._id != item._id
-    })
-    setNewAmenities(remove)
-  }
+    const remove = newAmenities.filter(i => {
+      return i._id != item._id;
+    });
+    setNewAmenities(remove);
+  };
+
+  const renderAmenities = ({item, index}) => {
+    return (
+      <View
+        style={{
+          flexDirection: 'row',
+          width: '50%',
+          alignItems: 'center',
+          justifyContent: 'space-around',
+          paddingVertical: 5,
+        }}>
+        <Text style={styles.radioText}>{item.name}</Text>
+        <CheckBox
+          style={styles.radioBtn}
+          value={amenityCheckbox[index]}
+          tintColors={{true: PRIMARY, false: DARKGREY}}
+          disabled={false}
+          onValueChange={handleAmenityCheckbox.bind(this, index)}
+        />
+      </View>
+    );
+  };
 
   const next = () => {
+    console.log(JSON.stringify(newAmenities, null, 2));
     let newData = {
       ...route?.params?.data,
       bankDetails: {
         accNumber: accountNumber,
         ifsc: IFSC,
         name: bankName,
-        upiIds: [UPI]
+        upiIds: [UPI],
       },
       onboardedThroughExecutive: phonenum,
-      amenities: [
-        ...newAmenities
-      ]
-    }
-    navigation.navigate('ShopTiming', { data: newData });
+      amenities: [...newAmenities],
+    };
+    navigation.navigate('ShopTiming', {data: newData});
   };
 
   const isValidate = () => {
@@ -140,35 +163,39 @@ const ShopDetails = ({ navigation, route, user }) => {
           <View style={premiumService && styles.subContainer}>
             <View
               style={
-                premiumService ? styles.premiumCheckBox2 : styles.premiumCheckBox
+                premiumService
+                  ? styles.premiumCheckBox2
+                  : styles.premiumCheckBox
               }>
-              <View style={{ width: '80%', marginLeft: premiumService ? 20 : 0 }}>
+              <View style={{width: '80%', marginLeft: premiumService ? 20 : 0}}>
                 <Text style={styles.partnerProgramme}>
                   Do you want to join our channel partner Programme?
-                  <Text style={[styles.premiumText, { paddingLeft: 10 }]}>
+                  <Text style={[styles.premiumText, {paddingLeft: 10}]}>
                     {' '}
                     Premium Service{' '}
                   </Text>
                 </Text>
               </View>
-              <View style={[styles.radioBtnView,
-              {
-                right: premiumService ? 20 : 5,
-              }]}>
+              <View
+                style={[
+                  styles.radioBtnView,
+                  {
+                    right: premiumService ? 20 : 5,
+                  },
+                ]}>
                 <CheckBox
                   style={styles.radioBtn}
                   value={premiumService}
-                  tintColors={{ true: PRIMARY, false: DARKGREY }}
+                  tintColors={{true: PRIMARY, false: DARKGREY}}
                   disabled={false}
                   onValueChange={() => {
                     setPremiumService(!premiumService);
                   }}
                 />
               </View>
-
             </View>
             {premiumService && (
-              <View style={{ width: '100%' }}>
+              <View style={{width: '100%'}}>
                 <TextInput
                   value={bankName}
                   style={styles.input}
@@ -176,15 +203,13 @@ const ShopDetails = ({ navigation, route, user }) => {
                   onChangeText={value => setBankName(value)}
                   activeUnderlineColor={GREY_2}
                   placeholder="Bank Name"
-                  theme={
-                    {
-                      fonts: {
-                        regular: {
-                          fontFamily: 'Gilroy-Medium'
-                        }
-                      }
-                    }
-                  }
+                  theme={{
+                    fonts: {
+                      regular: {
+                        fontFamily: 'Gilroy-Medium',
+                      },
+                    },
+                  }}
                 />
                 <TextInput
                   value={accountNumber}
@@ -193,15 +218,13 @@ const ShopDetails = ({ navigation, route, user }) => {
                   onChangeText={value => setAccountNumber(value)}
                   activeUnderlineColor={GREY_2}
                   placeholder="Bank Account Number"
-                  theme={
-                    {
-                      fonts: {
-                        regular: {
-                          fontFamily: 'Gilroy-Medium'
-                        }
-                      }
-                    }
-                  }
+                  theme={{
+                    fonts: {
+                      regular: {
+                        fontFamily: 'Gilroy-Medium',
+                      },
+                    },
+                  }}
                 />
                 {/* {error.accountNumber && (
                 <Text style={styles.error}>{error.accountNumber}</Text>
@@ -213,15 +236,13 @@ const ShopDetails = ({ navigation, route, user }) => {
                   activeUnderlineColor={GREY_2}
                   onChangeText={value => setIFSC(value)}
                   placeholder="Bank Account IFSC"
-                  theme={
-                    {
-                      fonts: {
-                        regular: {
-                          fontFamily: 'Gilroy-Medium'
-                        }
-                      }
-                    }
-                  }
+                  theme={{
+                    fonts: {
+                      regular: {
+                        fontFamily: 'Gilroy-Medium',
+                      },
+                    },
+                  }}
                 />
                 {/* {error.IFSC && (
                 <Text style={styles.error}>{error.IFSC}</Text>
@@ -233,15 +254,13 @@ const ShopDetails = ({ navigation, route, user }) => {
                   activeUnderlineColor={GREY_2}
                   onChangeText={value => setUPI(value)}
                   placeholder="UPI ID"
-                  theme={
-                    {
-                      fonts: {
-                        regular: {
-                          fontFamily: 'Gilroy-Medium'
-                        }
-                      }
-                    }
-                  }
+                  theme={{
+                    fonts: {
+                      regular: {
+                        fontFamily: 'Gilroy-Medium',
+                      },
+                    },
+                  }}
                   right={
                     <TextInput.Icon
                       name={() => (
@@ -261,13 +280,13 @@ const ShopDetails = ({ navigation, route, user }) => {
               </View>
             )}
           </View>
-          <View style={{ marginVertical: 20 }}>
+          <View style={{marginVertical: 20}}>
             <View style={styles.radioContainer}>
               <FlatList
                 data={amenities}
                 renderItem={renderAmenities}
                 numColumns={2}
-                key={(item) => item.toString()}
+                key={item => item.toString()}
               />
               {/* <View style={styles.radioButton}>
                 <Text style={styles.radioText}>Parking availability</Text>
@@ -342,12 +361,15 @@ const ShopDetails = ({ navigation, route, user }) => {
             />
           </View> */}
 
-          <View style={[salesExecutive && styles.subContainer, { marginTop: 10 }]}>
+          <View
+            style={[salesExecutive && styles.subContainer, {marginTop: 10}]}>
             <View
               style={
-                salesExecutive ? styles.premiumCheckBox2 : styles.premiumCheckBox
+                salesExecutive
+                  ? styles.premiumCheckBox2
+                  : styles.premiumCheckBox
               }>
-              <View style={{ width: '80%', marginLeft: salesExecutive ? 20 : 0 }}>
+              <View style={{width: '80%', marginLeft: salesExecutive ? 20 : 0}}>
                 <Text style={styles.partnerProgramme}>
                   Have any sales executive visited your shop?
                 </Text>
@@ -357,9 +379,9 @@ const ShopDetails = ({ navigation, route, user }) => {
               </View>
 
               <CheckBox
-                style={[styles.radioBtn, { right: 5 }]}
+                style={[styles.radioBtn, {right: 5}]}
                 value={salesExecutive}
-                tintColors={{ true: PRIMARY, false: DARKGREY }}
+                tintColors={{true: PRIMARY, false: DARKGREY}}
                 disabled={false}
                 onValueChange={() => {
                   setSalesExecutive(!salesExecutive);
@@ -367,27 +389,22 @@ const ShopDetails = ({ navigation, route, user }) => {
               />
             </View>
             {salesExecutive && (
-              <View style={{ width: '100%', marginTop: 15 }}>
+              <View style={{width: '100%', marginTop: 15}}>
                 <TextInput
                   value={phonenum}
-                  style={[
-                    styles.input,
-                    { paddingLeft: 10, marginBottom: 25, },
-                  ]}
+                  style={[styles.input, {paddingLeft: 10, marginBottom: 25}]}
                   selectionColor={DARKBLUE}
                   onChangeText={value => setPhoneNum(value)}
                   activeUnderlineColor={GREY_2}
                   placeholder="Phone Number"
                   keyboardType="numeric"
-                  theme={
-                    {
-                      fonts: {
-                        regular: {
-                          fontFamily: 'Gilroy-Medium'
-                        }
-                      }
-                    }
-                  }
+                  theme={{
+                    fonts: {
+                      regular: {
+                        fontFamily: 'Gilroy-Medium',
+                      },
+                    },
+                  }}
                   left={
                     <TextInput.Icon
                       name={() => (
@@ -430,7 +447,6 @@ const styles = StyleSheet.create({
   },
   premiumCheckBox2: {
     flexDirection: 'row',
-    // justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 15,
     width: '100%',
@@ -462,7 +478,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Gilroy-Medium',
     textDecorationLine: 'underline',
     letterSpacing: 0.3,
-
   },
   upi: {
     color: DARKBLUE,
@@ -473,7 +488,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     fontFamily: 'Gilroy-Medium',
     letterSpacing: 0.3,
-
   },
   radioContainer: {
     flexDirection: 'row',
@@ -499,7 +513,6 @@ const styles = StyleSheet.create({
     color: DARKBLUE,
     fontFamily: 'Gilroy-Medium',
     letterSpacing: 0.3,
-
   },
   next: {
     width: '100%',
@@ -516,10 +529,10 @@ const styles = StyleSheet.create({
   },
   radioBtnView: {
     // right: 10,
-    position: 'absolute'
+    position: 'absolute',
   },
   radioBtn: {
     width: 20,
     height: 20,
-  }
+  },
 });

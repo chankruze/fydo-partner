@@ -72,7 +72,7 @@ function RegisterShop({ route, navigation, user }) {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [shopName, setShopName] = useState('');
   const [address, setAddress] = useState(
-    route.params ? route.params.address : null,
+    route.params ? route.params.data.address?.addressLine1 : null,
   );
   const [coordinates, setCoordinates] = useState(
     route.params ? route.params.coordinates : null,
@@ -87,7 +87,7 @@ function RegisterShop({ route, navigation, user }) {
   // const [user, setUser] = useState('');
 
   useEffect(() => {
-    console.log("add-->", route.params?.address);
+    console.log("add-->", route.params.data.address.addressLine1);
     // if (route.params !== undefined) {
     //   const newAddress = route.params.address;
     //   setCoordinates(route.params?.coordinates)
