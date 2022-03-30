@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ActivityIndicator,
   BackHandler,
@@ -14,8 +14,8 @@ import {
   View,
 } from 'react-native';
 import ImageSlider from '../../components/ImageSlider';
-import {DARKBLUE, LIGHTBLUE, PRIMARY} from '../../assets/colors';
-import {response} from '../../utils/dummyStore';
+import { DARKBLUE, LIGHTBLUE, PRIMARY } from '../../assets/colors';
+import { response } from '../../utils/dummyStore';
 import StoreOffers from '../../components/shop/StoreOffers';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { connect } from 'react-redux';
@@ -30,8 +30,8 @@ const mapStateToProps = (state) => {
   }
 }
 
-const MyShop = ({navigation, user}) => {
- const store = response
+const MyShop = ({ navigation, user }) => {
+  const store = response
   const [isOpen, setIsOpen] = useState(true);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -49,11 +49,11 @@ const MyShop = ({navigation, user}) => {
   };
 
   useEffect(() => {
-    async function fetchData(){
+    async function fetchData() {
       try {
         const response = await getMyShop(user?.accessToken);
         const json = await response.json();
-        if(json){
+        if (json) {
           setData(json);
         }
       } catch (error) {
@@ -61,15 +61,15 @@ const MyShop = ({navigation, user}) => {
       }
     }
     fetchData();
-    
+
   }, []);
 
   useEffect(() => {
-    async function getAmenitiesData(){
+    async function getAmenitiesData() {
       try {
         const amenitiesResponse = await getAmenities(user?.accessToken);
         const json = await amenitiesResponse.json();
-        if(json){
+        if (json) {
           setAmenities(json);
         }
       } catch (error) {
@@ -81,11 +81,11 @@ const MyShop = ({navigation, user}) => {
   }, [])
 
   useEffect(() => {
-    async function fetchOffers(){
+    async function fetchOffers() {
       try {
         const offerResponse = await getOffers(user?.accessToken);
         const json = await offerResponse.json();
-        if(json){
+        if (json) {
           setOffers(json);
         }
       } catch (error) {
@@ -97,7 +97,7 @@ const MyShop = ({navigation, user}) => {
   }, []);
 
   const renderTag = item => {
-    let {_id, name} = item;
+    let { _id, name } = item;
     return (
       <TouchableOpacity key={_id} style={styles.tag}>
         <Text style={styles.tagName}>{name}</Text>
@@ -105,7 +105,7 @@ const MyShop = ({navigation, user}) => {
     );
   };
 
-  renderTiming = ({item, index}) => {
+  renderTiming = ({ item, index }) => {
     const today = new Date().getDay();
     let d = item.dayOfWeek;
 
@@ -196,7 +196,7 @@ const MyShop = ({navigation, user}) => {
             )}
 
             <View style={styles.row}>
-              
+
               <TouchableOpacity
                 style={{
                   flexDirection: 'row',
@@ -208,7 +208,7 @@ const MyShop = ({navigation, user}) => {
                 ) : (
                   <Text style={styles.close}>Closed</Text>
                 )}
-                
+
               </TouchableOpacity>
             </View>
             {timeView && (
@@ -217,7 +217,7 @@ const MyShop = ({navigation, user}) => {
                   data={store?.timing}
                   keyExtractor={item => item?._id.toString()}
                   renderItem={item => renderTiming(item)}
-                  ItemSeparatorComponent={() => <View style={{height: 5}} />}
+                  ItemSeparatorComponent={() => <View style={{ height: 5 }} />}
                 />
               </View>
             )}
@@ -240,14 +240,14 @@ const MyShop = ({navigation, user}) => {
             {amenities?.length > 0 && (
               <View style={styles.options}>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                  {amenities?.map(({_id, name, iconUrl}) => (
+                  {amenities?.map(({ _id, name, iconUrl }) => (
                     <View style={styles.option} key={_id}>
                       {iconUrl &&
                         (iconUrl?.split('.').pop() == 'svg' ? (
                           <SvgUri width={50} height={50} uri={iconUrl} />
                         ) : (
                           <Image
-                            source={{uri: iconUrl}}
+                            source={{ uri: iconUrl }}
                             style={{
                               width: 50,
                               height: 50,
@@ -267,12 +267,12 @@ const MyShop = ({navigation, user}) => {
               navigation={navigation}
             />
           </View>
-          <View style={styles.editButton}>
+          {/* <View style={styles.editButton}>
               <TouchableOpacity onPress={()=> navigation.navigate('RegisterShop')}>
               <FontAwesomeIcon name="edit" color="white" size={25}/>
 
               </TouchableOpacity>
-          </View>
+          </View> */}
         </View>
       }></FlatList>
   );
@@ -468,14 +468,14 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   editButton: {
-      position: 'absolute', 
-      width: 50,
-      height: 50,
-      bottom: 50,
-      right: 30,
-      backgroundColor: DARKBLUE,
-      borderRadius: 50,
-      justifyContent: 'center',
-      alignItems: 'center'
+    position: 'absolute',
+    width: 50,
+    height: 50,
+    bottom: 50,
+    right: 30,
+    backgroundColor: DARKBLUE,
+    borderRadius: 50,
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 });

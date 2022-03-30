@@ -141,13 +141,8 @@ const ShopTiming = props => {
   const [user, setUser] = useState('');
 
   useEffect(() => {
-    getUsers();
+    console.log("sss-->", props.route?.params?.data);
   });
-
-  const getUsers = async () => {
-    const user = await getUser();
-    setUser(user)
-  }
 
   const selectImages = () => {
     rbSheet.open();
@@ -198,7 +193,6 @@ const ShopTiming = props => {
     })
       .then(res => {
         let imageData = [res];
-        console.log('sdf-->', imageData);
 
         const data = imageData.map((i, index) => {
           return {
@@ -225,6 +219,7 @@ const ShopTiming = props => {
   };
 
   const renderImages = async () => {
+    let { user } = props;
     let fileNames = [], finalImages = [];
     if (images.length > 0) {
       images.map((i) => {
@@ -254,7 +249,6 @@ const ShopTiming = props => {
   };
 
   const submit = async () => {
-    let { setUser } = props;
     const finalImages = await renderImages();
 
     const prevParams = props?.route?.params?.data;
@@ -271,23 +265,23 @@ const ShopTiming = props => {
 
       console.log("aspp-->", params);
 
-      let { accessToken, navigation } = props;
-      const response = await updateShop(accessToken, params);
+      let { navigation, user } = props;
+      const response = await updateShop(user?.accessToken, params);
 
       const json = await response.json();
+      console.log("ff-->", JSON.stringify(json, null, 2));
       if (json) {
         let object = Object.assign({ ...props?.user }, { ...json });
-        console.log()
         setUser(object);
         saveUserData(object);
-        // navigation.dispatch(
-        //   CommonActions.reset({
-        //     index: 0,
-        //     routes: [
-        //       { name: 'Main' },
-        //     ],
-        //   })
-        // );
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [
+              { name: 'Main' },
+            ],
+          })
+        );
       }
     } catch (error) {
       console.log(error);
@@ -456,7 +450,7 @@ const ShopTiming = props => {
           style={{
             flexDirection: 'row',
             alignItems: 'center',
-            right: 5,
+            right: 12,
           }}>
           <Text style={styles.closeTxt}>Closed</Text>
           <CheckBox

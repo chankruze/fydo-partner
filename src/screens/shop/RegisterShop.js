@@ -88,13 +88,13 @@ function RegisterShop({ route, navigation, user }) {
 
   useEffect(() => {
     console.log("add-->", route.params?.address);
-    if (route.params !== undefined) {
-      // const newAddress = route.params.address;
-      setCoordinates(route.params?.coordinates)
-      // setAddress(newAddress);
-    } else {
-      return;
-    }
+    // if (route.params !== undefined) {
+    //   const newAddress = route.params.address;
+    //   setCoordinates(route.params?.coordinates)
+    //   setAddress(newAddress);
+    // } else {
+    //   return;
+    // }
   }, []);
 
   const isValidate = () => {
@@ -115,7 +115,7 @@ function RegisterShop({ route, navigation, user }) {
     if (shopName == null || shopName?.trim() == '') {
       error.shopName = 'Enter shop name';
     }
-    if (address == null || address?.trim() == '') {
+    if (route.params?.address == null || route.params?.address?.trim() == '') {
       error.address = 'Enter the shop address';
     }
     setError(error);
@@ -136,7 +136,6 @@ function RegisterShop({ route, navigation, user }) {
       .then((assets) => {
         if (assets) {
           let imageData = [assets];
-          console.log("sss=-->", imageData);
           const data = imageData.map((i, index) => {
             return {
               // uri: i.path,
@@ -162,7 +161,6 @@ function RegisterShop({ route, navigation, user }) {
       method: 'PUT',
       body: imageBody
     });
-    console.log("ddd-->", final.status);
     if (final.status == "200") {
       if (Platform.OS == 'android') {
         ToastAndroid.show('Image upload Successfully', ToastAndroid.SHORT);
@@ -172,9 +170,9 @@ function RegisterShop({ route, navigation, user }) {
       if (type == 'front') {
         const frontImage = data[0]?.split("?")[0];
         setFrontImg(frontImage)
-      } else {
+      } else if (type == 'back') {
         const backImg = data[0]?.split("?")[0];
-        setFrontImg(backImg)
+        setBacktImg(backImg)
       }
     } else {
       if (Platform.OS == 'android') {
@@ -201,12 +199,12 @@ function RegisterShop({ route, navigation, user }) {
           ownerName: ownerName,
           ownerMobile: phoneNumber
         },
-        // location: [
-        //   coordinates.longitude,
-        //   coordinates.latitude
-        // ],
+        location: [
+          route.params?.coordinates.longitude,
+          route.params?.coordinates.latitude
+        ],
         address: {
-          addressLine1: address,
+          addressLine1: route.params?.address,
           pin: pincode
         },
         documents: [
@@ -223,7 +221,6 @@ function RegisterShop({ route, navigation, user }) {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
-      {/* {console.log("dd-->", route.params?.address)} */}
       <StatusBar barStyle="dark-content" backgroundColor={PRIMARY} translucent />
       <View style={styles.contentContainer}>
         <ScrollView
@@ -281,7 +278,7 @@ function RegisterShop({ route, navigation, user }) {
           <View style={styles.box}>
             <EntypoIcon name="location" size={25} color={DARKBLACK} />
             <TextInput
-              value={address}
+              value={route.params?.address}
               editable={false}
               multiline
               style={[styles.input, { width: '80%' }]}

@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, SafeAreaView, ScrollView, Dimensions } from 'react-native';
-import React, { useState } from 'react';
+import { StyleSheet, Text, View, SafeAreaView, ScrollView, Dimensions, FlatList } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import { RadioButton, TextInput } from 'react-native-paper';
 import CheckBox from '@react-native-community/checkbox';
 
@@ -15,11 +15,18 @@ import {
 
 import ButtonComponent from '../../components/ButtonComponent';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import { getAmenities } from '../../services/shopService';
+import { connect } from 'react-redux';
 
 const WIDTH = Dimensions.get('screen').width;
 
+const mapStateToProps = (state) => {
+  return {
+    user: state?.userReducer?.user
+  }
+}
 
-const ShopDetails = ({ navigation, route }) => {
+const ShopDetails = ({ navigation, route, user }) => {
   const [parking, setParking] = useState(false);
   const [wheelchair, setWheelchair] = useState(false);
   const [foodCourt, setFoodCourt] = useState(false);
@@ -27,15 +34,86 @@ const ShopDetails = ({ navigation, route }) => {
 
   const [premiumService, setPremiumService] = useState(false);
   const [salesExecutive, setSalesExecutive] = useState(false);
-  const [homeDelivery, setHomeDelivery] = useState(false);
+  const [phonenum, setPhoneNum] = useState(false);
   const [error, setError] = useState(null);
   const [accountNumber, setAccountNumber] = useState(null);
+  const [bankName, setBankName] = useState(null);
   const [IFSC, setIFSC] = useState(null);
   const [UPI, setUPI] = useState(null);
+  const [amenities, setAmenities] = useState([]);
+  const [newAmenities, setNewAmenities] = useState([]);
+
+  useEffect(() => {
+    fetchAllAmenities();
+    // setNewAmenities([])
+  }, [])
+
+  fetchAllAmenities = async () => {
+    try {
+      const response = await getAmenities(user?.accessToken)
+      const data = await response.json();
+      console.log("jj-->", data);
+      setAmenities(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const renderAmenities = ({ item, index }) => {
+    return (
+      <View style={{
+        flexDirection: 'row',
+        width: '50%',
+        alignItems: 'center',
+        justifyContent: 'space-around',
+        paddingVertical: 5
+      }}>
+        <Text style={styles.radioText}>{item.name}</Text>
+        <CheckBox
+          style={styles.radioBtn}
+          value={parking}
+          tintColors={{ true: PRIMARY, false: DARKGREY }}
+          disabled={false}
+          onValueChange={(e) => {
+            console.log("ffds-->", e);
+            checkAmenities(e, item);
+            // setParking(!parking);
+          }}
+        />
+      </View>
+    )
+  }
+
+  const checkAmenities = (checked, item) => {
+    if (checked) {
+      newAmenities.push({
+        _id: item._id,
+        name: item.name,
+        iconUrl: item.iconUrl
+      })
+      return;
+    }
+    const remove = newAmenities.filter((i) => {
+      return i._id != item._id
+    })
+    setNewAmenities(remove)
+  }
 
   const next = () => {
-    // if (isValidate() || !premiumService)
-    navigation.navigate('ShopTiming', { data: route?.params?.data });
+    let newData = {
+      ...route?.params?.data,
+      bankDetails: {
+        accNumber: accountNumber,
+        ifsc: IFSC,
+        name: bankName,
+        upiIds: [UPI]
+      },
+      onboardedThroughExecutive: phonenum,
+      amenities: [
+        ...newAmenities
+      ]
+    }
+    navigation.navigate('ShopTiming', { data: newData });
   };
 
   const isValidate = () => {
@@ -92,6 +170,23 @@ const ShopDetails = ({ navigation, route }) => {
             {premiumService && (
               <View style={{ width: '100%' }}>
                 <TextInput
+                  value={bankName}
+                  style={styles.input}
+                  selectionColor={DARKBLUE}
+                  onChangeText={value => setBankName(value)}
+                  activeUnderlineColor={GREY_2}
+                  placeholder="Bank Name"
+                  theme={
+                    {
+                      fonts: {
+                        regular: {
+                          fontFamily: 'Gilroy-Medium'
+                        }
+                      }
+                    }
+                  }
+                />
+                <TextInput
                   value={accountNumber}
                   style={[styles.input]}
                   selectionColor={DARKBLUE}
@@ -112,9 +207,11 @@ const ShopDetails = ({ navigation, route }) => {
                 <Text style={styles.error}>{error.accountNumber}</Text>
               )} */}
                 <TextInput
+                  value={IFSC}
                   style={styles.input}
                   selectionColor={DARKBLUE}
                   activeUnderlineColor={GREY_2}
+                  onChangeText={value => setIFSC(value)}
                   placeholder="Bank Account IFSC"
                   theme={
                     {
@@ -130,24 +227,11 @@ const ShopDetails = ({ navigation, route }) => {
                 <Text style={styles.error}>{error.IFSC}</Text>
               )} */}
                 <TextInput
+                  value={UPI}
                   style={styles.input}
                   selectionColor={DARKBLUE}
                   activeUnderlineColor={GREY_2}
-                  placeholder="GST ID (optional)"
-                  theme={
-                    {
-                      fonts: {
-                        regular: {
-                          fontFamily: 'Gilroy-Medium'
-                        }
-                      }
-                    }
-                  }
-                />
-                <TextInput
-                  style={styles.input}
-                  selectionColor={DARKBLUE}
-                  activeUnderlineColor={GREY_2}
+                  onChangeText={value => setUPI(value)}
                   placeholder="UPI ID"
                   theme={
                     {
@@ -173,13 +257,19 @@ const ShopDetails = ({ navigation, route }) => {
                 {/* {error.UPI && (
                 <Text style={styles.error}>{error.UPI}</Text>
               )} */}
-                <Text style={styles.upi}>Add More UPI IDs</Text>
+                {/* <Text style={styles.upi}>Add More UPI IDs</Text> */}
               </View>
             )}
           </View>
           <View style={{ marginVertical: 20 }}>
             <View style={styles.radioContainer}>
-              <View style={styles.radioButton}>
+              <FlatList
+                data={amenities}
+                renderItem={renderAmenities}
+                numColumns={2}
+                key={(item) => item.toString()}
+              />
+              {/* <View style={styles.radioButton}>
                 <Text style={styles.radioText}>Parking availability</Text>
                 <CheckBox
                   style={styles.radioBtn}
@@ -229,11 +319,11 @@ const ShopDetails = ({ navigation, route }) => {
                     setInstoreShopping(!instoreShopping);
                   }}
                 />
-              </View>
+              </View> */}
             </View>
           </View>
 
-          <View style={[styles.radioButton, { width: '100%' }]}>
+          {/* <View style={[styles.radioButton, { width: '100%' }]}>
             <View>
               <Text style={styles.radioText}>
                 Do you provide home delivery/service?
@@ -250,9 +340,9 @@ const ShopDetails = ({ navigation, route }) => {
                 setHomeDelivery(!homeDelivery);
               }}
             />
-          </View>
+          </View> */}
 
-          <View style={[salesExecutive && styles.subContainer, { marginTop: 30 }]}>
+          <View style={[salesExecutive && styles.subContainer, { marginTop: 10 }]}>
             <View
               style={
                 salesExecutive ? styles.premiumCheckBox2 : styles.premiumCheckBox
@@ -279,11 +369,13 @@ const ShopDetails = ({ navigation, route }) => {
             {salesExecutive && (
               <View style={{ width: '100%', marginTop: 15 }}>
                 <TextInput
+                  value={phonenum}
                   style={[
                     styles.input,
                     { paddingLeft: 10, marginBottom: 25, },
                   ]}
                   selectionColor={DARKBLUE}
+                  onChangeText={value => setPhoneNum(value)}
                   activeUnderlineColor={GREY_2}
                   placeholder="Phone Number"
                   keyboardType="numeric"
@@ -321,7 +413,7 @@ const ShopDetails = ({ navigation, route }) => {
   );
 };
 
-export default ShopDetails;
+export default connect(mapStateToProps)(ShopDetails);
 
 const styles = StyleSheet.create({
   container: {
@@ -356,7 +448,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Gilroy-Medium',
     borderBottomColor: DARKGREY,
     backgroundColor: 'white',
-    marginTop: 15,
+    marginVertical: 10,
     fontSize: 14,
   },
   partnerProgramme: {
@@ -396,6 +488,7 @@ const styles = StyleSheet.create({
   },
   radioText: {
     fontSize: 14,
+    width: '60%',
     color: DARKBLACK,
     fontFamily: 'Gilroy-Medium',
     letterSpacing: 0.3,
