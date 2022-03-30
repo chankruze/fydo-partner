@@ -11,19 +11,16 @@ import {
   SafeAreaView,
   Platform,
   ToastAndroid,
+  KeyboardAvoidingView
 } from 'react-native';
 import {
   PRIMARY,
   DARKGREY,
-  GREY,
-  LIGHTB,
-  PRIMARYLACK,
   LIGHTBLACK,
   DARKBLACK,
   DARKBLUE,
   LIGHTBLUE,
   GREY_2,
-  GREY_3,
 } from '../../assets/colors';
 import Octicons from 'react-native-vector-icons/Octicons';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -42,8 +39,7 @@ import { add, color } from 'react-native-reanimated';
 import { generatePresignUrl } from '../../services/presignUrlService';
 import { connect } from 'react-redux';
 import Toast from 'react-native-simple-toast';
-import { getUser } from '../../utils/defaultPreference';
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 const HEIGHT = Dimensions.get('screen').height;
 
@@ -223,8 +219,15 @@ function RegisterShop({ route, navigation, user }) {
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
       <StatusBar barStyle="dark-content" backgroundColor={PRIMARY} translucent />
       <View style={styles.contentContainer}>
-        <ScrollView
-          showsVerticalScrollIndicator={false}>
+        <KeyboardAwareScrollView enableOnAndroid={true}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps='handled'
+          enableAutomaticScroll={Platform.OS == 'ios'}
+        >
+          {/* <ScrollView
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps='handled'
+          > */}
           <View style={styles.information}>
             <MaterialComunityIcons
               name="information-outline"
@@ -401,7 +404,9 @@ function RegisterShop({ route, navigation, user }) {
             backgroundColor={DARKBLUE}
             onPress={next}
           />
-        </ScrollView>
+          {/* </ScrollView> */}
+        </KeyboardAwareScrollView>
+
       </View>
     </SafeAreaView>
   );
