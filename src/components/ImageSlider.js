@@ -9,12 +9,12 @@ import {
 } from 'react-native';
 import PagerView from 'react-native-pager-view';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import React, {useState, useEffect, createRef} from 'react';
+import React, { useState, useEffect, createRef } from 'react';
 
 
 const HEIGHT = Dimensions.get('screen').height;
 
-const ImageSlider = ({images, navigation}) => {
+const ImageSlider = ({ images, navigation }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isMounted, setIsMounted] = useState(false);
 
@@ -37,7 +37,7 @@ const ImageSlider = ({images, navigation}) => {
     return clearInterval(interval);
   }, []);
 
-  const handleIndicator = ({nativeEvent}) => {
+  const handleIndicator = ({ nativeEvent }) => {
     setCurrentIndex(nativeEvent.position);
   };
 
@@ -49,11 +49,10 @@ const ImageSlider = ({images, navigation}) => {
     });
   };
 
-  const renderView = ({url}, id) => {
-    url;
+  const renderView = ({ url }, id) => {
     return (
       <View style={styles.page} key={id}>
-        <Image style={styles.image} source={{uri: url}} />
+        <Image style={styles.image} source={{ uri: url }} />
         {/* <Text style={styles.title}>{title}</Text> */}
       </View>
     );
