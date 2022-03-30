@@ -320,7 +320,7 @@ function RegisterShop({ route, navigation, user }) {
               renderDropdownIcon={() => (
                 <EntypoIcon name="chevron-down" size={25} color={DARKBLACK} />
               )}
-              buttonStyle={[styles.input, { width: '91%', marginLeft: 0 }]}
+              buttonStyle={{ backgroundColor: 'transparent', width: '95%' }}
               buttonTextStyle={{
                 textAlign: 'left',
                 fontFamily: 'Gilroy-Medium',
@@ -379,7 +379,7 @@ function RegisterShop({ route, navigation, user }) {
                 <EntypoIcon name="chevron-down" size={25} color="#000" />
               )}
               dropdownStyle={{ borderRadius: 10 }}
-              buttonStyle={[styles.input, { width: '100%', marginLeft: 0 }]}
+              buttonStyle={{ backgroundColor: 'transparent', width: '100%' }}
               buttonTextStyle={{
                 color: DARKGREY,
                 textAlign: 'left',
@@ -451,7 +451,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginVertical: 10,
-    justifyContent: 'space-around',
+    // justifyContent: 'space-around',
     borderBottomWidth: 1,
     borderBottomColor: DARKGREY,
     marginHorizontal: 10,
