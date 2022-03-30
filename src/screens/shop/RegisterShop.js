@@ -190,7 +190,7 @@ function RegisterShop({ route, navigation, user }) {
   };
 
   const next = async () => {
-    if (true) {
+    if (isValidate()) {
       let data = {
         name: shopName,
         mobile: phoneNumber,

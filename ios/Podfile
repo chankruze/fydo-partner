@@ -30,6 +30,8 @@ target 'fydopartner' do
 
   pod 'RNShare', :path => '../node_modules/react-native-share'
 
+  pod 'react-native-pager-view', :path => '../node_modules/react-native-pager-view'
+
   pod 'react-native-version-info', :path => '../node_modules/react-native-version-info'
 
   pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
