@@ -7,8 +7,8 @@ import {
   Dimensions,
   FlatList,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {RadioButton, TextInput} from 'react-native-paper';
+import React, { useEffect, useState } from 'react';
+import { RadioButton, TextInput } from 'react-native-paper';
 import CheckBox from '@react-native-community/checkbox';
 
 import {
@@ -35,7 +35,7 @@ const mapStateToProps = state => {
   };
 };
 
-const ShopDetails = ({navigation, route, user}) => {
+const ShopDetails = ({ navigation, route, user }) => {
   const [parking, setParking] = useState(false);
   const [wheelchair, setWheelchair] = useState(false);
   const [foodCourt, setFoodCourt] = useState(false);
@@ -61,13 +61,11 @@ const ShopDetails = ({navigation, route, user}) => {
     try {
       const response = await getAmenities(user?.accessToken);
       const data = await response.json();
-      console.log('jj-->', data);
       setAmenities(data);
       setAmenityCheckbox(new Array(data.length).fill(false));
     } catch (error) {
       console.log(error);
     }
-    console.log('length-->', amenities.length);
   };
 
   const handleAmenityCheckbox = id => {
@@ -80,13 +78,10 @@ const ShopDetails = ({navigation, route, user}) => {
       }
     });
     setAmenityCheckbox(tempArray);
-    console.log('TempArray---> ', tempArray);
     checkAmenities(tempArray[id], amenities[id]);
   };
 
   const checkAmenities = (checked, item) => {
-    console.log('checked---> ', checked);
-    console.log('item--->', item);
     if (checked) {
       newAmenities.push({
         _id: item._id,
@@ -102,7 +97,7 @@ const ShopDetails = ({navigation, route, user}) => {
     setNewAmenities(remove);
   };
 
-  const renderAmenities = ({item, index}) => {
+  const renderAmenities = ({ item, index }) => {
     return (
       <View
         style={{
@@ -116,7 +111,7 @@ const ShopDetails = ({navigation, route, user}) => {
         <CheckBox
           style={styles.radioBtn}
           value={amenityCheckbox[index]}
-          tintColors={{true: PRIMARY, false: DARKGREY}}
+          tintColors={{ true: PRIMARY, false: DARKGREY }}
           disabled={false}
           onValueChange={handleAmenityCheckbox.bind(this, index)}
         />
@@ -137,7 +132,7 @@ const ShopDetails = ({navigation, route, user}) => {
       onboardedThroughExecutive: phonenum,
       amenities: [...newAmenities],
     };
-    navigation.navigate('ShopTiming', {data: newData});
+    navigation.navigate('ShopTiming', { data: newData });
   };
 
   const isValidate = () => {
@@ -173,10 +168,10 @@ const ShopDetails = ({navigation, route, user}) => {
                   ? styles.premiumCheckBox2
                   : styles.premiumCheckBox
               }>
-              <View style={{width: '80%', marginLeft: premiumService ? 20 : 0}}>
+              <View style={{ width: '80%', marginLeft: premiumService ? 20 : 0 }}>
                 <Text style={styles.partnerProgramme}>
                   Do you want to join our channel partner Programme?
-                  <Text style={[styles.premiumText, {paddingLeft: 10}]}>
+                  <Text style={[styles.premiumText, { paddingLeft: 10 }]}>
                     {' '}
                     Premium Service{' '}
                   </Text>
@@ -192,7 +187,7 @@ const ShopDetails = ({navigation, route, user}) => {
                 <CheckBox
                   style={styles.radioBtn}
                   value={premiumService}
-                  tintColors={{true: PRIMARY, false: DARKGREY}}
+                  tintColors={{ true: PRIMARY, false: DARKGREY }}
                   disabled={false}
                   onValueChange={() => {
                     setPremiumService(!premiumService);
@@ -201,7 +196,7 @@ const ShopDetails = ({navigation, route, user}) => {
               </View>
             </View>
             {premiumService && (
-              <View style={{width: '100%'}}>
+              <View style={{ width: '100%' }}>
                 <TextInput
                   value={bankName}
                   style={styles.input}
@@ -286,7 +281,7 @@ const ShopDetails = ({navigation, route, user}) => {
               </View>
             )}
           </View>
-          <View style={{marginVertical: 20}}>
+          <View style={{ marginVertical: 20 }}>
             <View style={styles.radioContainer}>
               <FlatList
                 data={amenities}
@@ -368,14 +363,14 @@ const ShopDetails = ({navigation, route, user}) => {
           </View> */}
 
           <View
-            style={[salesExecutive && styles.subContainer, {marginTop: 10}]}>
+            style={[salesExecutive && styles.subContainer, { marginTop: 10 }]}>
             <View
               style={
                 salesExecutive
                   ? styles.premiumCheckBox2
                   : styles.premiumCheckBox
               }>
-              <View style={{width: '80%', marginLeft: salesExecutive ? 20 : 0}}>
+              <View style={{ width: '80%', marginLeft: salesExecutive ? 20 : 0 }}>
                 <Text style={styles.partnerProgramme}>
                   Have any sales executive visited your shop?
                 </Text>
@@ -385,9 +380,9 @@ const ShopDetails = ({navigation, route, user}) => {
               </View>
 
               <CheckBox
-                style={[styles.radioBtn, {right: 5}]}
+                style={[styles.radioBtn, { right: 5 }]}
                 value={salesExecutive}
-                tintColors={{true: PRIMARY, false: DARKGREY}}
+                tintColors={{ true: PRIMARY, false: DARKGREY }}
                 disabled={false}
                 onValueChange={() => {
                   setSalesExecutive(!salesExecutive);
@@ -395,10 +390,10 @@ const ShopDetails = ({navigation, route, user}) => {
               />
             </View>
             {salesExecutive && (
-              <View style={{width: '100%', marginTop: 15}}>
+              <View style={{ width: '100%', marginTop: 15 }}>
                 <TextInput
                   value={phonenum}
-                  style={[styles.input, {paddingLeft: 10, marginBottom: 25}]}
+                  style={[styles.input, { paddingLeft: 10, marginBottom: 25 }]}
                   selectionColor={DARKBLUE}
                   onChangeText={value => setPhoneNum(value)}
                   activeUnderlineColor={GREY_2}
