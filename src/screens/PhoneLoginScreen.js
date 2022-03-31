@@ -22,7 +22,7 @@ import {
 } from '../assets/colors';
 import ButtonComponent from '../components/ButtonComponent';
 import WithNetInfo from '../components/hoc/withNetInfo';
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sendLoginOTP } from '../services/authService';
 import { SCREENS } from '../constants/authScreens';
 
@@ -87,44 +87,50 @@ const PhoneLoginScreen = ({ navigation, handleNextScreen }) => {
   return (
 
     <View style={styles.container}>
-      <StatusBar backgroundColor={PRIMARY} translucent={false} />
-      <Text style={styles.title}>Enter phone number</Text>
-      <Text style={styles.label}>
-        We will send you a 4-digit OTP to your phone number for
-        verification.
-      </Text>
-      <TouchableOpacity style={styles.countryButton} activeOpacity={0.8}>
-        <Image source={flag} style={styles.flagIcon} />
-        <Text style={styles.countryCode}>{country.code}</Text>
-        <View style={styles.separator} />
-        <TextInput
-          style={styles.input}
-          maxLength={10}
-          value={phoneNumber}
-          keyboardType="phone-pad"
-          placeholder="Phone number"
-          placeholderTextColor={DARKGREY}
-          onChangeText={handlePhoneNumber}
-        />
-      </TouchableOpacity>
-
-      <Text style={styles.error}>{error}</Text>
-      <ButtonComponent
-        backgroundColor={PRIMARY}
-        color="white"
-        label="Send OTP"
-        onPress={sendOTP}
-        loading={loading}
-      />
-
-      <View style={styles.footer}>
-        <Text style={styles.footerLabel}>
-          By continuing you agree to our
+      <KeyboardAwareScrollView enableOnAndroid={true}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps='handled'
+        enableAutomaticScroll={Platform.OS == 'ios'}
+      >
+        <StatusBar backgroundColor={PRIMARY} translucent={false} />
+        <Text style={styles.title}>Enter phone number</Text>
+        <Text style={styles.label}>
+          We will send you a 4-digit OTP to your phone number for
+          verification.
         </Text>
-        <TouchableOpacity>
-          <Text style={styles.footerOtherLabel}>Terms & Conditions</Text>
+        <TouchableOpacity style={styles.countryButton} activeOpacity={0.8}>
+          <Image source={flag} style={styles.flagIcon} />
+          <Text style={styles.countryCode}>{country.code}</Text>
+          <View style={styles.separator} />
+          <TextInput
+            style={styles.input}
+            maxLength={10}
+            value={phoneNumber}
+            keyboardType="phone-pad"
+            placeholder="Phone number"
+            placeholderTextColor={DARKGREY}
+            onChangeText={handlePhoneNumber}
+          />
         </TouchableOpacity>
-      </View>
+
+        <Text style={styles.error}>{error}</Text>
+        <ButtonComponent
+          backgroundColor={PRIMARY}
+          color="white"
+          label="Send OTP"
+          onPress={sendOTP}
+          loading={loading}
+        />
+
+        <View style={styles.footer}>
+          <Text style={styles.footerLabel}>
+            By continuing you agree to our
+          </Text>
+          <TouchableOpacity>
+            <Text style={styles.footerOtherLabel}>Terms & Conditions</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAwareScrollView>
     </View>
   );
 };

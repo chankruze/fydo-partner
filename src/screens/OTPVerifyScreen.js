@@ -18,6 +18,7 @@ import { saveUserData } from '../utils/defaultPreference';
 import ButtonComponent from '../components/ButtonComponent';
 import OTPTextInput from 'react-native-otp-textinput';
 import WithNetInfo from '../components/hoc/withNetInfo';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { SCREENS } from '../constants/authScreens';
 
 const HEIGHT = Dimensions.get('screen').height;
@@ -100,40 +101,46 @@ const OTPVerifyScreen = ({ navigationData, navigation, handleNextScreen, setUser
   };
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Verify OTP</Text>
-      <Text style={styles.label}>
-        Please enter the 6-digit OTP sent to you at {phoneNumber}
-      </Text>
-      <OTPTextInput
-        // ref={e => (otpInput = e)}
-        handleTextChange={handleOTP}
-        inputCount={6}
-        containerStyle={styles.optContainer}
-        textInputStyle={styles.otpBox}
-      />
-      {error != null && <Text style={styles.error}>{error}</Text>}
-      <ButtonComponent
-        backgroundColor={PRIMARY}
-        color="white"
-        label="Verify & continue"
-        onPress={verify}
-        loading={loading}
-      />
-      <View style={styles.row}>
-        <Text style={styles.label}>Didn't get the OTP?</Text>
-        <TouchableOpacity
-          disabled={otp?.length != 6}
-          onPress={resendOTP}
-          style={styles.resendButton}>
-          <Text style={styles.resendLabel}>Resend</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.footer}>
-        <Text style={styles.footerLabel}>By continuing you agree to our</Text>
-        <TouchableOpacity>
-          <Text style={styles.footerOtherLabel}>Terms & Conditions</Text>
-        </TouchableOpacity>
-      </View>
+      <KeyboardAwareScrollView enableOnAndroid={true}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps='handled'
+        enableAutomaticScroll={Platform.OS == 'ios'}
+      >
+        <Text style={styles.title}>Verify OTP</Text>
+        <Text style={styles.label}>
+          Please enter the 6-digit OTP sent to you at {phoneNumber}
+        </Text>
+        <OTPTextInput
+          // ref={e => (otpInput = e)}
+          handleTextChange={handleOTP}
+          inputCount={6}
+          containerStyle={styles.optContainer}
+          textInputStyle={styles.otpBox}
+        />
+        {error != null && <Text style={styles.error}>{error}</Text>}
+        <ButtonComponent
+          backgroundColor={PRIMARY}
+          color="white"
+          label="Verify & continue"
+          onPress={verify}
+          loading={loading}
+        />
+        <View style={styles.row}>
+          <Text style={styles.label}>Didn't get the OTP?</Text>
+          <TouchableOpacity
+            disabled={otp?.length != 6}
+            onPress={resendOTP}
+            style={styles.resendButton}>
+            <Text style={styles.resendLabel}>Resend</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.footer}>
+          <Text style={styles.footerLabel}>By continuing you agree to our</Text>
+          <TouchableOpacity>
+            <Text style={styles.footerOtherLabel}>Terms & Conditions</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAwareScrollView>
     </View>
   );
 };
@@ -207,6 +214,8 @@ const styles = StyleSheet.create({
     fontFamily: 'Gilroy-Medium',
   },
   optContainer: {
+    width: '100%',
+    // backgroundColor: 'red',
     flexDirection: 'row',
     alignItems: 'center',
     // justifyContent: 'space-between',
@@ -217,7 +226,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0,
     fontSize: 14,
     color: 'black',
-    width: 45,
+    width: '13%',
   },
   error: {
     marginVertical: 5,

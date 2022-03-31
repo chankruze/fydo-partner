@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -17,15 +17,15 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import HomeFab from '../components/home/HomeFab';
 import HomeSlider from './../components/home/HomeSlider';
 import Entypo from 'react-native-vector-icons/Entypo';
-import {PRIMARY} from '../assets/colors';
-import {SvgUri} from 'react-native-svg';
+import { PRIMARY } from '../assets/colors';
+import { SvgUri } from 'react-native-svg';
 import OfferIcon from './../assets/icons/my offer.svg';
 import MyShopIcon from './../assets/icons/myshop.svg';
 import SupportIcon from './../assets/icons/support.svg';
 import ReferEarnIcon from './../assets/icons/refer and earn.svg';
 import Share from 'react-native-share';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import AddOfferIcon from './../assets/icons/addoffer.png';
 
 
@@ -70,7 +70,7 @@ class HomeScreen extends Component {
   }
 
   async callApis() {
-    let {user} = this.props;
+    let { user } = this.props;
     try {
       const [shopStatusResponse, carouselsResponse] = await Promise.all([
         getShopStatus(user?.accessToken),
@@ -87,49 +87,49 @@ class HomeScreen extends Component {
     }
   }
 
-    async callApis(){
-        let {user} = this.props;
-        try {
-            const [shopStatusResponse, carouselsResponse ] = await Promise.all([
-                getShopStatus(user?.accessToken), getCarousels(user?.accessToken)
-            ]);
-            const shopStatusJson = await shopStatusResponse.json();
-            const carouselsJson = await carouselsResponse.json();
-            this.setState({carousels: carouselsJson, shopOpen: shopStatusJson?.isOpen})
+  async callApis() {
+    let { user } = this.props;
+    try {
+      const [shopStatusResponse, carouselsResponse] = await Promise.all([
+        getShopStatus(user?.accessToken), getCarousels(user?.accessToken)
+      ]);
+      const shopStatusJson = await shopStatusResponse.json();
+      const carouselsJson = await carouselsResponse.json();
+      this.setState({ carousels: carouselsJson, shopOpen: shopStatusJson?.isOpen })
 
-        } catch (error) {
-            console.log(error);
-        }
-      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
   async openShop() {
-    let {user} = this.props;
+    let { user } = this.props;
     try {
       const response = await openShop(user?.accessToken);
       const json = await response.json();
-      this.setState({shopOpen: json?.isOpen});
+      this.setState({ shopOpen: json?.isOpen });
     } catch (error) {
       console.log(error);
     }
   }
 
   async closeShop() {
-    let {user} = this.props;
+    let { user } = this.props;
     try {
       const response = await closeShop(user?.accessToken);
       const json = await response.json();
       console.log(json);
-      this.setState({shopOpen: json?.isOpen});
+      this.setState({ shopOpen: json?.isOpen });
     } catch (error) {
       console.log(error);
     }
   }
 
   handleModal() {
-    this.setState({modalVisible: !this.state.modalVisible});
+    this.setState({ modalVisible: !this.state.modalVisible });
   }
 
   handleTagsBottomSheet() {
-    this.setState({tagBottomSheetVisible: !this.state.tagBottomSheetVisible});
+    this.setState({ tagBottomSheetVisible: !this.state.tagBottomSheetVisible });
   }
 
   async shareCard() {
@@ -149,22 +149,22 @@ class HomeScreen extends Component {
   // }
 
   navigateToReferEarn() {
-    let {navigation} = this.props;
+    let { navigation } = this.props;
     navigation.navigate('ReferEarn');
   }
 
   navigateToSupportScreen() {
-    let {navigation} = this.props;
+    let { navigation } = this.props;
     navigation.navigate('Support');
   }
 
-    // navigateToMyOffers(){
-    //     this.setState({modalVisible: false});
-    //     let {navigation} = this.props;
-    //     navigation.navigate('MyOffers');
-    // }
+  // navigateToMyOffers(){
+  //     this.setState({modalVisible: false});
+  //     let {navigation} = this.props;
+  //     navigation.navigate('MyOffers');
+  // }
   navigateToMyOffers() {
-    let {navigation} = this.props;
+    let { navigation } = this.props;
     navigation.navigate('MyOffers');
   }
 
@@ -204,8 +204,8 @@ class HomeScreen extends Component {
   }
 
   render() {
-    let {shopOpen, carousels} = this.state;
-    let {language} = this.props;
+    let { shopOpen, carousels } = this.state;
+    let { language } = this.props;
 
     return (
       <SafeAreaView style={styles.container}>
@@ -217,18 +217,18 @@ class HomeScreen extends Component {
           <TouchableOpacity
             activeOpacity={1}
             style={styles.modelContainer}
-            onPress={() => this.setState({modalVisible: false})}>
+            onPress={() => this.setState({ modalVisible: false })}>
             <View style={styles.modalItems}>
               <TouchableOpacity
                 style={styles.modalItem}
                 activeOpacity={0.9}
                 onPress={this.navigateToMyOffers}>
-                  <Image 
-                    source={AddOfferIcon}
-                    style={styles.addOfferIcon}/>
-                  <View style={styles.modalLabelContainer}>
-                    <Text style={styles.modalLabel}>{language == 'HINDI'? 'प्रस्ताव जोड़ें' : 'Add Offer'}</Text>
-                  </View>
+                <Image
+                  source={AddOfferIcon}
+                  style={styles.addOfferIcon} />
+                <View style={styles.modalLabelContainer}>
+                  <Text style={styles.modalLabel}>{language == 'HINDI' ? 'प्रस्ताव जोड़ें' : 'Add Offer'}</Text>
+                </View>
               </TouchableOpacity>
               {/* <TouchableOpacity 
                                     style={styles.modalItem}
@@ -279,7 +279,7 @@ class HomeScreen extends Component {
           </View> */}
           <View style={styles.line} />
           <View style={styles.row}>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.buttonContainer}
               onPress={() => this.props?.navigation?.navigate('MyShop')}>
               <View style={styles.button}>
@@ -301,18 +301,18 @@ class HomeScreen extends Component {
               onPress={this.navigateToSupportScreen}
               style={styles.support}>
               <SupportIcon width={24} height={24} />
-              <Text style={styles.otherLabel}>{language == 'HINDI'? 'समर्थन और सेवा' : 'Support and service'}</Text>
+              <Text style={styles.otherLabel}>{language == 'HINDI' ? 'समर्थन और सेवा' : 'Support and service'}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={this.navigateToReferEarn}
               style={styles.referEarn}>
               <SupportIcon width={24} height={24} />
-              <Text style={styles.otherLabel}>{language == 'HINDI'? 'देखें और कमाएं': 'Refer and earn'}</Text>
+              <Text style={styles.otherLabel}>{language == 'HINDI' ? 'देखें और कमाएं' : 'Refer and earn'}</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.line} />
           <View style={styles.shopStatusRow}>
-            <Text style={styles.shopStatusLabel}>{language == 'HINDI'? 'आपकी दुकान की स्थिति': 'Your shop status'}</Text>
+            <Text style={styles.shopStatusLabel}>{language == 'HINDI' ? 'आपकी दुकान की स्थिति' : 'Your shop status'}</Text>
             <Switch
               style={styles.switchButton}
               value={shopOpen}
@@ -321,8 +321,8 @@ class HomeScreen extends Component {
             />
             <View
               style={Object.assign(
-                {...styles.shopStatus},
-                {backgroundColor: shopOpen ? '#66bb6a' : '#ff7043'},
+                { ...styles.shopStatus },
+                { backgroundColor: shopOpen ? '#66bb6a' : '#ff7043' },
               )}>
               <Text style={styles.shopStatusOtherLabel}>
                 {shopOpen ? (language == 'HINDI' ? 'खुल गया' : 'Opened') : (language == 'HINDI' ? 'बंद किया हुआ' : 'Closed')}
@@ -586,7 +586,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: 133,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,
     shadowRadius: 2,
     elevation: 2,

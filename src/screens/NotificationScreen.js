@@ -1,7 +1,8 @@
-import React, {Component} from 'react';
-import {SafeAreaView, StyleSheet, Text, FlatList, View, ActivityIndicator} from 'react-native';
+import moment from 'moment';
+import React, { Component } from 'react';
+import { SafeAreaView, StyleSheet, Text, FlatList, View, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
-import { PRIMARY } from '../assets/colors';
+import { GREY_2, PRIMARY } from '../assets/colors';
 import WithNetInfo from '../components/hoc/withNetInfo';
 import { getNotifications } from '../services/notificationService';
 
@@ -54,9 +55,9 @@ const mapStateToProps = (state) => {
     }
 }
 
-class NotificationScreen extends Component{
+class NotificationScreen extends Component {
 
-    constructor(){
+    constructor() {
         super();
         this.state = {
             notifications: notifications,
@@ -64,40 +65,42 @@ class NotificationScreen extends Component{
         }
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.fetchNotifications();
     }
 
-    async fetchNotifications(){
-        let {user} = this.props;
-        this.setState({loading: true});
+    async fetchNotifications() {
+        let { user } = this.props;
+        this.setState({ loading: true });
         try {
             const response = await getNotifications(user?.accessToken);
             const json = await response.json();
-            this.setState({loading: false, notifications: json});
+            console.log("gg-->", json);
+            this.setState({ loading: false, notifications: json });
         } catch (error) {
             console.log(error);
-            this.setState({loading: false});
+            this.setState({ loading: false });
         }
     }
 
-    renderNotification({item}) {
-        let {notification, createdAt} = item;
+    renderNotification({ item }) {
+        let { notificationBody, createdAt } = item;
         return (
             <View style={styles.notification}>
-                <Text style={styles.title}>{notification?.body}</Text>
-                <Text style={styles.time}>{createdAt}</Text>
+                <Text style={styles.title}>{notificationBody?.title}</Text>
+                <Text style={styles.body}>{notificationBody?.body}</Text>
+                <Text style={styles.time}>{moment(createdAt).local().startOf('seconds').fromNow()}</Text>
             </View>
         )
     }
 
-    render(){
-        let {notifications, loading} = this.state;
+    render() {
+        let { notifications, loading } = this.state;
 
-        if(loading){
+        if (loading) {
             return (
                 <SafeAreaView style={styles.container}>
-                    <ActivityIndicator 
+                    <ActivityIndicator
                         color={PRIMARY}
                         size="large"
                     />
@@ -105,7 +108,7 @@ class NotificationScreen extends Component{
             )
         }
 
-        if(notifications.length == 0){
+        if (notifications.length == 0) {
             return (
                 <SafeAreaView style={styles.container}>
                     <Text style={styles.info}>We have no item to show here</Text>
@@ -115,11 +118,12 @@ class NotificationScreen extends Component{
 
         return (
             <SafeAreaView style={styles.container}>
-                <FlatList 
+                <FlatList
+                    showsVerticalScrollIndicator={false}
                     data={notifications}
                     style={styles.notifications}
                     renderItem={this.renderNotification}
-                    ItemSeparatorComponent={() => <View style={styles.separator}/>}
+                    // ItemSeparatorComponent={() => <View style={styles.separator} />}
                     keyExtractor={item => item?._id.toString()}
                 />
             </SafeAreaView>
@@ -145,16 +149,29 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
     notification: {
-        padding: 20,
+        borderColor: GREY_2,
+        borderWidth: 1,
+        borderRadius: 10,
+        padding: 15,
+        marginVertical: 8,
+        marginHorizontal: 10
     },
     title: {
-        fontWeight: '400',
+        // fontWeight: '400',
         color: 'black',
-        fontSize: 13,
+        fontSize: 16,
+        fontFamily: 'Gilroy-SemiBold',
+        lineHeight: 20
+    },
+    body: {
+        paddingTop: 5,
+        color: 'black',
+        fontSize: 14,
+        fontFamily: 'Gilroy-Medium',
         lineHeight: 20
     },
     time: {
-        color: 'gray',
+        color: GREY_2,
         fontSize: 10,
         alignSelf: 'flex-end',
         fontWeight: '400'
