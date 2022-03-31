@@ -30,7 +30,7 @@ function MainNavigation({ language, user }) {
       // initialRouteName='MyOfferss'
       screenOptions={{
         tabBarActiveTintColor: PRIMARY,
-        tabBarInactiveTintColor: 'lightgrey',
+        tabBarInactiveTintColor: 'black',
         // tabBarShowLabel: false,
       }}>
       <Tab.Screen

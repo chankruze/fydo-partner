@@ -154,15 +154,14 @@ const MapScreen = ({navigation, route}) => {
   };
 
   const confirmAddress = () => {
-    const newData = {
-      address: {
-        addressLine1: address,
-      },
-      location: [region.latitude, region.longitude],
-    }
-    navigation.navigate('RegisterShop', {data: newData});
+    navigation.navigate('RegisterShop', {
+      address: address,
+      coordinates: {
+        latitude: region.latitude,
+        longitude: region.longitude
+      }
+    })
   };
-
   return (
     <View style={styles.container}>
       <MapView style={styles.map} initialRegion={region} region={region}>

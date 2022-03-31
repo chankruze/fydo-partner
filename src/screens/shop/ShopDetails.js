@@ -23,8 +23,9 @@ import {
 
 import ButtonComponent from '../../components/ButtonComponent';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import {getAmenities} from '../../services/shopService';
-import {connect} from 'react-redux';
+import { getAmenities } from '../../services/shopService';
+import { connect } from 'react-redux';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 const WIDTH = Dimensions.get('screen').width;
 
@@ -159,7 +160,12 @@ const ShopDetails = ({navigation, route, user}) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.container}>
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <KeyboardAwareScrollView enableOnAndroid={true}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps='handled'
+          enableAutomaticScroll={Platform.OS == 'ios'}
+        >
+          {/* <ScrollView showsVerticalScrollIndicator={false}> */}
           <View style={premiumService && styles.subContainer}>
             <View
               style={
@@ -424,7 +430,8 @@ const ShopDetails = ({navigation, route, user}) => {
               onPress={next}
             />
           </View>
-        </ScrollView>
+          {/* </ScrollView> */}
+        </KeyboardAwareScrollView>
       </View>
     </SafeAreaView>
   );

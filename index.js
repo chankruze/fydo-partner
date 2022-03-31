@@ -2,12 +2,13 @@
  * @format
  */
 
-import {AppRegistry} from 'react-native';
+import { AppRegistry } from 'react-native';
 import App from './App';
-import {name as appName} from './app.json';
-import {LogBox} from 'react-native';
+import { name as appName } from './app.json';
+import { LogBox } from 'react-native';
 
 LogBox.ignoreLogs(["VirtualizedLists should never be nested"])
+LogBox.ignoreAllLogs();
 
 // let oldRender = Text.render;
 // Text.render = function(...args) {

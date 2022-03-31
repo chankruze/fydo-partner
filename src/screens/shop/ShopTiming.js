@@ -240,7 +240,7 @@ const ShopTiming = props => {
       })
 
       await data.map((i) => {
-        finalImages.push({ uri: i?.split("?")[0] })
+        finalImages.push({ url: i?.split("?")[0] })
       })
       return finalImages;
     } else {

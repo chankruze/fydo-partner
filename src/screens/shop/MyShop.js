@@ -14,7 +14,7 @@ import {
   View,
 } from 'react-native';
 import ImageSlider from '../../components/ImageSlider';
-import { DARKBLUE, LIGHTBLUE, PRIMARY } from '../../assets/colors';
+import { DARKBLACK, DARKBLUE, GREY_2, LIGHTBLUE, PRIMARY } from '../../assets/colors';
 import { response } from '../../utils/dummyStore';
 import StoreOffers from '../../components/shop/StoreOffers';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
@@ -22,7 +22,7 @@ import { connect } from 'react-redux';
 import { getAmenities, getMyShop } from '../../services/shopService';
 import { SvgUri } from 'react-native-svg';
 import { getOffers } from '../../services/offerService';
-
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const mapStateToProps = (state) => {
   return {
@@ -31,7 +31,7 @@ const mapStateToProps = (state) => {
 }
 
 const MyShop = ({ navigation, user }) => {
-  const store = response
+  // const store = response
   const [isOpen, setIsOpen] = useState(true);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -96,6 +96,42 @@ const MyShop = ({ navigation, user }) => {
     fetchOffers();
   }, []);
 
+  setMyAmenities = () => {
+    var result = amenities.filter(function (o1) {
+      return data?.amenities.some(function (o2) {
+        return o1._id == o2;
+      });
+    });
+
+    return (
+      <>
+        {result?.length > 0 && (
+          <View style={styles.options}>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              {result?.map(({ _id, name, iconUrl }) => (
+                <View style={styles.option} key={_id}>
+                  {iconUrl &&
+                    (iconUrl?.split('.').pop() == 'svg' ? (
+                      <SvgUri width={50} height={50} uri={iconUrl} />
+                    ) : (
+                      <Image
+                        source={{ uri: iconUrl }}
+                        style={{
+                          width: 50,
+                          height: 50,
+                        }}
+                      />
+                    ))}
+                  <Text style={styles.optionName}>{name}</Text>
+                </View>
+              ))}
+            </ScrollView>
+          </View>
+        )}
+      </>
+    )
+  }
+
   const renderTag = item => {
     let { _id, name } = item;
     return (
@@ -107,9 +143,9 @@ const MyShop = ({ navigation, user }) => {
 
   renderTiming = ({ item, index }) => {
     const today = new Date().getDay();
-    let d = item.dayOfWeek;
+    let d = item.dayOfWeek.slice(0, 3);
 
-    const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
     return (
       <View
@@ -125,7 +161,7 @@ const MyShop = ({ navigation, user }) => {
               color: days[today] == d ? DARKBLACK : GREY_2,
             },
           ]}>
-          {item.dayOfWeek}
+          {(item.dayOfWeek.slice(0, 3))}
         </Text>
         <View
           style={{
@@ -196,25 +232,63 @@ const MyShop = ({ navigation, user }) => {
             )}
 
             <View style={styles.row}>
-
-              <TouchableOpacity
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}
-                onPress={() => handleTiming()}>
+              {/* {store?.isOpen && (
+                                    <Text style={styles.open}>Open now</Text>
+                                )}
+                                {!store?.isOpen && (
+                                    <Text style={styles.close}>Closed now</Text>
+                                )} */}
+              <TouchableOpacity style={{
+                flex: 1,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+                onPress={() => handleTiming()}
+              >
                 {isOpen ? (
-                  <Text style={styles.open}>Open</Text>
-                ) : (
-                  <Text style={styles.close}>Closed</Text>
-                )}
+                  <Text style={styles.open}>Open now</Text>
 
+                ) : (
+                  <Text style={styles.close}>Closed now</Text>
+                  /* <Text style={{
+                      fontSize: 28,
+                      marginLeft: 5
+                  }}>{'\u2022'}</Text>
+                  <Text style={[styles.open, {
+                      marginLeft: 5
+                  }]}>Opens at {store?.timings[0].timings?.endTime}</Text> */
+                )}
+                {timeView ? (
+                  <MaterialIcons
+                    name='keyboard-arrow-up'
+                    color={'black'}
+                    size={18}
+                    style={{
+                      flex: 1,
+                      alignSelf: 'center',
+                      marginLeft: 5
+                    }}
+                  />
+                ) : (
+                  <MaterialIcons
+                    name='keyboard-arrow-down'
+                    color={'black'}
+                    size={18}
+                    style={{
+                      flex: 1,
+                      alignSelf: 'center',
+                      marginLeft: 5
+                    }}
+                  />
+                )}
               </TouchableOpacity>
+              {/* <Text style={styles.timing}>{store?.timing}</Text> */}
             </View>
             {timeView && (
               <View style={styles.timeView}>
                 <FlatList
-                  data={store?.timing}
+                  data={data?.timing}
                   keyExtractor={item => item?._id.toString()}
                   renderItem={item => renderTiming(item)}
                   ItemSeparatorComponent={() => <View style={{ height: 5 }} />}
@@ -237,42 +311,22 @@ const MyShop = ({ navigation, user }) => {
               }}
             /> */}
             <Text style={styles.amenities}>My Amenities</Text>
-            {amenities?.length > 0 && (
-              <View style={styles.options}>
-                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                  {amenities?.map(({ _id, name, iconUrl }) => (
-                    <View style={styles.option} key={_id}>
-                      {iconUrl &&
-                        (iconUrl?.split('.').pop() == 'svg' ? (
-                          <SvgUri width={50} height={50} uri={iconUrl} />
-                        ) : (
-                          <Image
-                            source={{ uri: iconUrl }}
-                            style={{
-                              width: 50,
-                              height: 50,
-                            }}
-                          />
-                        ))}
-                      <Text style={styles.optionName}>{name}</Text>
-                    </View>
-                  ))}
-                </ScrollView>
-              </View>
-            )}
+            {setMyAmenities()}
           </View>
-          <View>
-            <StoreOffers
-              offers={offers}
-              navigation={navigation}
-            />
-          </View>
-          <View style={styles.editButton}>
-              <TouchableOpacity onPress={()=> navigation.navigate('RegisterShop', {data: data})}>
+          {offers.length > 0 && (
+            <View>
+              <StoreOffers
+                offers={offers}
+                navigation={navigation}
+              />
+            </View>
+          )}
+          {/* <View style={styles.editButton}>
+              <TouchableOpacity onPress={()=> navigation.navigate('RegisterShop')}>
               <FontAwesomeIcon name="edit" color="white" size={25}/>
 
               </TouchableOpacity>
-          </View>
+          </View> */}
         </View>
       }></FlatList>
   );
@@ -457,9 +511,10 @@ const styles = StyleSheet.create({
   },
   timeView: {
     marginHorizontal: 10,
+    marginBottom: 15
   },
   dayStyle: {
-    width: '10%',
+    width: '15%',
     fontFamily: 'Gilroy-Semibold',
     textTransform: 'capitalize',
   },

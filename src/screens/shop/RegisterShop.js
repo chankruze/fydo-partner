@@ -11,19 +11,16 @@ import {
   SafeAreaView,
   Platform,
   ToastAndroid,
+  KeyboardAvoidingView
 } from 'react-native';
 import {
   PRIMARY,
   DARKGREY,
-  GREY,
-  LIGHTB,
-  PRIMARYLACK,
   LIGHTBLACK,
   DARKBLACK,
   DARKBLUE,
   LIGHTBLUE,
   GREY_2,
-  GREY_3,
 } from '../../assets/colors';
 import Octicons from 'react-native-vector-icons/Octicons';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -42,8 +39,7 @@ import { add, color } from 'react-native-reanimated';
 import { generatePresignUrl } from '../../services/presignUrlService';
 import { connect } from 'react-redux';
 import Toast from 'react-native-simple-toast';
-import { getUser } from '../../utils/defaultPreference';
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 const HEIGHT = Dimensions.get('screen').height;
 
@@ -72,7 +68,7 @@ function RegisterShop({ route, navigation, user }) {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [shopName, setShopName] = useState('');
   const [address, setAddress] = useState(
-    route.params ? route.params.data.address?.addressLine1 : null,
+    route.params ? route.params.address : null,
   );
   const [coordinates, setCoordinates] = useState(
     route.params ? route.params.coordinates : null,
@@ -87,7 +83,7 @@ function RegisterShop({ route, navigation, user }) {
   // const [user, setUser] = useState('');
 
   useEffect(() => {
-    console.log("add-->", route.params.data.address.addressLine1);
+    console.log("add-->", route.params?.address);
     // if (route.params !== undefined) {
     //   const newAddress = route.params.address;
     //   setCoordinates(route.params?.coordinates)
@@ -190,7 +186,7 @@ function RegisterShop({ route, navigation, user }) {
   };
 
   const next = async () => {
-    if (true) {
+    if (isValidate()) {
       let data = {
         name: shopName,
         mobile: phoneNumber,
@@ -223,8 +219,15 @@ function RegisterShop({ route, navigation, user }) {
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
       <StatusBar barStyle="dark-content" backgroundColor={PRIMARY} translucent />
       <View style={styles.contentContainer}>
-        <ScrollView
-          showsVerticalScrollIndicator={false}>
+        <KeyboardAwareScrollView enableOnAndroid={true}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps='handled'
+          enableAutomaticScroll={Platform.OS == 'ios'}
+        >
+          {/* <ScrollView
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps='handled'
+          > */}
           <View style={styles.information}>
             <MaterialComunityIcons
               name="information-outline"
@@ -320,7 +323,7 @@ function RegisterShop({ route, navigation, user }) {
               renderDropdownIcon={() => (
                 <EntypoIcon name="chevron-down" size={25} color={DARKBLACK} />
               )}
-              buttonStyle={[styles.input, { width: '91%', marginLeft: 0 }]}
+              buttonStyle={{ backgroundColor: 'transparent', width: '95%' }}
               buttonTextStyle={{
                 textAlign: 'left',
                 fontFamily: 'Gilroy-Medium',
@@ -379,7 +382,7 @@ function RegisterShop({ route, navigation, user }) {
                 <EntypoIcon name="chevron-down" size={25} color="#000" />
               )}
               dropdownStyle={{ borderRadius: 10 }}
-              buttonStyle={[styles.input, { width: '100%', marginLeft: 0 }]}
+              buttonStyle={{ backgroundColor: 'transparent', width: '100%' }}
               buttonTextStyle={{
                 color: DARKGREY,
                 textAlign: 'left',
@@ -401,7 +404,9 @@ function RegisterShop({ route, navigation, user }) {
             backgroundColor={DARKBLUE}
             onPress={next}
           />
-        </ScrollView>
+          {/* </ScrollView> */}
+        </KeyboardAwareScrollView>
+
       </View>
     </SafeAreaView>
   );
@@ -451,7 +456,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginVertical: 10,
-    justifyContent: 'space-around',
+    // justifyContent: 'space-around',
     borderBottomWidth: 1,
     borderBottomColor: DARKGREY,
     marginHorizontal: 10,
