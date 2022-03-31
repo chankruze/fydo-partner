@@ -8,22 +8,26 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Platform,
-  StatusBar
+  StatusBar,
 } from 'react-native';
-import React, { useState, useEffect } from 'react';
-import MapView, { Marker } from 'react-native-maps';
+import React, {useState, useEffect} from 'react';
+import MapView, {Marker} from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
-import { DARKBLUE, GREY, PRIMARY } from '../assets/colors/index';
+import {DARKBLUE, GREY, PRIMARY} from '../assets/colors/index';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import locationPin from '../assets/images/location-pin.png';
 import pinIcon from '../assets/images/pin.png';
 import FAB from 'react-native-fab';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { SearchLocation, GetPostalAddress } from '../services/mapService';
-import { isNotchDevice } from '../utils/deviceInfo';
-import Permissions, { PERMISSIONS, RESULTS, request } from 'react-native-permissions'
+import {SearchLocation, GetPostalAddress} from '../services/mapService';
+import {isNotchDevice} from '../utils/deviceInfo';
+import Permissions, {
+  PERMISSIONS,
+  RESULTS,
+  request,
+} from 'react-native-permissions';
 
-const MapScreen = ({ navigation, route }) => {
+const MapScreen = ({navigation, route}) => {
   const [region, setRegion] = useState({
     latitude: 27.2046,
     longitude: 77.4977,
@@ -52,22 +56,24 @@ const MapScreen = ({ navigation, route }) => {
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
         );
       } else {
-        granted = await request(PERMISSIONS.IOS.LOCATION_ALWAYS).then((result) => {
-          return result
-        });
+        granted = await request(PERMISSIONS.IOS.LOCATION_ALWAYS).then(
+          result => {
+            return result;
+          },
+        );
       }
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         Geolocation.getCurrentPosition(
-          ({ coords }) => {
-            let { latitude, longitude } = coords;
-            let location = { latitude: latitude, longitude: longitude };
+          ({coords}) => {
+            let {latitude, longitude} = coords;
+            let location = {latitude: latitude, longitude: longitude};
             GetPostalAddress(latitude, longitude)
               .then(res => {
                 setAddress(res.formatted_address);
               })
               .catch(err => console.log(err));
             setSelectedLocation(location);
-            setRegion(Object.assign({ ...region }, { ...location }));
+            setRegion(Object.assign({...region}, {...location}));
             setLocationChange(true);
           },
           error => {
@@ -93,16 +99,16 @@ const MapScreen = ({ navigation, route }) => {
 
   const setLocation = () => {
     Geolocation.getCurrentPosition(
-      ({ coords }) => {
-        let { latitude, longitude } = coords;
-        let location = { latitude: latitude, longitude: longitude };
+      ({coords}) => {
+        let {latitude, longitude} = coords;
+        let location = {latitude: latitude, longitude: longitude};
         GetPostalAddress(latitude, longitude)
           .then(res => {
             setAddress(res.formatted_address);
           })
           .catch(err => console.log(err));
         setSelectedLocation(location);
-        setRegion(Object.assign({ ...region }, { ...location }));
+        setRegion(Object.assign({...region}, {...location}));
         setLocationChange(true);
       },
       error => {
@@ -127,21 +133,21 @@ const MapScreen = ({ navigation, route }) => {
       })
       .catch(err => console.log(err));
     setSelectedLocation(coordinate);
-    setRegion(Object.assign({ ...region }, { ...coordinate }));
+    setRegion(Object.assign({...region}, {...coordinate}));
     setLocationChange(true);
   };
 
   const onSubmit = query => {
     SearchLocation(query)
       .then(res => {
-        const { lat, lng } = res;
-        const location = { latitude: lat, longitude: lng };
+        const {lat, lng} = res;
+        const location = {latitude: lat, longitude: lng};
         GetPostalAddress(lat, lng)
           .then(res => {
             setAddress(res.formatted_address);
           })
           .catch(err => console.log(err));
-        setRegion(Object.assign({ ...region }, { ...location }));
+        setRegion(Object.assign({...region}, {...location}));
         setSelectedLocation(location);
       })
       .catch(err => console.log(err));
@@ -156,7 +162,6 @@ const MapScreen = ({ navigation, route }) => {
       }
     })
   };
-
   return (
     <View style={styles.container}>
       <MapView style={styles.map} initialRegion={region} region={region}>
@@ -184,10 +189,15 @@ const MapScreen = ({ navigation, route }) => {
       </View>
       <View
         style={Object.assign(
-          { ...styles.confirmButton },
-          { opacity: locationChange ? 1 : 0.8 },
+          {...styles.confirmButton},
+          {opacity: locationChange ? 1 : 0.8},
         )}>
-        <TextInput style={styles.selectedLocation} disabled value={address} multiline />
+        <TextInput
+          style={styles.selectedLocation}
+          disabled
+          value={address}
+          multiline
+        />
         <TouchableOpacity
           activeOpacity={0.7}
           style={styles.check}
@@ -282,5 +292,5 @@ const styles = StyleSheet.create({
     fontFamily: 'Gilroy-Medium',
     width: '90%',
     letterSpacing: 0.3,
-  }
+  },
 });
