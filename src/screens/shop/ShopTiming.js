@@ -223,7 +223,7 @@ const ShopTiming = props => {
     let fileNames = [], finalImages = [];
     if (images.length > 0) {
       images.map((i) => {
-        fileNames.push(i.fileName.split(".")[0])
+        fileNames.push(uuid.v4(i.fileName.split(".")[0]))
       })
       const imageResponse = await generatePresignUrl(user?.accessToken, fileNames);
       const data = await imageResponse.json();
@@ -270,19 +270,19 @@ const ShopTiming = props => {
 
       const json = await response.json();
       console.log("ff-->", JSON.stringify(json, null, 2));
-      if (json) {
-        let object = Object.assign({ ...props?.user }, { ...json });
-        setUser(object);
-        saveUserData(object);
-        navigation.dispatch(
-          CommonActions.reset({
-            index: 0,
-            routes: [
-              { name: 'Main' },
-            ],
-          })
-        );
-      }
+      // if (json) {
+      //   let object = Object.assign({ ...props?.user }, { ...json });
+      //   setUser(object);
+      //   saveUserData(object);
+      //   navigation.dispatch(
+      //     CommonActions.reset({
+      //       index: 0,
+      //       routes: [
+      //         { name: 'Main' },
+      //       ],
+      //     })
+      //   );
+      // }
     } catch (error) {
       console.log(error);
     }
