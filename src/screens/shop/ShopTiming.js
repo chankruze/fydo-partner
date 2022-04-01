@@ -201,7 +201,8 @@ const ShopTiming = props => {
               Platform.OS === 'android'
                 ? i.path
                 : i.path.replace('file://', ''),
-            fileName: i.filename
+            fileName: Platform.OS == 'ios' ? i.filename
+              : i.path.substring(i.path.lastIndexOf('/') + 1)
           };
         });
         const newImages = [...images, ...data];
@@ -270,19 +271,19 @@ const ShopTiming = props => {
 
       const json = await response.json();
       console.log("ff-->", JSON.stringify(json, null, 2));
-      // if (json) {
-      //   let object = Object.assign({ ...props?.user }, { ...json });
-      //   setUser(object);
-      //   saveUserData(object);
-      //   navigation.dispatch(
-      //     CommonActions.reset({
-      //       index: 0,
-      //       routes: [
-      //         { name: 'Main' },
-      //       ],
-      //     })
-      //   );
-      // }
+      if (json) {
+        let object = Object.assign({ ...props?.user }, { ...json });
+        setUser(object);
+        saveUserData(object);
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [
+              { name: 'Main' },
+            ],
+          })
+        );
+      }
     } catch (error) {
       console.log(error);
     }
@@ -749,7 +750,7 @@ const styles = StyleSheet.create({
     marginLeft: 15,
   },
   timeButton: {
-    width: '20%',
+    width: '15%',
     height: 30,
     borderRadius: 4,
     borderColor: 'rgba(77, 83, 91, 0.2)',

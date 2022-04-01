@@ -139,7 +139,8 @@ function RegisterShop({ route, navigation, user }) {
                 Platform.OS === 'android'
                   ? i.path
                   : i.path.replace('file://', ''),
-              fileName: i.filename
+              fileName: Platform.OS == 'ios' ? i.filename
+                : i.path.substring(i.path.lastIndexOf('/') + 1)
             };
           });
           setImages(data, type)
@@ -217,7 +218,7 @@ function RegisterShop({ route, navigation, user }) {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
-      <StatusBar barStyle="dark-content" backgroundColor={PRIMARY} translucent />
+      <StatusBar barStyle="default" backgroundColor={PRIMARY} translucent />
       <View style={styles.contentContainer}>
         <KeyboardAwareScrollView enableOnAndroid={true}
           showsVerticalScrollIndicator={false}

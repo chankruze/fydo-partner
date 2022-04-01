@@ -54,6 +54,7 @@ const OnboardingScreen = (props) => {
   }, [showBottomSheet])
 
   const viewableItemsChanged = useRef(({ viewableItems }) => {
+    console.log("iii-->", viewableItems[0].index);
     setCurrentIndex(viewableItems[0].index);
   }).current;
 
@@ -81,14 +82,13 @@ const OnboardingScreen = (props) => {
   //   const viewConfig = useRef({viewAreaCoveragePercentThresold: 50}).current;
   return (
     <SafeAreaView style={(currentIndex == 3) ? styles.container2 : styles.container1}>
-      <StatusBar translucent={false} backgroundColor={PRIMARY} />
+      <StatusBar translucent={false} backgroundColor={PRIMARY} barStyle='default' />
       <View style={styles.miniContainer}>
         {currentIndex == 3 ? null : (
           <View style={styles.skipBtn}>
             <SkipButton skip={skip} />
           </View>
         )}
-        {console.log("ass-->", scrollEnable)}
         <FlatList
           scrollEnabled={scrollEnable}
           data={slides}
@@ -123,9 +123,9 @@ const OnboardingScreen = (props) => {
           height: HEIGHT * 0.6,
           width: '100%'
         }}>
-          <StatusBar
+          {/* <StatusBar
             backgroundColor={'rgba(0, 0, 0, .3)'}
-            barStyle="light-content" />
+            barStyle="light-content" /> */}
           {/* <View style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, .3)' }}></View> */}
 
           {currentScreen == SCREENS.PHONE_LOGIN && (<PhoneLoginScreen {...props} handleNextScreen={handleNextScreen} />)}
