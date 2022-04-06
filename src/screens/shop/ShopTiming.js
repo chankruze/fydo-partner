@@ -8,6 +8,8 @@ import {
   Image,
   FlatList,
   Dimensions,
+  Platform,
+  ToastAndroid,
 } from 'react-native';
 import React, { createRef, useEffect, useRef, useState } from 'react';
 import {
@@ -39,8 +41,9 @@ import { updateShop } from '../../services/shopService';
 import { connect } from 'react-redux';
 import { generatePresignUrl } from '../../services/presignUrlService';
 import uuid from 'react-native-uuid';
-import { setUser } from '../../store/actions/user.action';
+import { setShop, setUser } from '../../store/actions/user.action';
 import { getUser, saveUserData } from '../../utils/defaultPreference';
+import Toast from 'react-native-simple-toast';
 
 const HEIGHT = Dimensions.get('screen').height;
 
@@ -56,12 +59,17 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     setUser: user => dispatch(setUser(user)),
+    // setShop: myshop => dispatch(setShop(myshop))
   };
 };
 
 const ShopTiming = props => {
   let rbSheet = useRef();
-  const [images, setImages] = useState([]);
+  const shopDetails = props.route?.params?.data;
+
+  const [images, setImages] = useState(
+    shopDetails?.images ? shopDetails?.images : []
+  );
   const [timePicker, setTimePicker] = useState(false);
   const [opentimePicker, setOpenTimePicker] = useState(false);
   const [closetimePicker, setCloseTimePicker] = useState(false);
@@ -80,68 +88,69 @@ const ShopTiming = props => {
     'Friday',
     'Saturday',
   ];
-  const [individualTimings, setIndividualTimings] = useState([
-    {
-      timings: {
-        startTime: null,
-        endTime: null,
-      },
-      dayOfWeek: 'Sunday',
-      _id: '62137c449c5674a6e62aed14',
-    },
-    {
-      timings: {
-        startTime: null,
-        endTime: null,
-      },
-      dayOfWeek: 'Monday',
-      _id: '62137c449c5674a6e62aed15',
-    },
-    {
-      timings: {
-        startTime: null,
-        endTime: null,
-      },
-      dayOfWeek: 'Tuesday',
-      _id: '62137c449c5674a6e62aed16',
-    },
-    {
-      timings: {
-        startTime: null,
-        endTime: null,
-      },
-      dayOfWeek: 'Wednesday',
-      _id: '62137c449c5674a6e62aed17',
-    },
-    {
-      timings: {
-        startTime: null,
-        endTime: null,
-      },
-      dayOfWeek: 'Thursday',
-      _id: '62137c449c5674a6e62aed18',
-    },
-    {
-      timings: {
-        startTime: null,
-        endTime: null,
-      },
-      dayOfWeek: 'Friday',
-      _id: '62137c449c5674a6e62aed19',
-    },
-    {
-      timings: {
-        startTime: null,
-        endTime: null,
-      },
-      dayOfWeek: 'Saturday',
-      _id: '62137c449c5674a6e62aed1a',
-    },
-  ]);
-  const [user, setUser] = useState('');
+  const [individualTimings, setIndividualTimings] = useState(
+    shopDetails?.timing ? shopDetails?.timing :
+      [
+        {
+          timings: {
+            startTime: null,
+            endTime: null,
+          },
+          dayOfWeek: 'SUN',
+          _id: '62137c449c5674a6e62aed14',
+        },
+        {
+          timings: {
+            startTime: null,
+            endTime: null,
+          },
+          dayOfWeek: 'MON',
+          _id: '62137c449c5674a6e62aed15',
+        },
+        {
+          timings: {
+            startTime: null,
+            endTime: null,
+          },
+          dayOfWeek: 'TUE',
+          _id: '62137c449c5674a6e62aed16',
+        },
+        {
+          timings: {
+            startTime: null,
+            endTime: null,
+          },
+          dayOfWeek: 'WED',
+          _id: '62137c449c5674a6e62aed17',
+        },
+        {
+          timings: {
+            startTime: null,
+            endTime: null,
+          },
+          dayOfWeek: 'THU',
+          _id: '62137c449c5674a6e62aed18',
+        },
+        {
+          timings: {
+            startTime: null,
+            endTime: null,
+          },
+          dayOfWeek: 'FRI',
+          _id: '62137c449c5674a6e62aed19',
+        },
+        {
+          timings: {
+            startTime: null,
+            endTime: null,
+          },
+          dayOfWeek: 'SAT',
+          _id: '62137c449c5674a6e62aed1a',
+        },
+      ]);
 
   useEffect(() => {
-    console.log("sss-->", props.route?.params?.data);
+    // console.log("sss-->", JSON.stringify(props.route?.params?.data));
   });
 
   const selectImages = () => {
@@ -165,10 +174,12 @@ const ShopTiming = props => {
         const data = imageData.map(i => {
           return {
             // uri: i.path,
-            uri:
+            url:
               Platform.OS === 'android'
                 ? i.path
                 : i.path.replace('file://', ''),
+            fileName: Platform.OS == 'ios' ? i.filename
+              : i.path.substring(i.path.lastIndexOf('/') + 1)
           };
         });
 
@@ -197,7 +208,7 @@ const ShopTiming = props => {
         const data = imageData.map((i, index) => {
           return {
             // uri: i.path,
-            uri:
+            url:
               Platform.OS === 'android'
                 ? i.path
                 : i.path.replace('file://', ''),
@@ -221,58 +232,77 @@ const ShopTiming = props => {
 
   const renderImages = async () => {
     let { user } = props;
-    let fileNames = [], finalImages = [];
+    let fileNames = [], finalImages = [], oldImages = [];
     if (images.length > 0) {
       images.map((i) => {
-        fileNames.push(uuid.v4(i.fileName.split(".")[0]))
+        if (i.fileName) {
+          fileNames.push(uuid.v4(i?.fileName.split(".")[0]))
+        } else {
+          oldImages.push(i);
+        }
       })
-      const imageResponse = await generatePresignUrl(user?.accessToken, fileNames);
-      const data = await imageResponse.json();
+      if (fileNames.length > 0) {
+        const imageResponse = await generatePresignUrl(user?.accessToken, fileNames);
+        const data = await imageResponse.json();
 
-      data.map(async (i) => {
-        images.map(async (j) => {
-          const imageBody = await getBlob(j.uri);
+        data.map(async (i) => {
+          images.map(async (j) => {
+            const imageBody = await getBlob(j.url);
 
-          await fetch(i, {
-            method: 'PUT',
-            body: imageBody
-          });
+            await fetch(i, {
+              method: 'PUT',
+              body: imageBody
+            });
+          })
         })
-      })
 
-      await data.map((i) => {
-        finalImages.push({ url: i?.split("?")[0] })
-      })
-      return finalImages;
+        await data.map((i) => {
+          finalImages.push({ url: i?.split("?")[0] })
+        })
+        const newAr = [...oldImages, ...finalImages]
+        return newAr;
+      } else {
+        return oldImages;
+      }
     } else {
-      return [];
+      if (Platform.OS == 'android') {
+        ToastAndroid.show('Please select at least one image', ToastAndroid.SHORT);
+      } else {
+        Toast.show('Please select at least one image', Toast.SHORT);
+      }
+      // return [];
     }
   };
 
   const submit = async () => {
+    let pics = [];
     const finalImages = await renderImages();
-
+    finalImages.map((i) => {
+      pics.push(i.url)
+    })
     const prevParams = props?.route?.params?.data;
 
     try {
       const params = {
-        // name: prevParams.name,
-        // mobile: prevParams.mobile,
-        // type: prevParams.type,
+        ...prevParams,
         timing: individualTimings,
         images: finalImages,
-        ...prevParams
+        pics: pics
       }
 
-      console.log("aspp-->", params);
+      // console.log("aspp-->", JSON.stringify(params, null, 2));
 
       let { navigation, user } = props;
       const response = await updateShop(user?.accessToken, params);
-
       const json = await response.json();
-      console.log("ff-->", JSON.stringify(json, null, 2));
+      // console.log("ff-->", JSON.stringify(json, null, 2));
+
+      let { setUser } = props;
       if (json) {
-        let object = Object.assign({ ...props?.user }, { ...json });
+        let object = {
+          ...user,
+          profileComplete: json.profileComplete
+        };
         setUser(object);
         saveUserData(object);
         navigation.dispatch(
@@ -296,12 +326,12 @@ const ShopTiming = props => {
           <Image
             style={styles.circleContainer}
             source={{
-              uri: image.uri,
+              uri: image.url,
             }}
           />
           <TouchableOpacity
             onPress={() => {
-              removeImage(image.uri);
+              removeImage(image.url);
             }}
             style={styles.removeIcon}>
             <Cross />
@@ -407,13 +437,13 @@ const ShopTiming = props => {
         }}>
         <Text
           style={{
-            width: '23%',
+            width: '12%',
             marginLeft: 5,
             fontFamily: 'Gilroy-Regular',
             fontSize: 14,
             color: '#383B3F',
           }}>
-          {item.dayOfWeek}
+          {item.dayOfWeek.slice(0, 3).toUpperCase()}
         </Text>
         <TouchableOpacity
           style={
@@ -451,11 +481,11 @@ const ShopTiming = props => {
           style={{
             flexDirection: 'row',
             alignItems: 'center',
-            right: 12,
+            right: 5,
           }}>
           <Text style={styles.closeTxt}>Closed</Text>
           <CheckBox
-            style={[styles.radioBtn, { marginLeft: 5 }]}
+            style={[styles.radioBtn, { marginLeft: 8 }]}
             value={checked[index]}
             tintColors={{ true: PRIMARY, false: DARKGREY }}
             disabled={false}
@@ -466,9 +496,9 @@ const ShopTiming = props => {
     );
   };
 
-  const removeImage = uri => {
+  const removeImage = url => {
     var c = images.filter(i => {
-      return i.uri !== uri;
+      return i.url !== url;
     });
     setImages(c);
   };
@@ -750,7 +780,7 @@ const styles = StyleSheet.create({
     marginLeft: 15,
   },
   timeButton: {
-    width: '15%',
+    width: '20%',
     height: 30,
     borderRadius: 4,
     borderColor: 'rgba(77, 83, 91, 0.2)',
@@ -844,3 +874,4 @@ const styles = StyleSheet.create({
     height: 20,
   }
 });
+

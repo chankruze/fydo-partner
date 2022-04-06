@@ -23,6 +23,7 @@ import { getAmenities, getMyShop } from '../../services/shopService';
 import { SvgUri } from 'react-native-svg';
 import { getOffers } from '../../services/offerService';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { setShop } from '../../store/actions/user.action';
 
 const mapStateToProps = (state) => {
   return {
@@ -30,7 +31,13 @@ const mapStateToProps = (state) => {
   }
 }
 
-const MyShop = ({ navigation, user }) => {
+const mapDispatchToProps = dispatch => {
+  return {
+    setShop: myshop => dispatch(setShop(myshop))
+  };
+};
+
+const MyShop = ({ navigation, user, setShop }) => {
   // const store = response
   const [isOpen, setIsOpen] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -55,6 +62,7 @@ const MyShop = ({ navigation, user }) => {
         const json = await response.json();
         if (json) {
           setData(json);
+          setShop(json);
         }
       } catch (error) {
         console.log(error);
@@ -145,7 +153,7 @@ const MyShop = ({ navigation, user }) => {
     const today = new Date().getDay();
     let d = item.dayOfWeek.slice(0, 3);
 
-    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 
     return (
       <View
@@ -214,6 +222,8 @@ const MyShop = ({ navigation, user }) => {
             barStyle="dark-content"
             translucent={true}
           />
+          {console.log("data-->", data)}
+
           <ImageSlider images={data?.images} navigation={navigation} />
           <View style={styles.contentContainer}>
             <View style={styles.nameRow}>
@@ -321,18 +331,18 @@ const MyShop = ({ navigation, user }) => {
               />
             </View>
           )}
-          {/* <View style={styles.editButton}>
-              <TouchableOpacity onPress={()=> navigation.navigate('RegisterShop')}>
-              <FontAwesomeIcon name="edit" color="white" size={25}/>
+          <View style={styles.editButton}>
+            <TouchableOpacity onPress={() => navigation.navigate('RegisterShop', { edit: data })}>
+              <FontAwesomeIcon name="edit" color="white" size={25} />
 
-              </TouchableOpacity>
-          </View> */}
+            </TouchableOpacity>
+          </View>
         </View>
       }></FlatList>
   );
 };
 
-export default connect(mapStateToProps)(MyShop);
+export default connect(mapStateToProps, mapDispatchToProps)(MyShop);
 
 const styles = StyleSheet.create({
   container: {

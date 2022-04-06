@@ -14,7 +14,7 @@ const mapDispatchToProps = (dispatch) => {
 
 const mapStateToProps = (state) => {
   return {
-    user: state?.userReducer?.user
+    user: state?.userReducer?.user,
   }
 }
 

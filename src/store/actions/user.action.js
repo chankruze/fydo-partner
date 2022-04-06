@@ -1,6 +1,6 @@
-import { CLEAR_USER, SET_LANGUAGE, SET_USER } from "../types";
+import { CLEAR_USER, SET_LANGUAGE, SET_USER, SET_SHOP } from "../types";
 
-export function setUser(user){
+export function setUser(user) {
     return {
         type: SET_USER,
         payload: {
@@ -9,7 +9,7 @@ export function setUser(user){
     }
 }
 
-export function setLanguage(language){
+export function setLanguage(language) {
     console.log(language)
     return {
         type: SET_LANGUAGE,
@@ -19,7 +19,14 @@ export function setLanguage(language){
     }
 }
 
-export function clearUser(){
+export function setShop(myshop) {
+    return {
+        type: SET_SHOP,
+        payload: myshop
+    }
+}
+
+export function clearUser() {
     return {
         type: CLEAR_USER
     }

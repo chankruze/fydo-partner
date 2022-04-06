@@ -36,65 +36,90 @@ const mapStateToProps = state => {
 };
 
 const ShopDetails = ({ navigation, route, user }) => {
-  const [parking, setParking] = useState(false);
-  const [wheelchair, setWheelchair] = useState(false);
-  const [foodCourt, setFoodCourt] = useState(false);
-  const [instoreShopping, setInstoreShopping] = useState(false);
+  const shopDetails = route?.params?.data;
 
-  const [premiumService, setPremiumService] = useState(false);
-  const [salesExecutive, setSalesExecutive] = useState(false);
-  const [phonenum, setPhoneNum] = useState(false);
+  const [premiumService, setPremiumService] = useState(
+    shopDetails?.bankDetails ? true : false
+  );
+  const [salesExecutive, setSalesExecutive] = useState(
+    shopDetails?.onboardedThroughExecutive ? true : false
+  );
+  const [phonenum, setPhoneNum] = useState(
+    shopDetails?.onboardedThroughExecutive ? shopDetails?.onboardedThroughExecutive
+      : ''
+  );
   const [error, setError] = useState(null);
-  const [accountNumber, setAccountNumber] = useState(null);
-  const [bankName, setBankName] = useState(null);
-  const [IFSC, setIFSC] = useState(null);
-  const [UPI, setUPI] = useState(null);
+  const [accountNumber, setAccountNumber] = useState(
+    shopDetails?.bankDetails?.accNumber ? shopDetails?.bankDetails?.accNumber : ''
+  );
+  const [bankName, setBankName] = useState(
+    shopDetails?.bankDetails?.name ? shopDetails?.bankDetails?.name : ''
+  );
+  const [IFSC, setIFSC] = useState(
+    shopDetails?.bankDetails?.ifsc ? shopDetails?.bankDetails?.ifsc : ''
+  );
+  const [UPI, setUPI] = useState(
+    shopDetails?.bankDetails?.upiIds ? shopDetails?.bankDetails?.upiIds[0] : ''
+  );
   const [amenities, setAmenities] = useState([]);
   const [newAmenities, setNewAmenities] = useState([]);
-  const [amenityCheckbox, setAmenityCheckbox] = useState([]);
 
   useEffect(() => {
+    // console.log("kk-->", shopDetails)
     fetchAllAmenities();
   }, []);
 
-  fetchAllAmenities = async () => {
+  useEffect(() => {
+    fetchOldAmenities();
+  }, [amenities])
+
+  const fetchOldAmenities = () => {
+    if (shopDetails?.amenities?.length > 0) {
+      var newAme = amenities.filter(function (o1) {
+        return shopDetails?.amenities.some(function (o2) {
+          return o1._id == o2
+        })
+      });
+      let newA = [];
+      newAme.forEach((i) => {
+        let data = {
+          _id: i._id,
+          name: i.name,
+          iconUrl: i.iconUrl
+        }
+        newA.push(data);
+      })
+      setNewAmenities(newA)
+    }
+  }
+
+  const fetchAllAmenities = async () => {
     try {
       const response = await getAmenities(user?.accessToken);
       const data = await response.json();
       setAmenities(data);
-      setAmenityCheckbox(new Array(data.length).fill(false));
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handleAmenityCheckbox = id => {
-    const tempArray = amenityCheckbox.map((item, index) => {
-      if (index == id) {
-        let bool = !item;
-        return bool;
-      } else {
-        return item;
-      }
-    });
-    setAmenityCheckbox(tempArray);
-    checkAmenities(tempArray[id], amenities[id]);
-  };
-
-  const checkAmenities = (checked, item) => {
+  const handleAmenityCheckbox = (checked, item) => {
     if (checked) {
       newAmenities.push({
         _id: item._id,
         name: item.name,
         iconUrl: item.iconUrl,
       });
-      console.log(JSON.stringify(newAmenities, null, 3));
       return;
     }
     const remove = newAmenities.filter(i => {
       return i._id != item._id;
     });
     setNewAmenities(remove);
+  };
+
+  const checkAmenities = (id) => {
+    return shopDetails?.amenities?.includes(id)
   };
 
   const renderAmenities = ({ item, index }) => {
@@ -109,18 +134,19 @@ const ShopDetails = ({ navigation, route, user }) => {
         }}>
         <Text style={styles.radioText}>{item.name}</Text>
         <CheckBox
+          key={item._id}
           style={styles.radioBtn}
-          value={amenityCheckbox[index]}
+          value={checkAmenities(item._id)}
           tintColors={{ true: PRIMARY, false: DARKGREY }}
           disabled={false}
-          onValueChange={handleAmenityCheckbox.bind(this, index)}
+          onValueChange={(e) => handleAmenityCheckbox(e, item)}
         />
       </View>
     );
   };
 
   const next = () => {
-    console.log(JSON.stringify(newAmenities, null, 2));
+    // console.log(JSON.stringify(newAmenities, null, 2));
     let newData = {
       ...route?.params?.data,
       bankDetails: {
@@ -130,8 +156,9 @@ const ShopDetails = ({ navigation, route, user }) => {
         upiIds: [UPI],
       },
       onboardedThroughExecutive: phonenum,
-      amenities: [...newAmenities],
+      amenities: newAmenities,
     };
+    // console.log("dd-->", newData);
     navigation.navigate('ShopTiming', { data: newData });
   };
 

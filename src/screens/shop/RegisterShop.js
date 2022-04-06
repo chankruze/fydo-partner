@@ -40,6 +40,9 @@ import { generatePresignUrl } from '../../services/presignUrlService';
 import { connect } from 'react-redux';
 import Toast from 'react-native-simple-toast';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { useIsFocused } from '@react-navigation/native';
+import { getUser } from '../../utils/defaultPreference';
+import { getIpAddress } from 'react-native-device-info';
 
 const HEIGHT = Dimensions.get('screen').height;
 
@@ -57,41 +60,66 @@ const options = {
 
 const mapStateToProps = (state) => {
   return {
-    user: state?.userReducer?.user
+    user: state?.userReducer?.user,
+    myshop: state?.userReducer?.myshop,
   }
 }
 
-function RegisterShop({ route, navigation, user }) {
+function RegisterShop({ route, navigation, user, myshop }) {
 
-  const [ownerName, setOwnerName] = useState('');
-  // const [phoneNumber, setPhoneNumber] = useState(route.params.phoneNumber);
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [shopName, setShopName] = useState('');
-  const [address, setAddress] = useState(
-    route.params ? route.params.address : null,
+  const isFocused = useIsFocused();
+  // const edit = route.params?.edit;
+
+  const [ownerName, setOwnerName] = useState(
+    myshop ? myshop.owner?.ownerName : ''
   );
-  const [coordinates, setCoordinates] = useState(
-    route.params ? route.params.coordinates : null,
+  const [phoneNumber, setPhoneNumber] = useState(
+    myshop ? myshop.mobile : ''
   );
-  const [pincode, setPincode] = useState('');
+  const [shopName, setShopName] = useState(
+    myshop ? myshop.name : ''
+  );
+  const [address, setAddress] = useState('');
+  const [coordinates, setCoordinates] = useState([]);
+  const [pincode, setPincode] = useState(
+    myshop ? myshop?.address?.pin : ''
+  );
   const [website, setWebsite] = useState('');
-  const [shopType, setShopType] = useState('');
+  const [shopType, setShopType] = useState(
+    myshop ? myshop.type : ''
+  );
   const [error, setError] = useState({});
-  const [frontImg, setFrontImg] = useState(null);
-  const [backImg, setBacktImg] = useState(null);
-  const [idType, setIdType] = useState('');
-  // const [user, setUser] = useState('');
+  const [frontImg, setFrontImg] = useState(
+    myshop ? myshop?.documents[0]?.documentFrontUrl : ''
+  );
+  const [backImg, setBacktImg] = useState(
+    myshop ? myshop?.documents[0]?.documentBackUrl : ''
+  );
+  const [idType, setIdType] = useState(
+    myshop ? myshop?.documents[0]?.documentType : ''
+  );
 
   useEffect(() => {
-    console.log("add-->", route.params?.address);
-    // if (route.params !== undefined) {
-    //   const newAddress = route.params.address;
-    //   setCoordinates(route.params?.coordinates)
-    //   setAddress(newAddress);
-    // } else {
-    //   return;
-    // }
-  }, []);
+    if (isFocused) {
+      // console.log("jj-->", myshop);
+      getAddress()
+    }
+  }, [isFocused]);
+
+  const getAddress = () => {
+    const map = route.params?.map;
+    // const edit = route.params?.edit;
+    if (map) {
+      setAddress(map?.address)
+      setCoordinates(map?.coordinates)
+    } else if (myshop) {
+      setAddress(myshop?.address?.addressLine1)
+      setCoordinates(myshop?.location)
+    } else {
+      setAddress('')
+      setCoordinates([])
+    }
+  }
 
   const isValidate = () => {
     const error = {};
@@ -188,7 +216,10 @@ function RegisterShop({ route, navigation, user }) {
 
   const next = async () => {
     if (isValidate()) {
+      // const user = await getUser();
+
       let data = {
+        ...myshop,
         name: shopName,
         mobile: phoneNumber,
         type: shopType,
@@ -196,12 +227,9 @@ function RegisterShop({ route, navigation, user }) {
           ownerName: ownerName,
           ownerMobile: phoneNumber
         },
-        location: [
-          route.params?.coordinates.longitude,
-          route.params?.coordinates.latitude
-        ],
+        location: coordinates,
         address: {
-          addressLine1: route.params?.address,
+          addressLine1: address,
           pin: pincode
         },
         documents: [
@@ -212,6 +240,7 @@ function RegisterShop({ route, navigation, user }) {
           }
         ]
       };
+      // console.log("ddds-->", data);
       navigation.navigate('ShopDetails', { data: data });
     }
   };
@@ -282,7 +311,7 @@ function RegisterShop({ route, navigation, user }) {
           <View style={styles.box}>
             <EntypoIcon name="location" size={25} color={DARKBLACK} />
             <TextInput
-              value={route.params?.address}
+              value={address}
               editable={false}
               multiline
               style={[styles.input, { width: '80%' }]}
@@ -316,7 +345,7 @@ function RegisterShop({ route, navigation, user }) {
             <FontAwesome name="id-card-o" size={18} color={DARKBLACK} />
             <SelectDropdown
               data={idCards}
-              defaultButtonText="Your ID Proof"
+              defaultButtonText={myshop ? idType : "Your ID Proof"}
               onSelect={(selectedItem, index) => {
                 setIdType(selectedItem)
               }}
@@ -375,10 +404,10 @@ function RegisterShop({ route, navigation, user }) {
             <SelectDropdown
               data={shopTypes}
               onSelect={(selectedItem, index) => {
-                console.log(selectedItem, index);
+                // console.log(selectedItem, index);
                 setShopType(selectedItem);
               }}
-              defaultButtonText="Type of store"
+              defaultButtonText={shopType ? shopType : "Type of store"}
               renderDropdownIcon={() => (
                 <EntypoIcon name="chevron-down" size={25} color="#000" />
               )}
