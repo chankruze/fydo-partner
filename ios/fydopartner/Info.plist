@@ -35,6 +35,8 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSContactsUsageDescription </key>
+	<string>${PRODUCT_NAME} wants to use your contacts to provide information</string>
 	<key>NSCameraUsageDescription</key>
 	<string>${PRODUCT_NAME} Camera Usage</string>
 	<key>NSContactsUsageDescription</key>
