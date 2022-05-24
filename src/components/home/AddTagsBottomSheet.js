@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -8,31 +8,54 @@ import {
   TouchableOpacity,
   FlatList,
 } from 'react-native';
-import {PRIMARY, DARKBLACK, LIGHTBLUE} from '../../assets/colors';
+import {PRIMARY, DARKBLACK, LIGHTBLUE, WHITE} from '../../assets/colors';
 import BottomsheetIcon from './../../assets/icons/bottomsheet-icon.png';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import ButtonComponent from '../ButtonComponent';
+import { updateShop } from '../../services/shopService';
+import { connect } from 'react-redux';
+import { setShop } from '../../store/actions/user.action';
 
-export default function AddTagsBottomSheet({handleClosePress}) {
-  const [tags, setTags] = useState(['asfd', 'asdfsasdf', 'asdfasdf']);
+const AddTagsBottomSheet = ({user,myshop,setShop,triggerTagModal}) =>{
+  const [tags, setTags] = useState(myshop?.searchTags.length > 0 ? myshop.searchTags : [])
   const [tag, setTag] = useState(null);
-
   const onStartShouldSetResponder = () => {
     return true;
   };
-
-  const addTag = () => {
-    tags.push(tag);
-    console.log(tags);
-    setTags(tags);
-    setTag(null);
+  
+  const [error, setError] = useState({});
+  const isValidate = () => {
+    const error = {};
+    if (tag == null || tag?.trim() == '') {
+      error.tag = 'Enter The Tag';
+    }
+    setError(error);
+    if (Object.keys(error).length == 0) return true;
+    return false;
   };
-
+  
+  const addTag = () => {
+    if(isValidate()){
+      tags.push(tag);
+      console.log(tags);
+      setTags(tags);
+      setTag(null);
+    }
+  };
+  const handleClosePress = async () => {
+      myshop.searchTags = tags;
+      const response = await updateShop(user?.accessToken, myshop)
+      const json = await response.json();
+      if(json){
+        setShop(json)
+      }
+      triggerTagModal()
+  }
+  
   const handleInput = value => {
     setTag(value);
   };
-
   const renderItem = (item, index) => {
     return (
       <View style={styles.tag} key={index}>
@@ -60,17 +83,21 @@ export default function AddTagsBottomSheet({handleClosePress}) {
       </Text>
       <View style={styles.row}>
         <View style={styles.inputContainer}>
-          <Ionicons name="pricetag-outline" size={18} />
+          <Ionicons name="pricetag-outline" size={18} style={styles.inputIcon}/>
           <TextInput
             value={tag}
             onChangeText={handleInput}
             style={styles.input}
+            placeholder="Try Fruits"
           />
         </View>
         <TouchableOpacity onPress={addTag} style={styles.addButton}>
           <Text style={styles.addButtonLabel}>ADD</Text>
         </TouchableOpacity>
       </View>
+      {error.tag && (
+        <Text style={styles.error}>{error.tag}</Text>
+      )}
       <View style={styles.tags}>
         {tags?.map((tag, index) => {
           return renderItem(tag, index);
@@ -87,10 +114,21 @@ export default function AddTagsBottomSheet({handleClosePress}) {
     </View>
   );
 }
-
+const mapStateToProps = (state) => {
+  return {
+    user: state?.userReducer?.user,
+    myshop:state?.userReducer?.myshop
+  }
+}
+const mapDispatchToProps = dispatch => {
+  return {
+    setShop: myshop => dispatch(setShop(myshop))
+  };
+};
+export default connect(mapStateToProps,mapDispatchToProps)(AddTagsBottomSheet) 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#f7f8fa',
+    backgroundColor: WHITE,
     position: 'absolute',
     width: '100%',
     bottom: 0,
@@ -98,7 +136,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 10,
     zIndex: 10,
     paddingHorizontal: 10,
-    paddingBottom: 50,
+    paddingBottom: 50
   },
   bottomSheetIcon: {
     height: 8,
@@ -132,6 +170,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 10,
+  },
+  inputIcon: {
+    marginRight:5,
   },
   row: {
     flexDirection: 'row',
@@ -175,5 +216,11 @@ const styles = StyleSheet.create({
     marginRight: 10,
     color: PRIMARY,
     fontFamily: 'Gilroy-Medium',
+  },
+  error: {
+    fontSize: 12,
+    color: 'red',
+    fontFamily: 'Gilroy-Regular',
+    paddingLeft: 15,
   },
 });

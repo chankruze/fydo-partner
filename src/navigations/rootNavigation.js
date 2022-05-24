@@ -3,7 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import MainNavigation from './mainNavigation';
 import SettingScreen from '../screens/SettingScreen';
-import { PRIMARY } from '../assets/colors';
+import { PRIMARY, WHITE } from '../assets/colors';
 import FAQScreen from '../screens/FAQScreen';
 import FeedbackScreen from '../screens/FeedbackScreen';
 import SupportServiceScreen from '../screens/SupportServiceScreen';
@@ -17,6 +17,9 @@ import MyShop from '../screens/shop/MyShop';
 import ShopTiming from '../screens/shop/ShopTiming'
 import SplashScreen from '../screens/SplashScreen';
 import OnboardingScreen from '../screens/OnboardingScreen';
+import { textScale } from '../utils/responsiveSize';
+import MySalesScreen from '../screens/MySalesScreen';
+import ReferralHistoryScreen from '../screens/ReferralHistoryScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -27,7 +30,7 @@ function RootNavigation() {
           <Stack.Screen name="Main" component={MainNavigation} />
           <Stack.Screen name="Auth" component={AuthNavigation} />
           <Stack.Navigator/> */}
-      <Stack.Navigator initialRouteName="Splash">
+      <Stack.Navigator initialRouteName="Splash" screenOptions={{headerBackTitleVisible: false}}>
         <Stack.Screen options={{ headerShown: false }} name="RegisterShop" component={RegisterShop} />
         <Stack.Screen options={{ headerShown: false }} name="Maps" component={MapScreen} />
         <Stack.Screen options={{ headerShown: false }} name="ShopDetails" component={ShopDetails} />
@@ -50,7 +53,7 @@ function RootNavigation() {
           component={SettingScreen}
           options={{
             headerShown: true,
-            headerTintColor: 'white',
+            headerTintColor: WHITE,
             headerStyle: {
               backgroundColor: PRIMARY,
             },
@@ -60,7 +63,7 @@ function RootNavigation() {
           name="FAQ"
           component={FAQScreen}
           options={{
-            headerTintColor: 'white',
+            headerTintColor: WHITE,
             headerStyle: {
               backgroundColor: PRIMARY,
             },
@@ -70,28 +73,35 @@ function RootNavigation() {
           name="Feedback"
           component={FeedbackScreen}
           options={{
-            headerTintColor: 'white',
+            headerTintColor: WHITE,
             headerStyle: {
               backgroundColor: PRIMARY,
             },
           }}
         />
-        <Stack.Screen
+        {/* <Stack.Screen
           name="SupportService"
           component={SupportServiceScreen}
           options={{
-            headerTintColor: 'white',
+            headerTintColor: WHITE,
+            headerTitleAlign: 'left',
+            headerTitleStyle: {
+              fontSize: textScale(15),
+              //fontWeight:'bold'
+            },
+            headerTitleAlign: 'left',
             headerStyle: {
               backgroundColor: PRIMARY,
             },
+            
           }}
-        />
+        /> */}
         <Stack.Screen
           name="AboutUs"
           component={AboutUsScreen}
           options={{
             title: 'About Us',
-            headerTintColor: 'white',
+            headerTintColor: WHITE,
             headerStyle: {
               backgroundColor: PRIMARY,
             },
@@ -102,7 +112,29 @@ function RootNavigation() {
           component={MyOffersScreen}
           options={{
             title: 'My Offers',
-            headerTintColor: 'white',
+            headerTintColor: WHITE,
+            headerStyle: {
+              backgroundColor: PRIMARY,
+            },
+          }}
+        />
+        {/* <Stack.Screen
+          name="MySales"
+          component={MySalesScreen}
+          options={{
+            title: 'My Sales',
+            headerTintColor: WHITE,
+            headerStyle: {
+              backgroundColor: PRIMARY,
+            },
+          }}
+        /> */}
+        <Stack.Screen
+          name="ReferralHistory"
+          component={ReferralHistoryScreen}
+          options={{
+            title: 'Referral History',
+            headerTintColor: WHITE,
             headerStyle: {
               backgroundColor: PRIMARY,
             },
@@ -113,7 +145,7 @@ function RootNavigation() {
           component={SupportServiceScreen}
           options={{
             title: 'Support and service',
-            headerTintColor: 'white',
+            headerTintColor: WHITE,
             headerStyle: {
               backgroundColor: PRIMARY,
             },
@@ -124,7 +156,7 @@ function RootNavigation() {
           component={ReferAndEarnScreen}
           options={{
             title: 'Refer and earn',
-            headerTintColor: 'white',
+            headerTintColor: WHITE,
             headerStyle: {
               backgroundColor: PRIMARY,
             },

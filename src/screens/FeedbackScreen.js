@@ -6,6 +6,7 @@ import {PRIMARY} from '../assets/colors';
 import {feedback, sendFeedback} from '../services/feedbackService';
 import ButtonComponent from '../components/ButtonComponent';
 import { connect } from 'react-redux';
+import { moderateScale, moderateScaleVertical, textScale } from '../utils/responsiveSize';
 
 const mapStateToProps = (state) => {
   return {
@@ -114,10 +115,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    padding: 10,
+    padding: moderateScale(15),
   },
   title: {
-    fontSize: 18,
+    fontSize: textScale(18),
     color: 'black',
     fontFamily: 'Gilroy-Medium',
     letterSpacing: 0.3,
@@ -125,44 +126,47 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: '#eeeeee',
-    borderRadius: 5,
-    marginVertical: 10,
+    borderRadius: moderateScale(5),
+    marginVertical: moderateScaleVertical(10),
     padding: 10,
-    fontSize: 15,
+    fontSize: textScale(15),
     textAlignVertical: 'top',
     fontFamily: 'Gilroy-Medium',
     letterSpacing: 0.3,
+    height: moderateScale(267),
+    justifyContent: "flex-start"
   },
   subTitle: {
-    fontSize: 16,
+    fontSize: textScale(16),
     color: 'black',
     fontFamily: 'Gilroy-Medium',
     letterSpacing: 0.3,
+    marginTop:moderateScaleVertical(20)
 
   },
   label: {
-    marginVertical: 10,
+    marginVertical: moderateScaleVertical(10),
     color: 'black',
-    fontSize: 13,
+    fontSize: textScale(13),
     fontFamily: 'Gilroy-Medium',
     letterSpacing: 0.3,
 
   },
   ratingContainer: {
     alignSelf: 'flex-start',
-    marginBottom: 20,
+    marginBottom: moderateScale(20),
   },
   buttonContainer: {
-    marginTop: 20,
+    marginTop: moderateScaleVertical(20),
     width: '80%',
     alignSelf: 'center'
   },
   starContainer: {
-    marginTop: 20,
+    marginTop: moderateScaleVertical(20),
     alignSelf: 'center',
   },
   error: {
-    marginBottom: 20,
+    marginBottom: moderateScale(20),
     color: 'red',
     fontSize: 12
   }

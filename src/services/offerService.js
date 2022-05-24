@@ -12,6 +12,7 @@ export function addOffer(token, data){
             title: data?.title,
             description: data?.description,
             startDate: data?.startDate,
+            searchTags: data?.searchTags,
             endDate: data?.endDate,
             type: 'OFFER',
             imageUrl: data?.imageUrl
@@ -19,8 +20,8 @@ export function addOffer(token, data){
     })
 }
 
-export function getOffers(token){
-    return fetch(GET_OFFERS, {
+export function getOffers(token,limit,page){
+    return fetch(GET_OFFERS + `?type=OFFER&limit=${limit}&skip=${page}` , {
         method: 'GET',
         headers: { 
             'Content-Type': 'application/json',

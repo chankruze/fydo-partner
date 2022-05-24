@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
-import {ActivityIndicator, FlatList, SafeAreaView, StyleSheet, Text, View, Image} from 'react-native';
+import {ActivityIndicator, FlatList, SafeAreaView, StyleSheet, Text, View,RefreshControl} from 'react-native';
 import { connect } from 'react-redux';
-import { PRIMARY } from '../../assets/colors';
+import { PRIMARY, WHITE } from '../../assets/colors';
+import CardOffers from '../../components/myoffers/CardOffers';
 import { getOffers } from '../../services/offerService';
-import OfferIcon from './../../assets/icons/offer.png';
+import { moderateScaleVertical, textScale } from '../../utils/responsiveSize';
+// import OfferIcon from './../../assets/icons/offer.png';
 
 const mapStateToProps = (state) => {
     return {
@@ -17,75 +19,129 @@ class RequestedOffersScreen extends Component{
         super(props);
         this.state = {
             offers: [],
-            loading: false
+            isLoading: false,
+            isRefresh: false,
+            loadeMore: false,
+            limit: 10,
+            skip: 0,
         }
+        //this.fetchOffers = this.fetchOffers.bind(this)
+        this.onEndReached = this.onEndReached.bind(this)
+        this.handlRefresh = this.handlRefresh.bind(this)
     }
 
     componentDidMount(){
-        this.fetchOffers();
+        this.fetchOffers(true);
     }
 
-    async fetchOffers(){
+    async fetchOffers(val,loadeMore){
         let {user} = this.props;
-        this.setState({loading: true});
+        if (loadeMore) {
+            this.setState({ loadeMore: true })
+        }
+        if (val) {
+            this.setState({ isLoading: true })
+        }
+
+        else {
+            this.setState({ isRefresh: true })
+        }
         try {
-            const response = await getOffers(user?.accessToken);
+            let {limit,skip} = this.state;
+            const paddingJson = []
+            const response = await getOffers(user?.accessToken,limit,skip);
             const json = await response.json();
-            this.setState({loading: false, offers: json});
+            json.filter((data)=> {
+                if(data.status == 'PENDING'){
+                    paddingJson.push(data)
+                }
+            })
+            console.log('paddingJson--',response)
+            this.setState({
+                offers:[...this.state.offers, ...paddingJson],
+                isLoading: false,
+                isRefresh: false,
+                skip: skip + limit,
+                loadeMore: false,
+            })
+           // this.setState({loading: false, offers: paddingJson});
         } catch (error) {
             console.log(error);
-            this.setState({loading: false});
+            this.setState({isLoading: false});
         }
     }
-
     renderItem({item}){
-        let {title, status} = item;
         return (
-            <View style={styles.offer}>
-                <Image 
-                    source={OfferIcon}
-                    style={styles.icon}/>
-                <Text style={styles.title}>{title}</Text>
-                <View style={Object.assign({...styles.status}, {backgroundColor: status == 'PENDING'? '#ffb74d': '#81c784'})}>
-                    <Text style={styles.statusLabel}>{status}</Text>
-                </View>
-            </View>
+            <CardOffers item={item}/>
         )
     }
+    handlRefresh(){
+       this.fetchOffers(false)
+    }
 
+    onEndReached(){
+       this.fetchOffers(false, true)
+    }
     render(){
 
-        let {offers, loading} = this.state;
+        let {offers, isLoading} = this.state;
 
-        if(loading){
+        if(isLoading){
             return (
-                <SafeAreaView style={styles.container}>
-                    <ActivityIndicator 
-                        size="large" 
-                        color={PRIMARY}
-                    />
-                </SafeAreaView>
+                <View style={styles.container}>
+                    <SafeAreaView style={{flex:1}}>
+                        <ActivityIndicator 
+                            size="large" 
+                            color={PRIMARY}
+                        />
+                    </SafeAreaView>
+                </View>
             )
         }
 
         if(offers.length == 0)
             return (
-                <SafeAreaView style={styles.container}>
-                    <Text style={styles.info}>
-                        We have no item to show here
-                    </Text>
-                </SafeAreaView>
+                <View style={styles.container}>
+                    <SafeAreaView style={{flex:1}}>
+                        <Text style={styles.info}>
+                            We have no item to show here
+                        </Text>
+                    </SafeAreaView>
+                </View>
             )
 
         return (
-            <SafeAreaView style={styles.container}>
+           
+            <View style={styles.container}>
+                 <SafeAreaView style={{flex:1}}>
                 <FlatList 
+                    contentContainerStyle={{paddingBottom:moderateScaleVertical(90),marginTop:moderateScaleVertical(15)}}
+                    showsVerticalScrollIndicator={false}
                     data={offers}
                     keyExtractor={item => item?._id.toString()}
                     renderItem={this.renderItem}
                     ItemSeparatorComponent={() => <View style={styles.separator}/>}
+                    onEndReachedThreshold={0.01}
+                    onMomentumScrollBegin={() => {
+                        onEndReachedMomentum = false
+                    }}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={this.state.isRefresh}
+                            onRefresh={this.handlRefresh}
+                            color={PRIMARY}
+                        />
+                    }
+                    ListFooterComponent={
+                       this.state.loadeMore && (<View style={{ marginTop: moderateScaleVertical(20) }}>
+                            <ActivityIndicator color={PRIMARY} size="large" />
+                        </View>)
+                    }
+                    onEndReached={this.onEndReached}
                 />
-            </SafeAreaView>
+                 </SafeAreaView>
+            </View>
+           
         )
     }
 }
@@ -95,43 +151,16 @@ export default connect(mapStateToProps)(RequestedOffersScreen);
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'white'
+        backgroundColor: WHITE,
     },
     info: {
         alignSelf: 'center',
-        marginTop: 15,
+        marginTop: moderateScaleVertical(14),
         fontWeight: 'bold',
-        fontSize: 16,
+        fontSize: textScale(16),
         letterSpacing: .2
     },
-    icon: {
-        height: 30,
-        width: 30
-    },
-    offer: {
-        paddingVertical: 20,
-        paddingHorizontal: 20,
-        flexDirection: 'row',
-        alignItems: 'center'
-    },
     separator: {
-        borderBottomColor: 'lightgray',
-        borderBottomWidth: .8
-    },
-    title: {
-        flex: 1,
-        marginHorizontal: 10,
-        color: 'black',
-        fontWeight: '400'
-    },
-    status: {
-        backgroundColor: 'orange',
-        alignSelf: 'flex-end',
-        borderRadius: 5
-    },
-    statusLabel: {
-        paddingHorizontal: 20,
-        paddingVertical: 3,
-        fontSize: 13
-    }
+        marginBottom:moderateScaleVertical(10)
+     },
 })

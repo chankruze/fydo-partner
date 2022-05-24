@@ -2,14 +2,17 @@ import { Dimensions, StyleSheet, TouchableOpacity, Image, View, Text, ToastAndro
 import { Shadow } from 'react-native-shadow-2';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { LIGHTGREY } from '../../assets/colors';
-
+import imageLoading from '../../assets/images/image-loading.png'
+import imageNotUploaded from '../../assets/images/image-not-uploaded.png'
 import React, {useState} from 'react'
+import { moderateScale } from '../../utils/responsiveSize';
 
 const WIDTH = Dimensions.get('screen').width;
 
 const OfferComponent = ({token, item, navigation, type}) => {
   const { _id, pics, title, extra, imageUrl, isFavourite, description } = item;
   const [favourite, setFavourite] = useState(true)
+  const [loading, setLoading] = React.useState(false);
   return (
     <Shadow
     distance={1}
@@ -27,8 +30,13 @@ const OfferComponent = ({token, item, navigation, type}) => {
         style={styles.listItem}
         >
         <Image
-            source={{ uri: imageUrl?.[0] }}
-            style={styles.image}
+            source={imageUrl[0] ? { uri: imageUrl && imageUrl[0] } : imageNotUploaded}
+            style={{...styles.image,display: loading ? 'none': 'flex'}}
+            onLoadStart={() => setLoading(true)}
+            onLoadEnd={() => setLoading(false)}
+        /><Image 
+        source={imageLoading}
+        style={{...styles.image,display:loading ? 'flex' : 'none'}}
         />
         <View style={styles.content}>
             <Text style={styles.dealTitle} numberOfLines={1}>{title}</Text>
@@ -64,7 +72,7 @@ const styles = StyleSheet.create({
       overflow: 'hidden'
   },
   image: {
-      height: '100%',
+    height: moderateScale(120),
       width: '100%',
       // borderRadius: 10,
       resizeMode: 'stretch',

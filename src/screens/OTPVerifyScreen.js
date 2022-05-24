@@ -7,8 +7,10 @@ import {
   Image,
   TextInput,
   Dimensions,
+  Keyboard,
+  Clipboard,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DARKBLUE, DARKGREY, GREY, LIGHTBLACK, PRIMARY } from '../assets/colors';
 import { sendLoginOTP, verifyLoginOTP } from '../services/authService';
 import { setUser } from '../store/actions/user.action';
@@ -20,7 +22,7 @@ import OTPTextInput from 'react-native-otp-textinput';
 import WithNetInfo from '../components/hoc/withNetInfo';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { SCREENS } from '../constants/authScreens';
-
+import RNOtpVerify from 'react-native-otp-verify';
 const HEIGHT = Dimensions.get('screen').height;
 
 const mapDispatchToProps = function (dispatch) {
@@ -38,7 +40,25 @@ const OTPVerifyScreen = ({ navigationData, navigation, handleNextScreen, setUser
   const [loading, setLoading] = useState(false);
 
   const otpInput = createRef();
+  useEffect(()=> {
+    getHash = () =>
+    RNOtpVerify.getHash()
+      .then(console.log)
+      .catch(console.log);
 
+    startListeningForOtp = () =>
+    RNOtpVerify.getOtp()
+      .then(p => RNOtpVerify.addListener(otpHandler))
+      .catch(p => console.log(p));
+      
+      return () => RNOtpVerify.removeListener();
+  },[])
+  const otpHandler = (message) => {
+      const otp = /(\d{4})/g.exec(message)[1];
+      setOtp(otp)
+      Clipboard.setString(otp);
+      Keyboard.dismiss()
+  }
   const validateInput = () => {
     if (otp == null || otp.trim() == '') {
       setError('* Required');

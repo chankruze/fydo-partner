@@ -75,7 +75,7 @@ class SettingScreen extends Component {
 
     navigateToSupportServiceScreen() {
         let { navigation } = this.props;
-        navigation.navigate('SupportService');
+        navigation.navigate('Support');
     }
 
     navigateToAboutUsScreen() {

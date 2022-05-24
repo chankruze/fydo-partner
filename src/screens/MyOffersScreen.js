@@ -3,7 +3,7 @@ import {SafeAreaView, StyleSheet, TouchableOpacity, StatusBar, Image, Modal, Vie
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import LiveOffersScreen from './myoffers/LiveOffersScreen';
 import RequestedOffersScreen from './myoffers/ReqestedOffersScreen';
-import { PRIMARY } from '../assets/colors';
+import { PRIMARY, WHITE } from '../assets/colors';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MyOffersBottomSheet from '../components/myoffers/MyOffersBottomSheet';
 import { connect } from 'react-redux';
@@ -91,12 +91,14 @@ class MyOffersScreen extends Component{
 
     render(){
         return (
-            <SafeAreaView style={styles.container}>
+            // <SafeAreaView style={styles.container}>
+            // </SafeAreaView>
+            <View style={styles.container}>
                 <StatusBar 
                     backgroundColor={PRIMARY}
                     barStyle="light-content" 
                 />
-                <TouchableOpacity
+                {/* <TouchableOpacity
                     onPress={this.triggerModal} 
                     style={styles.fab}>
                     <MaterialIcons 
@@ -104,10 +106,10 @@ class MyOffersScreen extends Component{
                         color='white'
                         name='add'
                     />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 {this.renderTabs()}
-                {this.state.modalVisible && this.renderModal()}
-            </SafeAreaView>
+                {/* {this.state.modalVisible && this.renderModal()} */}
+            </View>
         )
     }
 }
@@ -116,7 +118,8 @@ export default connect(mapStateToProps)(MyOffersScreen);
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        backgroundColor:WHITE
     },
     fab: {
         width: 50,

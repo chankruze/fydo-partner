@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import {View, StyleSheet, Image, Text, TouchableOpacity, TextInput, ActivityIndicator} from 'react-native';
-import { PRIMARY } from '../../assets/colors';
+import { BLACK, PRIMARY, WHITE } from '../../assets/colors';
 import BottomsheetIcon from './../../assets/icons/bottomsheet-icon.png';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 import Dialog from "react-native-dialog";
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import { generatePresignUrl } from '../../services/presignUrlService';
 import { addOffer } from '../../services/offerService';
 import uuid from 'react-native-uuid';
+import { moderateScale } from '../../utils/responsiveSize';
 
 export default function MyOffersBottomSheet({token, toggle}){
 
@@ -24,7 +25,8 @@ export default function MyOffersBottomSheet({token, toggle}){
     const [dialogVisible, setDialogVisible] = useState(false);
     const [startDate, setStartDate] = useState(new Date().getTime());
     const [endDate, setEndDate] = useState(new Date().getTime());
-
+    const [endTimePicker, setEndTimePicker] = useState(false);
+    const [startTimePicker, setStartTimePicker] = useState(false);
     const handleProductName = (productName) => {
         setProductName(productName)
     };
@@ -38,9 +40,11 @@ export default function MyOffersBottomSheet({token, toggle}){
     };
 
     const addTag = () => {
-        tags.push(tag);
-        setTags(tags);
-        setTag(null);
+        if(validateTag()){
+            tags.push(tag);
+            setTags(tags);
+            setTag(null);
+        }
     }
 
     const handleInput = (value) => {
@@ -52,13 +56,13 @@ export default function MyOffersBottomSheet({token, toggle}){
         setTags(list);
     }
 
-    const handleStartDate = (event, selectedDate) => {
+    const handleStartDate = (selectedDate) => {
         const currentDate = selectedDate;
         const milliseconds = new Date(currentDate).getTime();
         setStartDate(milliseconds);
     }
 
-    const handleEndDate = (event, selectedDate) => {
+    const handleEndDate = (selectedDate) => {
         const currentDate = selectedDate;
         const milliseconds = new Date(currentDate).getTime();
         setEndDate(milliseconds);
@@ -67,16 +71,13 @@ export default function MyOffersBottomSheet({token, toggle}){
     const pickImage = () => {
         setDialogVisible(true)
     }
-
-    const showDate = (onChange) => {
-        DateTimePickerAndroid.open({
-            value: new Date(),
-            onChange,
-            mode: 'date',
-            is24Hour: false
-          })
+    const handleStartTimePicker = () => {
+        setStartTimePicker(!startTimePicker);
     };
-
+    
+    const handleEndTimePicker = () => {
+        setEndTimePicker(!endTimePicker);
+    };
     const submit = async () => {
         let imagePath = null;
         if(validateInputs()){
@@ -97,6 +98,7 @@ export default function MyOffersBottomSheet({token, toggle}){
                 const response = await addOffer(token, {
                     title: productName,
                     description: description,
+                    searchTags: tags,
                     startDate: startDate,
                     endDate: endDate,
                     imageUrl: [imagePath]
@@ -140,15 +142,23 @@ export default function MyOffersBottomSheet({token, toggle}){
             error['productName'] = "Enter product name";
         if(!description)
             error['description'] = 'Enter description';
-
         if(Object.keys(error).length > 0){
             setError(error);
             return false;
         }
         return true;
-
     }
-    
+    const validateTag = () => {
+        let error = {};
+        setError({});
+        if(!tag)
+            error['tag'] = "Enter Tag";
+        if(Object.keys(error).length > 0){
+            setError(error);
+            return false;
+        }
+        return true;
+    }
 
     const getDate = (milliseconds) => {
         return moment(milliseconds).format('DD MMM');
@@ -268,7 +278,8 @@ export default function MyOffersBottomSheet({token, toggle}){
                 <View style={styles.inputContainer}>
                     <Ionicons 
                         name='pricetag-outline'
-                        size={18}/>
+                        size={18}
+                        style={styles.inputIcon}/>
                     <TextInput
                         value={tag}
                         onChangeText={handleInput}
@@ -282,6 +293,7 @@ export default function MyOffersBottomSheet({token, toggle}){
                     <Text style={styles.addButtonLabel}>ADD</Text>
                 </TouchableOpacity>
             </View>
+            {error?.tag && <Text style={styles.error}>{error?.tag}</Text>}
             <View style={styles.tags}>
                 {tags?.map((tag, index) => {
                     return renderItem(tag, index);
@@ -291,7 +303,7 @@ export default function MyOffersBottomSheet({token, toggle}){
                 <View style={styles.box}>
                     <Text style={styles.dateLabel}>Start Date</Text>
                     <TouchableOpacity 
-                        onPress={showDate.bind(this, handleStartDate)}
+                        onPress={handleStartTimePicker}
                         style={styles.dateContainer}>
                         <Text style={styles.date}>{getDate(startDate)}</Text>
                     </TouchableOpacity>
@@ -299,11 +311,23 @@ export default function MyOffersBottomSheet({token, toggle}){
                 <View style={styles.box}>
                     <Text style={styles.dateLabel}>End Date</Text>
                     <TouchableOpacity
-                        onPress={showDate.bind(this, handleEndDate)}
+                        onPress={handleEndTimePicker}
                         style={styles.dateContainer}>
                         <Text style={styles.date}>{getDate(endDate)}</Text>
                     </TouchableOpacity>
                 </View>
+                <DateTimePickerModal
+                    isVisible={startTimePicker}
+                    mode="date"
+                    onConfirm={handleStartDate}
+                    onCancel={setStartTimePicker}
+                />
+                <DateTimePickerModal
+                    isVisible={endTimePicker}
+                    mode="date"
+                    onConfirm={handleEndDate}
+                    onCancel={setEndTimePicker}
+                />
             </View>
             <TouchableOpacity
                 onPress={submit}
@@ -366,6 +390,9 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-end',
         marginLeft: 5
     },
+    inputIcon: {
+        marginRight:5,
+      },
     input: {
         borderBottomColor: 'lightgray',
         borderBottomWidth: 1,
@@ -412,10 +439,12 @@ const styles = StyleSheet.create({
         fontSize: 15
     },
     dateContainer: {
-        backgroundColor: '#eeeeee',
-        width:  80,
-        padding: 10,
-        borderRadius: 5,
+        borderWidth:1,
+        borderColor:BLACK,
+        backgroundColor: WHITE,
+        width: moderateScale(80),
+        padding: moderateScale(10),
+        borderRadius: moderateScale(5),
         justifyContent: 'center',
         alignItems: 'center'
     },

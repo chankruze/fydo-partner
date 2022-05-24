@@ -29,7 +29,6 @@ const FAQS = [
     question: 'Can I give special discounts in festive seasons?',
     answer:
       'Through fydo, any business partners can give discounts on any occasion they want, which will be clearly visible below their shop name and on the dashboard. Just fill the details in the business offers section and select your duration of promotional discounts and we will handle the rest.',
-    showMore: true,
   },
   {
     id: 4,

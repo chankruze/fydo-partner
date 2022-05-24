@@ -5,19 +5,22 @@ import HomeScreen from '../screens/HomeScreen';
 import { useHeaderHeight } from '@react-navigation/elements';
 import NotificationScreen from '../screens/NotificationScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { PRIMARY } from '../assets/colors';
+import { BLACK, PRIMARY, WHITE } from '../assets/colors';
 import { connect } from 'react-redux';
+import { moderateScaleVertical, textScale } from '../utils/responsiveSize';
+import TransactionScreen from '../screens/TransactionScreen';
 
 const Tab = createBottomTabNavigator();
 
 const mapStateToProps = (state) => {
   return {
     language: state?.userReducer?.language,
-    user: state?.userReducer?.user
+    user: state?.userReducer?.user,
+    myshop:state?.userReducer?.myshop,
   }
 }
 
-function MainNavigation({ language, user }) {
+function MainNavigation({ language, user,myshop }) {
 
   const headerHeight = useHeaderHeight();
 
@@ -38,7 +41,7 @@ function MainNavigation({ language, user }) {
         component={HomeScreen}
         options={(({ navigation }) => (
           {
-            title: user?.name,
+            title: myshop?.name ? myshop.name : 'Home',
             tabBarIcon: ({ color, size, focused }) => (
               <Ionicons
                 name={focused ? "home" : "home-outline"}
@@ -51,8 +54,10 @@ function MainNavigation({ language, user }) {
             },
             headerTintColor: PRIMARY,
             headerTitleStyle: {
-              fontSize: 15
+              fontSize: textScale(18),
+              fontWeight:'bold'
             },
+            headerTitleAlign: 'left',
             tabBarLabel: language == 'HINDI' ? 'घर' : 'Home',
             headerRight: () => (
               <TouchableOpacity
@@ -69,10 +74,10 @@ function MainNavigation({ language, user }) {
           }
         ))} />
       <Tab.Screen
-        name="Notification"
+        name="Alerts"
         component={NotificationScreen}
         options={{
-          tabBarLabel: language == 'HINDI' ? 'अधिसूचना' : 'Notification',
+          tabBarLabel: language == 'HINDI' ? 'अधिसूचना' : 'Alerts',
           headerShown: true,
           tabBarIcon: ({ color, size, focused }) => (
             <Ionicons
@@ -83,7 +88,7 @@ function MainNavigation({ language, user }) {
           tabBarStyle: {
             // paddingBottom: 5
           },
-          headerTintColor: 'white',
+          headerTintColor: WHITE,
           headerStyle: {
             backgroundColor: PRIMARY,
           },
@@ -94,6 +99,29 @@ function MainNavigation({ language, user }) {
           //   </View>
           // )
         }} />
+        {/* <Tab.Screen
+        name="Transactions"
+        component={TransactionScreen}
+        options={{
+          tabBarLabel: language == 'HINDI' ? 'अधिसूचना' : 'Transactions',
+          headerShown: true,
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons
+              name={focused ? "wallet" : "wallet-outline"}
+              size={20}
+              color={PRIMARY} />
+          ),
+          tabBarStyle: {
+            // paddingBottom: 5
+          },
+          headerTintColor: WHITE,
+          headerStyle: {
+            backgroundColor: PRIMARY,
+            shadowOpacity:0,
+            elevation:0
+          },
+
+        }} /> */}
     </Tab.Navigator>
   );
 }
@@ -109,15 +137,15 @@ const styles = StyleSheet.create({
 
   },
   title: {
-    fontSize: 18,
+    fontSize: textScale(18),
     color: 'white',
     fontWeight: 'bold',
     letterSpacing: .5
   },
   label: {
-    marginTop: 3,
+    marginTop: moderateScaleVertical(3),
     color: 'white',
-    fontSize: 10,
+    fontSize: textScale(10),
     letterSpacing: .5
   }
 })

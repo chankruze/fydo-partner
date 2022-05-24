@@ -95,7 +95,7 @@ const PhoneLoginScreen = ({ navigation, handleNextScreen }) => {
         <StatusBar backgroundColor={PRIMARY} translucent={false} />
         <Text style={styles.title}>Enter phone number</Text>
         <Text style={styles.label}>
-          We will send you a 4-digit OTP to your phone number for
+          We will send you a 6-digit OTP to your phone number for
           verification.
         </Text>
         <TouchableOpacity style={styles.countryButton} activeOpacity={0.8}>

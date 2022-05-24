@@ -7,9 +7,10 @@ import {
   View,
   TouchableOpacity,
 } from 'react-native';
-import {LIGHTBLUE, PRIMARY} from '../assets/colors';
+import {GREY_1, LIGHTBLUE, PRIMARY} from '../assets/colors';
 import WithNetInfo from '../components/hoc/withNetInfo';
 import ButtonComponent from '../components/ButtonComponent';
+import { moderateScale, textScale } from '../utils/responsiveSize';
 class SupportServiceScreen extends Component {
   constructor() {
     super();
@@ -110,11 +111,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   title: {
-    fontSize: 16,
+    fontSize: textScale(14),
     textAlign: 'center',
+    fontWeight:'400',
     fontFamily: 'Gilroy-Medium',
     letterSpacing: 0.3,
-
+    color:GREY_1
   },
 
   label: {
@@ -128,6 +130,6 @@ const styles = StyleSheet.create({
   buttonContainer: {
     width: '85%',
     marginTop: 18,
-    borderRadius: 10,
+    borderRadius: moderateScale(10),
   },
 });
