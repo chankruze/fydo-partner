@@ -5,6 +5,7 @@ import { moderateScale, moderateScaleVertical, textScale } from '../utils/respon
 import { getRefer } from '../services/referearnService';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { connect } from 'react-redux';
+import moment from 'moment';
 
 const ReferralHistoryScreen = ({user}) => {
   const [loading, setLoading] = useState(false);
@@ -46,23 +47,22 @@ const  shortName = (str1) => {
   }
 };
   const renderItem = ({item}) => {
-    const name = shortName(item?.title)
     return (
       <View style={styles.flatStyle}>
         <View style={{flexDirection:'row',alignContent:'center'}}>
           <View style={styles.card}>
             <View style={styles.infoContainer}>
                 <View style={{...styles.icon, backgroundColor: '#003579'}}>
-                  <Text style={styles.iconContent}>{name}</Text>
+                  <Text style={styles.iconContent}>{item?.referredUser?.name && shortName(item?.referredUser?.name && item?.referredUser?.name)}{item?.referredShop?.name && shortName(item?.referredShop?.name && item?.referredShop?.name)}</Text>
                 </View>
                 <View style={{flexDirection:'row'}}>
                     <View>
-                      <Text style={{...styles.titleText,marginBottom:moderateScaleVertical(5)}}>Referred by</Text>
-                      <Text style={styles.primaryText}>{item?.title}</Text>
+                      <Text style={{...styles.titleText,marginBottom:moderateScaleVertical(5)}}>Referred {item?.referredUser?.name && 'User'} {item?.referredShop?.name && 'Shop'}</Text>
+                      <Text style={styles.primaryText}>{item?.referredUser?.name && item?.referredUser?.name} {item?.referredShop?.name && item?.ActivityIndicatorreferredShop?.name}</Text>
                     </View>
                     <View style={{marginHorizontal:moderateScale(25)}}>
                       <Text style={{...styles.titleText,marginBottom:moderateScaleVertical(5)}}>Referred on</Text>
-                      <Text style={styles.primaryText}>{item?.date}</Text>
+                      <Text style={styles.primaryText}>{moment(item?.createdAt).format('DD-MM-YYYY')}</Text>
                     </View>
                 </View>
             </View>

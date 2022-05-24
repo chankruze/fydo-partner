@@ -1,4 +1,4 @@
-export const BASE = 'https://api.fydo.in/';
+export const BASE = 'https://api2.lfyd.in/';
 export const GOOGLE_MAP_API = 'AIzaSyAqTqXuRHOdBKs9Vmmqyrm966Lu-kGL7Qs';
 
 export const SEND_LOGIN_OTP_API = BASE + 'shop-login/send-otp-for-auth';
@@ -28,6 +28,7 @@ export const GET_MY_SHOP = BASE + "shop/my-shop";
 export const REFER_EARN = BASE + "shop/form-response";
 
 export const GET_REFERRALS = BASE + "referral/my-referrals"; 
+export const GET_REFERRALS_CODE = BASE + "referral/my-referral-code";
 
 export const GET_AMENITIES = BASE + "amenity/all";
 

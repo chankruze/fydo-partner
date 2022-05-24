@@ -50,6 +50,7 @@ const mapStateToProps = state => {
   return {
     user: state?.userReducer?.user,
     language: state?.userReducer?.language,
+    myshop:state?.userReducer?.myshop,
   };
 };
 const mapDispatchToProps = dispatch => {
@@ -144,11 +145,12 @@ class HomeScreen extends Component {
   // }
 
   async shareCard() {
+    const {myshop} = this.props;
     try {
       const shareResponse = await Share.open({
-        message: 'Message',
-        title: 'Title',
-        url: 'https://www.npmjs.com/package/react-native-share',
+        message: `Check ${myshop && myshop?.name} out. Get all your Automobile Repair needs from ${myshop && myshop?.name} only on Fydo.`,
+        //title: 'Title',
+        //url: 'https://www.npmjs.com/package/react-native-share',
       });
     } catch (error) {
       console.log(error);

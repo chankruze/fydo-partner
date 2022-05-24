@@ -27,6 +27,7 @@ const styles = StyleSheet.create({
         borderRadius: moderateScale(5),
         backgroundColor: LIGHTBLUE,
         shadowColor: 'rgba(227, 242, 253, 1)',
+
       },
       label: {
         color: PRIMARY,
