@@ -122,9 +122,9 @@ const TransactionScreen = ({user}) => {
         position:'relative',
     }}>
         <View style={{justifyContent:'center',alignItems:'center',textAlign:'center',marginBottom:moderateScaleVertical(20)}}>
-            <Text style={{fontSize:textScale(18),color:WHITE,marginVertical:moderateScaleVertical(5)}}>Payments Received</Text>
+            <Text style={{fontSize:textScale(18),color:WHITE,marginVertical:moderateScaleVertical(5)}}>Amount to Settle</Text>
             <Text style={{fontSize:textScale(50),fontFamily:'Gilroy-Medium',color:WHITE,marginBottom:moderateScaleVertical(15)}}>{'\u20B9'} 1200</Text>
-            <Text style={{fontSize:textScale(12),color:WHITE,marginBottom:moderateScaleVertical(15)}}>Total Number of Payments 23</Text>
+            {/* <Text style={{fontSize:textScale(12),color:WHITE,marginBottom:moderateScaleVertical(15)}}>Total Number of Payments 23</Text> */}
         </View>
     </LinearGradient>
     <View style={{marginHorizontal:moderateScale(15)}}>

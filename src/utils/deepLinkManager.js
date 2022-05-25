@@ -8,8 +8,8 @@ export async function buildLink(type, id, data) {
   const link = await dynamicLinks().buildShortLink({
     link: `https://play.google.com/store/apps/details?id=com.letsdevelopit.lfydnewapp`,
     // domainUriPrefix is created in your Firebase console
-    //domainUriPrefix: 'https://fydo.page.link',
-    domainUriPrefix: 'https://lfydnewapp.page.link',
+    domainUriPrefix: 'https://fydo.page.link',
+   // domainUriPrefix: 'https://lfydnewapp.page.link',
     // optional setup which updates Firebase analytics campaign
     // "banner". This also needs setting up before hand
     android: {
@@ -34,8 +34,8 @@ export async function buildReferalLink(referralCode,referralText) {
     const link = await dynamicLinks().buildShortLink({
       link: `https://play.google.com/store/apps/details?id=com.letsdevelopit.lfydnewapp&referalCode=${referralCode}`,
       // domainUriPrefix is created in your Firebase console
-      //domainUriPrefix: 'https://fydo.page.link',
-      domainUriPrefix: 'https://lfydnewapp.page.link',
+      domainUriPrefix: 'https://fydo.page.link',
+      //domainUriPrefix: 'https://lfydnewapp.page.link',
       // optional setup which updates Firebase analytics campaign
       // "banner". This also needs setting up before hand
       android: {
