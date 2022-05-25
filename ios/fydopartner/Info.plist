@@ -20,6 +20,19 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>org.reactjs.native.example.fydopartner</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>org.reactjs.native.example.fydopartner</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(MARKETING_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
@@ -94,6 +107,10 @@
 	<array>
 		<string>armv7</string>
 	</array>
+  <key>FirebaseDynamicLinksCustomDomains</key>
+    <array>
+      <string>https://lfydnewapp.page.link/jkhx</string>
+    </array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

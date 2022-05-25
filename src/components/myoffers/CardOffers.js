@@ -9,6 +9,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Share from 'react-native-share';
 import imageLoading from '../../assets/images/image-loading.png'
 import imageNotUploaded from '../../assets/images/image-not-uploaded.png'
+import { buildLink } from '../../utils/deepLinkManager'
 // function getNumberOfDays(start, end) {
 //     const date1 = new Date(start);
 //     const date2 = new Date(end);
@@ -32,8 +33,9 @@ const CardOffers = ({item}) => {
     //const left = totalDay - startDay < 0 ? 0 : value * (width-290)/total - 15;
     const shareCard = async () => {
         try {
+        const link = await buildLink(item);
         await Share.open({
-            message: title,
+            message: `${title && title}\n${description && description}\n${link}`,
             title: description,
             url: imageUrl && imageUrl[0],
           });

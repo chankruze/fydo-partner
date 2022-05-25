@@ -6,6 +6,7 @@ import { getReferCode, refer } from '../services/referearnService';
 import { moderateScale, moderateScaleVertical, textScale, width } from '../utils/responsiveSize';
 import ReferEarnImage from './../assets/images/referearn.png';
 import ReferCode from './../assets/images/refercode.png';
+import { buildReferalLink } from '../utils/deepLinkManager';
 import Share from 'react-native-share';
 
 const mapStateToProps = (state) => {
@@ -46,11 +47,11 @@ class ReferAndEarnScreen extends Component{
       async shareCard() {
         try {
             console.log('data==>',this.state.data)
-          const shareResponse = await Share.open({
-            message:`Hi, I just invited you to Fydo!\nStep 1: Use my link to download the app.\nStep 2: Use my referral code ${this.state.data.referralCode && this.state.data.referralCode} while signing up.\nStep 3: Start exploring offers, deals and much more in your city.\n\nDownload the app now.\n${this.state.data.referralShortLink && this.state.data.referralShortLink}`,
-           // title: this.state.data.referralCode && this.state.data.referralCode,
-           // url: this.state.data.referralShortLink && this.state.data.referralShortLink,
-          });
+            const message = `Hi, I just invited you to Fydo!\nStep 1: Use my link to download the app.\nStep 2: Use my referral code ${this.state.data.referralCode && this.state.data.referralCode} while signing up.\nStep 3: Start exploring offers, deals and much more in your city.\n\nDownload the app now.`
+            const link = await buildReferalLink(this.state.data.referralCode && this.state.data.referralCode,message && message)
+            await Share.open({
+                message:`Hi, I just invited you to Fydo!\nStep 1: Use my link to download the app.\nStep 2: Use my referral code ${this.state.data.referralCode && this.state.data.referralCode} while signing up.\nStep 3: Start exploring offers, deals and much more in your city.\n\nDownload the app now.\n${link && link}`,
+            });
         } catch (error) {
           console.log(error);
         }

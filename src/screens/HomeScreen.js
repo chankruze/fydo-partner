@@ -147,6 +147,7 @@ class HomeScreen extends Component {
   async shareCard() {
     const {myshop} = this.props;
     try {
+      
       const shareResponse = await Share.open({
         message: `Check ${myshop && myshop?.name} out. Get all your Automobile Repair needs from ${myshop && myshop?.name} only on Fydo.`,
         //title: 'Title',
