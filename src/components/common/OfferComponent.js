@@ -72,11 +72,10 @@ const styles = StyleSheet.create({
       overflow: 'hidden'
   },
   image: {
-    height: moderateScale(120),
-      width: '100%',
+    height: moderateScale(110),
+    width: '100%',
       // borderRadius: 10,
-      resizeMode: 'stretch',
-      backgroundColor: LIGHTGREY
+      //resizeMode: 'stretch',
   },
   icon: {
       position: 'absolute',
