@@ -6,6 +6,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { connect } from 'react-redux'
 import { getTransaction, getTransactionAmount } from '../services/transactionService'
+import WithNetInfo from '../components/hoc/withNetInfo'
 
 const TransactionScreen = ({user}) => {
     const [loading, setLoading] = useState(false);
@@ -122,12 +123,15 @@ const TransactionScreen = ({user}) => {
         position:'relative',
     }}>
         <View style={{justifyContent:'center',alignItems:'center',textAlign:'center',marginBottom:moderateScaleVertical(20)}}>
-            <Text style={{fontSize:textScale(18),color:WHITE,marginVertical:moderateScaleVertical(5)}}>Amount to Settle</Text>
+            <Text style={{fontSize:textScale(18),color:WHITE,fontFamily:'Gilroy-Medium',marginVertical:moderateScaleVertical(5)}}>Amount to Settle</Text>
             <Text style={{fontSize:textScale(50),fontFamily:'Gilroy-Medium',color:WHITE,marginBottom:moderateScaleVertical(15)}}>{'\u20B9'} 1200</Text>
             {/* <Text style={{fontSize:textScale(12),color:WHITE,marginBottom:moderateScaleVertical(15)}}>Total Number of Payments 23</Text> */}
         </View>
     </LinearGradient>
     <View style={{marginHorizontal:moderateScale(15)}}>
+        {data.length === 0 ? 
+        <Text style={{marginTop:moderateScaleVertical(15),alignSelf:'center',}}>Not Found</Text>
+        :
     <FlatList
                         contentContainerStyle={{paddingBottom:moderateScaleVertical(230),marginTop:moderateScaleVertical(15)}}
                         showsVerticalScrollIndicator={false}
@@ -152,7 +156,7 @@ const TransactionScreen = ({user}) => {
                             </View>)
                         }
                         onEndReached={onEndReached}
-                    />
+                    />}
                     </View>
    </SafeAreaView>
    </View>
@@ -163,7 +167,7 @@ const mapStateToProps = (state) => {
         user: state?.userReducer?.user
     }
   }
-export default connect(mapStateToProps)(TransactionScreen) 
+export default connect(mapStateToProps)(WithNetInfo(TransactionScreen)) 
 
 const styles = StyleSheet.create({
     container: { 

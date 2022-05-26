@@ -7,6 +7,7 @@ import { PRIMARY, WHITE } from '../assets/colors';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MyOffersBottomSheet from '../components/myoffers/MyOffersBottomSheet';
 import { connect } from 'react-redux';
+import WithNetInfo from '../components/hoc/withNetInfo';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -114,7 +115,7 @@ class MyOffersScreen extends Component{
     }
 }
 
-export default connect(mapStateToProps)(MyOffersScreen);
+export default connect(mapStateToProps)(WithNetInfo(MyOffersScreen));
 
 const styles = StyleSheet.create({
     container: {

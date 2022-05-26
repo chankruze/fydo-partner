@@ -8,6 +8,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MyOffersBottomSheet from '../components/myoffers/MyOffersBottomSheet';
 import { connect } from 'react-redux';
 import { moderateScale } from '../utils/responsiveSize';
+import WithNetInfo from '../components/hoc/withNetInfo';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -73,7 +74,7 @@ class MySalesScreen extends Component{
     }
 }
 
-export default connect(mapStateToProps)(MySalesScreen);
+export default connect(mapStateToProps)(WithNetInfo(MySalesScreen));
 
 const styles = StyleSheet.create({
     container: {

@@ -67,7 +67,8 @@ class HomeScreen extends Component {
       tagBottomSheetVisible: false,
       tagTopSheetVisibel:false,
       modalOfferVisible:false,
-      modelSaleVisible:false
+      modelSaleVisible:false,
+      carousels:[]
     }
     this.openShop = this.openShop.bind(this);
     this.closeShop = this.closeShop.bind(this);
@@ -345,7 +346,7 @@ renderSaleModal(){
         {this.state.tagTopSheetVisibel && this.renderTopSheet()}
         <ScrollView>
           <StatusBar backgroundColor={PRIMARY} />
-          <HomeSlider carousels={carousels} />
+          <HomeSlider carousels={carousels && carousels} />
           <CardIconButton title="Share your business card to get more customer!" buttonTitle="Tap to share" icons={<MaterialIcons name="card-giftcard" size={30} color={WHITE} />} onPress={this.shareCard}/>
           <View style={styles.line} />
           <CardIconButton title="Add Tags to your shops to make user search you" buttonTitle="Tap to Add" icons={<Ionicons name="pricetag-outline" size={30} color={WHITE} />}  onPress={this.triggerTagModal}/>

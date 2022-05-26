@@ -15,7 +15,7 @@ export default function HomeSlider({carousels}){
     return (
         <SliderBox
             sliderBoxHeight={HEIGHT * .25} 
-            images={carousels}
+            images={carousels && carousels}
             autoplay
             circleLoop/>
     )

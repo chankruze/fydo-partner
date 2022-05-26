@@ -135,7 +135,7 @@ const PhoneLoginScreen = ({ navigation, handleNextScreen }) => {
   );
 };
 
-export default WithNetInfo(PhoneLoginScreen);
+export default WithNetInfo(WithNetInfo(PhoneLoginScreen));
 
 const styles = StyleSheet.create({
   container: {

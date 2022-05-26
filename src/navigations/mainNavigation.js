@@ -99,7 +99,7 @@ function MainNavigation({ language, user,myshop }) {
           //   </View>
           // )
         }} />
-        {/* <Tab.Screen
+       {/* <Tab.Screen
         name="Transactions"
         component={TransactionScreen}
         options={{
@@ -121,7 +121,7 @@ function MainNavigation({ language, user,myshop }) {
             elevation:0
           },
 
-        }} /> */}
+        }} />  */}
     </Tab.Navigator>
   );
 }

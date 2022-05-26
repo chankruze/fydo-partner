@@ -6,6 +6,7 @@ import { getRefer } from '../services/referearnService';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { connect } from 'react-redux';
 import moment from 'moment';
+import WithNetInfo from '../components/hoc/withNetInfo';
 
 const ReferralHistoryScreen = ({user}) => {
   const [loading, setLoading] = useState(false);
@@ -169,7 +170,7 @@ const mapStateToProps = (state) => {
       user: state?.userReducer?.user
   }
 }
-export default  connect(mapStateToProps)(ReferralHistoryScreen)
+export default  connect(mapStateToProps)(WithNetInfo(ReferralHistoryScreen))
 
 const styles = StyleSheet.create({
   container: {
