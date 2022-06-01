@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
 import {ActivityIndicator, FlatList, SafeAreaView, StyleSheet, Text, View,RefreshControl} from 'react-native';
 import { connect } from 'react-redux';
-import {  PRIMARY, WHITE } from '../../assets/colors';
+import { PRIMARY, WHITE } from '../../assets/colors';
 import CardOffers from '../../components/myoffers/CardOffers';
 import { getOffers } from '../../services/offerService';
 import { moderateScaleVertical, textScale } from '../../utils/responsiveSize';
+// import OfferIcon from './../../assets/icons/offer.png';
 
 const mapStateToProps = (state) => {
     return {
@@ -12,40 +13,32 @@ const mapStateToProps = (state) => {
     }
 }
 
-class LiveOffersScreen extends Component{
+class RequestedOffersScreen extends Component{
 
     constructor(props){
         super(props);
         this.state = {
             offers: [],
-            isLoading: false,
-            isRefresh: false,
-            loadeMore: false,
             limit: 10,
             skip: 0,
+            isLast: false,
+            refreshing: false,
+            loading: false,
         }
-        this.onEndReached = this.onEndReached.bind(this)
-        this.handlRefresh = this.handlRefresh.bind(this)
+        this.fetchOffers = this.fetchOffers.bind(this)
     }
 
     componentDidMount(){
-        this.fetchOffers(true);
+        this.setState({ loading: true });
+        this.fetchOffers();
     }
 
-    async fetchOffers(val,loadeMore){
+    async fetchOffers(){
         let {user} = this.props;
-        if (loadeMore) {
-            this.setState({ loadeMore: true })
-        }
-        if (val) {
-            this.setState({ isLoading: true })
-        }
-        else {
-            this.setState({ isRefresh: true })
-        }
+        let {limit,skip,isLast} = this.state;
         try {
+           if(!isLast){
             const activeJson = []
-            let {limit,skip} = this.state;
             const response = await getOffers(user?.accessToken,limit,skip);
             const json = await response.json();
             json.filter((data)=> {
@@ -53,16 +46,21 @@ class LiveOffersScreen extends Component{
                     activeJson.push(data)
                 }
             })
+            console.log('activeJson--',json)
             this.setState({
                 offers:[...this.state.offers, ...activeJson],
-                isLoading: false,
-                isRefresh: false,
                 skip: skip + limit,
-                loadeMore: false,
+                loading: false,
+                isLast: paddingJson.length == 0 || paddingJson.length < limit ? true : false,
+                refreshing: false,
             })
+        }else {
+            this.setState({loading: false, refreshing: false })
+        }
+           // this.setState({loading: false, offers: paddingJson});
         } catch (error) {
             console.log(error);
-            this.setState({loading: false});
+            this.setState({loading: false, refreshing: false });
         }
     }
     renderItem({item}){
@@ -70,21 +68,28 @@ class LiveOffersScreen extends Component{
             <CardOffers item={item}/>
         )
     }
-    handlRefresh(){
-        this.fetchOffers(false)
-     }
- 
-     onEndReached(){
-        this.fetchOffers(false, true)
-     }
+    handlRefresh = () =>{
+        this.setState({
+            refreshing: true
+        });
+       this.fetchOffers();
+    }
+
+    onEndReached = () =>{
+        this.setState({
+            isLast:true,
+            refreshing:false
+        })
+       this.fetchOffers()
+    }
     render(){
 
-        let {offers, loading} = this.state;
+        let {offers, isLoading} = this.state;
 
-        if(loading){
+        if(isLoading){
             return (
-                <View style={styles.liveContainer}>
-                    <SafeAreaView>
+                <View style={styles.container}>
+                    <SafeAreaView style={{flex:1}}>
                         <ActivityIndicator 
                             size="large" 
                             color={PRIMARY}
@@ -96,8 +101,8 @@ class LiveOffersScreen extends Component{
 
         if(offers.length == 0)
             return (
-                <View style={styles.liveContainer}>
-                    <SafeAreaView>
+                <View style={styles.container}>
+                    <SafeAreaView style={{flex:1}}>
                         <Text style={styles.info}>
                             We have no item to show here
                         </Text>
@@ -106,10 +111,11 @@ class LiveOffersScreen extends Component{
             )
 
         return (
-            <View style={styles.liveContainer}>
-                <SafeAreaView>
+           
+            <View style={styles.container}>
+                 <SafeAreaView style={{flex:1}}>
                 <FlatList 
-                    contentContainerStyle={{paddingBottom:moderateScaleVertical(90),marginTop:moderateScaleVertical(15)}}
+                    contentContainerStyle={{paddingBottom:moderateScaleVertical(20),marginTop:moderateScaleVertical(15)}}
                     showsVerticalScrollIndicator={false}
                     data={offers}
                     keyExtractor={item => item?._id.toString()}
@@ -121,28 +127,29 @@ class LiveOffersScreen extends Component{
                     }}
                     refreshControl={
                         <RefreshControl
-                            refreshing={this.state.isRefresh}
+                            refreshing={this.state.refreshing}
                             onRefresh={this.handlRefresh}
                             color={PRIMARY}
                         />
                     }
                     ListFooterComponent={
-                       this.state.loadeMore && (<View style={{ marginTop: moderateScaleVertical(20) }}>
+                       !this.state.isLast && (<View style={{ marginTop: moderateScaleVertical(20) }}>
                             <ActivityIndicator color={PRIMARY} size="large" />
                         </View>)
                     }
                     onEndReached={this.onEndReached}
                 />
-                </SafeAreaView>
-                </View>
+                 </SafeAreaView>
+            </View>
+           
         )
     }
 }
 
-export default connect(mapStateToProps)(LiveOffersScreen);
+export default connect(mapStateToProps)(RequestedOffersScreen);
 
 const styles = StyleSheet.create({
-    liveContainer: {
+    container: {
         flex: 1,
         backgroundColor: WHITE,
     },

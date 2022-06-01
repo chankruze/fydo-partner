@@ -26,6 +26,7 @@ import SupportIcon from './../assets/icons/support.svg';
 import Share from 'react-native-share';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { connect } from 'react-redux';
 import AddOfferIcon from './../assets/icons/addoffer.png';
 import WithNetInfo from '../components/hoc/withNetInfo';
@@ -383,7 +384,7 @@ renderSaleModal(){
               <SquareIconButton
               onPress={()=>this.props?.navigation?.navigate('ReferEarn')}
               label={language == 'HINDI' ? 'देखें और कमाएं' : 'Refer and earn'}
-              icon={<SupportIcon width={24} height={24} />}/>
+              icon={<FontAwesome name='bullhorn' size={24} color={PRIMARY}/>}/>
           </View>
           <View style={styles.line} />
           <View style={styles.shopStatusRow}>

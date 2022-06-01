@@ -14,7 +14,7 @@ export const GET_SHOP_STATUS = BASE + "shop/shop-open-status";
 
 export const GET_CAROUSELS = BASE + "shop/homepage-carousel";
 
-export const GET_NOTIFICATIONS = BASE + "notification/all?skip=0";
+export const GET_NOTIFICATIONS = BASE + "notification/all";
 
 export const ADD_OFFER = BASE + "offer/add-offer-request";
 export const GET_OFFERS = BASE + "offer/my-offers";

@@ -55,7 +55,8 @@ function MainNavigation({ language, user,myshop }) {
             headerTintColor: PRIMARY,
             headerTitleStyle: {
               fontSize: textScale(18),
-              fontWeight:'bold'
+              fontWeight:'bold',
+              fontFamily: 'Gilroy-Bold',
             },
             headerTitleAlign: 'left',
             tabBarLabel: language == 'HINDI' ? 'घर' : 'Home',
@@ -99,7 +100,7 @@ function MainNavigation({ language, user,myshop }) {
           //   </View>
           // )
         }} />
-       {/* <Tab.Screen
+        <Tab.Screen
         name="Transactions"
         component={TransactionScreen}
         options={{
@@ -121,7 +122,7 @@ function MainNavigation({ language, user,myshop }) {
             elevation:0
           },
 
-        }} />  */}
+        }} />  
     </Tab.Navigator>
   );
 }

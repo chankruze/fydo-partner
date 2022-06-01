@@ -1,12 +1,12 @@
 import { View, Text, StyleSheet, FlatList, SafeAreaView, Image, ActivityIndicator,RefreshControl,StatusBar } from 'react-native';
 import React,{useState} from 'react'
-import { BLACK, PRIMARY, WHITE } from '../assets/colors'
+import { PRIMARY, WHITE } from '../assets/colors'
 import { moderateScale, moderateScaleVertical, textScale } from '../utils/responsiveSize'
 import { getRefer } from '../services/referearnService';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { connect } from 'react-redux';
-import moment from 'moment';
 import WithNetInfo from '../components/hoc/withNetInfo';
+import ReferralCard from '../components/Referral/ReferralCard';
 
 const ReferralHistoryScreen = ({user}) => {
   const [loading, setLoading] = useState(false);
@@ -38,38 +38,10 @@ const ReferralHistoryScreen = ({user}) => {
         setLoading(false);
     }
   }
-const  shortName = (str1) => {
-  if (str1) {
-      var split_names = str1.trim().split(" ");
-      if (split_names.length > 1) {
-          return (split_names[0].charAt(0) + split_names[split_names.length - 1].charAt(0));
-      }
-      return split_names[0].charAt(0);
-  }
-};
+
   const renderItem = ({item}) => {
     return (
-      <View style={styles.flatStyle}>
-        <View style={{flexDirection:'row',alignContent:'center'}}>
-          <View style={styles.card}>
-            <View style={styles.infoContainer}>
-                <View style={{...styles.icon, backgroundColor: '#003579'}}>
-                  <Text style={styles.iconContent}>{item?.referredUser?.name && shortName(item?.referredUser?.name && item?.referredUser?.name)}{item?.referredShop?.name && shortName(item?.referredShop?.name && item?.referredShop?.name)}</Text>
-                </View>
-                <View style={{flexDirection:'row'}}>
-                    <View>
-                      <Text style={{...styles.titleText,marginBottom:moderateScaleVertical(5)}}>Referred {item?.referredUser?.name && 'User'} {item?.referredShop?.name && 'Shop'}</Text>
-                      <Text style={styles.primaryText}>{item?.referredUser?.name && item?.referredUser?.name} {item?.referredShop?.name && item?.ActivityIndicatorreferredShop?.name}</Text>
-                    </View>
-                    <View style={{marginHorizontal:moderateScale(25)}}>
-                      <Text style={{...styles.titleText,marginBottom:moderateScaleVertical(5)}}>Referred on</Text>
-                      <Text style={styles.primaryText}>{moment(item?.createdAt).format('DD-MM-YYYY')}</Text>
-                    </View>
-                </View>
-            </View>
-          </View>
-         </View>
-      </View>
+      <ReferralCard item={item}/>
     )
   }
   const wait = (timeout) => {
@@ -110,7 +82,7 @@ if(data?.length === 0){
                         marginTop:moderateScaleVertical(15),
                         marginHorizontal: moderateScale(16),
                       }}>
-                          <Text style={styles.referralTitle}>Total Referral {''} {total && total}</Text>
+                          <Text style={styles.referralTitle}>Total Referral {total && total}</Text>
                       </View>
                       <View style={styles.loaderContainer}>
                         <FontAwesome name={'paper-plane'} size={40} color={'#4D535BCC'} style={{marginBottom:moderateScaleVertical(10)}}/>
@@ -131,15 +103,15 @@ if(data?.length === 0){
      <SafeAreaView style={{flex:1, backgroundColor: WHITE }}>
         <View style={{
             marginTop:moderateScaleVertical(15),
-            marginHorizontal: moderateScale(16),
+            marginHorizontal: moderateScale(12),
             flex:1
         }}>
-            <Text style={styles.referralTitle}>Total Referral {total && total}</Text>
+            <Text style={{...styles.referralTitle,}}>Total Referral {total && total}</Text>
             <FlatList
                         showsVerticalScrollIndicator={false}
                         data={data}
                         renderItem={renderItem}
-                        keyExtractor={(item, index) => item.id}
+                        keyExtractor={(item, index) => item._id}
                         ItemSeparatorComponent={() => <View style={styles.lineStyle} />}
                         onEndReachedThreshold={0.01}
                         onMomentumScrollBegin={() => {
@@ -185,62 +157,16 @@ const styles = StyleSheet.create({
   referralTitle: {
     fontSize:textScale(20),
     color:'#4D535BCC',
+    fontFamily:'Gilroy-Medium',
     marginBottom:moderateScaleVertical(10)
-  },
-  flatStyle:{
-      backgroundColor: WHITE,
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.2,
-      //padding:moderateScale(16),
-      borderRadius:moderateScale(4),
-      margin:2
-  },
-  flexView: {
-      flexDirection: 'row', 
-      alignItems: 'center',
-      justifyContent:'space-between'
-  },
-  card: {
-    padding: 10,
-    margin: 5
-  },
-  infoContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      paddingVertical: 2
   },
   info: {
     fontSize:textScale(12),
+    fontFamily:'Gilroy-Medium',
     color:'#4D535BCC',
   },
-  primaryText: {
-      fontSize: textScale(16),
-      fontFamily:'Gilroy-Medium',
-      color:BLACK
-  },
-  titleText: {
-      fontSize:textScale(14),
-      color:'#4D535B99'
-  },
-  iconContent: {
-      flex: 1,
-      paddingVertical: moderateScaleVertical(5),
-      fontSize: textScale(24),
-      fontFamily:'Gilroy-Bold',
-      color: WHITE,
-      marginHorizontal: moderateScale(5),
-      justifyContent:'center'
-  },
-  icon:{
-      borderRadius: 25,
-      aspectRatio: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-      marginRight: 15,
-      padding: moderateScale(5)
-  },
+  
   lineStyle:{
     marginVertical:moderateScaleVertical(5)
-  }
+  },
 })

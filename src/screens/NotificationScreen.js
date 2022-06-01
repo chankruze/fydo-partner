@@ -1,53 +1,11 @@
 import moment from 'moment';
 import React, { Component } from 'react';
-import { SafeAreaView, StyleSheet, Text, FlatList, View, ActivityIndicator } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, FlatList, View, ActivityIndicator, RefreshControl } from 'react-native';
 import { connect } from 'react-redux';
-import { GREY_2, PRIMARY } from '../assets/colors';
+import { GREY_2, PRIMARY, WHITE } from '../assets/colors';
 import WithNetInfo from '../components/hoc/withNetInfo';
 import { getNotifications } from '../services/notificationService';
-
-const notifications = [
-    {
-        _id: 1,
-        notification: {
-            title: 'asdfasdf',
-            body: 'asdfasdf'
-        },
-        createdAt: '2000',
-        read: null
-
-    },
-    {
-        _id: 2,
-        notification: {
-            title: 'asdfasdf',
-            body: 'asdfasdf'
-        },
-        createdAt: '2000',
-        read: null
-
-    },
-    {
-        _id: 3,
-        notification: {
-            title: 'asdfasdf',
-            body: 'asdfasdf'
-        },
-        createdAt: '2000',
-        read: null
-
-    },
-    {
-        _id: 4,
-        notification: {
-            title: 'asdfasdf',
-            body: 'asdfasdf'
-        },
-        createdAt: '2000',
-        read: null
-
-    },
-];
+import { moderateScale, moderateScaleVertical, textScale } from '../utils/responsiveSize';
 
 const mapStateToProps = (state) => {
     return {
@@ -60,29 +18,59 @@ class NotificationScreen extends Component {
     constructor() {
         super();
         this.state = {
-            notifications: notifications,
-            loading: false
+            notifications: [],
+            limit: 10,
+            skip: 0,
+            isLast: false,
+            refreshing: false,
+            loading: false,
         }
+        this.fetchNotifications = this.fetchNotifications.bind(this)
     }
 
     componentDidMount() {
+        this.setState({ loading: true });
         this.fetchNotifications();
     }
 
     async fetchNotifications() {
         let { user } = this.props;
-        this.setState({ loading: true });
+        let {limit,skip,isLast} = this.state;
         try {
-            const response = await getNotifications(user?.accessToken);
+            if(!isLast){
+            const response = await getNotifications(user?.accessToken,limit,skip);
             const json = await response.json();
             console.log("gg-->", json);
-            this.setState({ loading: false, notifications: json });
+                this.setState({ 
+                    notifications:[...this.state.notifications, ...json],
+                    skip: skip + limit,
+                    loading: false,
+                    isLast: json.length == 0 || json.length < limit ? true : false,
+                    refreshing: false,
+                });
+            }
+            else{
+                this.setState({loading: false, refreshing: false })
+            }
         } catch (error) {
             console.log(error);
-            this.setState({ loading: false });
+            this.setState({ loading: false,refreshing:false });
         }
     }
+    handlRefresh = () =>{
+        this.setState({
+            refreshing: true
+        });
+       this.fetchNotifications();
+    }
 
+    onEndReached = () =>{
+        this.setState({
+            isLast:true,
+            refreshing:false
+        })
+       this.fetchNotifications()
+    }
     renderNotification({ item }) {
         let { notificationBody, createdAt } = item;
         return (
@@ -119,12 +107,29 @@ class NotificationScreen extends Component {
         return (
             <SafeAreaView style={styles.container}>
                 <FlatList
+                contentContainerStyle={{marginTop: moderateScaleVertical(15),paddingBottom:moderateScaleVertical(20)}}
                     showsVerticalScrollIndicator={false}
                     data={notifications}
-                    style={styles.notifications}
                     renderItem={this.renderNotification}
-                    // ItemSeparatorComponent={() => <View style={styles.separator} />}
+                    ItemSeparatorComponent={() => <View style={styles.lineStyle} />}
                     keyExtractor={item => item?._id.toString()}
+                    onEndReachedThreshold={0.01}
+                    onMomentumScrollBegin={() => {
+                        onEndReachedMomentum = false
+                    }}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={this.state.refreshing}
+                            onRefresh={this.handlRefresh}
+                            color={PRIMARY}
+                        />
+                    }
+                    ListFooterComponent={
+                       !this.state.isLast && (<View style={{ marginTop: moderateScaleVertical(20) }}>
+                            <ActivityIndicator color={PRIMARY} size="large" />
+                        </View>)
+                    }
+                    onEndReached={this.onEndReached}
                 />
             </SafeAreaView>
         )
@@ -136,43 +141,40 @@ export default connect(mapStateToProps)(NotificationScreen);
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'white'
+        backgroundColor:WHITE
     },
     info: {
         alignSelf: 'center',
-        marginTop: 15,
-        fontSize: 16,
+        marginTop:  moderateScaleVertical(15),
+        fontSize: textScale(16),
         letterSpacing: .2,
         fontFamily: 'Gilroy-Bold'
-    },
-    notifications: {
-        marginTop: 10
     },
     notification: {
         borderColor: GREY_2,
         borderWidth: 1,
-        borderRadius: 10,
-        padding: 15,
-        marginVertical: 8,
-        marginHorizontal: 10
+        borderRadius: moderateScale(10),
+        padding: moderateScale(15),
+        //marginVertical: 8,
+        marginHorizontal: moderateScale(10)
     },
     title: {
         // fontWeight: '400',
         color: 'black',
-        fontSize: 16,
+        fontSize: textScale(16),
         fontFamily: 'Gilroy-SemiBold',
         lineHeight: 20
     },
     body: {
-        paddingTop: 5,
+        paddingTop: moderateScaleVertical(5),
         color: 'black',
-        fontSize: 14,
+        fontSize: textScale(14),
         fontFamily: 'Gilroy-Medium',
         lineHeight: 20
     },
     time: {
         color: GREY_2,
-        fontSize: 10,
+        fontSize:  textScale(10),
         alignSelf: 'flex-end',
         fontWeight: '400'
     },
@@ -180,6 +182,9 @@ const styles = StyleSheet.create({
         borderBottomWidth: .4,
         width: '100%',
         borderBottomColor: 'rgba(0, 53, 121, 0.2)',
-        marginTop: 10
+        marginTop: moderateScaleVertical(10)
+    },
+    lineStyle:{
+        marginBottom:moderateScaleVertical(8)
     }
 })

@@ -5,6 +5,7 @@ import appIcon from '../assets/images/app-icon.png';
 import { setUser } from '../store/actions/user.action';
 import { connect } from 'react-redux';
 import { getUser } from '../utils/defaultPreference';
+import { PRIMARY } from '../assets/colors';
 
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -63,7 +64,7 @@ const SplashScreen = ({ navigation, setUser, user }) => {
 
   return (
     <LinearGradient
-      colors={['#003579', '#093c7e']}
+      colors={[PRIMARY, '#093c7e']}
       style={styles.container}>
       <StatusBar translucent={true} backgroundColor={'transparent'} />
       <Image source={appIcon} style={styles.icon} />
