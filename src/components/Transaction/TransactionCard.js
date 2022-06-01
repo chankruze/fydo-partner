@@ -17,7 +17,24 @@ import {
   } from '../../assets/colors';
 import Clipboard from '@react-native-clipboard/clipboard';
 import Toast from 'react-native-simple-toast';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Fontisto from 'react-native-vector-icons/Fontisto';
+
 const TransactionCard = ({item}) => {
+
+    const getImageType = (transactionType) => {
+      switch (transactionType) {
+        case 'REFERRAL': {
+            return <FontAwesome name='bullhorn' style={styles.iconContent}/>;
+        }
+        case 'SHOP_PAYMENT': {
+            return <Fontisto name='shopping-store' style={styles.iconContent}/>;
+        }
+        default: { 
+            return <MaterialIcons style={styles.iconContent} name="account-balance-wallet" />;
+        }
+      }
+    }
     const copyId = (id) => {
         Clipboard.setString(id);
         if (Platform.OS == 'android') {
@@ -54,10 +71,7 @@ const TransactionCard = ({item}) => {
     <View style={styles.cardWrapper}>
       <View style={styles.leftWrapper}>
         <View style={{...styles.icon, backgroundColor: PRIMARY}}>
-          <MaterialIcons
-            style={styles.iconContent}
-            name="account-balance-wallet"
-          />
+            {getImageType(item?.transactionPurpose)}
         </View>
         <View>
               <Text style={{...styles.secondaryText, color: BLACK}}>
@@ -133,7 +147,7 @@ const styles = StyleSheet.create({
       },
       iconContent: {
         flex: 1,
-        fontSize: textScale(24),
+        fontSize: textScale(20),
         fontFamily: 'Gilroy-Bold',
         color: WHITE,
         justifyContent: 'center',
@@ -144,6 +158,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         marginRight: moderateScale(15),
-        padding: moderateScale(10),
+        padding: moderateScale(12),
       },
 })
