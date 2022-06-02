@@ -1,12 +1,8 @@
 import {
-  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  Image,
-  TextInput,
-  Dimensions,
   Keyboard,
   Clipboard,
 } from 'react-native';
@@ -18,13 +14,11 @@ import { createRef } from 'react';
 import { connect } from 'react-redux';
 import { saveUserData } from '../utils/defaultPreference';
 import ButtonComponent from '../components/ButtonComponent';
-import OTPTextInput from 'react-native-otp-textinput';
 import OTPInputView from '@twotalltotems/react-native-otp-input'
 import WithNetInfo from '../components/hoc/withNetInfo';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { SCREENS } from '../constants/authScreens';
 import RNOtpVerify from 'react-native-otp-verify';
-const HEIGHT = Dimensions.get('screen').height;
+
 
 const mapDispatchToProps = function (dispatch) {
   return {
@@ -131,13 +125,6 @@ const OTPVerifyScreen = ({ navigationData, navigation, handleNextScreen, setUser
         <Text style={styles.label}>
           Please enter the 6-digit OTP sent to you at {phoneNumber}
         </Text>
-        {/* <OTPTextInput
-          // ref={e => (otpInput = e)}
-          handleTextChange={handleOTP}
-          inputCount={6}
-          containerStyle={styles.optContainer}
-          textInputStyle={styles.otpBox}
-        /> */}
         <OTPInputView
                     style={styles.optContainer}
                     pinCount={6}
