@@ -104,7 +104,7 @@ const TransactionScreen = ({user}) => {
           <View style={styles.headerContainer}>
             <Text style={styles.headerTitle}>Amount to Settled</Text>
             <Text style={styles.headerTotal}>
-              {'\u20B9'} {total && total}
+              {'\u20B9'} {total ? total : 0}
             </Text>
             {/* <Text style={{fontSize:textScale(12),color:WHITE,marginBottom:moderateScaleVertical(15)}}>Total Number of Payments 23</Text> */}
           </View>

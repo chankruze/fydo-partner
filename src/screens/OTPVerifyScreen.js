@@ -19,6 +19,7 @@ import { connect } from 'react-redux';
 import { saveUserData } from '../utils/defaultPreference';
 import ButtonComponent from '../components/ButtonComponent';
 import OTPTextInput from 'react-native-otp-textinput';
+import OTPInputView from '@twotalltotems/react-native-otp-input'
 import WithNetInfo from '../components/hoc/withNetInfo';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { SCREENS } from '../constants/authScreens';
@@ -33,7 +34,7 @@ const mapDispatchToProps = function (dispatch) {
 
 const OTPVerifyScreen = ({ navigationData, navigation, handleNextScreen, setUser }) => {
   const id = navigationData?.otpId;
-  const [otp, setOtp] = useState(null);
+  const [otp, setOtp] = useState('');
   const [otpId, setOtpId] = useState(id);
   const phoneNumber = navigationData?.phoneNumber;
   const [error, setError] = useState(null);
@@ -130,13 +131,27 @@ const OTPVerifyScreen = ({ navigationData, navigation, handleNextScreen, setUser
         <Text style={styles.label}>
           Please enter the 6-digit OTP sent to you at {phoneNumber}
         </Text>
-        <OTPTextInput
+        {/* <OTPTextInput
           // ref={e => (otpInput = e)}
           handleTextChange={handleOTP}
           inputCount={6}
           containerStyle={styles.optContainer}
           textInputStyle={styles.otpBox}
-        />
+        /> */}
+        <OTPInputView
+                    style={styles.optContainer}
+                    pinCount={6}
+                    // code={otp}
+                    editable={true}
+                    code={otp}
+                    // code={this.state.code} //You can supply this prop or not. The component will be used as a controlled / uncontrolled component respectively.
+                   onCodeChanged = {handleOTP}
+                    autoFocusOnLoad={false}
+                    codeInputFieldStyle={styles.otpBox}
+                    // codeInputHighlightStyle={styles.optContainer}
+                    onCodeFilled={handleOTP}
+
+                />
         {error != null && <Text style={styles.error}>{error}</Text>}
         <ButtonComponent
           backgroundColor={PRIMARY}
@@ -241,12 +256,22 @@ const styles = StyleSheet.create({
     // justifyContent: 'space-between',
     marginVertical: 15,
   },
+  optContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    // justifyContent: 'space-between',
+    marginVertical: 15,
+  },
   otpBox: {
+    borderRadius: 10,
     backgroundColor: '#F4F5F5',
-    borderBottomWidth: 0,
+    borderBottomWidth: 1,
     fontSize: 14,
     color: 'black',
-    width: '13%',
+    width: 45,
+    // marginRight: 10,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   error: {
     marginVertical: 5,
