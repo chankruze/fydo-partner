@@ -41,7 +41,7 @@ import {
 import CardIconButton from '../components/home/CardIconButton';
 import { setShop } from '../store/actions/user.action';
 import CardlabelButton from '../components/home/CardlabelButton';
-import {  moderateScale, moderateScaleVertical, textScale } from '../utils/responsiveSize';
+import { moderateScale, moderateScaleVertical, textScale } from '../utils/responsiveSize';
 import JoinNowTopSheet from './shop/JoinNowTopSheet';
 import MyOffersBottomSheet from '../components/myoffers/MyOffersBottomSheet';
 import RoundIconText from '../components/home/RoundIconText';
@@ -49,14 +49,16 @@ import SquareIconButton from '../components/home/SquareIconButton';
 import MySaleBottomSheet from '../components/sale/MySaleBottomSheet';
 import messaging from '@react-native-firebase/messaging';
 import { getDeviceInfo } from '../utils/getDeviceInfo';
-import { uploadDeviceInfo } from '../services/homeServicr';
+import { uploadDeviceInfo } from '../services/homeService';
+
 const mapStateToProps = state => {
   return {
     user: state?.userReducer?.user,
     language: state?.userReducer?.language,
-    myshop:state?.userReducer?.myshop,
+    myshop: state?.userReducer?.myshop,
   };
 };
+
 const mapDispatchToProps = dispatch => {
   return {
     setShop: myshop => dispatch(setShop(myshop))
@@ -69,10 +71,10 @@ class HomeScreen extends Component {
       shopOpen: false,
       modalVisible: false,
       tagBottomSheetVisible: false,
-      tagTopSheetVisibel:false,
-      modalOfferVisible:false,
-      modelSaleVisible:false,
-      carousels:[]
+      tagTopSheetVisibel: false,
+      modalOfferVisible: false,
+      modelSaleVisible: false,
+      carousels: []
     }
     this.openShop = this.openShop.bind(this);
     this.closeShop = this.closeShop.bind(this);
@@ -110,7 +112,7 @@ class HomeScreen extends Component {
     }
   }
   async fetchShopData() {
-    let { user,setShop } = this.props;
+    let { user, setShop } = this.props;
     try {
       const response = await getMyShop(user?.accessToken);
       const json = await response.json();
@@ -155,60 +157,60 @@ class HomeScreen extends Component {
     const { user } = this.props;
 
     try {
-        const accessToken = user?.accessToken || null;
-        if (accessToken) {
-            const token = await this.getToken();
-            console.log('token-->',token);
-            const deviceInfo = await getDeviceInfo();
-            this.uploadDeviceInfo(token, deviceInfo, accessToken)
-        }
+      const accessToken = user?.accessToken || null;
+      if (accessToken) {
+        const token = await this.getToken();
+        const deviceInfo = await getDeviceInfo();
+        this.uploadDeviceInfos(token, deviceInfo, accessToken)
+      }
     } catch (error) {
-        console.log("calling from getSection", error);
-        this.setState({ loading: false });
+      console.log("calling from getSection", error);
+      this.setState({ loading: false });
     }
-}
-async uploadDeviceInfo(token, deviceInfo, accessToken) {
-  let params = JSON.stringify(Object.assign({ ...deviceInfo }, { 'fcmId': token, 'appType': 'Partner' }));
-  console.log('params-->',params)
-  await uploadDeviceInfo(params,accessToken);
-}
+  }
+  async uploadDeviceInfos(token, deviceInfo, accessToken) {
+    let params = JSON.stringify(Object.assign({ ...deviceInfo }, { 'fcmId': token, 'appType': 'Partner' }));
+    console.log('params-->', params)
+    await uploadDeviceInfo(params, accessToken);
+  }
+
   async getToken() {
     const authStatus = await messaging().requestPermission();
     const enabled =
-    authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-    authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-  if (enabled) {
-    await messaging().registerDeviceForRemoteMessages();
-    return await messaging().getToken();
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+    if (enabled) {
+      await messaging().registerDeviceForRemoteMessages();
+      return await messaging().getToken();
+    }
   }
-}
   NotifcationListnes() {
     console.log('NotifcationListnes-->')
     messaging().onNotificationOpenedApp(remoteMessage => {
       console.log(
-          'Notification caused app to open from background state:',
-          remoteMessage.notification, remoteMessage.data
+        'Notification caused app to open from background state:',
+        remoteMessage.notification, remoteMessage.data
       );
       if (remoteMessage) {
-        console.log('remoteMessage',remoteMessage)
+        console.log('remoteMessage', remoteMessage)
       }
-  });
+    });
 
-  messaging()
+    messaging()
       .getInitialNotification()
       .then(remoteMessage => {
-          if (remoteMessage) {
-            console.log('remoteMessage-->',remoteMessage)
-          }
+        if (remoteMessage) {
+          console.log('remoteMessage-->', remoteMessage)
+        }
       });
-  messaging().onMessage(async remoteMessage => {
-      console.log('notification on froground state....',remoteMessage)
-  })
+    messaging().onMessage(async remoteMessage => {
+      console.log('notification on froground state....', remoteMessage)
+    })
   }
   async shareCard() {
-    const {myshop} = this.props;
+    const { myshop } = this.props;
     try {
-      
+
       const shareResponse = await Share.open({
         message: `Check ${myshop && myshop?.name} out. Get all your Automobile Repair needs from ${myshop && myshop?.name} only on Fydo.`,
         //title: 'Title',
@@ -233,7 +235,7 @@ async uploadDeviceInfo(token, deviceInfo, accessToken) {
     navigation.navigate('Support');
   }
   triggerOfferModal() {
-    this.setState({modalVisible: false})
+    this.setState({ modalVisible: false })
     this.setState(prevState => {
       return {
         modalOfferVisible: !prevState.modalOfferVisible,
@@ -241,10 +243,10 @@ async uploadDeviceInfo(token, deviceInfo, accessToken) {
     });
   }
   triggerSaleModel() {
-    this.setState({modalVisible:false})
+    this.setState({ modalVisible: false })
     this.setState(prevState => {
       return {
-        modelSaleVisible:!prevState.modelSaleVisible,
+        modelSaleVisible: !prevState.modelSaleVisible,
       }
     })
   }
@@ -264,24 +266,24 @@ async uploadDeviceInfo(token, deviceInfo, accessToken) {
   }
   renderTopSheet() {
     return (
-      <Modal  
-      statusBarTranslucent
-      animationType="fade"
-      transparent={true}
-      visible={this.state.tagTopSheetVisibel}
-      onRequestClose={this.triggerTopTagModal}
+      <Modal
+        statusBarTranslucent
+        animationType="fade"
+        transparent={true}
+        visible={this.state.tagTopSheetVisibel}
+        onRequestClose={this.triggerTopTagModal}
       >
-      <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      >
-        <Pressable
-          activeOpacity={1}
-          style={styles.addTagsBottomSheetContainer}
-          onPress={this.triggerTopTagModal}
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        >
+          <Pressable
+            activeOpacity={1}
+            style={styles.addTagsBottomSheetContainer}
+            onPress={this.triggerTopTagModal}
           >
-            <JoinNowTopSheet/>
+            <JoinNowTopSheet />
           </Pressable>
-          </KeyboardAvoidingView>
+        </KeyboardAvoidingView>
       </Modal>
     )
   }
@@ -293,71 +295,71 @@ async uploadDeviceInfo(token, deviceInfo, accessToken) {
         transparent={true}
         visible={this.state.tagBottomSheetVisible}
         onRequestClose={this.triggerTagModal}>
-          <KeyboardAvoidingView
-            style={{
-              height: 400,
-             // position: 'absolute',
-              width: '100%',
-              bottom: 0,
-              flex:1
-            }}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <Pressable
-          activeOpacity={1}
-          style={styles.addTagsBottomSheetContainer}
-          onPress={this.triggerTagModal}>
-            <AddTagsBottomSheet triggerTagModal={this.triggerTagModal}/>
-        </Pressable>
-          </KeyboardAvoidingView>
+        <KeyboardAvoidingView
+          style={{
+            height: 400,
+            // position: 'absolute',
+            width: '100%',
+            bottom: 0,
+            flex: 1
+          }}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+          <Pressable
+            activeOpacity={1}
+            style={styles.addTagsBottomSheetContainer}
+            onPress={this.triggerTagModal}>
+            <AddTagsBottomSheet triggerTagModal={this.triggerTagModal} />
+          </Pressable>
+        </KeyboardAvoidingView>
       </Modal>
     );
   }
-  renderOfferModal(){
-    let {user} = this.props;
+  renderOfferModal() {
+    let { user } = this.props;
     return (
-        <Modal 
-            statusBarTranslucent
-            animationType="fade"
-            transparent={true}
-            visible={this.state.modalOfferVisible}
-            onRequestClose={this.triggerOfferModal}
-            >
-            <Pressable 
-                activeOpacity={1}
-                style={styles.addTagsBottomSheetContainer}
-                onPress={this.triggerOfferModal}>
+      <Modal
+        statusBarTranslucent
+        animationType="fade"
+        transparent={true}
+        visible={this.state.modalOfferVisible}
+        onRequestClose={this.triggerOfferModal}
+      >
+        <Pressable
+          activeOpacity={1}
+          style={styles.addTagsBottomSheetContainer}
+          onPress={this.triggerOfferModal}>
 
-                <MyOffersBottomSheet 
-                    token={user?.accessToken}
-                    toggle={this.triggerOfferModal}/>
-            </Pressable>
-        </Modal>
-    )
-}
-renderSaleModal(){
-  let {user} = this.props;
-  return (
-      <Modal 
-          statusBarTranslucent
-          animationType="fade"
-          transparent={true}
-          visible={this.state.modelSaleVisible}
-          onRequestClose={this.triggerSaleModel}
-          >
-          <Pressable 
-              activeOpacity={1}
-              style={styles.addTagsBottomSheetContainer}
-              onPress={this.triggerSaleModel}>
-
-              <MySaleBottomSheet 
-                  token={user?.accessToken}
-                  toggle={this.triggerSaleModel}/>
-          </Pressable>
+          <MyOffersBottomSheet
+            token={user?.accessToken}
+            toggle={this.triggerOfferModal} />
+        </Pressable>
       </Modal>
-  )
-}
+    )
+  }
+  renderSaleModal() {
+    let { user } = this.props;
+    return (
+      <Modal
+        statusBarTranslucent
+        animationType="fade"
+        transparent={true}
+        visible={this.state.modelSaleVisible}
+        onRequestClose={this.triggerSaleModel}
+      >
+        <Pressable
+          activeOpacity={1}
+          style={styles.addTagsBottomSheetContainer}
+          onPress={this.triggerSaleModel}>
+
+          <MySaleBottomSheet
+            token={user?.accessToken}
+            toggle={this.triggerSaleModel} />
+        </Pressable>
+      </Modal>
+    )
+  }
   render() {
-    let { shopOpen, carousels  } = this.state;
+    let { shopOpen, carousels } = this.state;
     let { language } = this.props;
 
     return (
@@ -407,43 +409,43 @@ renderSaleModal(){
         <ScrollView>
           <StatusBar backgroundColor={PRIMARY} />
           <HomeSlider carousels={carousels && carousels} />
-          <CardIconButton title="Share your business card to get more customer!" buttonTitle="Tap to share" icons={<MaterialIcons name="card-giftcard" size={30} color={WHITE} />} onPress={this.shareCard}/>
+          <CardIconButton title="Share your business card to get more customer!" buttonTitle="Tap to share" icons={<MaterialIcons name="card-giftcard" size={30} color={WHITE} />} onPress={this.shareCard} />
           <View style={styles.line} />
-          <CardIconButton title="Add Tags to your shops to make user search you" buttonTitle="Tap to Add" icons={<Ionicons name="pricetag-outline" size={30} color={WHITE} />}  onPress={this.triggerTagModal}/>
+          <CardIconButton title="Add Tags to your shops to make user search you" buttonTitle="Tap to Add" icons={<Ionicons name="pricetag-outline" size={30} color={WHITE} />} onPress={this.triggerTagModal} />
           <View style={styles.line} />
           <View style={styles.row}>
             <RoundIconText
-            icon={<MyShopIcon width={24} height={24} />}
-            onPress={() => this.props?.navigation?.navigate('MyShop')}
-            label={language == 'HINDI' ? 'मेरी दुकान' : 'My Shops'}/>
-            <RoundIconText 
+              icon={<MyShopIcon width={24} height={24} />}
+              onPress={() => this.props?.navigation?.navigate('MyShop')}
+              label={language == 'HINDI' ? 'मेरी दुकान' : 'My Shops'} />
+            <RoundIconText
               icon={<OfferIcon width={24} height={24} />}
-              onPress={()=> this.props?.navigation?.navigate('MyOffers')}
+              onPress={() => this.props?.navigation?.navigate('MyOffers')}
               label={language == 'HINDI' ? 'मेरे प्रस्ताव' : 'My Offers'}
             />
-            <RoundIconText 
-              icon={<Feather name="arrow-down-left" size={24} color={'#fff'}/> }
-              onPress={()=> this.props?.navigation?.navigate('ReferralHistory')}
+            <RoundIconText
+              icon={<Feather name="arrow-down-left" size={24} color={'#fff'} />}
+              onPress={() => this.props?.navigation?.navigate('ReferralHistory')}
               label={language == 'HINDI' ? 'मेरे प्रस्ताव' : 'My Referral'}
             />
-             {/* <RoundIconText 
+            {/* <RoundIconText 
               icon={<OfferIcon width={24} height={24} />}
               onPress={()=> this.props?.navigation?.navigate('MySales')}
               label={language == 'HINDI' ? 'मेरे प्रस्ताव' : 'My Sales'}
             /> */}
           </View>
-          <View style={styles.line} /> 
-           <CardlabelButton title="Get guranteed customer in your shop" subTitle="Be Our Exclusive Channel Partner" buttonTitle="Join now" onPress={this.triggerTopTagModal}/>
+          <View style={styles.line} />
+          <CardlabelButton title="Get guranteed customer in your shop" subTitle="Be Our Exclusive Channel Partner" buttonTitle="Join now" onPress={this.triggerTopTagModal} />
           <View style={styles.line} />
           <View style={styles.row}>
-              <SquareIconButton 
-                onPress={()=>this.props?.navigation?.navigate('Support')}
-                label={language == 'HINDI' ? 'समर्थन और सेवा' : 'Support and service'}
-                icon={<SupportIcon width={24} height={24} />}/>
-              <SquareIconButton
-              onPress={()=>this.props?.navigation?.navigate('ReferEarn')}
+            <SquareIconButton
+              onPress={() => this.props?.navigation?.navigate('Support')}
+              label={language == 'HINDI' ? 'समर्थन और सेवा' : 'Support and service'}
+              icon={<SupportIcon width={24} height={24} />} />
+            <SquareIconButton
+              onPress={() => this.props?.navigation?.navigate('ReferEarn')}
               label={language == 'HINDI' ? 'देखें और कमाएं' : 'Refer and earn'}
-              icon={<FontAwesome name='bullhorn' size={24} color={PRIMARY}/>}/>
+              icon={<FontAwesome name='bullhorn' size={24} color={PRIMARY} />} />
           </View>
           <View style={styles.line} />
           <View style={styles.shopStatusRow}>
@@ -471,7 +473,7 @@ renderSaleModal(){
   }
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(WithNetInfo(HomeScreen));
+export default connect(mapStateToProps, mapDispatchToProps)(WithNetInfo(HomeScreen));
 
 const styles = StyleSheet.create({
   container: {
@@ -490,7 +492,7 @@ const styles = StyleSheet.create({
   },
   shopStatusLabel: {
     color: 'black',
-    fontSize:  textScale(13),
+    fontSize: textScale(13),
     fontFamily: 'Gilroy-Medium',
     letterSpacing: 0.3,
 

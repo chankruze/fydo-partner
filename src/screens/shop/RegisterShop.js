@@ -122,6 +122,7 @@ function RegisterShop({ route, navigation, user, myshop }) {
   }
 
   const isValidate = () => {
+    const map = route.params?.map;
     const error = {};
     if (ownerName == null || ownerName?.trim() == '') {
       error.ownerName = 'Enter owner name';
@@ -139,7 +140,7 @@ function RegisterShop({ route, navigation, user, myshop }) {
     if (shopName == null || shopName?.trim() == '') {
       error.shopName = 'Enter shop name';
     }
-    if (route.params?.address == null || route.params?.address?.trim() == '') {
+    if (!map?.address) {
       error.address = 'Enter the shop address';
     }
     setError(error);

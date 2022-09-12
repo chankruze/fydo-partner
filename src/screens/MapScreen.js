@@ -59,7 +59,7 @@ const MapScreen = ({ navigation, route }) => {
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
         );
       } else {
-        granted = await request(PERMISSIONS.IOS.LOCATION_ALWAYS).then(
+        granted = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE).then(
           result => {
             return result;
           },
