@@ -17,6 +17,9 @@ PODS:
   - Firebase/DynamicLinks (8.10.0):
     - Firebase/CoreOnly
     - FirebaseDynamicLinks (~> 8.10.0)
+  - Firebase/Messaging (8.10.0):
+    - Firebase/CoreOnly
+    - FirebaseMessaging (~> 8.10.0)
   - FirebaseCore (8.10.0):
     - FirebaseCoreDiagnostics (~> 8.0)
     - GoogleUtilities/Environment (~> 7.6)
@@ -28,6 +31,20 @@ PODS:
     - nanopb (~> 2.30908.0)
   - FirebaseDynamicLinks (8.10.0):
     - FirebaseCore (~> 8.0)
+  - FirebaseInstallations (8.14.0):
+    - FirebaseCore (~> 8.0)
+    - GoogleUtilities/Environment (~> 7.7)
+    - GoogleUtilities/UserDefaults (~> 7.7)
+    - PromisesObjC (< 3.0, >= 1.2)
+  - FirebaseMessaging (8.10.0):
+    - FirebaseCore (~> 8.0)
+    - FirebaseInstallations (~> 8.0)
+    - GoogleDataTransport (~> 9.1)
+    - GoogleUtilities/AppDelegateSwizzler (~> 7.6)
+    - GoogleUtilities/Environment (~> 7.6)
+    - GoogleUtilities/Reachability (~> 7.6)
+    - GoogleUtilities/UserDefaults (~> 7.6)
+    - nanopb (~> 2.30908.0)
   - Flipper (0.99.0):
     - Flipper-Folly (~> 2.6)
     - Flipper-RSocket (~> 1.4)
@@ -108,6 +125,8 @@ PODS:
     - GoogleUtilities/Reachability
   - "GoogleUtilities/NSData+zlib (7.7.0)"
   - GoogleUtilities/Reachability (7.7.0):
+    - GoogleUtilities/Logger
+  - GoogleUtilities/UserDefaults (7.7.0):
     - GoogleUtilities/Logger
   - libevent (2.1.12)
   - nanopb (2.30908.0):
@@ -441,6 +460,10 @@ PODS:
     - GoogleUtilities/AppDelegateSwizzler
     - React-Core
     - RNFBApp
+  - RNFBMessaging (13.1.1):
+    - Firebase/Messaging (= 8.10.0)
+    - React-Core
+    - RNFBApp
   - RNGestureHandler (2.3.2):
     - React-Core
   - RNImageCropPicker (0.37.3):
@@ -578,6 +601,7 @@ DEPENDENCIES:
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBDynamicLinks (from `../node_modules/@react-native-firebase/dynamic-links`)"
+  - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
@@ -595,6 +619,8 @@ SPEC REPOS:
     - FirebaseCore
     - FirebaseCoreDiagnostics
     - FirebaseDynamicLinks
+    - FirebaseInstallations
+    - FirebaseMessaging
     - Flipper
     - Flipper-Boost-iOSX
     - Flipper-DoubleConversion
@@ -728,6 +754,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBDynamicLinks:
     :path: "../node_modules/@react-native-firebase/dynamic-links"
+  RNFBMessaging:
+    :path: "../node_modules/@react-native-firebase/messaging"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNImageCropPicker:
@@ -758,6 +786,8 @@ SPEC CHECKSUMS:
   FirebaseCore: 04186597c095da37d90ff9fd3e53bc61a1ff2440
   FirebaseCoreDiagnostics: fd0c8490f34287229c1d6c103d3a55f81ec85712
   FirebaseDynamicLinks: bb6ac718f763ec43560f0e2bb6b655a798b277af
+  FirebaseInstallations: 7d1d967a307c12f1aadd76844fc321cef699b1ce
+  FirebaseMessaging: b0aeba17332ee1ee610662b4d1e02a86db82f08f
   Flipper: 30e8eeeed6abdc98edaf32af0cda2f198be4b733
   Flipper-Boost-iOSX: fd1e2b8cbef7e662a122412d7ac5f5bea715403c
   Flipper-DoubleConversion: 57ffbe81ef95306cc9e69c4aa3aeeeeb58a6a28c
@@ -825,6 +855,7 @@ SPEC CHECKSUMS:
   RNDeviceInfo: 8d4177859b062334835962799460528869a487fb
   RNFBApp: 6e20f07b316346d96737191f377777f61f51a8d2
   RNFBDynamicLinks: 140a76744739274fc589c3de88fe2161e2214a34
+  RNFBMessaging: eb8d1b08795c8718706007ed0743732d00e1acc4
   RNGestureHandler: 6e757e487a4834e7280e98e9bac66d2d9c575e9c
   RNImageCropPicker: 44e2807bc410741f35d4c45b6586aedfe3da39d2
   RNPermissions: 34d678157c800b25b22a488e4d8babb57456e796

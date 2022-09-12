@@ -47,6 +47,9 @@ import MyOffersBottomSheet from '../components/myoffers/MyOffersBottomSheet';
 import RoundIconText from '../components/home/RoundIconText';
 import SquareIconButton from '../components/home/SquareIconButton';
 import MySaleBottomSheet from '../components/sale/MySaleBottomSheet';
+import messaging from '@react-native-firebase/messaging';
+import { getDeviceInfo } from '../utils/getDeviceInfo';
+import { uploadDeviceInfo } from '../services/homeServicr';
 const mapStateToProps = state => {
   return {
     user: state?.userReducer?.user,
@@ -81,11 +84,14 @@ class HomeScreen extends Component {
     this.navigateToSupportScreen = this.navigateToSupportScreen.bind(this);
     this.triggerOfferModal = this.triggerOfferModal.bind(this);
     this.triggerSaleModel = this.triggerSaleModel.bind(this);
+    this.NotifcationListnes = this.NotifcationListnes.bind(this);
   }
 
   componentDidMount() {
     this.callApis();
     this.fetchShopData();
+    this.getSections();
+    this.NotifcationListnes();
   }
 
 
@@ -145,7 +151,60 @@ class HomeScreen extends Component {
   // handleTagsBottomSheet() {
   //   this.setState({ tagBottomSheetVisible: !this.state.tagBottomSheetVisible });
   // }
+  getSections = async () => {
+    const { user } = this.props;
 
+    try {
+        const accessToken = user?.accessToken || null;
+        if (accessToken) {
+            const token = await this.getToken();
+            console.log('token-->',token);
+            const deviceInfo = await getDeviceInfo();
+            this.uploadDeviceInfo(token, deviceInfo, accessToken)
+        }
+    } catch (error) {
+        console.log("calling from getSection", error);
+        this.setState({ loading: false });
+    }
+}
+async uploadDeviceInfo(token, deviceInfo, accessToken) {
+  let params = JSON.stringify(Object.assign({ ...deviceInfo }, { 'fcmId': token, 'appType': 'Partner' }));
+  console.log('params-->',params)
+  await uploadDeviceInfo(params,accessToken);
+}
+  async getToken() {
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+    authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+    authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+  if (enabled) {
+    await messaging().registerDeviceForRemoteMessages();
+    return await messaging().getToken();
+  }
+}
+  NotifcationListnes() {
+    console.log('NotifcationListnes-->')
+    messaging().onNotificationOpenedApp(remoteMessage => {
+      console.log(
+          'Notification caused app to open from background state:',
+          remoteMessage.notification, remoteMessage.data
+      );
+      if (remoteMessage) {
+        console.log('remoteMessage',remoteMessage)
+      }
+  });
+
+  messaging()
+      .getInitialNotification()
+      .then(remoteMessage => {
+          if (remoteMessage) {
+            console.log('remoteMessage-->',remoteMessage)
+          }
+      });
+  messaging().onMessage(async remoteMessage => {
+      console.log('notification on froground state....',remoteMessage)
+  })
+  }
   async shareCard() {
     const {myshop} = this.props;
     try {
@@ -373,8 +432,8 @@ renderSaleModal(){
               label={language == 'HINDI' ? 'मेरे प्रस्ताव' : 'My Sales'}
             /> */}
           </View>
-          {/* <View style={styles.line} /> 
-           <CardlabelButton title="Get guranteed customer in your shop" subTitle="Be Our Exclusive Channel Partner" buttonTitle="Join now" onPress={this.triggerTopTagModal}/> */}
+          <View style={styles.line} /> 
+           <CardlabelButton title="Get guranteed customer in your shop" subTitle="Be Our Exclusive Channel Partner" buttonTitle="Join now" onPress={this.triggerTopTagModal}/>
           <View style={styles.line} />
           <View style={styles.row}>
               <SquareIconButton 

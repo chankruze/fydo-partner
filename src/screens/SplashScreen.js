@@ -6,6 +6,7 @@ import { setUser } from '../store/actions/user.action';
 import { connect } from 'react-redux';
 import { getUser } from '../utils/defaultPreference';
 import { PRIMARY } from '../assets/colors';
+import messaging from '@react-native-firebase/messaging';
 
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -60,6 +61,49 @@ const SplashScreen = ({ navigation, setUser, user }) => {
     // return () => {
     //   clearTimeout(timeout)
     // }
+    messaging().onNotificationOpenedApp(remoteMessage => {
+      console.log(
+          'Notification caused app to open from background state:',
+          remoteMessage.notification, remoteMessage.data
+      );
+      if (remoteMessage) {
+        console.log('remoteMessage',remoteMessage)
+          // let { entityType, entityId } = remoteMessage.data;
+          // if (entityId && entityType == NOTIFICATION_TYPES.SINGLE_BRAND) {
+          //     this.setState({ initialRoute: 'Brand', id: entityId })ˀ
+          // }
+          // else if (entityId && entityType == NOTIFICATION_TYPES.SINGLE_STORE) {
+          //     this.setState({ initialRoute: 'Store', id: entityId })
+          // }
+          // else if (entityId && entityType == NOTIFICATION_TYPES.SINGLE_OFFER) {
+          //     this.setState({ initialRoute: 'Offer', id: entityId })
+          // }
+      }
+      // navigation.navigate(remoteMessage.data.type);
+  });
+
+  messaging()
+      .getInitialNotification()
+      .then(remoteMessage => {
+          if (remoteMessage) {
+            console.log('remoteMessage-->',remoteMessage)
+              // console.log(
+              //     'Notification caused app to open from quit state:',
+              //     remoteMessage.notification, remoteMessage.data
+              // );
+              // let { entityType, entityId } = remoteMessage.data;
+              // if (entityId && entityType == NOTIFICATION_TYPES.SINGLE_BRAND) {
+              //     this.setState({ initialRoute: 'Brand', id: entityId })
+              // }
+              // else if (entityId && entityType == NOTIFICATION_TYPES.SINGLE_STORE) {
+              //     this.setState({ initialRoute: 'Store', id: entityId })
+              // }
+              // else if (entityId && entityType == NOTIFICATION_TYPES.SINGLE_OFFER) {
+              //     this.setState({ initialRoute: 'Offer', id: entityId })
+              // }
+              // setInitialRoute(remoteMessage.data.type); // e.g. "Settings"
+          }
+      });
   }, []);
 
   return (

@@ -116,7 +116,8 @@ const styles = StyleSheet.create({
     fontWeight:'400',
     fontFamily: 'Gilroy-Medium',
     letterSpacing: 0.3,
-    color:GREY_1
+    color:GREY_1,
+    width: '85%',
   },
 
   label: {

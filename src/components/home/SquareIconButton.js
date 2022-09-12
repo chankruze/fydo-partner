@@ -23,11 +23,12 @@ const styles = StyleSheet.create({
         marginRight: moderateScale(5),
         height: moderateScale(70),
         justifyContent: 'center',
-        elevation: 3,
         borderRadius: moderateScale(5),
         backgroundColor: LIGHTBLUE,
         shadowColor: 'rgba(227, 242, 253, 1)',
-
+        elevation:3,
+        shadowOffset:{width:0,height:2},
+        shadowOpacity:0.2,
       },
       label: {
         color: PRIMARY,

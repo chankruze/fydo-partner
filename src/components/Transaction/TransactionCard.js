@@ -144,6 +144,7 @@ const styles = StyleSheet.create({
         padding: moderateScale(16),
         borderRadius: moderateScale(4),
         margin: 2,
+        elevation:3
       },
       iconContent: {
         flex: 1,

@@ -7,7 +7,7 @@ import {
   textScale,
   width,
 } from '../../utils/responsiveSize';
-import {PRIMARY, WHITE} from '../../assets/colors';
+import {BLACK, GREEN, PRIMARY, WHITE} from '../../assets/colors';
 import shield from '../../assets/images/shield.png';
 import ButtonComponent from '../../components/ButtonComponent';
 import {useState} from 'react';
@@ -51,19 +51,31 @@ const JoinNowTopSheet = () => {
           <View style={styles.wrapper}>
             <View style={styles.inputWrapper}>
               <TextInput
-                    placeholder='Your Name'
+                    placeholder='Account Name'
                     style={styles.input}
                     placeholderTextColor="#383B3F80"
                     //onChangeText={handleProductName}
                 />
                 <TextInput
-                    placeholder='Bank Account'
+                    placeholder='Email Address'
+                    style={styles.input}
+                    placeholderTextColor="#383B3F80"
+                    //onChangeText={handleProductName}
+                />
+                <TextInput
+                    placeholder='Bank account number'
                     style={styles.input}
                     placeholderTextColor="#383B3F80"
                     //onChangeText={handleProductName}
                 />
                 <TextInput
                     placeholder='IFSC Code'
+                    style={styles.input}
+                    placeholderTextColor="#383B3F80"
+                    //onChangeText={handleProductName}
+                />
+                 <TextInput
+                    placeholder='Add UPI ID'
                     style={styles.input}
                     placeholderTextColor="#383B3F80"
                     //onChangeText={handleProductName}
@@ -98,7 +110,7 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     paddingHorizontal: moderateScale(15),
-    marginTop: moderateScaleVertical(10),
+    //marginTop: moderateScaleVertical(10),
   },
   image: {
     height: moderateScale(80),
@@ -117,13 +129,13 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   input: {
-    borderBottomColor: '#00357933',
-    borderBottomWidth: 1.5,
-    marginVertical: moderateScaleVertical(25),
-    marginHorizontal:moderateScale(5)
+     borderBottomColor: '#00357933',
+     borderBottomWidth: 1.5,
+     padding:moderateScale(8),
+    marginVertical: moderateScaleVertical(8),
+    marginHorizontal:moderateScale(5),
   },
   inputWrapper: {
-   //paddingHorizontal: moderateScale(5),
-    marginTop: moderateScaleVertical(10),
+   marginBottom: moderateScale(10),
   }
 });
