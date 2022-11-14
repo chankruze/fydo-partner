@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   View,
@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   FlatList,
 } from 'react-native';
-import {PRIMARY, DARKBLACK, LIGHTBLUE, WHITE} from '../../assets/colors';
+import { PRIMARY, DARKBLACK, LIGHTBLUE, WHITE } from '../../assets/colors';
 import BottomsheetIcon from './../../assets/icons/bottomsheet-icon.png';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -17,13 +17,13 @@ import { updateShop } from '../../services/shopService';
 import { connect } from 'react-redux';
 import { setShop } from '../../store/actions/user.action';
 
-const AddTagsBottomSheet = ({user,myshop,setShop,triggerTagModal}) =>{
+const AddTagsBottomSheet = ({ user, myshop, setShop, triggerTagModal }) => {
   const [tags, setTags] = useState(myshop?.searchTags.length > 0 ? myshop.searchTags : [])
   const [tag, setTag] = useState(null);
   const onStartShouldSetResponder = () => {
     return true;
   };
-  
+
   const [error, setError] = useState({});
   const isValidate = () => {
     const error = {};
@@ -34,25 +34,23 @@ const AddTagsBottomSheet = ({user,myshop,setShop,triggerTagModal}) =>{
     if (Object.keys(error).length == 0) return true;
     return false;
   };
-  
+
   const addTag = () => {
-    if(isValidate()){
+    if (isValidate()) {
       tags.push(tag);
-      console.log(tags);
       setTags(tags);
       setTag(null);
     }
   };
   const handleClosePress = async () => {
-      myshop.searchTags = tags;
-      const response = await updateShop(user?.accessToken, myshop)
-      const json = await response.json();
-      if(json){
-        setShop(json)
-      }
-      triggerTagModal()
+    myshop.searchTags = tags;
+    const response = await updateShop(user?.accessToken, myshop)
+    if (response) {
+      setShop(response)
+    }
+    triggerTagModal()
   }
-  
+
   const handleInput = value => {
     setTag(value);
   };
@@ -83,7 +81,7 @@ const AddTagsBottomSheet = ({user,myshop,setShop,triggerTagModal}) =>{
       </Text>
       <View style={styles.row}>
         <View style={styles.inputContainer}>
-          <Ionicons name="pricetag-outline" size={18} style={styles.inputIcon}/>
+          <Ionicons name="pricetag-outline" size={18} style={styles.inputIcon} />
           <TextInput
             value={tag}
             onChangeText={handleInput}
@@ -117,7 +115,7 @@ const AddTagsBottomSheet = ({user,myshop,setShop,triggerTagModal}) =>{
 const mapStateToProps = (state) => {
   return {
     user: state?.userReducer?.user,
-    myshop:state?.userReducer?.myshop
+    myshop: state?.userReducer?.myshop
   }
 }
 const mapDispatchToProps = dispatch => {
@@ -125,7 +123,7 @@ const mapDispatchToProps = dispatch => {
     setShop: myshop => dispatch(setShop(myshop))
   };
 };
-export default connect(mapStateToProps,mapDispatchToProps)(AddTagsBottomSheet) 
+export default connect(mapStateToProps, mapDispatchToProps)(AddTagsBottomSheet)
 const styles = StyleSheet.create({
   container: {
     backgroundColor: WHITE,
@@ -172,7 +170,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   inputIcon: {
-    marginRight:5,
+    marginRight: 5,
   },
   row: {
     flexDirection: 'row',

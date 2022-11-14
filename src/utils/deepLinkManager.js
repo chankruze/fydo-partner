@@ -4,12 +4,11 @@ import dynamicLinks from '@react-native-firebase/dynamic-links';
 // import { DeepLinkTypes } from './DeepLinkTypes';
 
 export async function buildLink(type, id, data) {
-  console.log("buildLink", data)
   const link = await dynamicLinks().buildShortLink({
     link: `https://play.google.com/store/apps/details?id=com.letsdevelopit.lfydnewapp`,
     // domainUriPrefix is created in your Firebase console
     domainUriPrefix: 'https://fydo.page.link',
-   // domainUriPrefix: 'https://lfydnewapp.page.link',
+    // domainUriPrefix: 'https://lfydnewapp.page.link',
     // optional setup which updates Firebase analytics campaign
     // "banner". This also needs setting up before hand
     android: {
@@ -29,7 +28,7 @@ export async function buildLink(type, id, data) {
   return link;
 }
 
-export async function buildReferalLink(referralCode,referralText) {
+export async function buildReferalLink(referralCode, referralText) {
   try {
     const link = await dynamicLinks().buildShortLink({
       link: `https://play.google.com/store/apps/details?id=com.letsdevelopit.lfydnewapp&referalCode=${referralCode}`,
@@ -50,7 +49,7 @@ export async function buildReferalLink(referralCode,referralText) {
         descriptionText: `${referralText && referralCode}\n${link}`,
       }
     });
-  
+
     return link;
   } catch (error) {
     console.log(error)

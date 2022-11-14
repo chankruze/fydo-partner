@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {View, StyleSheet, Image, Text, TouchableOpacity, TextInput, ActivityIndicator} from 'react-native';
+import { View, StyleSheet, Image, Text, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
 import { BLACK, PRIMARY, WHITE } from '../../assets/colors';
 import BottomsheetIcon from './../../assets/icons/bottomsheet-icon.png';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -7,18 +7,20 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 import Dialog from "react-native-dialog";
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { generatePresignUrl } from '../../services/presignUrlService';
 import { addOffer } from '../../services/offerService';
 import uuid from 'react-native-uuid';
 import { moderateScale } from '../../utils/responsiveSize';
+import { KeyboardAvoidingView } from 'react-native';
+import { Platform } from 'react-native';
 
-export default function MyOffersBottomSheet({token, toggle}){
+export default function MyOffersBottomSheet({ token, toggle }) {
 
     const [loading, setLoading] = useState(false);
     const [tags, setTags] = useState([]);
     const [imageUrl, setImageUrl] = useState(null);
-    const [tag, setTag]  = useState(null);
+    const [tag, setTag] = useState(null);
     const [error, setError] = useState({});
     const [productName, setProductName] = useState(null);
     const [description, setDescription] = useState(null);
@@ -34,13 +36,13 @@ export default function MyOffersBottomSheet({token, toggle}){
     const handleDescription = (description) => {
         setDescription(description);
     }
-    
+
     const onStartShouldSetResponder = () => {
         return true
     };
 
     const addTag = () => {
-        if(validateTag()){
+        if (validateTag()) {
             tags.push(tag);
             setTags(tags);
             setTag(null);
@@ -74,23 +76,20 @@ export default function MyOffersBottomSheet({token, toggle}){
     const handleStartTimePicker = () => {
         setStartTimePicker(!startTimePicker);
     };
-    
+
     const handleEndTimePicker = () => {
         setEndTimePicker(!endTimePicker);
     };
     const submit = async () => {
         let imagePath = null;
-        if(validateInputs()){
+        if (validateInputs()) {
             setLoading(true);
             try {
-                if(imageUrl){
-                    console.log("23")
-                    console.log(token)
+                if (imageUrl) {
                     const imageResponse = await generatePresignUrl(token, [uuid.v4()]);
-                    const data = await imageResponse.json();
-                    imagePath = data[0]?.split("?")[0];
+                    imagePath = imageResponse[0]?.split("?")[0];
                     const imageBody = await getBlob(imageUrl);
-                    const dataResponse = await fetch(data[0], {
+                    const dataResponse = await fetch(imageResponse[0], {
                         method: 'PUT',
                         body: imageBody
                     })
@@ -138,11 +137,11 @@ export default function MyOffersBottomSheet({token, toggle}){
     const validateInputs = () => {
         let error = {};
         setError({});
-        if(!productName)
+        if (!productName)
             error['productName'] = "Enter product name";
-        if(!description)
+        if (!description)
             error['description'] = 'Enter description';
-        if(Object.keys(error).length > 0){
+        if (Object.keys(error).length > 0) {
             setError(error);
             return false;
         }
@@ -151,9 +150,9 @@ export default function MyOffersBottomSheet({token, toggle}){
     const validateTag = () => {
         let error = {};
         setError({});
-        if(!tag)
+        if (!tag)
             error['tag'] = "Enter Tag";
-        if(Object.keys(error).length > 0){
+        if (Object.keys(error).length > 0) {
             setError(error);
             return false;
         }
@@ -170,9 +169,8 @@ export default function MyOffersBottomSheet({token, toggle}){
                 mediaType: 'photo',
                 quality: .5,
             });
-            if(result?.assets?.length > 0){
+            if (result?.assets?.length > 0) {
                 setImageUrl(result?.assets[0]?.uri)
-                console.log(imageUrl)
             }
             setDialogVisible(false);
         } catch (error) {
@@ -194,9 +192,8 @@ export default function MyOffersBottomSheet({token, toggle}){
                 quality: .5,
                 selectionLimit: 1
             });
-            if(result?.assets.length > 0){
+            if (result?.assets.length > 0) {
                 setImageUrl(result?.assets[0]?.uri)
-                console.log(result?.assets[0]?.uri)
             }
             setDialogVisible(false);
         } catch (error) {
@@ -207,17 +204,17 @@ export default function MyOffersBottomSheet({token, toggle}){
 
     const renderDialog = () => {
         return (
-            <Dialog.Container 
-                visible={dialogVisible} 
+            <Dialog.Container
+                visible={dialogVisible}
                 onBackdropPress={() => {
                     setDialogVisible(false)
-            }}>
+                }}>
                 <Dialog.Title>Select Image</Dialog.Title>
                 <Dialog.Description>
                     Select image from?
                 </Dialog.Description>
-                <Dialog.Button label="Gallery" onPress={openGallery}/>
-                <Dialog.Button label="Camera" onPress={openCamera}/>
+                <Dialog.Button label="Gallery" onPress={openGallery} />
+                <Dialog.Button label="Camera" onPress={openCamera} />
             </Dialog.Container>
         )
     }
@@ -228,7 +225,7 @@ export default function MyOffersBottomSheet({token, toggle}){
                 <Text style={styles.tagLabel}>{item}</Text>
                 <TouchableOpacity
                     onPress={removeTag.bind(this, item)}>
-                    <MaterialIcons 
+                    <MaterialIcons
                         name='clear'
                         size={16}
                         color={PRIMARY}
@@ -239,23 +236,23 @@ export default function MyOffersBottomSheet({token, toggle}){
     }
 
     return (
-        <View 
-            style={styles.container} 
+        <View
+            style={styles.container}
             onStartShouldSetResponder={onStartShouldSetResponder}>
             {renderDialog()}
-            <Image 
+            <Image
                 source={BottomsheetIcon}
                 style={styles.bottomSheetIcon}
             />
             <Text style={styles.title}>Add Offer</Text>
             <View style={styles.row}>
                 <TouchableOpacity
-                    onPress={pickImage} 
+                    onPress={pickImage}
                     style={styles.addPhotosButton}>
                     <Ionicons
                         color={PRIMARY}
-                        size={32} 
-                        name='md-add-circle-outline'/>
+                        size={32}
+                        name='md-add-circle-outline' />
                     <Text style={styles.addPhotoLabel}>Add photos</Text>
                 </TouchableOpacity>
                 <Text style={styles.otherLabel}>If any</Text>
@@ -266,7 +263,7 @@ export default function MyOffersBottomSheet({token, toggle}){
                 onChangeText={handleProductName}
             />
             {error?.productName && <Text style={styles.error}>{error?.productName}</Text>}
-            <TextInput 
+            <TextInput
                 placeholder='Add Description (Buy 1 get 1 free /Buy 2 get 20% off)'
                 style={styles.input}
                 onChangeText={handleDescription}
@@ -276,10 +273,10 @@ export default function MyOffersBottomSheet({token, toggle}){
             <Text style={styles.label}>Please add some tags to make the customer feel easy to find your offers!</Text>
             <View style={styles.row}>
                 <View style={styles.inputContainer}>
-                    <Ionicons 
+                    <Ionicons
                         name='pricetag-outline'
                         size={18}
-                        style={styles.inputIcon}/>
+                        style={styles.inputIcon} />
                     <TextInput
                         value={tag}
                         onChangeText={handleInput}
@@ -287,7 +284,7 @@ export default function MyOffersBottomSheet({token, toggle}){
                         placeholder="Try fruits"
                     />
                 </View>
-                <TouchableOpacity 
+                <TouchableOpacity
                     onPress={addTag}
                     style={styles.addButton}>
                     <Text style={styles.addButtonLabel}>ADD</Text>
@@ -302,7 +299,7 @@ export default function MyOffersBottomSheet({token, toggle}){
             <View style={styles.row}>
                 <View style={styles.box}>
                     <Text style={styles.dateLabel}>Start Date</Text>
-                    <TouchableOpacity 
+                    <TouchableOpacity
                         onPress={handleStartTimePicker}
                         style={styles.dateContainer}>
                         <Text style={styles.date}>{getDate(startDate)}</Text>
@@ -331,10 +328,10 @@ export default function MyOffersBottomSheet({token, toggle}){
             </View>
             <TouchableOpacity
                 onPress={submit}
-                activeOpacity={.8} 
+                activeOpacity={.8}
                 style={styles.submitButton}>
                 {!loading && <Text style={styles.submitButtonLabel}>Submit</Text>}
-                {loading && <ActivityIndicator size="small" color="white"/>}
+                {loading && <ActivityIndicator size="small" color="white" />}
             </TouchableOpacity>
         </View>
     )
@@ -391,8 +388,8 @@ const styles = StyleSheet.create({
         marginLeft: 5
     },
     inputIcon: {
-        marginRight:5,
-      },
+        marginRight: 5,
+    },
     input: {
         borderBottomColor: 'lightgray',
         borderBottomWidth: 1,
@@ -439,8 +436,8 @@ const styles = StyleSheet.create({
         fontSize: 15
     },
     dateContainer: {
-        borderWidth:1,
-        borderColor:BLACK,
+        borderWidth: 1,
+        borderColor: BLACK,
         backgroundColor: WHITE,
         width: moderateScale(80),
         padding: moderateScale(10),

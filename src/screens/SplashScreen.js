@@ -29,7 +29,6 @@ const SplashScreen = ({ navigation, setUser, user }) => {
         const user = await getUser();
         setUserInfo(user);
         setUser(user);
-        console.log("user", user)
         if (user == null) {
           navigation.navigate('OnBoarding')
         }
@@ -45,64 +44,21 @@ const SplashScreen = ({ navigation, setUser, user }) => {
     }
     setUserData();
 
-    // let timeout = setTimeout(async () => {
-    //   // let user = await getUser();
-    //   console.log("jj--.", user);
-    //   if (user == null) {
-    //     navigation.navigate('OnBoarding')
-    //   }
-    //   else if (user?.profileComplete == false) {
-    //     navigation.navigate('RegisterShop');
-    //   }
-    //   else {
-    //     navigation.navigate('Main');
-    //   }
-    // }, 3000)
-    // return () => {
-    //   clearTimeout(timeout)
-    // }
     messaging().onNotificationOpenedApp(remoteMessage => {
       console.log(
-          'Notification caused app to open from background state:',
-          remoteMessage.notification, remoteMessage.data
+        'Notification caused app to open from background state:'
       );
       if (remoteMessage) {
-        console.log('remoteMessage',remoteMessage)
-          // let { entityType, entityId } = remoteMessage.data;
-          // if (entityId && entityType == NOTIFICATION_TYPES.SINGLE_BRAND) {
-          //     this.setState({ initialRoute: 'Brand', id: entityId })ˀ
-          // }
-          // else if (entityId && entityType == NOTIFICATION_TYPES.SINGLE_STORE) {
-          //     this.setState({ initialRoute: 'Store', id: entityId })
-          // }
-          // else if (entityId && entityType == NOTIFICATION_TYPES.SINGLE_OFFER) {
-          //     this.setState({ initialRoute: 'Offer', id: entityId })
-          // }
+        console.log('remoteMessage')
       }
-      // navigation.navigate(remoteMessage.data.type);
-  });
+    });
 
-  messaging()
+    messaging()
       .getInitialNotification()
       .then(remoteMessage => {
-          if (remoteMessage) {
-            console.log('remoteMessage-->',remoteMessage)
-              // console.log(
-              //     'Notification caused app to open from quit state:',
-              //     remoteMessage.notification, remoteMessage.data
-              // );
-              // let { entityType, entityId } = remoteMessage.data;
-              // if (entityId && entityType == NOTIFICATION_TYPES.SINGLE_BRAND) {
-              //     this.setState({ initialRoute: 'Brand', id: entityId })
-              // }
-              // else if (entityId && entityType == NOTIFICATION_TYPES.SINGLE_STORE) {
-              //     this.setState({ initialRoute: 'Store', id: entityId })
-              // }
-              // else if (entityId && entityType == NOTIFICATION_TYPES.SINGLE_OFFER) {
-              //     this.setState({ initialRoute: 'Offer', id: entityId })
-              // }
-              // setInitialRoute(remoteMessage.data.type); // e.g. "Settings"
-          }
+        if (remoteMessage) {
+          console.log('remoteMessage-->')
+        }
       });
   }, []);
 

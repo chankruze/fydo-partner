@@ -1,6 +1,7 @@
 export const BASE = 'https://api2.lfyd.in/';
 // export const BASE = 'https://api.fydo.in/';
-export const GOOGLE_MAP_API = 'AIzaSyAqTqXuRHOdBKs9Vmmqyrm966Lu-kGL7Qs';
+// export const GOOGLE_MAP_API = 'AIzaSyAqTqXuRHOdBKs9Vmmqyrm966Lu-kGL7Qs';
+export const GOOGLE_MAP_API = 'AIzaSyAJ_qAklmjyYP_fo6as_npbuVTslECfr_A';
 
 export const SEND_LOGIN_OTP_API = BASE + 'shop-login/send-otp-for-auth';
 export const VERIFY_LOGIN_OTP_API = BASE + 'shop-login/validate-otp-for-auth';
@@ -36,3 +37,5 @@ export const GET_AMENITIES = BASE + "amenity/all";
 export const GET_TRANSACTION = BASE + "transaction/v1/fetch-my-shop-transactions";
 export const GET_SETTLEMENT = BASE + "transaction/v1/fetch-my-shop-settlements";
 export const GET_TRANSACTION_AMOUNT = BASE + "transaction/v1/fetch-unsettled-amount"
+
+export const GET_POSTAL_ADDRESS = "https://maps.googleapis.com/maps/api/geocode/json";

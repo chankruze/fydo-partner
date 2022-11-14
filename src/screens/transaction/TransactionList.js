@@ -23,22 +23,17 @@ export const TransactionList = ({ user }) => {
     }, [])
 
     const apiTransactionHit = async () => {
-        console.log('====================================');
-        console.log("api call==>");
-        console.log('====================================');
         try {
             if (!isLast) {
                 const response = await getTransaction(user?.accessToken, limit, skip);
-                const json = await response.json();
-                console.log('json-->', json);
-                setTransactions([...transactions, ...json]);
+                setTransactions([...transactions, ...response]);
                 setSkip(skip + limit);
                 setLoading(false);
-                setLast(json.length == 0 || json.length < limit ? true : false);
+                setLast(response.length == 0 || response.length < limit ? true : false);
                 setRefreshing(false);
             }
         } catch (error) {
-            console.log('error raised', error);
+            console.log(error);
             setLoading(false);
         }
     };

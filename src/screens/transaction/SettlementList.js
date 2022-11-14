@@ -23,9 +23,6 @@ export const SettlementList = ({ user }) => {
     }, [])
 
     const getSettlements = async () => {
-        console.log('====================================');
-        console.log("api call==>");
-        console.log('====================================');
         try {
             if (!isLast) {
                 let params = {
@@ -34,15 +31,11 @@ export const SettlementList = ({ user }) => {
                 }
 
                 const response = await getSettlement(user?.accessToken, limit, skip, params);
-                const json = await response.json();
 
-                console.log('====================================');
-                console.log("json==>", json);
-                console.log('====================================');
-                setSettlements([...settlements, ...json]);
+                setSettlements([...settlements, ...response]);
                 setSkip(skip + limit);
                 setLoading(false);
-                setLast(json.length == 0 || json.length < limit ? true : false);
+                setLast(response.length == 0 || response.length < limit ? true : false);
             }
         } catch (error) {
             console.log('error raised', error);

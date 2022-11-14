@@ -59,10 +59,9 @@ const MyShop = ({ navigation, user, setShop }) => {
     async function fetchData() {
       try {
         const response = await getMyShop(user?.accessToken);
-        const json = await response.json();
-        if (json) {
-          setData(json);
-          setShop(json);
+        if (response) {
+          setData(response);
+          setShop(response);
         }
       } catch (error) {
         console.log(error);
@@ -76,9 +75,8 @@ const MyShop = ({ navigation, user, setShop }) => {
     async function getAmenitiesData() {
       try {
         const amenitiesResponse = await getAmenities(user?.accessToken);
-        const json = await amenitiesResponse.json();
-        if (json) {
-          setAmenities(json);
+        if (amenitiesResponse) {
+          setAmenities(amenitiesResponse);
         }
       } catch (error) {
         console.log(error);
@@ -92,9 +90,8 @@ const MyShop = ({ navigation, user, setShop }) => {
     async function fetchOffers() {
       try {
         const offerResponse = await getOffers(user?.accessToken);
-        const json = await offerResponse.json();
-        if (json) {
-          setOffers(json);
+        if (offerResponse) {
+          setOffers(offerResponse);
         }
       } catch (error) {
         console.log(error);
@@ -222,7 +219,6 @@ const MyShop = ({ navigation, user, setShop }) => {
             barStyle="dark-content"
             translucent={true}
           />
-          {console.log("data-->", data)}
 
           <ImageSlider images={data?.images} navigation={navigation} />
           <View style={styles.contentContainer}>

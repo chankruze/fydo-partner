@@ -48,7 +48,6 @@ const MapScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     requestLocation();
-    // console.log(routes)
   }, []);
 
   const requestLocation = async () => {
@@ -67,14 +66,20 @@ const MapScreen = ({ navigation, route }) => {
       }
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         Geolocation.getCurrentPosition(
-          ({ coords }) => {
+          async ({ coords }) => {
             let { latitude, longitude } = coords;
             let location = { latitude: latitude, longitude: longitude };
-            GetPostalAddress(latitude, longitude)
-              .then(res => {
-                setAddress(res.formatted_address);
-              })
-              .catch(err => console.log(err));
+            const address = await GetPostalAddress(latitude, longitude);
+
+            if (address?.status === 'OK') {
+              setAddress(address?.results[0]?.formatted_address);
+            }
+
+            // GetPostalAddress(latitude, longitude)
+            //   .then(res => {
+            //     setAddress(res.formatted_address);
+            //   })
+            //   .catch(err => console.log(err));
             setSelectedLocation(location);
             setRegion(Object.assign({ ...region }, { ...location }));
             setLocationChange(true);
@@ -102,14 +107,14 @@ const MapScreen = ({ navigation, route }) => {
 
   const setLocation = () => {
     Geolocation.getCurrentPosition(
-      ({ coords }) => {
+      async ({ coords }) => {
         let { latitude, longitude } = coords;
         let location = { latitude: latitude, longitude: longitude };
-        GetPostalAddress(latitude, longitude)
-          .then(res => {
-            setAddress(res.formatted_address);
-          })
-          .catch(err => console.log(err));
+        const address = await GetPostalAddress(latitude, longitude);
+
+        if (address?.status === 'OK') {
+          setAddress(address?.results[0]?.formatted_address);
+        }
         setSelectedLocation(location);
         setRegion(Object.assign({ ...region }, { ...location }));
         setLocationChange(true);
@@ -128,32 +133,16 @@ const MapScreen = ({ navigation, route }) => {
     );
   };
 
-  const onDragEnd = e => {
+  const onDragEnd = async e => {
     let coordinate = e.nativeEvent.coordinate;
-    GetPostalAddress(coordinate.latitude, coordinate.longitude)
-      .then(res => {
-        setAddress(res.formatted_address);
-      })
-      .catch(err => console.log(err));
+    const address = await GetPostalAddress(latitude, longitude);
+
+    if (address?.status === 'OK') {
+      setAddress(address?.results[0]?.formatted_address);
+    }
     setSelectedLocation(coordinate);
     setRegion(Object.assign({ ...region }, { ...coordinate }));
     setLocationChange(true);
-  };
-
-  const onSubmit = query => {
-    SearchLocation(query)
-      .then(res => {
-        const { lat, lng } = res;
-        const location = { latitude: lat, longitude: lng };
-        GetPostalAddress(lat, lng)
-          .then(res => {
-            setAddress(res.formatted_address);
-          })
-          .catch(err => console.log(err));
-        setRegion(Object.assign({ ...region }, { ...location }));
-        setSelectedLocation(location);
-      })
-      .catch(err => console.log(err));
   };
 
   const confirmAddress = () => {
@@ -197,7 +186,7 @@ const MapScreen = ({ navigation, route }) => {
           returnKeyType={'search'} // Can be left out for default return key 
           listViewDisplayed={true}    // true/false/undefined
           fetchDetails={true}
-          onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
+          onPress={async (data, details = null) => { // 'details' is provided when fetchDetails = true
             let lat = details.geometry.location?.lat;
             let lng = details.geometry.location?.lng;
             let location = {
@@ -207,11 +196,11 @@ const MapScreen = ({ navigation, route }) => {
             setRegion(Object.assign({ ...region }, { ...location }));
             setSelectedLocation(location);
             setLocationChange(true);
-            GetPostalAddress(lat, lng)
-              .then(res => {
-                setAddress(res.formatted_address);
-              })
-              .catch(err => console.log(err));
+            const address = await GetPostalAddress(lat, lng);
+
+            if (address?.status === 'OK') {
+              setAddress(address?.results[0]?.formatted_address);
+            }
           }
           }
           query={{

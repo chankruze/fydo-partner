@@ -10,7 +10,7 @@ export async function getDeviceInfo() {
         object['osVersion'] = await Platform.Version;
         return object;
     } catch (error) {
-        console.log(object);
+        console.log(error);
     }
 }
 

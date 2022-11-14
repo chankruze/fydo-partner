@@ -43,11 +43,10 @@ const OTPVerifyScreen = ({ navigationData, navigation, handleNextScreen, setUser
     }, 500);
     // getHash = () =>
     RNOtpVerify.getHash()
-      .then((hash) => console.log(hash))
+      .then((hash))
       .catch();
     RNOtpVerify.getOtp()
       .then(p => {
-        console.log("hhhhh==>", p)
         RNOtpVerify.addListener(otpHandler)
       })
       .catch(p => (p));
@@ -56,9 +55,6 @@ const OTPVerifyScreen = ({ navigationData, navigation, handleNextScreen, setUser
   }, [])
 
   const otpHandler = (message) => {
-    console.log('====================================');
-    console.log("mesf==>", message);
-    console.log('====================================');
 
     // Tts.stop();
     // Tts.speak(message);
@@ -90,16 +86,15 @@ const OTPVerifyScreen = ({ navigationData, navigation, handleNextScreen, setUser
     setLoading(true);
     if (!validateInput()) return;
     try {
-      console.log(otpId || id, otp)
       const response = await verifyLoginOTP(otpId || id, otp);
-      const { data } = response;
+
       setLoading(false);
-      if (data.message) {
-        setError(data.message);
+      if (response?.message) {
+        setError(response?.message);
       } else {
-        setUser(data);
-        saveUserData(data);
-        if (data.profileComplete) {
+        setUser(response);
+        saveUserData(response);
+        if (response?.profileComplete) {
           // handleNextScreen(SCREENS.LANGUAGE);
           navigation.navigate('Main');
 
@@ -111,11 +106,11 @@ const OTPVerifyScreen = ({ navigationData, navigation, handleNextScreen, setUser
       }
     } catch (error) {
       console.log(error)
-      if (error.message == 'Request failed with status code 403') {
+      if (error?.message == 'Request failed with status code 403') {
         setError('Invalid OTP');
         setLoading(false);
       } else {
-        setError(error.message);
+        setError(error?.message);
         setLoading(false);
       }
     }
@@ -124,10 +119,11 @@ const OTPVerifyScreen = ({ navigationData, navigation, handleNextScreen, setUser
   const resendOTP = async () => {
     try {
       const response = await sendLoginOTP(phoneNumber);
-      const { otpId } = response?.data;
-      setOtp(null);
+      const { otpId } = response;
+      setOtp('');
       setOtpId(otpId);
-      otpInput.clear();
+      setError(null)
+      // otpInput.current.clear();
     } catch (error) {
       console.log(error);
     }
@@ -169,7 +165,7 @@ const OTPVerifyScreen = ({ navigationData, navigation, handleNextScreen, setUser
         <View style={styles.row}>
           <Text style={styles.label}>Didn't get the OTP?</Text>
           <TouchableOpacity
-            disabled={otp?.length != 6}
+            // disabled={otp?.length != 6}
             onPress={resendOTP}
             style={styles.resendButton}>
             <Text style={styles.resendLabel}>Resend</Text>

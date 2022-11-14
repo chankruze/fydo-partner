@@ -66,7 +66,6 @@ const ShopDetails = ({ navigation, route, user }) => {
   const [key, setKey] = useState(0);
 
   useEffect(() => {
-    // console.log("kk-->", shopDetails)
     fetchAllAmenities();
   }, []);
 
@@ -97,8 +96,7 @@ const ShopDetails = ({ navigation, route, user }) => {
   const fetchAllAmenities = async () => {
     try {
       const response = await getAmenities(user?.accessToken);
-      const data = await response.json();
-      setAmenities(data);
+      setAmenities(response);
     } catch (error) {
       console.log(error);
     }
@@ -148,7 +146,6 @@ const ShopDetails = ({ navigation, route, user }) => {
   };
 
   const next = () => {
-    // console.log(JSON.stringify(newAmenities, null, 2));
     let newData = {
       ...route?.params?.data,
       bankDetails: {
@@ -160,7 +157,6 @@ const ShopDetails = ({ navigation, route, user }) => {
       onboardedThroughExecutive: phonenum,
       amenities: newAmenities,
     };
-    // console.log("dd-->", newData);
     navigation.navigate('ShopTiming', { data: newData });
   };
 

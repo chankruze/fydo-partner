@@ -35,41 +35,39 @@ class NotificationScreen extends Component {
 
     async fetchNotifications() {
         let { user } = this.props;
-        let {limit,skip,isLast} = this.state;
+        let { limit, skip, isLast } = this.state;
         try {
-            if(!isLast){
-            const response = await getNotifications(user?.accessToken,limit,skip);
-            const json = await response.json();
-            console.log("gg-->", json);
-                this.setState({ 
-                    notifications:[...this.state.notifications, ...json],
+            if (!isLast) {
+                const response = await getNotifications(user?.accessToken, limit, skip);
+                this.setState({
+                    notifications: [...this.state.notifications, ...response],
                     skip: skip + limit,
                     loading: false,
-                    isLast: json.length == 0 || json.length < limit ? true : false,
+                    isLast: response.length == 0 || response.length < limit ? true : false,
                     refreshing: false,
                 });
             }
-            else{
-                this.setState({loading: false, refreshing: false })
+            else {
+                this.setState({ loading: false, refreshing: false })
             }
         } catch (error) {
             console.log(error);
-            this.setState({ loading: false,refreshing:false });
+            this.setState({ loading: false, refreshing: false });
         }
     }
-    handlRefresh = () =>{
+    handlRefresh = () => {
         this.setState({
             refreshing: true
         });
-       this.fetchNotifications();
+        this.fetchNotifications();
     }
 
-    onEndReached = () =>{
+    onEndReached = () => {
         this.setState({
-            isLast:true,
-            refreshing:false
+            isLast: true,
+            refreshing: false
         })
-       this.fetchNotifications()
+        this.fetchNotifications()
     }
     renderNotification({ item }) {
         let { notificationBody, createdAt } = item;
@@ -107,7 +105,7 @@ class NotificationScreen extends Component {
         return (
             <SafeAreaView style={styles.container}>
                 <FlatList
-                contentContainerStyle={{marginTop: moderateScaleVertical(15),paddingBottom:moderateScaleVertical(20)}}
+                    contentContainerStyle={{ marginTop: moderateScaleVertical(15), paddingBottom: moderateScaleVertical(20) }}
                     showsVerticalScrollIndicator={false}
                     data={notifications}
                     renderItem={this.renderNotification}
@@ -125,7 +123,7 @@ class NotificationScreen extends Component {
                         />
                     }
                     ListFooterComponent={
-                       !this.state.isLast && (<View style={{ marginTop: moderateScaleVertical(20) }}>
+                        !this.state.isLast && (<View style={{ marginTop: moderateScaleVertical(20) }}>
                             <ActivityIndicator color={PRIMARY} size="large" />
                         </View>)
                     }
@@ -141,11 +139,11 @@ export default connect(mapStateToProps)(NotificationScreen);
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor:WHITE
+        backgroundColor: WHITE
     },
     info: {
         alignSelf: 'center',
-        marginTop:  moderateScaleVertical(15),
+        marginTop: moderateScaleVertical(15),
         fontSize: textScale(16),
         letterSpacing: .2,
         fontFamily: 'Gilroy-Bold'
@@ -174,7 +172,7 @@ const styles = StyleSheet.create({
     },
     time: {
         color: GREY_2,
-        fontSize:  textScale(10),
+        fontSize: textScale(10),
         alignSelf: 'flex-end',
         fontWeight: '400'
     },
@@ -184,7 +182,7 @@ const styles = StyleSheet.create({
         borderBottomColor: 'rgba(0, 53, 121, 0.2)',
         marginTop: moderateScaleVertical(10)
     },
-    lineStyle:{
-        marginBottom:moderateScaleVertical(8)
+    lineStyle: {
+        marginBottom: moderateScaleVertical(8)
     }
 })

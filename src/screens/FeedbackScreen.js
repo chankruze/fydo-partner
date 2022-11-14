@@ -1,12 +1,13 @@
-import React, {Component} from 'react';
-import {ScrollView, StyleSheet, Text, TextInput, View, ToastAndroid} from 'react-native';
+import React, { Component } from 'react';
+import { ScrollView, StyleSheet, Text, TextInput, View, ToastAndroid } from 'react-native';
 import WithNetInfo from '../components/hoc/withNetInfo';
-import {AirbnbRating} from 'react-native-ratings';
-import {PRIMARY} from '../assets/colors';
-import {feedback, sendFeedback} from '../services/feedbackService';
+import { AirbnbRating } from 'react-native-ratings';
+import { PRIMARY } from '../assets/colors';
+import { feedback, sendFeedback } from '../services/feedbackService';
 import ButtonComponent from '../components/ButtonComponent';
 import { connect } from 'react-redux';
 import { moderateScale, moderateScaleVertical, textScale } from '../utils/responsiveSize';
+import ToastMessage from '../components/common/ToastComponent';
 
 const mapStateToProps = (state) => {
   return {
@@ -28,10 +29,10 @@ class FeedbackScreen extends Component {
     this.handleFeedback = this.handleFeedback.bind(this);
   }
 
-  isValidated(){
-    let {feedback} = this.state;
-    if(feedback == null || feedback?.length == 0){
-      this.setState({error: 'Enter feedback'});
+  isValidated() {
+    let { feedback } = this.state;
+    if (feedback == null || feedback?.length == 0) {
+      this.setState({ error: 'Enter feedback' });
       return false
     }
     return true;
@@ -39,30 +40,29 @@ class FeedbackScreen extends Component {
   }
 
   onFinishRating(rating) {
-    this.setState({ratingCount: rating});
+    this.setState({ ratingCount: rating });
   }
 
   handleFeedback(feedback) {
-    this.setState({feedback: feedback});
+    this.setState({ feedback: feedback });
   }
 
   async submitFeedback() {
-    let {user} = this.props;
-    let {feedback, ratingCount} = this.state;
-    if(!this.isValidated()) return;
+    let { user } = this.props;
+    let { feedback, ratingCount } = this.state;
+    if (!this.isValidated()) return;
 
-    this.setState({loading: true, error: null});
+    this.setState({ loading: true, error: null });
     try {
       const response = await sendFeedback(user?.accessToken, feedback, ratingCount);
-      const json = await response.json();
-      if(json){
-        ToastAndroid.show('Feedback submitted', ToastAndroid.SHORT);
-        this.setState({loading: false, feedback: null, ratingCount: null})
+      if (response) {
+        ToastMessage({ message: 'Feedback submitted' });
+        this.setState({ loading: false, feedback: null, ratingCount: null })
       }
-      else this.setState({loading: false})
+      else this.setState({ loading: false })
     } catch (error) {
       console.log(error);
-      this.setState({loading: false})
+      this.setState({ loading: false })
     }
   }
 
@@ -82,19 +82,19 @@ class FeedbackScreen extends Component {
         <Text style={styles.subTitle}>Rate us</Text>
         <Text style={styles.label}>Your opinion matters</Text>
         <View style={styles.starContainer}>
-        <AirbnbRating
-          showRating={false}
-          type="star"
-          ratingCount={5}
-          size={35}
-          starContainerStyle={styles.ratingContainer}
-          onFinishRating={this.onFinishRating}
-          jumpValue={1}
-          selectedColor={PRIMARY}
-          defaultRating={this.state.ratingCount}
-        />
+          <AirbnbRating
+            showRating={false}
+            type="star"
+            ratingCount={5}
+            size={35}
+            starContainerStyle={styles.ratingContainer}
+            onFinishRating={this.onFinishRating}
+            jumpValue={1}
+            selectedColor={PRIMARY}
+            defaultRating={this.state.ratingCount}
+          />
         </View>
-        
+
         <View style={styles.buttonContainer}>
           <ButtonComponent
             label="Submit"
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     color: 'black',
     fontFamily: 'Gilroy-Medium',
     letterSpacing: 0.3,
-    marginTop:moderateScaleVertical(20)
+    marginTop: moderateScaleVertical(20)
 
   },
   label: {

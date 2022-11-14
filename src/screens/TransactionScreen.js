@@ -40,9 +40,7 @@ const TransactionScreen = ({ user }) => {
   const apiTransactionAmonut = async () => {
     try {
       const response = await getTransactionAmount(user?.accessToken);
-      const json = await response.json();
-      console.log('json amount-->', json);
-      setTotal(json?.totalUnsettledAmount);
+      setTotal(response?.totalUnsettledAmount);
     } catch (error) {
       console.log('error-->', error);
     }
@@ -77,7 +75,6 @@ const TransactionScreen = ({ user }) => {
       <SafeAreaView style={{ flex: 1 }}>
         <StatusBar backgroundColor={PRIMARY} barStyle="light-content" />
         <View>
-          {console.log("kl==>", currentIndex, types)}
           <PagerView
             ref={viewPagerRef}
             style={styles.pagerView}

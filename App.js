@@ -36,20 +36,6 @@ LogBox.ignoreLogs([
 const App = () => {
   const [isFirstLaunch, setIsFirstLaunch] = useState(true);
 
-  useEffect(() => {
-    // RNOtpVerify.getHash()
-    //   .then((hash) => alert(hash))
-    //   .catch();
-    // RNOtpVerify.getOtp()
-    //   .then(p => {
-    //     console.log("hhhhh==>", p)
-    //     RNOtpVerify.addListener(otpHandler)
-    //   })
-    //   .catch(p => (p));
-
-    // return () => RNOtpVerify.removeListener();
-  }, []);
-
   const otpHandler = (msg) => {
     alert(msg);
   }

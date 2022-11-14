@@ -24,8 +24,6 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 import ToastMessage from '../common/ToastComponent';
 
 const TransactionCard = ({ item }) => {
-  console.log("tra==>", item)
-
   const getImageType = (transactionType) => {
     switch (transactionType) {
       case 'REFERRAL': {
@@ -80,7 +78,7 @@ const TransactionCard = ({ item }) => {
             <Text style={{
               ...styles.primaryText,
               fontFamily: 'Gilroy-Medium',
-              fontSize: 14,
+              fontSize: 12,
               color: BLACK
             }}>
               {item?._id}{' '}
@@ -108,7 +106,7 @@ const TransactionCard = ({ item }) => {
           </View>
         </View>
         <View style={styles.rightWrapper}>
-          <Text style={{ ...styles.primaryText, color: BLACK }}>
+          <Text style={{ ...styles.primaryText, color: BLACK, fontSize: 18 }}>
             {'\u20B9'}
             {item?.totalAmount}
           </Text>

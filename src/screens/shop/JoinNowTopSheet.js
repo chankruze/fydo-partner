@@ -54,13 +54,8 @@ const JoinNowTopSheet = ({ myshop, user, onPress, setUser }) => {
     }
 
     const response = await updateShop(user?.accessToken, request);
-    const json = await response.json();
 
-    console.log('====================================');
-    console.log("json==>", json);
-    console.log('====================================');
-
-    if (json) {
+    if (response) {
       onPress();
     }
   }

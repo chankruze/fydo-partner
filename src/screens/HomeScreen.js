@@ -51,6 +51,7 @@ import MySaleBottomSheet from '../components/sale/MySaleBottomSheet';
 import messaging from '@react-native-firebase/messaging';
 import { getDeviceInfo } from '../utils/getDeviceInfo';
 import { uploadDeviceInfo } from '../services/homeService';
+import { Platform } from 'react-native';
 
 const mapStateToProps = state => {
   return {
@@ -103,9 +104,7 @@ class HomeScreen extends Component {
       const [shopStatusResponse, carouselsResponse] = await Promise.all([
         getShopStatus(user?.accessToken), getCarousels(user?.accessToken)
       ]);
-      const shopStatusJson = await shopStatusResponse.json();
-      const carouselsJson = await carouselsResponse.json();
-      this.setState({ carousels: carouselsJson, shopOpen: shopStatusJson?.isOpen })
+      this.setState({ carousels: carouselsResponse, shopOpen: shopStatusResponse?.isOpen })
 
     } catch (error) {
       console.log(error);
@@ -115,9 +114,8 @@ class HomeScreen extends Component {
     let { user, setShop } = this.props;
     try {
       const response = await getMyShop(user?.accessToken);
-      const json = await response.json();
-      if (json) {
-        setShop(json)
+      if (response) {
+        setShop(response)
       }
     } catch (error) {
       console.log(error);
@@ -127,8 +125,7 @@ class HomeScreen extends Component {
     let { user } = this.props;
     try {
       const response = await openShop(user?.accessToken);
-      const json = await response.json();
-      this.setState({ shopOpen: json?.isOpen });
+      this.setState({ shopOpen: response?.isOpen });
     } catch (error) {
       console.log(error);
     }
@@ -138,9 +135,7 @@ class HomeScreen extends Component {
     let { user } = this.props;
     try {
       const response = await closeShop(user?.accessToken);
-      const json = await response.json();
-      console.log(json);
-      this.setState({ shopOpen: json?.isOpen });
+      this.setState({ shopOpen: response?.isOpen });
     } catch (error) {
       console.log(error);
     }
@@ -172,21 +167,13 @@ class HomeScreen extends Component {
   uploadDeviceInfos = async (token, deviceInfo, accessToken) => {
     const { myshop } = this.props;
 
-    console.log('====================================');
-    console.log("id==>", myshop?._id);
-    console.log('====================================');
-
     let params = JSON.stringify(Object.assign({ ...deviceInfo }, {
       'fcmId': token,
       'appType': 'Partner',
       'shopId': myshop?._id,
       'appTech': 'RN'
     }));
-    console.log('params-->', params)
     const response = await uploadDeviceInfo(params, accessToken);
-    console.log('====================================');
-    console.log("res123==>", response);
-    console.log('====================================');
   }
 
   async getToken() {
@@ -203,11 +190,10 @@ class HomeScreen extends Component {
     console.log('NotifcationListnes-->')
     messaging().onNotificationOpenedApp(remoteMessage => {
       console.log(
-        'Notification caused app to open from background state:',
-        remoteMessage.notification, remoteMessage.data
+        'Notification caused app to open from background state:'
       );
       if (remoteMessage) {
-        console.log('remoteMessage', remoteMessage)
+        console.log('remoteMessage')
       }
     });
 
@@ -215,11 +201,11 @@ class HomeScreen extends Component {
       .getInitialNotification()
       .then(remoteMessage => {
         if (remoteMessage) {
-          console.log('remoteMessage-->', remoteMessage)
+          console.log('remoteMessage-->')
         }
       });
     messaging().onMessage(async remoteMessage => {
-      console.log('notification on froground state....', remoteMessage)
+      console.log('notification on froground state....')
     })
   }
   async shareCard() {
@@ -341,15 +327,23 @@ class HomeScreen extends Component {
         visible={this.state.modalOfferVisible}
         onRequestClose={this.triggerOfferModal}
       >
-        <Pressable
-          activeOpacity={1}
-          style={styles.addTagsBottomSheetContainer}
-          onPress={this.triggerOfferModal}>
+        <KeyboardAvoidingView
+          style={{
+            justifyContent: 'center'
+          }}
+          behavior={Platform.OS == 'android' ? 'height' : 'padding'}
+        >
+          <Pressable
+            activeOpacity={1}
+            style={styles.addTagsBottomSheetContainer}
+            onPress={this.triggerOfferModal}>
 
-          <MyOffersBottomSheet
-            token={user?.accessToken}
-            toggle={this.triggerOfferModal} />
-        </Pressable>
+            <MyOffersBottomSheet
+              token={user?.accessToken}
+              toggle={this.triggerOfferModal} />
+          </Pressable>
+        </KeyboardAvoidingView>
+
       </Modal>
     )
   }

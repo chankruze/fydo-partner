@@ -1,22 +1,30 @@
 import axios from "axios";
 import { UPLOAD_DEVICE_DEAILS_API } from "../config/endpoints";
+import ApiInstance from '../utils/ApiInstance';
 
 //upload device info
-export function uploadDeviceInfo(params, token) {
+export async function uploadDeviceInfo(params, token) {
+    try {
+        const response = await ApiInstance({
+            method: 'POST',
+            url: UPLOAD_DEVICE_DEAILS_API,
+            data: params,
+        });
+        return Promise.resolve(response);
+    } catch (error) {
+        return Promise.reject(error);
+    }
 
-    console.log('====================================');
-    console.log("token==>", token, params);
-    console.log('====================================');
-    return axios({
-        method: 'POST',
-        url: UPLOAD_DEVICE_DEAILS_API,
-        headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
-        data: params
-    });
+    // return axios({
+    //     method: 'POST',
+    //     url: UPLOAD_DEVICE_DEAILS_API,
+    //     headers: {
+    //         Accept: 'application/json',
+    //         'Content-Type': 'application/json',
+    //         'Authorization': `Bearer ${token}`
+    //     },
+    //     data: params
+    // });
 
     // return fetch(UPLOAD_DEVICE_DEAILS_API, {
     //     method: 'POST',

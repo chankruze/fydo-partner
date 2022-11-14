@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {ActivityIndicator, FlatList, SafeAreaView, StyleSheet, Text, View,RefreshControl} from 'react-native';
+import React, { Component } from 'react';
+import { ActivityIndicator, FlatList, SafeAreaView, StyleSheet, Text, View, RefreshControl } from 'react-native';
 import { connect } from 'react-redux';
 import { PRIMARY, WHITE } from '../../assets/colors';
 import CardOffers from '../../components/myoffers/CardOffers';
@@ -13,9 +13,9 @@ const mapStateToProps = (state) => {
     }
 }
 
-class RequestedOffersScreen extends Component{
+class RequestedOffersScreen extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             offers: [],
@@ -28,70 +28,68 @@ class RequestedOffersScreen extends Component{
         this.fetchOffers = this.fetchOffers.bind(this)
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.setState({ loading: true });
         this.fetchOffers();
     }
 
-    async fetchOffers(){
-        let {user} = this.props;
-        let {limit,skip,isLast} = this.state;
+    async fetchOffers() {
+        let { user } = this.props;
+        let { limit, skip, isLast } = this.state;
         try {
-           if(!isLast){
-            const paddingJson = []
-            const response = await getOffers(user?.accessToken,limit,skip);
-            const json = await response.json();
-            json.filter((data)=> {
-                if(data.status == 'PROCESSED'){
-                    paddingJson.push(data)
-                }
-            })
-            console.log('paddingJson--',json)
-            this.setState({
-                offers:[...this.state.offers, ...paddingJson],
-                skip: skip + limit,
-                loading: false,
-                isLast: paddingJson.length == 0 || paddingJson.length < limit ? true : false,
-                refreshing: false,
-            })
-        }else {
-            this.setState({loading: false, refreshing: false })
-        }
-           // this.setState({loading: false, offers: paddingJson});
+            if (!isLast) {
+                const paddingJson = []
+                const response = await getOffers(user?.accessToken, limit, skip);
+                response.filter((data) => {
+                    if (data.status == 'PROCESSED') {
+                        paddingJson.push(data)
+                    }
+                })
+                this.setState({
+                    offers: [...this.state.offers, ...paddingJson],
+                    skip: skip + limit,
+                    loading: false,
+                    isLast: paddingJson.length == 0 || paddingJson.length < limit ? true : false,
+                    refreshing: false,
+                })
+            } else {
+                this.setState({ loading: false, refreshing: false })
+            }
+            // this.setState({loading: false, offers: paddingJson});
         } catch (error) {
             console.log(error);
-            this.setState({loading: false, refreshing: false });
+            this.setState({ loading: false, refreshing: false });
         }
     }
-    renderItem({item}){
+    renderItem({ item }) {
         return (
-            <CardOffers item={item}/>
+            <CardOffers item={item} />
         )
     }
-    handlRefresh = () =>{
+    handlRefresh = () => {
         this.setState({
             refreshing: true
         });
-       this.fetchOffers();
+        this.fetchOffers();
     }
 
-    onEndReached = () =>{
+    onEndReached = () => {
         this.setState({
-            isLast:true,
-            refreshing:false
+            isLast: true,
+            refreshing: false
         })
-       this.fetchOffers()
+        this.fetchOffers()
     }
-    render(){
+    render() {
 
-        let {offers, isLoading} = this.state;
+        let { offers, isLoading } = this.state;
 
-        if(isLoading){
+        if (isLoading) {
             return (
                 <View style={styles.container}>
-                    <SafeAreaView style={{flex:1}}>
-                        <ActivityIndicator 
-                            size="large" 
+                    <SafeAreaView style={{ flex: 1 }}>
+                        <ActivityIndicator
+                            size="large"
                             color={PRIMARY}
                         />
                     </SafeAreaView>
@@ -99,10 +97,10 @@ class RequestedOffersScreen extends Component{
             )
         }
 
-        if(offers.length == 0)
+        if (offers.length == 0)
             return (
                 <View style={styles.container}>
-                    <SafeAreaView style={{flex:1}}>
+                    <SafeAreaView style={{ flex: 1 }}>
                         <Text style={styles.info}>
                             We have no item to show here
                         </Text>
@@ -111,37 +109,37 @@ class RequestedOffersScreen extends Component{
             )
 
         return (
-           
+
             <View style={styles.container}>
-                 <SafeAreaView style={{flex:1}}>
-                <FlatList 
-                    contentContainerStyle={{paddingBottom:moderateScaleVertical(20),marginTop:moderateScaleVertical(15)}}
-                    showsVerticalScrollIndicator={false}
-                    data={offers}
-                    keyExtractor={item => item?._id.toString()}
-                    renderItem={this.renderItem}
-                    ItemSeparatorComponent={() => <View style={styles.separator}/>}
-                    onEndReachedThreshold={0.01}
-                    onMomentumScrollBegin={() => {
-                        onEndReachedMomentum = false
-                    }}
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={this.state.refreshing}
-                            onRefresh={this.handlRefresh}
-                            color={PRIMARY}
-                        />
-                    }
-                    ListFooterComponent={
-                       !this.state.isLast && (<View style={{ marginTop: moderateScaleVertical(20) }}>
-                            <ActivityIndicator color={PRIMARY} size="large" />
-                        </View>)
-                    }
-                    onEndReached={this.onEndReached}
-                />
-                 </SafeAreaView>
+                <SafeAreaView style={{ flex: 1 }}>
+                    <FlatList
+                        contentContainerStyle={{ paddingBottom: moderateScaleVertical(20), marginTop: moderateScaleVertical(15) }}
+                        showsVerticalScrollIndicator={false}
+                        data={offers}
+                        keyExtractor={item => item?._id.toString()}
+                        renderItem={this.renderItem}
+                        ItemSeparatorComponent={() => <View style={styles.separator} />}
+                        onEndReachedThreshold={0.01}
+                        onMomentumScrollBegin={() => {
+                            onEndReachedMomentum = false
+                        }}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={this.state.refreshing}
+                                onRefresh={this.handlRefresh}
+                                color={PRIMARY}
+                            />
+                        }
+                        ListFooterComponent={
+                            !this.state.isLast && (<View style={{ marginTop: moderateScaleVertical(20) }}>
+                                <ActivityIndicator color={PRIMARY} size="large" />
+                            </View>)
+                        }
+                        onEndReached={this.onEndReached}
+                    />
+                </SafeAreaView>
             </View>
-           
+
         )
     }
 }
@@ -161,6 +159,6 @@ const styles = StyleSheet.create({
         letterSpacing: .2
     },
     separator: {
-        marginBottom:moderateScaleVertical(10)
-     },
+        marginBottom: moderateScaleVertical(10)
+    },
 })

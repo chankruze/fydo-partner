@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {ScrollView, StyleSheet, Text, Image, TextInput, TouchableOpacity, ActivityIndicator, ToastAndroid,View} from 'react-native';
+import React, { Component } from 'react';
+import { ScrollView, StyleSheet, Text, Image, TextInput, TouchableOpacity, ActivityIndicator, ToastAndroid, View } from 'react-native';
 import { connect } from 'react-redux';
 import { BLACK, PRIMARY, WHITE } from '../assets/colors';
 import { getReferCode, refer } from '../services/referearnService';
@@ -8,6 +8,7 @@ import ReferEarnImage from './../assets/images/referearn.png';
 import ReferCode from './../assets/images/refercode.png';
 import { buildReferalLink } from '../utils/deepLinkManager';
 import Share from 'react-native-share';
+import ToastMessage from '../components/common/ToastComponent';
 
 const mapStateToProps = (state) => {
     return {
@@ -15,14 +16,14 @@ const mapStateToProps = (state) => {
     }
 }
 
-class ReferAndEarnScreen extends Component{
-    constructor(){
+class ReferAndEarnScreen extends Component {
+    constructor() {
         super();
         this.state = {
             loading: false,
             shopName: null,
             contactNumber: null,
-            data:''
+            data: ''
         };
         this.onReferClick = this.onReferClick.bind(this);
         this.handleShopName = this.handleShopName.bind(this);
@@ -35,60 +36,56 @@ class ReferAndEarnScreen extends Component{
     async onReferCode() {
         let { user } = this.props;
         try {
-          const response = await getReferCode(user?.accessToken);
-          const json = await response.json();
-          console.log('json--',json)
-          this.setState({data:json})
-          //this.setState({ shopOpen: json?.isOpen });
-        } catch (error) {
-          console.log(error);
-        }
-      }
-      async shareCard() {
-        try {
-            console.log('data==>',this.state.data)
-            const message = `Hi, I just invited you to Fydo!\nStep 1: Use my link to download the app.\nStep 2: Use my referral code ${this.state.data.referralCode && this.state.data.referralCode} while signing up.\nStep 3: Start exploring offers, deals and much more in your city.\n\nDownload the app now.`
-            const link = await buildReferalLink(this.state.data.referralCode && this.state.data.referralCode,message && message)
-            await Share.open({
-                message:`Hi, I just invited you to Fydo!\nStep 1: Use my link to download the app.\nStep 2: Use my referral code ${this.state.data.referralCode && this.state.data.referralCode} while signing up.\nStep 3: Start exploring offers, deals and much more in your city.\n\nDownload the app now.\n${link && link}`,
-            });
-        } catch (error) {
-          console.log(error);
-        }
-      }
-    async onReferClick(){
-        let {user} = this.props;
-        let {shopName, contactNumber} = this.state;
-        try {
-            this.setState({loading: true});
-            const response = await refer(user?.accessToken, shopName, contactNumber);
-            const json = await response.json();
-            if(json){
-                ToastAndroid.show('Successfully refer', ToastAndroid.SHORT);
-                this.setState({shopName: null, contactNumber: null})
-            }
-            this.setState({loading: false});
+            const response = await getReferCode(user?.accessToken);
+            this.setState({ data: response })
+            //this.setState({ shopOpen: json?.isOpen });
         } catch (error) {
             console.log(error);
-            this.setState({loading: false});
-            ToastAndroid.show('Something went wrong', ToastAndroid.SHORT);
+        }
+    }
+    async shareCard() {
+        try {
+            const message = `Hi, I just invited you to Fydo!\nStep 1: Use my link to download the app.\nStep 2: Use my referral code ${this.state.data.referralCode && this.state.data.referralCode} while signing up.\nStep 3: Start exploring offers, deals and much more in your city.\n\nDownload the app now.`
+            const link = await buildReferalLink(this.state.data.referralCode && this.state.data.referralCode, message && message)
+            await Share.open({
+                message: `Hi, I just invited you to Fydo!\nStep 1: Use my link to download the app.\nStep 2: Use my referral code ${this.state.data.referralCode && this.state.data.referralCode} while signing up.\nStep 3: Start exploring offers, deals and much more in your city.\n\nDownload the app now.\n${link && link}`,
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    async onReferClick() {
+        let { user } = this.props;
+        let { shopName, contactNumber } = this.state;
+        try {
+            this.setState({ loading: true });
+            const response = await refer(user?.accessToken, shopName, contactNumber);
+            if (response) {
+                ToastMessage({ message: 'Successfully refer' });
+                this.setState({ shopName: null, contactNumber: null })
+            }
+            this.setState({ loading: false });
+        } catch (error) {
+            console.log(error);
+            this.setState({ loading: false });
+            ToastMessage({ message: 'Something went wrong' });
         }
     }
 
-    handleShopName(value){
-        this.setState({shopName: value});
+    handleShopName(value) {
+        this.setState({ shopName: value });
     }
 
-    handleContactNumber(value){
-        this.setState({contactNumber: value});
+    handleContactNumber(value) {
+        this.setState({ contactNumber: value });
     }
-    render(){
+    render() {
         return (
             <ScrollView contentContainerStyle={styles.container}>
                 <Text style={styles.title}>Refer your nearby merchant and earn upto &#8377;100.</Text>
                 <Text style={styles.label}>You will receive the reward as soon as the merchant add money to their wallet.</Text>
                 <Image
-                    source={ReferEarnImage} 
+                    source={ReferEarnImage}
                     style={styles.image}
                 />
                 {/* <TextInput 
@@ -116,23 +113,23 @@ class ReferAndEarnScreen extends Component{
                 </TouchableOpacity> */}
                 <View style={styles.CardContainer}>
                     <TouchableOpacity style={styles.Card} onPress={this.shareCard} >
-                        <View style={{alignItems:'center',flexDirection:'row'}}>
-                        <View style={styles.subView} />
+                        <View style={{ alignItems: 'center', flexDirection: 'row' }}>
+                            <View style={styles.subView} />
                             <View style={styles.cardLabelContainer}>
-                                <Text  style={styles.cardLabel}>
+                                <Text style={styles.cardLabel}>
                                     Share your referral code
                                 </Text>
                                 <Text style={styles.cardButtonLabel}>Referral code: {this.state.data.referralCode && this.state.data.referralCode}</Text>
                             </View>
                         </View>
-                        <View style={{alignSelf:'flex-end',padding:moderateScale(10)}}>
+                        <View style={{ alignSelf: 'flex-end', padding: moderateScale(10) }}>
                             <Image
                                 source={ReferCode}
-                                style={{height:moderateScale(80),width:moderateScale(90)}}
+                                style={{ height: moderateScale(80), width: moderateScale(90) }}
                             />
                         </View>
                     </TouchableOpacity>
-          </View>
+                </View>
             </ScrollView>
         )
     }
@@ -192,42 +189,42 @@ const styles = StyleSheet.create({
     CardContainer: {
         padding: moderateScale(2),
         paddingVertical: moderateScaleVertical(10),
-      },
-      Card: {
+    },
+    Card: {
         height: moderateScale(100),
         borderRadius: moderateScale(10),
         backgroundColor: WHITE,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent:'space-between',
-       // paddingHorizontal: moderateScale(20),
+        justifyContent: 'space-between',
+        // paddingHorizontal: moderateScale(20),
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.2,
-        elevation:3
-      },
-      cardLabelContainer: {
+        elevation: 3
+    },
+    cardLabelContainer: {
         marginLeft: moderateScale(15),
-      },
-      cardLabel: {
+    },
+    cardLabel: {
         color: BLACK,
         fontSize: textScale(14),
-        fontWeight:'500',
+        fontWeight: '500',
         fontFamily: 'Gilroy-Medium'
-      },
-      cardButtonLabel: {
+    },
+    cardButtonLabel: {
         fontFamily: 'Gilroy-Medium',
         letterSpacing: 0.3,
         color: BLACK,
         fontSize: textScale(10),
-        marginTop:moderateScaleVertical(5)
-      },
-      subView: {
+        marginTop: moderateScaleVertical(5)
+    },
+    subView: {
         backgroundColor: PRIMARY,
         width: moderateScale(20),
         height: moderateScale(100),
-       borderTopLeftRadius: moderateScale(10),
-       borderBottomLeftRadius: moderateScale(10)
+        borderTopLeftRadius: moderateScale(10),
+        borderBottomLeftRadius: moderateScale(10)
     },
 
 })

@@ -149,10 +149,6 @@ const ShopTiming = props => {
         },
       ]);
 
-  useEffect(() => {
-    // console.log("sss-->", JSON.stringify(props.route?.params?.data));
-  });
-
   const selectImages = () => {
     rbSheet.open();
   };
@@ -243,9 +239,8 @@ const ShopTiming = props => {
       })
       if (fileNames.length > 0) {
         const imageResponse = await generatePresignUrl(user?.accessToken, fileNames);
-        const data = await imageResponse.json();
 
-        data.map(async (i) => {
+        imageResponse.map(async (i) => {
           images.map(async (j) => {
             const imageBody = await getBlob(j.url);
 
@@ -256,7 +251,7 @@ const ShopTiming = props => {
           })
         })
 
-        await data.map((i) => {
+        await imageResponse.map((i) => {
           finalImages.push({ url: i?.split("?")[0] })
         })
         const newAr = [...oldImages, ...finalImages]
@@ -290,18 +285,14 @@ const ShopTiming = props => {
         pics: pics
       }
 
-      // console.log("aspp-->", JSON.stringify(params, null, 2));
-
       let { navigation, user } = props;
       const response = await updateShop(user?.accessToken, params);
-      const json = await response.json();
-      // console.log("ff-->", JSON.stringify(json, null, 2));
 
       let { setUser } = props;
-      if (json) {
+      if (response) {
         let object = {
           ...user,
-          profileComplete: json.profileComplete
+          profileComplete: response?.profileComplete
         };
         setUser(object);
         saveUserData(object);

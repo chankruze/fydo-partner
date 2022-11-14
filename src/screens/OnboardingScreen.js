@@ -54,7 +54,6 @@ const OnboardingScreen = (props) => {
   }, [showBottomSheet])
 
   const viewableItemsChanged = useRef(({ viewableItems }) => {
-    console.log("iii-->", viewableItems[0].index);
     setCurrentIndex(viewableItems[0].index);
   }).current;
 

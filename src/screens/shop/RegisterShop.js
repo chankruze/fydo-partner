@@ -66,9 +66,6 @@ const mapStateToProps = (state) => {
 }
 
 function RegisterShop({ route, navigation, user, myshop }) {
-
-  console.log("gl==>", myshop)
-
   const isFocused = useIsFocused();
   // const edit = route.params?.edit;
 
@@ -104,7 +101,6 @@ function RegisterShop({ route, navigation, user, myshop }) {
 
   useEffect(() => {
     if (isFocused) {
-      // console.log("jj-->", myshop);
       getAddress()
     }
   }, [isFocused]);
@@ -183,10 +179,9 @@ function RegisterShop({ route, navigation, user, myshop }) {
   setImages = async (res, type) => {
     const shortUri = [res[0].fileName.split(".")[0]];
     const imageResponse = await generatePresignUrl(user?.accessToken, shortUri);
-    const data = await imageResponse.json();
     const imageBody = await getBlob(res[0]?.uri);
 
-    const final = await fetch(data[0], {
+    const final = await fetch(imageResponse[0], {
       method: 'PUT',
       body: imageBody
     });
@@ -197,10 +192,10 @@ function RegisterShop({ route, navigation, user, myshop }) {
         Toast.show('Image upload Successfully', Toast.SHORT);
       }
       if (type == 'front') {
-        const frontImage = data[0]?.split("?")[0];
+        const frontImage = imageResponse[0]?.split("?")[0];
         setFrontImg(frontImage)
       } else if (type == 'back') {
-        const backImg = data[0]?.split("?")[0];
+        const backImg = imageResponse[0]?.split("?")[0];
         setBacktImg(backImg)
       }
     } else {
@@ -244,7 +239,6 @@ function RegisterShop({ route, navigation, user, myshop }) {
           }
         ]
       };
-      // console.log("ddds-->", data);
       navigation.navigate('ShopDetails', { data: data });
     }
   };
@@ -408,7 +402,6 @@ function RegisterShop({ route, navigation, user, myshop }) {
             <SelectDropdown
               data={shopTypes}
               onSelect={(selectedItem, index) => {
-                // console.log(selectedItem, index);
                 setShopType(selectedItem);
               }}
               defaultButtonText={shopType ? shopType : "Type of store"}

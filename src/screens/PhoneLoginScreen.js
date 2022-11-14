@@ -55,7 +55,7 @@ const PhoneLoginScreen = ({ navigation, handleNextScreen }) => {
     if (validateInput()) {
       try {
         const response = await sendLoginOTP(phoneNumber);
-        const { otpId } = response?.data;
+        const { otpId } = response;
         setLoading(false);
         if (otpId) {
           // navigation.navigate('OTPVerify', {

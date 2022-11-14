@@ -5,7 +5,7 @@
 import { AppRegistry } from 'react-native';
 import App from './App';
 import { name as appName } from './app.json';
-import { LogBox } from 'react-native';
+import { LogBox, Text, TextInput } from 'react-native';
 LogBox.ignoreLogs(["VirtualizedLists should never be nested"])
 LogBox.ignoreAllLogs();
 import messaging from '@react-native-firebase/messaging';
@@ -18,6 +18,15 @@ import Tts from 'react-native-tts';
 //     style: [{fontFamily: 'Lato-Regular'}, origin.props.style],
 //   });
 // };
+
+TextInput.defaultProps = {
+    ...(TextInput.defaultProps || {}),
+    color: 'black',
+};
+Text.defaultProps = {
+    ...(Text.defaultProps || {}),
+    color: 'black',
+};
 
 import './src/utils/notificationManager';
 
