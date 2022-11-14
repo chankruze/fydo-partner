@@ -16,11 +16,11 @@ const mapStateToProps = (state) => {
   return {
     language: state?.userReducer?.language,
     user: state?.userReducer?.user,
-    myshop:state?.userReducer?.myshop,
+    myshop: state?.userReducer?.myshop,
   }
 }
 
-function MainNavigation({ language, user,myshop }) {
+function MainNavigation({ language, user, myshop }) {
 
   const headerHeight = useHeaderHeight();
 
@@ -55,7 +55,7 @@ function MainNavigation({ language, user,myshop }) {
             headerTintColor: PRIMARY,
             headerTitleStyle: {
               fontSize: textScale(18),
-              fontWeight:'bold',
+              fontWeight: 'bold',
               fontFamily: 'Gilroy-Bold',
             },
             headerTitleAlign: 'left',
@@ -100,12 +100,12 @@ function MainNavigation({ language, user,myshop }) {
           //   </View>
           // )
         }} />
-        <Tab.Screen
+      <Tab.Screen
         name="Transactions"
         component={TransactionScreen}
         options={{
           tabBarLabel: language == 'HINDI' ? 'अधिसूचना' : 'Transactions',
-          headerShown: true,
+          headerShown: false,
           tabBarIcon: ({ color, size, focused }) => (
             <Ionicons
               name={focused ? "wallet" : "wallet-outline"}
@@ -118,11 +118,11 @@ function MainNavigation({ language, user,myshop }) {
           headerTintColor: WHITE,
           headerStyle: {
             backgroundColor: PRIMARY,
-            shadowOpacity:0,
-            elevation:0
+            shadowOpacity: 0,
+            elevation: 0
           },
 
-        }} />  
+        }} />
     </Tab.Navigator>
   );
 }

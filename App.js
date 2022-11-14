@@ -6,7 +6,8 @@ import {
   StyleSheet,
   StatusBar,
   ActivityIndicator,
-  LogBox
+  LogBox,
+  Alert
 } from 'react-native';
 import OnboardingScreen from './src/screens/OnboardingScreen';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -14,13 +15,14 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Provider } from 'react-redux';
 import store from './src/store';
 import SplashScreen from './src/screens/SplashScreen';
+import RNOtpVerify from 'react-native-otp-verify';
+import Tts from 'react-native-tts';
 
 const Stack = createNativeStackNavigator();
 
 LogBox.ignoreLogs([
   "[react-native-gesture-handler] Seems like you\'re using an old API with gesture components, check out new Gestures system!",
 ])
-
 
 // const Loading = () => {
 //   return (
@@ -30,30 +32,37 @@ LogBox.ignoreLogs([
 //   );
 // };
 
+
 const App = () => {
   const [isFirstLaunch, setIsFirstLaunch] = useState(true);
 
-  // useEffect(() => {
-  //   AsyncStorage.getItem('@viewedOnboarding').then(value => {
-  //     if (value == null) {
-  //       AsyncStorage.setItem('@viewedOnboarding', 'true');
-  //       setIsFirstLaunch(true);
-  //     } else {
-  //       setIsFirstLaunch(false);
-  //     }
-  //   }, []);
+  useEffect(() => {
+    // RNOtpVerify.getHash()
+    //   .then((hash) => alert(hash))
+    //   .catch();
+    // RNOtpVerify.getOtp()
+    //   .then(p => {
+    //     console.log("hhhhh==>", p)
+    //     RNOtpVerify.addListener(otpHandler)
+    //   })
+    //   .catch(p => (p));
 
-  // },[]);
+    // return () => RNOtpVerify.removeListener();
+  }, []);
+
+  const otpHandler = (msg) => {
+    alert(msg);
+  }
 
   const handleFirstLaunch = () => {
     setIsFirstLaunch(false);
   };
 
- return (
-  <Provider store={store}>
-    <RootNavigation />
-  </Provider>
-    );
+  return (
+    <Provider store={store}>
+      <RootNavigation />
+    </Provider>
+  );
 
   // if (isFirstLaunch === null) {
   //   return (<View style={styles.container}><Loading /></View>)
@@ -68,7 +77,7 @@ const App = () => {
   //      <RootNavigation />
   //   );
   // }
- 
+
 };
 
 const styles = StyleSheet.create({

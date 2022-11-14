@@ -1,4 +1,4 @@
-package com.fydopartner;
+package com.letsdevelopit.lfydnewapp;
 
 import android.app.Application;
 import com.facebook.react.bridge.JSIModulePackage;
@@ -79,7 +79,7 @@ protected JSIModulePackage getJSIModulePackage() {
          We use reflection here to pick up the class that initializes Flipper,
         since Flipper library is not available in release mode
         */
-        Class<?> aClass = Class.forName("com.fydopartner.ReactNativeFlipper");
+        Class<?> aClass = Class.forName("com.letsdevelopit.lfydnewapp.ReactNativeFlipper");
         aClass
             .getMethod("initializeFlipper", Context.class, ReactInstanceManager.class)
             .invoke(null, context, reactInstanceManager);

@@ -5,37 +5,38 @@ import {
   View,
   StatusBar,
   ActivityIndicator,
-  FlatList,
-  RefreshControl,
+  ImageBackground,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   moderateScaleVertical,
   textScale,
   moderateScale,
+  verticalScale,
 } from '../utils/responsiveSize';
-import {BLACK, PRIMARY, WHITE} from '../assets/colors';
-import LinearGradient from 'react-native-linear-gradient';
-import {connect} from 'react-redux';
+import { BLACK, GREY, GREY_2, PRIMARY, WHITE } from '../assets/colors';
+import { connect } from 'react-redux';
 import {
-  getTransaction,
   getTransactionAmount,
 } from '../services/transactionService';
 import WithNetInfo from '../components/hoc/withNetInfo';
-import TransactionCard from '../components/Transaction/TransactionCard';
+import PagerView from 'react-native-pager-view';
+import { TransactionList } from './transaction/TransactionList';
+import { SettlementList } from './transaction/SettlementList';
 
-const TransactionScreen = ({user}) => {
+const TransactionScreen = ({ user }) => {
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState([]);
-  const [skip, setSkip] = useState(0);
-  const [limit, setLimit] = useState(10);
   const [total, setTotal] = useState(0);
-  const [isLast, setLast] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
+
+  const [types, setTypes] = useState(['payments', 'settlements']);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const viewPagerRef = useRef();
+
   useEffect(() => {
     apiTransactionAmonut();
-    apiTransactionHit();
   }, []);
+
   const apiTransactionAmonut = async () => {
     try {
       const response = await getTransactionAmount(user?.accessToken);
@@ -46,44 +47,7 @@ const TransactionScreen = ({user}) => {
       console.log('error-->', error);
     }
   };
-  const apiTransactionHit = async () => {
-    try {
-      if (!isLast) {
-        const response = await getTransaction(user?.accessToken, limit, skip);
-        const json = await response.json();
-        console.log('json-->', json);
-        setData([...data, ...json]);
-        setSkip(skip + limit);
-        setLoading(false);
-        setLast(json.length == 0 || json.length < limit ? true : false);
-        setRefreshing(false);
-      }
-    } catch (error) {
-      console.log('error raised', error);
-      setLoading(false);
-    }
-  };
 
-  const renderItem = ({item}) => {
-    return <TransactionCard item={item} />;
-  };
-  const wait = timeout => {
-    return new Promise(resolve => setTimeout(resolve, timeout));
-  };
-  const handlRefresh = React.useCallback(() => {
-    setRefreshing(true);
-    setTimeout(() => {
-      apiTransactionHit();
-    }, 2000);
-    wait(2000).then(() => setRefreshing(false));
-  }, []);
-
-  const onEndReached = () => {
-    setSkip(0);
-    setLast(true);
-    setRefreshing(false);
-    apiTransactionHit();
-  };
   if (loading) {
     return (
       <View style={styles.container}>
@@ -94,57 +58,107 @@ const TransactionScreen = ({user}) => {
       </View>
     );
   }
+
+  const renderIndicators = () => {
+    return types.map((item, index) => {
+      return <View style={[styles.dot, {
+        backgroundColor: currentIndex == index ?
+          '#F1F2F6' : 'rgba(255,255,255,0.5)'
+      }]} key={index} />
+    })
+  }
+
+  const handleIndicator = ({ nativeEvent }) => {
+    setCurrentIndex(nativeEvent.position);
+  }
+
   return (
     <View style={styles.container}>
-      <SafeAreaView style={{flex: 1}}>
+      <SafeAreaView style={{ flex: 1 }}>
         <StatusBar backgroundColor={PRIMARY} barStyle="light-content" />
-        <LinearGradient
-          colors={[PRIMARY, '#2D65AE']}
-          style={styles.linearGradientStyle}>
-          <View style={styles.headerContainer}>
-            <Text style={styles.headerTitle}>Amount to Settled</Text>
-            <Text style={styles.headerTotal}>
-              {'\u20B9'} {total ? total : 0}
-            </Text>
-            {/* <Text style={{fontSize:textScale(12),color:WHITE,marginBottom:moderateScaleVertical(15)}}>Total Number of Payments 23</Text> */}
-          </View>
-        </LinearGradient>
-        <View style={{marginHorizontal: moderateScale(15)}}>
-          {data.length === 0 ? (
-            <Text style={styles.notFoundText}>Not Found</Text>
-          ) : (
-            <FlatList
-              contentContainerStyle={{
-                paddingBottom: moderateScaleVertical(200),
-                marginTop: moderateScaleVertical(15),
-              }}
-              showsVerticalScrollIndicator={false}
-              data={data}
-              renderItem={renderItem}
-              keyExtractor={(item, index) => item._id}
-              ItemSeparatorComponent={() => <View style={styles.lineStyle} />}
-              onEndReachedThreshold={0.01}
-              onMomentumScrollBegin={() => {
-                onEndReachedMomentum = false;
-              }}
-              refreshControl={
-                <RefreshControl
-                  refreshing={refreshing}
-                  onRefresh={handlRefresh}
-                  tintColor={PRIMARY}
-                />
-              }
-              ListFooterComponent={
-                !isLast && (
-                  <View style={{marginTop: moderateScaleVertical(20)}}>
-                    <ActivityIndicator color={PRIMARY} size="large" />
+        <View>
+          {console.log("kl==>", currentIndex, types)}
+          <PagerView
+            ref={viewPagerRef}
+            style={styles.pagerView}
+            onPageSelected={handleIndicator}
+            showPageIndicator={false}>
+            {types.map((i, index) => {
+              return (
+                <ImageBackground
+                  source={require('../assets/images/bgTransaction.png')}
+                  style={{
+                    justifyContent: 'center',
+                    backgroundColor: 'white'
+                  }}
+                >
+                  <View style={styles.headerContainer}>
+                    {currentIndex === 0 ? (
+                      <>
+                        <Text style={styles.headerTitle}>Amount to Settled</Text>
+                        <Text style={styles.headerTotal}>
+                          {'\u20B9'} {total ? total : 0}
+                        </Text>
+                        <Text style={{
+                          fontSize: textScale(12),
+                          color: WHITE,
+                          fontFamily: 'Gilroy-Medium',
+                          marginTop: verticalScale(8)
+                        }}>Total Number of Payments 23</Text>
+                      </>
+                    ) : (
+                      <>
+                        <Text style={styles.headerTitle}>Recent Settlements</Text>
+                        <View style={styles.row}>
+                          <View>
+                            <Text style={[styles.headerTotal, {
+                              fontSize: textScale(28)
+                            }]}>
+                              {'\u20B9'} {total ? total : 0}
+                            </Text>
+                            <Text style={[styles.headerTotal, {
+                              fontSize: textScale(12)
+                            }]}>Settled on 27th oct</Text>
+                          </View>
+                          <View style={{
+                            borderRightWidth: 1,
+                            borderRightColor: WHITE,
+                            height: verticalScale(50),
+                            marginHorizontal: moderateScale(15)
+                          }} />
+                          <View>
+                            <Text style={[styles.headerTotal, {
+                              fontSize: textScale(28)
+                            }]}>
+                              {'\u20B9'} {total ? total : 0}
+                            </Text>
+                            <Text style={[styles.headerTotal, {
+                              fontSize: textScale(12)
+                            }]}>Settled on 26th oct</Text>
+                          </View>
+                        </View>
+                      </>
+                    )}
                   </View>
-                )
-              }
-              onEndReached={onEndReached}
-            />
-          )}
+                </ImageBackground>
+              )
+            })}
+          </PagerView>
+
+          <View style={styles.indicators}>
+            {renderIndicators()}
+          </View>
         </View>
+
+        {currentIndex === 0 ? (
+          <TransactionList
+            user={user}
+          />
+        ) : (
+          <SettlementList
+            user={user}
+          />
+        )}
       </SafeAreaView>
     </View>
   );
@@ -159,7 +173,7 @@ export default connect(mapStateToProps)(WithNetInfo(TransactionScreen));
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    position: 'relative',
+    // position: 'relative',
     backgroundColor: WHITE,
   },
   linearGradientStyle: {
@@ -171,19 +185,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     textAlign: 'center',
-    marginBottom: moderateScaleVertical(20),
+    // marginBottom: verticalScale(20)
   },
   headerTitle: {
     fontSize: textScale(18),
     color: WHITE,
-    fontFamily: 'Gilroy-Medium',
+    fontFamily: 'Gilroy-Regular',
     marginVertical: moderateScaleVertical(5),
   },
   headerTotal: {
     fontSize: textScale(50),
     fontFamily: 'Gilroy-Medium',
     color: WHITE,
-    marginBottom: moderateScaleVertical(15),
+    // marginBottom: moderateScaleVertical(15),
   },
   notFoundText: {
     marginTop: moderateScaleVertical(15),
@@ -194,5 +208,35 @@ const styles = StyleSheet.create({
   },
   lineStyle: {
     marginVertical: moderateScaleVertical(5),
+  },
+  pagerView: {
+    width: '100%',
+    height: verticalScale(200),
+    borderRadius: 8,
+    paddingVertical: 10
+  },
+  indicators: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'center',
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 15,
+    justifyContent: 'center'
+  },
+  dot: {
+    height: 8,
+    width: 8,
+    borderRadius: 4,
+    backgroundColor: '#505050',
+    marginHorizontal: 3,
+    borderWidth: .4,
+    borderColor: 'grey'
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: verticalScale(8),
   },
 });

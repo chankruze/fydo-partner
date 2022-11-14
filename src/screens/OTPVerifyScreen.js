@@ -5,6 +5,7 @@ import {
   View,
   Keyboard,
   Clipboard,
+  Alert,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { DARKBLUE, DARKGREY, GREY, LIGHTBLACK, PRIMARY } from '../assets/colors';
@@ -18,7 +19,7 @@ import OTPInputView from '@twotalltotems/react-native-otp-input'
 import WithNetInfo from '../components/hoc/withNetInfo';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import RNOtpVerify from 'react-native-otp-verify';
-
+import Tts from 'react-native-tts';
 
 const mapDispatchToProps = function (dispatch) {
   return {
@@ -27,6 +28,8 @@ const mapDispatchToProps = function (dispatch) {
 };
 
 const OTPVerifyScreen = ({ navigationData, navigation, handleNextScreen, setUser }) => {
+  const otpInput = createRef();
+
   const id = navigationData?.otpId;
   const [otp, setOtp] = useState('');
   const [otpId, setOtpId] = useState(id);
@@ -34,26 +37,41 @@ const OTPVerifyScreen = ({ navigationData, navigation, handleNextScreen, setUser
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const otpInput = createRef();
-  useEffect(()=> {
-    getHash = () =>
+  useEffect(() => {
+    setTimeout(() => {
+      otpInput?.current?.focusField(0)
+    }, 500);
+    // getHash = () =>
     RNOtpVerify.getHash()
-      .then(console.log)
-      .catch(console.log);
-
-    startListeningForOtp = () =>
+      .then((hash) => console.log(hash))
+      .catch();
     RNOtpVerify.getOtp()
-      .then(p => RNOtpVerify.addListener(otpHandler))
-      .catch(p => console.log(p));
-      
-      return () => RNOtpVerify.removeListener();
-  },[])
+      .then(p => {
+        console.log("hhhhh==>", p)
+        RNOtpVerify.addListener(otpHandler)
+      })
+      .catch(p => (p));
+
+    return () => RNOtpVerify.removeListener();
+  }, [])
+
   const otpHandler = (message) => {
-      const otp = /(\d{4})/g.exec(message)[1];
+    console.log('====================================');
+    console.log("mesf==>", message);
+    console.log('====================================');
+
+    // Tts.stop();
+    // Tts.speak(message);
+
+    const otp = /(\d{6})/g.exec(message)?.[1];
+
+    if (otp) {
       setOtp(otp)
       Clipboard.setString(otp);
       Keyboard.dismiss()
+    }
   }
+
   const validateInput = () => {
     if (otp == null || otp.trim() == '') {
       setError('* Required');
@@ -126,19 +144,20 @@ const OTPVerifyScreen = ({ navigationData, navigation, handleNextScreen, setUser
           Please enter the 6-digit OTP sent to you at {phoneNumber}
         </Text>
         <OTPInputView
-                    style={styles.optContainer}
-                    pinCount={6}
-                    // code={otp}
-                    editable={true}
-                    code={otp}
-                    // code={this.state.code} //You can supply this prop or not. The component will be used as a controlled / uncontrolled component respectively.
-                   onCodeChanged = {handleOTP}
-                    autoFocusOnLoad={false}
-                    codeInputFieldStyle={styles.otpBox}
-                    // codeInputHighlightStyle={styles.optContainer}
-                    onCodeFilled={handleOTP}
+          ref={otpInput}
+          style={styles.optContainer}
+          pinCount={6}
+          // code={otp}
+          editable={true}
+          code={otp}
+          // code={this.state.code} //You can supply this prop or not. The component will be used as a controlled / uncontrolled component respectively.
+          onCodeChanged={handleOTP}
+          autoFocusOnLoad={false}
+          codeInputFieldStyle={styles.otpBox}
+          // codeInputHighlightStyle={styles.optContainer}
+          onCodeFilled={handleOTP}
 
-                />
+        />
         {error != null && <Text style={styles.error}>{error}</Text>}
         <ButtonComponent
           backgroundColor={PRIMARY}

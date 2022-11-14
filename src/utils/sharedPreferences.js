@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
 import DefaultPreference from 'react-native-default-preference';
 import SharedPreferences from 'react-native-shared-preferences';
@@ -51,6 +52,15 @@ export async function clearData() {
     } else {
         await DefaultPreference.clearAll();
     }
+}
+
+export async function storeValue(key, value) {
+    await AsyncStorage.setItem(key, value)
+}
+
+export async function getValue(key) {
+    let value = await AsyncStorage.getItem(key);
+    return JSON.parse(value);
 }
 
 // import SharedPreferences from 'react-native-shared-preferences';

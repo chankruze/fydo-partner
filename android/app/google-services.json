@@ -1,0 +1,643 @@
+{
+  "project_info": {
+    "project_number": "606864175917",
+    "firebase_url": "https://lfyd-android.firebaseio.com",
+    "project_id": "lfyd-android",
+    "storage_bucket": "lfyd-android.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:606864175917:android:74bbe7111e2452c261d9a4",
+        "android_client_info": {
+          "package_name": "com.example.dashboard_lfyd"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "606864175917-earkdo79vsjk7bibdi0fgijqur7vtovo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dashboard_lfyd",
+            "certificate_hash": "704ce527d121df2730710b37572becf62c6d5917"
+          }
+        },
+        {
+          "client_id": "606864175917-emvho0b3rs6viu64jte1il3c1f958b0m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dashboard_lfyd",
+            "certificate_hash": "35957c27c64c1c8a735d00690dbbf86d101850d8"
+          }
+        },
+        {
+          "client_id": "606864175917-f35ldguk3bjs49uvsod5eiuth6ln0ctl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dashboard_lfyd",
+            "certificate_hash": "d909767f816a1f8916d3bf34bf1a56ac50ae500c"
+          }
+        },
+        {
+          "client_id": "606864175917-gg10s8leboc98utu3hf299h876bqmno0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dashboard_lfyd",
+            "certificate_hash": "fd504fe75ef2bda62d618576f63d9ca30ec60f51"
+          }
+        },
+        {
+          "client_id": "606864175917-hhm0fq5i953l35ke0ae91krbbqfcqkj4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dashboard_lfyd",
+            "certificate_hash": "5d5f264815553d94ae951515be619334e9cb4c76"
+          }
+        },
+        {
+          "client_id": "606864175917-8mj9lempv0kvqtkfdq0jve22bvdm7tah.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD230WjVnqDN8RDc0dluozQTERDaokGlq4"
+        },
+        {
+          "current_key": "AIzaSyD0sjJRslaWB84RK5P714E_0mRBTb7fmfQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "606864175917-8mj9lempv0kvqtkfdq0jve22bvdm7tah.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "606864175917-2nhvav8np8j7rsr1hrtpcf4e6hf3alf1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.fydopartner",
+                "app_store_id": "12345678"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:606864175917:android:a317334b87afabe861d9a4",
+        "android_client_info": {
+          "package_name": "com.example.lfydadminapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "606864175917-p84hscdoavop8ehpoq5g7bebpuanrmvc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.lfydadminapp",
+            "certificate_hash": "d909767f816a1f8916d3bf34bf1a56ac50ae500c"
+          }
+        },
+        {
+          "client_id": "606864175917-umef0b0jqb15qab833ga3clmoa3nt89v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.lfydadminapp",
+            "certificate_hash": "bc7dd7db9d1b0fffdb3d6aee7c72c539cc350f1f"
+          }
+        },
+        {
+          "client_id": "606864175917-8mj9lempv0kvqtkfdq0jve22bvdm7tah.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD230WjVnqDN8RDc0dluozQTERDaokGlq4"
+        },
+        {
+          "current_key": "AIzaSyD0sjJRslaWB84RK5P714E_0mRBTb7fmfQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "606864175917-8mj9lempv0kvqtkfdq0jve22bvdm7tah.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "606864175917-2nhvav8np8j7rsr1hrtpcf4e6hf3alf1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.fydopartner",
+                "app_store_id": "12345678"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:606864175917:android:bd01af4ad3bea9b261d9a4",
+        "android_client_info": {
+          "package_name": "com.example.lfydmarketingapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "606864175917-8mj9lempv0kvqtkfdq0jve22bvdm7tah.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD230WjVnqDN8RDc0dluozQTERDaokGlq4"
+        },
+        {
+          "current_key": "AIzaSyD0sjJRslaWB84RK5P714E_0mRBTb7fmfQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "606864175917-8mj9lempv0kvqtkfdq0jve22bvdm7tah.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "606864175917-2nhvav8np8j7rsr1hrtpcf4e6hf3alf1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.fydopartner",
+                "app_store_id": "12345678"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:606864175917:android:7e7dc3422b1b13af61d9a4",
+        "android_client_info": {
+          "package_name": "com.example.lfydnotification"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "606864175917-8mj9lempv0kvqtkfdq0jve22bvdm7tah.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD230WjVnqDN8RDc0dluozQTERDaokGlq4"
+        },
+        {
+          "current_key": "AIzaSyD0sjJRslaWB84RK5P714E_0mRBTb7fmfQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "606864175917-8mj9lempv0kvqtkfdq0jve22bvdm7tah.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "606864175917-2nhvav8np8j7rsr1hrtpcf4e6hf3alf1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.fydopartner",
+                "app_store_id": "12345678"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:606864175917:android:e36e936de7c7fa6b61d9a4",
+        "android_client_info": {
+          "package_name": "com.example.lfydpersonaldatabase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "606864175917-4sjt9897s9m6s8eto488vmgc2pna29bi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.lfydpersonaldatabase",
+            "certificate_hash": "d6b9df2e699574676845131181aee5f1206c91b3"
+          }
+        },
+        {
+          "client_id": "606864175917-hmqk86tjv1d05r0f455gq3ck8e52hi4a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.lfydpersonaldatabase",
+            "certificate_hash": "35957c27c64c1c8a735d00690dbbf86d101850d8"
+          }
+        },
+        {
+          "client_id": "606864175917-8mj9lempv0kvqtkfdq0jve22bvdm7tah.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD230WjVnqDN8RDc0dluozQTERDaokGlq4"
+        },
+        {
+          "current_key": "AIzaSyD0sjJRslaWB84RK5P714E_0mRBTb7fmfQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "606864175917-8mj9lempv0kvqtkfdq0jve22bvdm7tah.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "606864175917-2nhvav8np8j7rsr1hrtpcf4e6hf3alf1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.fydopartner",
+                "app_store_id": "12345678"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:606864175917:android:f59a3ccd9e55bad361d9a4",
+        "android_client_info": {
+          "package_name": "com.example.rangersapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "606864175917-8mj9lempv0kvqtkfdq0jve22bvdm7tah.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD230WjVnqDN8RDc0dluozQTERDaokGlq4"
+        },
+        {
+          "current_key": "AIzaSyD0sjJRslaWB84RK5P714E_0mRBTb7fmfQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "606864175917-8mj9lempv0kvqtkfdq0jve22bvdm7tah.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "606864175917-2nhvav8np8j7rsr1hrtpcf4e6hf3alf1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.fydopartner",
+                "app_store_id": "12345678"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:606864175917:android:9a22d5242ecfef7161d9a4",
+        "android_client_info": {
+          "package_name": "com.fydopartner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "606864175917-8mj9lempv0kvqtkfdq0jve22bvdm7tah.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD230WjVnqDN8RDc0dluozQTERDaokGlq4"
+        },
+        {
+          "current_key": "AIzaSyD0sjJRslaWB84RK5P714E_0mRBTb7fmfQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "606864175917-8mj9lempv0kvqtkfdq0jve22bvdm7tah.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "606864175917-2nhvav8np8j7rsr1hrtpcf4e6hf3alf1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.fydopartner",
+                "app_store_id": "12345678"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:606864175917:android:c34d0ad622a22b4861d9a4",
+        "android_client_info": {
+          "package_name": "com.letsdevelopit.fydopartner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "606864175917-5l84gs5bmergnf4qfdtha80l439q5mj8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.letsdevelopit.fydopartner",
+            "certificate_hash": "5fe2208fcd2574690f7d97a1b00bd41bda53c03b"
+          }
+        },
+        {
+          "client_id": "606864175917-8mj9lempv0kvqtkfdq0jve22bvdm7tah.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD230WjVnqDN8RDc0dluozQTERDaokGlq4"
+        },
+        {
+          "current_key": "AIzaSyD0sjJRslaWB84RK5P714E_0mRBTb7fmfQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "606864175917-8mj9lempv0kvqtkfdq0jve22bvdm7tah.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "606864175917-2nhvav8np8j7rsr1hrtpcf4e6hf3alf1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.fydopartner",
+                "app_store_id": "12345678"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:606864175917:android:9f5f38056d83282b61d9a4",
+        "android_client_info": {
+          "package_name": "com.letsdevelopit.lfydapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "606864175917-2mr5m0t0v5bqkcu29pcib1egqgkmd4m0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.letsdevelopit.lfydapp",
+            "certificate_hash": "35957c27c64c1c8a735d00690dbbf86d101850d8"
+          }
+        },
+        {
+          "client_id": "606864175917-dh35g56l3rhbgff29geolgtat3rohsd6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.letsdevelopit.lfydapp",
+            "certificate_hash": "d6b9df2e699574676845131181aee5f1206c91b3"
+          }
+        },
+        {
+          "client_id": "606864175917-osvckkvgjsmtum3hikg108vck3c00509.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.letsdevelopit.lfydapp",
+            "certificate_hash": "be1b686f6ef38184c8be822cb06b7ace9dd03617"
+          }
+        },
+        {
+          "client_id": "606864175917-8mj9lempv0kvqtkfdq0jve22bvdm7tah.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD230WjVnqDN8RDc0dluozQTERDaokGlq4"
+        },
+        {
+          "current_key": "AIzaSyD0sjJRslaWB84RK5P714E_0mRBTb7fmfQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "606864175917-8mj9lempv0kvqtkfdq0jve22bvdm7tah.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "606864175917-2nhvav8np8j7rsr1hrtpcf4e6hf3alf1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.fydopartner",
+                "app_store_id": "12345678"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:606864175917:android:44f3477f1294711461d9a4",
+        "android_client_info": {
+          "package_name": "com.letsdevelopit.lfydcustomer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "606864175917-867oc4i3pe0rcbech8mjg5gbkveku9t8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.letsdevelopit.lfydcustomer",
+            "certificate_hash": "5d5f264815553d94ae951515be619334e9cb4c76"
+          }
+        },
+        {
+          "client_id": "606864175917-8mj9lempv0kvqtkfdq0jve22bvdm7tah.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD230WjVnqDN8RDc0dluozQTERDaokGlq4"
+        },
+        {
+          "current_key": "AIzaSyD0sjJRslaWB84RK5P714E_0mRBTb7fmfQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "606864175917-8mj9lempv0kvqtkfdq0jve22bvdm7tah.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "606864175917-2nhvav8np8j7rsr1hrtpcf4e6hf3alf1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.fydopartner",
+                "app_store_id": "12345678"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:606864175917:android:76675417784fc1f461d9a4",
+        "android_client_info": {
+          "package_name": "com.letsdevelopit.lfydcustomeradmin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "606864175917-msi407eghujud3ia0dlkl8l68cbm1u0g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.letsdevelopit.lfydcustomeradmin",
+            "certificate_hash": "d035d7d77fa0474383737994ea7ed3cb02559a8c"
+          }
+        },
+        {
+          "client_id": "606864175917-8mj9lempv0kvqtkfdq0jve22bvdm7tah.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD230WjVnqDN8RDc0dluozQTERDaokGlq4"
+        },
+        {
+          "current_key": "AIzaSyD0sjJRslaWB84RK5P714E_0mRBTb7fmfQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "606864175917-8mj9lempv0kvqtkfdq0jve22bvdm7tah.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "606864175917-2nhvav8np8j7rsr1hrtpcf4e6hf3alf1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.fydopartner",
+                "app_store_id": "12345678"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:606864175917:android:3c71e86650468ee761d9a4",
+        "android_client_info": {
+          "package_name": "com.letsdevelopit.lfydnewapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "606864175917-1fjeeocvtn6oceea0pvh58gg6dci2hep.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.letsdevelopit.lfydnewapp",
+            "certificate_hash": "2f64225a0420b2e5d44a201fe90bd7b21c5cadcf"
+          }
+        },
+        {
+          "client_id": "606864175917-25ddr10soadcc51cdqgqgn4ruftffkci.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.letsdevelopit.lfydnewapp",
+            "certificate_hash": "61a4778924adce463915bd221b36a56bfed258a2"
+          }
+        },
+        {
+          "client_id": "606864175917-ge4ivfteo7p0639igtn0n0spjhjuptd0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.letsdevelopit.lfydnewapp",
+            "certificate_hash": "58bc56f2f34cfe83cca7301045073655f3a6a538"
+          }
+        },
+        {
+          "client_id": "606864175917-ic52slcltsbtgo12ks4ccbkek10gjj2m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.letsdevelopit.lfydnewapp",
+            "certificate_hash": "5d5f264815553d94ae951515be619334e9cb4c76"
+          }
+        },
+        {
+          "client_id": "606864175917-8mj9lempv0kvqtkfdq0jve22bvdm7tah.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD230WjVnqDN8RDc0dluozQTERDaokGlq4"
+        },
+        {
+          "current_key": "AIzaSyD0sjJRslaWB84RK5P714E_0mRBTb7fmfQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "606864175917-8mj9lempv0kvqtkfdq0jve22bvdm7tah.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "606864175917-2nhvav8np8j7rsr1hrtpcf4e6hf3alf1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.fydopartner",
+                "app_store_id": "12345678"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

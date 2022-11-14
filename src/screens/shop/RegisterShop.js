@@ -67,6 +67,8 @@ const mapStateToProps = (state) => {
 
 function RegisterShop({ route, navigation, user, myshop }) {
 
+  console.log("gl==>", myshop)
+
   const isFocused = useIsFocused();
   // const edit = route.params?.edit;
 
@@ -79,7 +81,8 @@ function RegisterShop({ route, navigation, user, myshop }) {
   const [shopName, setShopName] = useState(
     myshop ? myshop.name : ''
   );
-  const [address, setAddress] = useState('');
+  const [address, setAddress] = useState(myshop ? myshop?.address?.addressLine1
+    : '');
   const [coordinates, setCoordinates] = useState([]);
   const [pincode, setPincode] = useState(
     myshop ? myshop?.address?.pin : ''
@@ -140,7 +143,7 @@ function RegisterShop({ route, navigation, user, myshop }) {
     if (shopName == null || shopName?.trim() == '') {
       error.shopName = 'Enter shop name';
     }
-    if (!map?.address) {
+    if (!address) {
       error.address = 'Enter the shop address';
     }
     setError(error);

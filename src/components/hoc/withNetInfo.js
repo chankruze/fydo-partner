@@ -1,29 +1,37 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import NetInfo from '@react-native-community/netinfo';
-import {View, Modal, Text, StyleSheet, Pressable, Image} from 'react-native';
-import {DARKBLUE} from '../../assets/colors';
+import { View, Modal, Text, StyleSheet, Pressable, Image } from 'react-native';
+import { DARKBLUE } from '../../assets/colors';
 
 const WithNetInfo = WrappedComponent => {
   const NewComponent = (props) => {
-    const [networkStatus, setNetworkStatus] = useState(false);
+    const [networkStatus, setNetworkStatus] = useState(true);
     const networkCheck = () => {
-      NetInfo.fetch().then(state => {
-        // setNetworkStatus(state.isConnected);
-        setNetworkStatus(false);
+      return removeNetInfoSubscription = NetInfo.addEventListener((state) => {
+        const offline = (state.isConnected && state.isInternetReachable);
+        setNetworkStatus(offline);
       });
+      // NetInfo.fetch().then(state => {
+      //   // setNetworkStatus(state.isConnected);
+      //   setNetworkStatus(state.isConnected);
+      // });
     };
     useEffect(() => {
-      networkCheck();
+      const unsubscribe = networkCheck();
+
+      return () => {
+        unsubscribe();
+      };
     }, []);
-    if (networkStatus) {
+    if (!networkStatus) {
       return (
         <View>
           <Modal
             animationType="slide"
             transparent={true}
             visible={!networkStatus}
-            onRequestClose={()=> {
-                console.log("Hardware back button pressed(Android)")
+            onRequestClose={() => {
+              console.log("Hardware back button pressed(Android)")
             }}>
             <View style={styles.centeredView}>
               <View style={styles.modalView}>
@@ -41,11 +49,12 @@ const WithNetInfo = WrappedComponent => {
               </View>
             </View>
           </Modal>
-          <WrappedComponent {...props}/>
+          <WrappedComponent {...props} />
         </View>
       );
+    } else {
+      return <WrappedComponent {...props} />;
     }
-    return <WrappedComponent {...props}/>;
   };
   return NewComponent;
 };

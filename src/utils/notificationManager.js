@@ -30,7 +30,7 @@ messaging()
   if (remoteMessage) {
     console.log(
       'Notification caused app to open from quit state:',
-      remoteMessage.notification,
+      remoteMessage,
     );
     // let {entityType, entityId} = remoteMessage.data;
     // if(entityId && entityType == NOTIFICATION_TYPES.SINGLE_BRAND){

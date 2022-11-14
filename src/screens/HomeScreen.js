@@ -12,6 +12,7 @@ import {
   Pressable,
   Image,
   KeyboardAvoidingView,
+  Alert,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import HomeFab from '../components/home/HomeFab';
@@ -89,13 +90,12 @@ class HomeScreen extends Component {
     this.NotifcationListnes = this.NotifcationListnes.bind(this);
   }
 
-  componentDidMount() {
-    this.callApis();
-    this.fetchShopData();
-    this.getSections();
-    this.NotifcationListnes();
+  async componentDidMount() {
+    await this.callApis();
+    await this.fetchShopData();
+    await this.getSections();
+    // this.NotifcationListnes();
   }
-
 
   async callApis() {
     let { user } = this.props;
@@ -168,10 +168,25 @@ class HomeScreen extends Component {
       this.setState({ loading: false });
     }
   }
-  async uploadDeviceInfos(token, deviceInfo, accessToken) {
-    let params = JSON.stringify(Object.assign({ ...deviceInfo }, { 'fcmId': token, 'appType': 'Partner' }));
+
+  uploadDeviceInfos = async (token, deviceInfo, accessToken) => {
+    const { myshop } = this.props;
+
+    console.log('====================================');
+    console.log("id==>", myshop?._id);
+    console.log('====================================');
+
+    let params = JSON.stringify(Object.assign({ ...deviceInfo }, {
+      'fcmId': token,
+      'appType': 'Partner',
+      'shopId': myshop?._id,
+      'appTech': 'RN'
+    }));
     console.log('params-->', params)
-    await uploadDeviceInfo(params, accessToken);
+    const response = await uploadDeviceInfo(params, accessToken);
+    console.log('====================================');
+    console.log("res123==>", response);
+    console.log('====================================');
   }
 
   async getToken() {
@@ -281,7 +296,9 @@ class HomeScreen extends Component {
             style={styles.addTagsBottomSheetContainer}
             onPress={this.triggerTopTagModal}
           >
-            <JoinNowTopSheet />
+            <JoinNowTopSheet
+              onPress={this.triggerTopTagModal}
+            />
           </Pressable>
         </KeyboardAvoidingView>
       </Modal>

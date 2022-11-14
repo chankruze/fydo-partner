@@ -63,6 +63,7 @@ const ShopDetails = ({ navigation, route, user }) => {
   );
   const [amenities, setAmenities] = useState([]);
   const [newAmenities, setNewAmenities] = useState([]);
+  const [key, setKey] = useState(0);
 
   useEffect(() => {
     // console.log("kk-->", shopDetails)
@@ -82,12 +83,12 @@ const ShopDetails = ({ navigation, route, user }) => {
       });
       let newA = [];
       newAme.forEach((i) => {
-        let data = {
-          _id: i._id,
-          name: i.name,
-          iconUrl: i.iconUrl
-        }
-        newA.push(data);
+        // let data = {
+        //   _id: i._id,
+        //   name: i.name,
+        //   iconUrl: i.iconUrl
+        // }
+        newA.push(i?._id);
       })
       setNewAmenities(newA)
     }
@@ -105,26 +106,27 @@ const ShopDetails = ({ navigation, route, user }) => {
 
   const handleAmenityCheckbox = (checked, item) => {
     if (checked) {
-      newAmenities.push({
-        _id: item._id,
-        name: item.name,
-        iconUrl: item.iconUrl,
-      });
+      newAmenities.push(item?._id);
+      setKey(Math.random())
+      setNewAmenities(newAmenities);
       return;
+    } else {
+      const remove = newAmenities.filter(i => {
+        return i != item?._id;
+      });
+      setKey(Math.random())
+      setNewAmenities(remove);
     }
-    const remove = newAmenities.filter(i => {
-      return i._id != item._id;
-    });
-    setNewAmenities(remove);
   };
 
   const checkAmenities = (id) => {
-    return shopDetails?.amenities?.includes(id)
+    return newAmenities?.includes(id)
   };
 
   const renderAmenities = ({ item, index }) => {
     return (
       <View
+        key={key}
         style={{
           flexDirection: 'row',
           width: '50%',

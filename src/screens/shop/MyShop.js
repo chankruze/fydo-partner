@@ -105,7 +105,7 @@ const MyShop = ({ navigation, user, setShop }) => {
   }, []);
 
   setMyAmenities = () => {
-    var result = amenities.filter(function (o1) {
+    var result = amenities?.filter(function (o1) {
       return data?.amenities.some(function (o2) {
         return o1._id == o2;
       });

@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, Image, TextInput} from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput } from 'react-native';
 import React from 'react';
 import {
   height,
@@ -7,16 +7,64 @@ import {
   textScale,
   width,
 } from '../../utils/responsiveSize';
-import {BLACK, GREEN, PRIMARY, WHITE} from '../../assets/colors';
+import { BLACK, GREEN, PRIMARY, WHITE } from '../../assets/colors';
 import shield from '../../assets/images/shield.png';
 import ButtonComponent from '../../components/ButtonComponent';
-import {useState} from 'react';
+import { useState } from 'react';
+import { connect } from 'react-redux';
+import { updateShop } from '../../services/shopService';
+import { saveUserData } from '../../utils/defaultPreference';
+import { setUser } from '../../store/actions/user.action';
 
-const JoinNowTopSheet = () => {
+const mapStateToProps = state => {
+  return {
+    myshop: state?.userReducer?.myshop,
+    user: state?.userReducer?.user,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    setUser: user => dispatch(setUser(user)),
+  };
+};
+
+const JoinNowTopSheet = ({ myshop, user, onPress, setUser }) => {
   const [nextStep, setNextStep] = useState(false);
+  const [accountName, setAccountName] = useState('');
+  const [email, setEmail] = useState('');
+  const [bankNo, setBankNo] = useState('');
+  const [ifsc, setIfsc] = useState('');
+  const [upi, setUpi] = useState('');
+
   const getNextStep = () => {
     setNextStep(state => !state);
   };
+
+  const editShop = async () => {
+    let request = {
+      ...myshop,
+      bankDetails: {
+        accNumber: bankNo,
+        ifsc: ifsc,
+        name: accountName,
+        upiIds: [upi],
+        email: email
+      },
+    }
+
+    const response = await updateShop(user?.accessToken, request);
+    const json = await response.json();
+
+    console.log('====================================');
+    console.log("json==>", json);
+    console.log('====================================');
+
+    if (json) {
+      onPress();
+    }
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
@@ -48,44 +96,50 @@ const JoinNowTopSheet = () => {
           </>
         ) : (
           <>
-          <View style={styles.wrapper}>
-            <View style={styles.inputWrapper}>
-              <TextInput
-                    placeholder='Account Name'
-                    style={styles.input}
-                    placeholderTextColor="#383B3F80"
-                    //onChangeText={handleProductName}
+            <View style={styles.wrapper}>
+              <View style={styles.inputWrapper}>
+                <TextInput
+                  placeholder='Account Name'
+                  style={styles.input}
+                  placeholderTextColor="#383B3F80"
+                  value={accountName}
+                  onChangeText={setAccountName}
                 />
                 <TextInput
-                    placeholder='Email Address'
-                    style={styles.input}
-                    placeholderTextColor="#383B3F80"
-                    //onChangeText={handleProductName}
+                  placeholder='Email Address'
+                  style={styles.input}
+                  placeholderTextColor="#383B3F80"
+                  value={email}
+                  onChangeText={setEmail}
                 />
                 <TextInput
-                    placeholder='Bank account number'
-                    style={styles.input}
-                    placeholderTextColor="#383B3F80"
-                    //onChangeText={handleProductName}
+                  placeholder='Bank account number'
+                  style={styles.input}
+                  placeholderTextColor="#383B3F80"
+                  value={bankNo}
+                  onChangeText={setBankNo}
                 />
                 <TextInput
-                    placeholder='IFSC Code'
-                    style={styles.input}
-                    placeholderTextColor="#383B3F80"
-                    //onChangeText={handleProductName}
+                  placeholder='IFSC Code'
+                  style={styles.input}
+                  placeholderTextColor="#383B3F80"
+                  value={ifsc}
+                  onChangeText={setIfsc}
                 />
-                 <TextInput
-                    placeholder='Add UPI ID'
-                    style={styles.input}
-                    placeholderTextColor="#383B3F80"
-                    //onChangeText={handleProductName}
+                <TextInput
+                  placeholder='Add UPI ID'
+                  style={styles.input}
+                  placeholderTextColor="#383B3F80"
+                  value={upi}
+                  onChangeText={setUpi}
                 />
-            </View>
-            <ButtonComponent
-                  label="Get Partner"
-                  color={WHITE}
-                  backgroundColor={PRIMARY}
-                />
+              </View>
+              <ButtonComponent
+                onPress={() => editShop()}
+                label="Get Partner"
+                color={WHITE}
+                backgroundColor={PRIMARY}
+              />
             </View>
           </>
         )}
@@ -94,7 +148,7 @@ const JoinNowTopSheet = () => {
   );
 };
 
-export default JoinNowTopSheet;
+export default connect(mapStateToProps, mapDispatchToProps)(JoinNowTopSheet);
 
 const styles = StyleSheet.create({
   container: {
@@ -106,7 +160,7 @@ const styles = StyleSheet.create({
     backgroundColor: WHITE,
     width: moderateScale(350),
     borderRadius: moderateScale(10),
-    paddingVertical:moderateScaleVertical(15)
+    paddingVertical: moderateScaleVertical(15)
   },
   wrapper: {
     paddingHorizontal: moderateScale(15),
@@ -129,13 +183,13 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   input: {
-     borderBottomColor: '#00357933',
-     borderBottomWidth: 1.5,
-     padding:moderateScale(8),
+    borderBottomColor: '#00357933',
+    borderBottomWidth: 1.5,
+    padding: moderateScale(8),
     marginVertical: moderateScaleVertical(8),
-    marginHorizontal:moderateScale(5),
+    marginHorizontal: moderateScale(5),
   },
   inputWrapper: {
-   marginBottom: moderateScale(10),
+    marginBottom: moderateScale(10),
   }
 });
