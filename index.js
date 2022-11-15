@@ -10,6 +10,7 @@ LogBox.ignoreLogs(["VirtualizedLists should never be nested"])
 LogBox.ignoreAllLogs();
 import messaging from '@react-native-firebase/messaging';
 import Tts from 'react-native-tts';
+global.is401Navigated = false;
 
 // let oldRender = Text.render;
 // Text.render = function(...args) {

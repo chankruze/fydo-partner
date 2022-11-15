@@ -25,6 +25,7 @@ import WithNetInfo from '../components/hoc/withNetInfo';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sendLoginOTP } from '../services/authService';
 import { SCREENS } from '../constants/authScreens';
+global.is401Navigated = false;
 
 const HEIGHT = Dimensions.get('screen').height;
 const TAB_BAR_HEIGHT = 49;

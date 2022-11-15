@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
 import DefaultPreference from 'react-native-default-preference';
 import SharedPreferences from 'react-native-shared-preferences';
@@ -48,7 +49,9 @@ export function getUser() {
 export async function clearData() {
     if (Platform.OS == 'android') {
         await SharedPreferences.clear();
+        await AsyncStorage.clear();
     } else {
         await DefaultPreference.clearAll();
+        await AsyncStorage.clear();
     }
 }

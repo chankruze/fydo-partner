@@ -147,7 +147,6 @@ class SettingScreen extends Component {
 
                                 if (getList?.length > 0) {
                                     getList?.map((i, index) => {
-                                        SmsRetriever.removeSmsListener();
                                         let Arr = [];
 
                                         let diff = (new Date().getTime() - i?.createdAt) / 1000;
@@ -169,11 +168,9 @@ class SettingScreen extends Component {
                                         let has = Arr.some(item => pId === item?.paymentId);
 
                                         if (has) {
-                                            SmsRetriever.removeSmsListener();
                                             this.onStart();
                                             return;
                                         } else {
-                                            SmsRetriever.removeSmsListener();
 
                                             Arr.push({
                                                 createdAt: JSON.stringify(new Date().getTime()),
@@ -188,8 +185,6 @@ class SettingScreen extends Component {
                                         }
                                     })
                                 } else {
-                                    SmsRetriever.removeSmsListener();
-
                                     let newArr = [];
 
                                     newArr.push({
@@ -233,7 +228,7 @@ class SettingScreen extends Component {
                 this._onSmsListenerPressed();
             },
             {
-                delay: 25000,
+                delay: 15000,
                 onLoop: true,
                 taskId: '12345',
                 onError: (e) => console.log(`Error logging:`, e),

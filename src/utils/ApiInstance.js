@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import ToastMessage from '../components/common/ToastComponent';
 import { navigationRef } from '../navigations/rootNavigation';
-import { getUser } from './sharedPreferences';
+import { getUser, getValue } from './sharedPreferences';
 
 const instance = axios.create({
     baseURL: '',
@@ -10,9 +10,9 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
     async (request) => {
-        const token = await getUser();
+        const token = await getValue('token');
         if (token) {
-            request.headers.Authorization = `Bearer ${token?.accessToken}`;
+            request.headers.Authorization = `Bearer ${token}`;
         }
 
         // const createdAt = new Date().getTime();
@@ -44,24 +44,30 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
     (response) => response.data,
     async (error) => {
+        console.log('====================================');
+        console.log("errp==>", error);
+        console.log('====================================');
         let { statusCode } = error?.response?.data;
         if (statusCode === 401) {
-            await AsyncStorage.clear();
-            ToastMessage({ message: error?.response?.data?.message });
-            navigationRef?.current?.reset({
-                index: 0,
-                routes: [{ name: 'OnBoarding' }]
-            });
+            if (global.is401Navigated === false) {
+                global.is401Navigated = true;
+                await AsyncStorage.clear();
+                ToastMessage({ message: error?.response?.data?.message });
+                navigationRef?.current?.reset({
+                    index: 0,
+                    routes: [{ name: 'OnBoarding' }]
+                });
+            }
+            else if (statusCode === 404 || statusCode === 500) {
+                ToastMessage({ message: error?.response?.data?.message });
+                navigationRef?.current?.reset({
+                    index: 0,
+                    routes: [{ name: 'Main' }]
+                });
+            } else {
+                return Promise.reject(error.response.data);
+            }
         }
-        // else if (statusCode === 404 || statusCode === 500) {
-        //     ToastMessage({ message: error?.response?.data?.message });
-        //     navigationRef?.current?.reset({
-        //         index: 0,
-        //         routes: [{ name: 'Main' }]
-        //     });
-        // } else {
-        return Promise.reject(error.response.data);
-        // }
     },
 );
 

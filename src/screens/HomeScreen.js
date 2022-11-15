@@ -107,7 +107,7 @@ class HomeScreen extends Component {
       this.setState({ carousels: carouselsResponse, shopOpen: shopStatusResponse?.isOpen })
 
     } catch (error) {
-      console.log(error);
+      console.log("ty==", error);
     }
   }
   async fetchShopData() {

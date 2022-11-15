@@ -20,6 +20,7 @@ import WithNetInfo from '../components/hoc/withNetInfo';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import RNOtpVerify from 'react-native-otp-verify';
 import Tts from 'react-native-tts';
+import { storeValue } from '../utils/sharedPreferences';
 
 const mapDispatchToProps = function (dispatch) {
   return {
@@ -43,7 +44,7 @@ const OTPVerifyScreen = ({ navigationData, navigation, handleNextScreen, setUser
     }, 500);
     // getHash = () =>
     RNOtpVerify.getHash()
-      .then((hash))
+      .then()
       .catch();
     RNOtpVerify.getOtp()
       .then(p => {
@@ -92,6 +93,7 @@ const OTPVerifyScreen = ({ navigationData, navigation, handleNextScreen, setUser
       if (response?.message) {
         setError(response?.message);
       } else {
+        storeValue('token', JSON.stringify(response?.accessToken));
         setUser(response);
         saveUserData(response);
         if (response?.profileComplete) {
