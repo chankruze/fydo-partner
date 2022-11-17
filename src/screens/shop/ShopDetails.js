@@ -23,9 +23,10 @@ import {
 
 import ButtonComponent from '../../components/ButtonComponent';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import { getAmenities } from '../../services/shopService';
+import { getAmenities, getCategories } from '../../services/shopService';
 import { connect } from 'react-redux';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import DropDownPicker from 'react-native-dropdown-picker';
 
 const WIDTH = Dimensions.get('screen').width;
 
@@ -36,6 +37,8 @@ const mapStateToProps = state => {
 };
 
 const ShopDetails = ({ navigation, route, user }) => {
+  const countries = ["Egypt", "Canada", "Australia", "Ireland"]
+
   const shopDetails = route?.params?.data;
 
   const [premiumService, setPremiumService] = useState(
@@ -62,11 +65,22 @@ const ShopDetails = ({ navigation, route, user }) => {
     shopDetails?.bankDetails?.upiIds ? shopDetails?.bankDetails?.upiIds[0] : ''
   );
   const [amenities, setAmenities] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [selectedCat, setSelectedCat] = useState();
   const [newAmenities, setNewAmenities] = useState([]);
   const [key, setKey] = useState(0);
 
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [items, setItems] = useState([
+    { label: 'Apple', value: 'apple' },
+    { label: 'Banana', value: 'banana' }
+  ]);
+
   useEffect(() => {
     fetchAllAmenities();
+    fetchAllCategories();
+    setValue(shopDetails?.categories)
   }, []);
 
   useEffect(() => {
@@ -97,6 +111,24 @@ const ShopDetails = ({ navigation, route, user }) => {
     try {
       const response = await getAmenities(user?.accessToken);
       setAmenities(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchAllCategories = async () => {
+    try {
+      const response = await getCategories(user?.accessToken);
+      console.log('====================================');
+      console.log("cat==>", response);
+      console.log('====================================');
+      let newArr = response.map((i) => {
+        return {
+          label: i?.name,
+          value: i?._id
+        }
+      })
+      setCategories(newArr);
     } catch (error) {
       console.log(error);
     }
@@ -156,6 +188,7 @@ const ShopDetails = ({ navigation, route, user }) => {
       },
       onboardedThroughExecutive: phonenum,
       amenities: newAmenities,
+      categories: selectedCat
     };
     navigation.navigate('ShopTiming', { data: newData });
   };
@@ -386,6 +419,47 @@ const ShopDetails = ({ navigation, route, user }) => {
               }}
             />
           </View> */}
+
+          <View style={{
+            marginBottom: 10,
+          }}>
+            <DropDownPicker
+              listMode='SCROLLVIEW'
+              placeholder='Select business type'
+              style={{
+                borderColor: 'lightgrey'
+              }}
+              dropDownContainerStyle={{
+                borderColor: 'lightgrey',
+              }}
+              searchTextInputStyle={{
+                borderWidth: 0,
+                fontSize: 16
+              }}
+              placeholderStyle={{
+                fontFamily: 'Gilroy-Medium'
+              }}
+              listItemLabelStyle={{
+                fontFamily: 'Gilroy-Medium'
+              }}
+              searchPlaceholder='Search category...'
+              searchPlaceholderTextColor='grey'
+              searchable
+              multiple
+              open={open}
+              value={value}
+              items={categories}
+              setOpen={setOpen}
+              setValue={setValue}
+              setItems={setItems}
+              onChangeValue={(val) => {
+                setSelectedCat(val);
+                console.log('====================================');
+                console.log("val==>", val);
+                console.log('====================================');
+              }}
+            />
+          </View>
 
           <View
             style={[salesExecutive && styles.subContainer, { marginTop: 10 }]}>

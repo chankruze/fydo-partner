@@ -15,7 +15,6 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Provider } from 'react-redux';
 import store from './src/store';
 import SplashScreen from './src/screens/SplashScreen';
-import RNOtpVerify from 'react-native-otp-verify';
 import Tts from 'react-native-tts';
 
 const Stack = createNativeStackNavigator();
@@ -23,14 +22,6 @@ const Stack = createNativeStackNavigator();
 LogBox.ignoreLogs([
   "[react-native-gesture-handler] Seems like you\'re using an old API with gesture components, check out new Gestures system!",
 ])
-
-// const Loading = () => {
-//   return (
-//     <View>
-//       <ActivityIndicator />
-//     </View>
-//   );
-// };
 
 
 const App = () => {

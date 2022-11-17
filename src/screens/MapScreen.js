@@ -135,7 +135,10 @@ const MapScreen = ({ navigation, route }) => {
 
   const onDragEnd = async e => {
     let coordinate = e.nativeEvent.coordinate;
+    let { latitude, longitude } = coordinate;
     const address = await GetPostalAddress(latitude, longitude);
+
+    console.log("add==>", address, coordinate)
 
     if (address?.status === 'OK') {
       setAddress(address?.results[0]?.formatted_address);

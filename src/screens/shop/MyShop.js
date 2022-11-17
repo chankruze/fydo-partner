@@ -59,6 +59,7 @@ const MyShop = ({ navigation, user, setShop }) => {
     async function fetchData() {
       try {
         const response = await getMyShop(user?.accessToken);
+        console.log("resp==>", response)
         if (response) {
           setData(response);
           setShop(response);
@@ -101,7 +102,7 @@ const MyShop = ({ navigation, user, setShop }) => {
     fetchOffers();
   }, []);
 
-  setMyAmenities = () => {
+  const setMyAmenities = () => {
     var result = amenities?.filter(function (o1) {
       return data?.amenities.some(function (o2) {
         return o1._id == o2;
@@ -146,7 +147,7 @@ const MyShop = ({ navigation, user, setShop }) => {
     );
   };
 
-  renderTiming = ({ item, index }) => {
+  const renderTiming = ({ item, index }) => {
     const today = new Date().getDay();
     let d = item.dayOfWeek.slice(0, 3);
 

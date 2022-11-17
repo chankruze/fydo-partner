@@ -9,6 +9,7 @@ import {
     Modal,
     Pressable,
     DeviceEventEmitter,
+    Switch,
 } from 'react-native';
 import FAQIcon from './../assets/icons/faq.svg';
 import PrivacyIcon from './../assets/icons/privacypolicy.svg';
@@ -25,13 +26,37 @@ import { connect } from 'react-redux';
 import { clearUser, setLanguage, setUser } from '../store/actions/user.action';
 import { CommonActions } from '@react-navigation/native';
 import { clearData, saveUserData } from '../utils/defaultPreference';
-import { Switch } from 'react-native-paper';
-import ReactNativeForegroundService from '@supersami/rn-foreground-service';
-import RNOtpVerify from 'react-native-otp-verify';
 import SmsRetriever from 'react-native-sms-retriever';
 import Tts from 'react-native-tts';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getValue, storeValue } from '../utils/sharedPreferences';
+import { Platform } from 'react-native';
+import BackgroundService from 'react-native-background-actions';
+import { isCameraPermissionGranted, isLocationPermissionGranted } from '../utils/permissionManager';
+import ToastMessage from '../components/common/ToastComponent';
+
+const sleep = (time) => new Promise((resolve) => setTimeout(() => resolve(), time));
+
+// You can do anything in your task such as network requests, timers and so on,
+// as long as it doesn't touch UI. Once your task completes (i.e. the promise is resolved),
+// React Native will go into "paused" mode (unless there are other tasks running,
+// or there is a foreground app).
+
+const options = {
+    taskName: 'Fydo Partner',
+    taskTitle: 'Fydo Partner',
+    taskDesc: 'Listening to payments',
+    taskIcon: {
+        name: 'ic_launcher_1',
+        type: 'mipmap',
+    },
+    color: '#ff00ff',
+    linkingURI: 'yourSchemeHere://chat/jane', // See Deep Linking for more info
+    parameters: {
+        delay: 15000,
+    },
+
+};
 
 const PRIVACY_PAGE = "https://fydo.in/privacy-policy.html";
 
@@ -54,6 +79,7 @@ class SettingScreen extends Component {
         this.state = {
             modalVisible: false,
             checked: false,
+            isRunningService: false
         }
         this.logout = this.logout.bind(this);
         this.navigateToFAQScreen = this.navigateToFAQScreen.bind(this);
@@ -78,6 +104,82 @@ class SettingScreen extends Component {
         }
     }
 
+    veryIntensiveTask = async (taskDataArguments) => {
+        // Example of an infinite loop task
+        const { delay } = taskDataArguments;
+        await new Promise(async (resolve, reject) => {
+            for (let i = 0; BackgroundService.isRunning(); i++) {
+                console.log("hello");
+                global.isListenerAttached = false;
+
+                const registered = await SmsRetriever.startSmsRetriever();
+                if (registered) {
+                    await SmsRetriever.addSmsListener(async event => {
+                        await new Promise(async (resolve, reject) => {
+                            if (event?.message && !global.isListenerAttached) {
+                                global.isListenerAttached = true;
+
+                                if (event?.message?.toLowerCase().includes('rupees')
+                                    || event?.message?.toLowerCase().includes('received')) {
+                                    let message = event?.message?.split('-')[0];
+                                    let Y = 'Lfyd';
+                                    let Z = event?.message?.split(Y).pop();
+                                    let pId = Z.substring(0, 25).trim();
+
+                                    const getList = await getValue('speak');
+
+                                    if (getList?.length > 0) {
+                                        let diffData = getList?.filter((i) => {
+                                            let diff = (new Date().getTime() - i?.createdAt) / 1000;
+                                            diff /= 60;
+                                            let difference = Math.round(diff);
+                                            if (difference < 6) {
+                                                return i
+                                            }
+                                        });
+
+                                        let existData = diffData.filter((j) => {
+                                            return j?.paymentId === pId
+                                        })
+
+                                        if (existData?.length > 0) {
+                                            SmsRetriever.removeSmsListener();
+                                            storeValue('speak', JSON.stringify(diffData))
+                                        } else {
+                                            SmsRetriever.removeSmsListener();
+
+                                            diffData.push({
+                                                createdAt: JSON.stringify(new Date().getTime()),
+                                                paymentId: pId
+                                            });
+
+                                            storeValue('speak', JSON.stringify(diffData))
+
+                                            Tts.speak(message);
+                                        }
+                                    } else {
+                                        SmsRetriever.removeSmsListener();
+                                        let newArr = [];
+
+                                        newArr.push({
+                                            createdAt: JSON.stringify(new Date().getTime()),
+                                            paymentId: pId
+                                        });
+                                        storeValue('speak', JSON.stringify(newArr))
+
+                                        // Tts.stop();
+                                        Tts.speak(message);
+                                    }
+                                }
+                            }
+                        })
+                    });
+                    await sleep(delay);
+                }
+            }
+        });
+    };
+
     triggerModal() {
         this.setState(prevState => {
             return {
@@ -85,6 +187,7 @@ class SettingScreen extends Component {
             }
         });
     }
+
 
     navigateToFAQScreen() {
         let { navigation } = this.props;
@@ -128,129 +231,13 @@ class SettingScreen extends Component {
         }
     }
 
-    _onSmsListenerPressed = async () => {
-        try {
-            const registered = await SmsRetriever.startSmsRetriever();
-            if (registered) {
-                await SmsRetriever.addSmsListener(async event => {
-                    if (event?.message) {
-                        ReactNativeForegroundService.update_task(async () => {
-
-                            if (event?.message?.toLowerCase().includes('rupees')
-                                || event?.message?.toLowerCase().includes('received')) {
-                                let message = event?.message?.split('-')[0];
-                                let Y = 'Lfyd';
-                                let Z = event?.message?.split(Y).pop();
-                                let pId = Z.substring(0, 25).trim();
-
-                                const getList = await getValue('speak');
-
-                                if (getList?.length > 0) {
-                                    getList?.map((i, index) => {
-                                        let Arr = [];
-
-                                        let diff = (new Date().getTime() - i?.createdAt) / 1000;
-                                        diff /= 60;
-                                        let difference = Math.round(diff);
-
-                                        if (difference > 6) {
-                                            delete getList[index];
-
-                                            let newArr = getList.filter((element) => {
-                                                return element !== undefined;
-                                            });
-
-                                            Arr = [...newArr];
-                                        } else {
-                                            Arr = [...getList]
-                                        }
-
-                                        let has = Arr.some(item => pId === item?.paymentId);
-
-                                        if (has) {
-                                            this.onStart();
-                                            return;
-                                        } else {
-
-                                            Arr.push({
-                                                createdAt: JSON.stringify(new Date().getTime()),
-                                                paymentId: pId
-                                            });
-                                            storeValue('speak', JSON.stringify(Arr))
-
-                                            Tts.speak(message);
-                                            this.onStart();
-                                            return;
-
-                                        }
-                                    })
-                                } else {
-                                    let newArr = [];
-
-                                    newArr.push({
-                                        createdAt: JSON.stringify(new Date().getTime()),
-                                        paymentId: pId
-                                    });
-                                    storeValue('speak', JSON.stringify(newArr))
-
-                                    // Tts.stop();
-                                    Tts.speak(message);
-                                    this.onStart();
-                                    return;
-
-                                }
-                            }
-                        },
-                            {
-                                delay: 15000,
-                                onLoop: false,
-                                taskId: '12345',
-                                onError: (e) => console.log(`Error logging:`, e),
-                            }
-                        )
-                        await SmsRetriever.removeSmsListener();
-                    }
-                });
-            }
-            // }
-        } catch (error) {
-            console.log(JSON.stringify(error));
-        }
+    onStart = async () => {
+        await BackgroundService.start(this.veryIntensiveTask, options);
+        // await BackgroundService.updateNotification({ taskDesc: 'New ExampleTask description' });
     };
 
-    onStart = () => {
-        // Checking if the task i am going to create already exist and running, which means that the foreground is also running.
-        if (ReactNativeForegroundService.is_task_running('12345')) return;
-        // Creating a task.
-        ReactNativeForegroundService.add_task(
-            () => {
-                console.log("hello");
-                this._onSmsListenerPressed();
-            },
-            {
-                delay: 15000,
-                onLoop: true,
-                taskId: '12345',
-                onError: (e) => console.log(`Error logging:`, e),
-            }
-        );
-        // starting  foreground service.
-        return ReactNativeForegroundService.start({
-            id: 144,
-            title: 'Foreground Service',
-            message: 'you are online!',
-        });
-    };
-
-    onStop = () => {
-        // Make always sure to remove the task before stoping the service. and instead of re-adding the task you can always update the task.
-        if (ReactNativeForegroundService.is_task_running('12345')) {
-            ReactNativeForegroundService.remove_task('12345');
-        }
-        SmsRetriever.removeSmsListener();
-        // RNOtpVerify.removeListener();
-        // Stoping Foreground service.
-        return ReactNativeForegroundService.stop();
+    onStop = async () => {
+        await BackgroundService.stop();
     };
 
     renderModal() {
@@ -275,17 +262,25 @@ class SettingScreen extends Component {
     }
 
     setRead = async (val) => {
+        // const permissionStatus = await isLocationPermissionGranted();
+        // const cameraPermissionStatus = await isCameraPermissionGranted();
+
+        // if (permissionStatus === 'granted' && cameraPermissionStatus === 'granted') {
         if (val) {
-            storeValue('speakPayment', 'true');
+            await storeValue('speakPayment', 'true');
             this.onStart()
         } else {
-            AsyncStorage.removeItem('speakPayment');
+            await AsyncStorage.removeItem('speakPayment');
             this.onStop()
         }
 
         this.setState({
             checked: val
         })
+        // } else {
+        //     ToastMessage({ message: 'Please give location and camera permissions for using read payments feature.' })
+        // }
+
     }
 
     render() {
@@ -318,7 +313,8 @@ class SettingScreen extends Component {
                 // onPress={this.openPrivacyPage}
                 >
                     <Switch
-
+                        trackColor={{ false: "#767577", true: "#81b0ff" }}
+                        thumbColor={this.state.checked ? "#f5dd4b" : "#f4f3f4"}
                         value={this.state.checked}
                         onValueChange={(val) => {
                             this.setRead(val)
@@ -410,8 +406,9 @@ const styles = StyleSheet.create({
         color: 'black',
     },
     line: {
-        height: 0.3,
-        backgroundColor: 'lightgrey',
+        borderWidth: 0.3,
+        // height: 0.3,
+        borderColor: 'lightgrey',
     },
     logoutIcon: {
         width: 22,

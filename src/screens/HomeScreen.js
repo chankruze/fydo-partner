@@ -50,8 +50,12 @@ import SquareIconButton from '../components/home/SquareIconButton';
 import MySaleBottomSheet from '../components/sale/MySaleBottomSheet';
 import messaging from '@react-native-firebase/messaging';
 import { getDeviceInfo } from '../utils/getDeviceInfo';
-import { uploadDeviceInfo } from '../services/homeService';
+import { getSupportVersion, uploadDeviceInfo } from '../services/homeService';
 import { Platform } from 'react-native';
+import { compareVersions } from 'compare-versions';
+import UpdateDialog from '../components/UpdateDialog';
+import Permissions, { PERMISSIONS, RESULTS, request } from 'react-native-permissions'
+import { isBleConnectPermissionGranted, isBleScanPermissionGranted, isBluetoothPermissionGranted, isCameraPermissionGranted, isLocationPermissionGranted, requestBleConnectPermission, requestBleScanPermission, requestCameraPermission, requestLocationPermission } from '../utils/permissionManager';
 
 const mapStateToProps = state => {
   return {
@@ -76,7 +80,10 @@ class HomeScreen extends Component {
       tagTopSheetVisibel: false,
       modalOfferVisible: false,
       modelSaleVisible: false,
-      carousels: []
+      carousels: [],
+      supportVersion: null,
+      deviceInfo: null,
+      updateViewVisible: false,
     }
     this.openShop = this.openShop.bind(this);
     this.closeShop = this.closeShop.bind(this);
@@ -92,9 +99,27 @@ class HomeScreen extends Component {
   }
 
   async componentDidMount() {
+    const response = await getSupportVersion();
+    const deviceInfo = await getDeviceInfo();
+    this.setState({ supportVersion: response, deviceInfo: deviceInfo });
+
+    const permissionStatus = await isLocationPermissionGranted();
+    if (permissionStatus !== 'granted') {
+      await requestLocationPermission();
+    }
+    const bluetoothConnectPermissionStatus = await isBleConnectPermissionGranted();
+    if (bluetoothConnectPermissionStatus !== 'granted') {
+      await requestBleConnectPermission();
+    }
+    const bluetoothScanPermissionStatus = await isBleScanPermissionGranted();
+    if (bluetoothScanPermissionStatus !== 'granted') {
+      await requestBleScanPermission();
+    }
+
     await this.callApis();
     await this.fetchShopData();
     await this.getSections();
+    // await this.showUpdateDialog();
     // this.NotifcationListnes();
   }
 
@@ -157,10 +182,31 @@ class HomeScreen extends Component {
         const token = await this.getToken();
         const deviceInfo = await getDeviceInfo();
         this.uploadDeviceInfos(token, deviceInfo, accessToken)
+
       }
     } catch (error) {
       console.log("calling from getSection", error);
       this.setState({ loading: false });
+    }
+  }
+
+  showUpdateDialog = () => {
+    let { supportVersion, deviceInfo } = this.state;
+    if (supportVersion == null || deviceInfo == null) return;
+    let appVersion = deviceInfo?.appVersion;
+    let minAndroidVersion = supportVersion?.minAndroidVersion;
+    let minIosVersion = supportVersion?.minIosVersion;
+
+    if (minIosVersion == undefined || minAndroidVersion == undefined || appVersion == null)
+      return;
+
+    if (Platform.OS === 'ios' && compareVersions(appVersion, minIosVersion) == -1) {
+      this.setState({ updateViewVisible: true });
+    } else if (Platform.OS === 'android' && compareVersions(appVersion, minAndroidVersion) == -1) {
+      this.setState({ updateViewVisible: true });
+    }
+    else {
+      this.setState({ updateViewVisible: false });
     }
   }
 
@@ -376,6 +422,7 @@ class HomeScreen extends Component {
     return (
       <SafeAreaView style={styles.container}>
         <HomeFab handleModal={this.handleModal} />
+        <UpdateDialog updateVisible={this.state.updateViewVisible} />
         <Modal
           statusBarTranslucent
           transparent={true}
@@ -417,7 +464,7 @@ class HomeScreen extends Component {
         {this.state.modelSaleVisible && this.renderSaleModal()}
         {this.state.tagBottomSheetVisible && this.renderTagBottomSheet()}
         {this.state.tagTopSheetVisibel && this.renderTopSheet()}
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <StatusBar backgroundColor={PRIMARY} />
           <HomeSlider carousels={carousels && carousels} />
           <CardIconButton title="Share your business card to get more customer!" buttonTitle="Tap to share" icons={<MaterialIcons name="card-giftcard" size={30} color={WHITE} />} onPress={this.shareCard} />

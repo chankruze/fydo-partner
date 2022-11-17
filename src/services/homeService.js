@@ -1,5 +1,5 @@
 import axios from "axios";
-import { UPLOAD_DEVICE_DEAILS_API } from "../config/endpoints";
+import { CHECK_UPDATE, UPLOAD_DEVICE_DEAILS_API } from "../config/endpoints";
 import ApiInstance from '../utils/ApiInstance';
 
 //upload device info
@@ -35,4 +35,17 @@ export async function uploadDeviceInfo(params, token) {
     //     },
     //     body: JSON.stringify(params)
     // })
+}
+
+export async function getSupportVersion() {
+    try {
+        const response = await ApiInstance({
+            method: 'GET',
+            url: CHECK_UPDATE,
+        });
+
+        return Promise.resolve(response);
+    } catch (error) {
+        return Promise.reject(error);
+    }
 }

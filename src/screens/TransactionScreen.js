@@ -17,12 +17,14 @@ import {
 import { BLACK, GREY, GREY_2, PRIMARY, WHITE } from '../assets/colors';
 import { connect } from 'react-redux';
 import {
+  getSettlement,
   getTransactionAmount,
 } from '../services/transactionService';
 import WithNetInfo from '../components/hoc/withNetInfo';
 import PagerView from 'react-native-pager-view';
 import { TransactionList } from './transaction/TransactionList';
 import { SettlementList } from './transaction/SettlementList';
+import moment from 'moment';
 
 const TransactionScreen = ({ user }) => {
   const [loading, setLoading] = useState(false);
@@ -31,11 +33,31 @@ const TransactionScreen = ({ user }) => {
   const [types, setTypes] = useState(['payments', 'settlements']);
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  const [recentSettlements, setRecentSettlements] = useState([]);
+
   const viewPagerRef = useRef();
 
   useEffect(() => {
     apiTransactionAmonut();
   }, []);
+
+  useEffect(() => {
+    apiRecentSettlements();
+  }, []);
+
+  const apiRecentSettlements = async () => {
+    try {
+      let params = {
+        startDate: 0,
+        endDate: 1761611872252
+      }
+
+      const response = await getSettlement(2, 0, params);
+      setRecentSettlements(response);
+    } catch (error) {
+      console.log('error-->', error);
+    }
+  };
 
   const apiTransactionAmonut = async () => {
     try {
@@ -105,17 +127,19 @@ const TransactionScreen = ({ user }) => {
                       </>
                     ) : (
                       <>
+                        {console.log("recent==>", recentSettlements)}
                         <Text style={styles.headerTitle}>Recent Settlements</Text>
                         <View style={styles.row}>
                           <View>
                             <Text style={[styles.headerTotal, {
                               fontSize: textScale(28)
                             }]}>
-                              {'\u20B9'} {total ? total : 0}
+                              {'\u20B9'} {recentSettlements[0]?.amount || 0}
                             </Text>
                             <Text style={[styles.headerTotal, {
                               fontSize: textScale(12)
-                            }]}>Settled on 27th oct</Text>
+                            }]}>{`Settled on ${moment(recentSettlements[0]?.createdAt).format('DD MMM')
+                              }`}</Text>
                           </View>
                           <View style={{
                             borderRightWidth: 1,
@@ -127,11 +151,12 @@ const TransactionScreen = ({ user }) => {
                             <Text style={[styles.headerTotal, {
                               fontSize: textScale(28)
                             }]}>
-                              {'\u20B9'} {total ? total : 0}
+                              {'\u20B9'} {recentSettlements[1]?.amount || 0}
                             </Text>
                             <Text style={[styles.headerTotal, {
                               fontSize: textScale(12)
-                            }]}>Settled on 26th oct</Text>
+                            }]}>{`Settled on ${moment(recentSettlements[1]?.createdAt).format('DD MMM')
+                              }`}</Text>
                           </View>
                         </View>
                       </>

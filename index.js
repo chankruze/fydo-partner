@@ -30,6 +30,7 @@ Text.defaultProps = {
 };
 
 import './src/utils/notificationManager';
+import { getValue, storeValue } from './src/utils/sharedPreferences';
 
 const speakPayment = async (remoteMessage) => {
     let message = remoteMessage?.split('-')[0];
@@ -38,41 +39,31 @@ const speakPayment = async (remoteMessage) => {
     const getList = await getValue('speak');
 
     if (getList?.length > 0) {
-        getList?.map((i, index) => {
-            let Arr = [];
-
+        let diffData = getList?.filter((i) => {
             let diff = (new Date().getTime() - i?.createdAt) / 1000;
             diff /= 60;
             let difference = Math.round(diff);
-
-            if (difference > 6) {
-                delete getList[index];
-
-                let newArr = getList.filter((element) => {
-                    return element !== undefined;
-                });
-
-                Arr = [...newArr];
-            } else {
-                Arr = [...getList]
+            if (difference < 6) {
+                return i
             }
+        });
 
-            let has = Arr.some(item => pId === item?.paymentId);
-
-            if (has) {
-                return;
-            } else {
-                Arr.push({
-                    createdAt: JSON.stringify(new Date().getTime()),
-                    paymentId: pId
-                });
-
-                storeValue('speak', JSON.stringify(Arr))
-
-                Tts.speak(message);
-                return;
-            }
+        let existData = diffData.filter((j) => {
+            return j?.paymentId === pId
         })
+
+        if (existData?.length > 0) {
+            storeValue('speak', JSON.stringify(diffData))
+        } else {
+            diffData.push({
+                createdAt: JSON.stringify(new Date().getTime()),
+                paymentId: pId
+            });
+
+            storeValue('speak', JSON.stringify(diffData))
+
+            Tts.speak(message);
+        }
     } else {
         let newArr = [];
 
@@ -80,11 +71,9 @@ const speakPayment = async (remoteMessage) => {
             createdAt: JSON.stringify(new Date().getTime()),
             paymentId: pId
         });
-
         storeValue('speak', JSON.stringify(newArr))
 
         Tts.speak(message);
-        return;
     }
 
 }
@@ -95,9 +84,5 @@ messaging().setBackgroundMessageHandler(async remoteMessage => {
         speakPayment(remoteMessage?.data?.body);
     }
 });
-
-import ReactNativeForegroundService from '@supersami/rn-foreground-service';
-import { getValue, storeValue } from './src/utils/sharedPreferences';
-ReactNativeForegroundService.register();
 
 AppRegistry.registerComponent(appName, () => App);

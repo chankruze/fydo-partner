@@ -1,4 +1,4 @@
-import { GET_AMENITIES, GET_CAROUSELS, GET_MY_SHOP, GET_SHOP_STATUS, SHOP_STATUS_CHANGE, UPDATE_SHOP } from "../config/endpoints"
+import { GET_AMENITIES, GET_CAROUSELS, GET_CATEGORIES, GET_MY_SHOP, GET_SHOP_STATUS, SHOP_STATUS_CHANGE, UPDATE_SHOP } from "../config/endpoints"
 import ApiInstance from '../utils/ApiInstance';
 
 export async function getShopStatus(token) {
@@ -135,6 +135,26 @@ export async function getAmenities(token) {
         const response = await ApiInstance({
             method: 'GET',
             url: GET_AMENITIES,
+        });
+
+        return Promise.resolve(response);
+    } catch (error) {
+        return Promise.reject(error);
+    }
+    // return fetch(GET_AMENITIES, {
+    //     headers: { 
+    //         'Content-Type': 'application/json',
+    //         'Authorization': `Bearer ${token}`,
+    //         "Content-Type": "application/json",
+    //     },
+    // })
+}
+
+export async function getCategories(token) {
+    try {
+        const response = await ApiInstance({
+            method: 'GET',
+            url: GET_CATEGORIES,
         });
 
         return Promise.resolve(response);

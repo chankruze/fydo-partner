@@ -30,7 +30,7 @@ export const SettlementList = ({ user }) => {
                     endDate: 1761611872252
                 }
 
-                const response = await getSettlement(user?.accessToken, limit, skip, params);
+                const response = await getSettlement(limit, skip, params);
 
                 setSettlements([...settlements, ...response]);
                 setSkip(skip + limit);

@@ -22,11 +22,11 @@ export async function getTransaction(token, limit, page) {
     // })
 }
 
-export async function getSettlement(token, limit, page, params) {
+export async function getSettlement(limit, page, params) {
     try {
         const response = await ApiInstance({
             method: 'POST',
-            url: GET_SETTLEMENT + `?limit=${limit}&skip=${page}`,
+            url: GET_SETTLEMENT + `?skip=${page}&limit=${limit}`,
             data: params
         });
         return Promise.resolve(response);

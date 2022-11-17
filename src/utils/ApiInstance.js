@@ -12,6 +12,9 @@ instance.interceptors.request.use(
     async (request) => {
         const token = await getValue('token');
         if (token) {
+            console.log('====================================');
+            console.log("token==>", token);
+            console.log('====================================');
             request.headers.Authorization = `Bearer ${token}`;
         }
 
@@ -58,15 +61,14 @@ instance.interceptors.response.use(
                     routes: [{ name: 'OnBoarding' }]
                 });
             }
-            else if (statusCode === 404 || statusCode === 500) {
-                ToastMessage({ message: error?.response?.data?.message });
-                navigationRef?.current?.reset({
-                    index: 0,
-                    routes: [{ name: 'Main' }]
-                });
-            } else {
-                return Promise.reject(error.response.data);
-            }
+        } else if (statusCode === 404 || statusCode === 500) {
+            ToastMessage({ message: error?.response?.data?.message });
+            navigationRef?.current?.reset({
+                index: 0,
+                routes: [{ name: 'Main' }]
+            });
+        } else {
+            return Promise.reject(error.response.data);
         }
     },
 );

@@ -285,6 +285,10 @@ const ShopTiming = props => {
         pics: pics
       }
 
+      console.log('====================================');
+      console.log("params==>", params);
+      console.log('====================================');
+
       let { navigation, user } = props;
       const response = await updateShop(user?.accessToken, params);
 
