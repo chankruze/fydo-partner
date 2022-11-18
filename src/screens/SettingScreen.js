@@ -31,32 +31,13 @@ import Tts from 'react-native-tts';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getValue, storeValue } from '../utils/sharedPreferences';
 import { Platform } from 'react-native';
-import BackgroundService from 'react-native-background-actions';
-import { isCameraPermissionGranted, isLocationPermissionGranted } from '../utils/permissionManager';
 import ToastMessage from '../components/common/ToastComponent';
-
-const sleep = (time) => new Promise((resolve) => setTimeout(() => resolve(), time));
+import BackgroundService from './BackgroundService';
 
 // You can do anything in your task such as network requests, timers and so on,
 // as long as it doesn't touch UI. Once your task completes (i.e. the promise is resolved),
 // React Native will go into "paused" mode (unless there are other tasks running,
 // or there is a foreground app).
-
-const options = {
-    taskName: 'Fydo Partner',
-    taskTitle: 'Fydo Partner',
-    taskDesc: 'Listening to payments',
-    taskIcon: {
-        name: 'ic_launcher_1',
-        type: 'mipmap',
-    },
-    color: '#ff00ff',
-    linkingURI: 'yourSchemeHere://chat/jane', // See Deep Linking for more info
-    parameters: {
-        delay: 15000,
-    },
-
-};
 
 const PRIVACY_PAGE = "https://fydo.in/privacy-policy.html";
 
@@ -103,82 +84,6 @@ class SettingScreen extends Component {
             })
         }
     }
-
-    veryIntensiveTask = async (taskDataArguments) => {
-        // Example of an infinite loop task
-        const { delay } = taskDataArguments;
-        await new Promise(async (resolve, reject) => {
-            for (let i = 0; BackgroundService.isRunning(); i++) {
-                console.log("hello");
-                global.isListenerAttached = false;
-
-                const registered = await SmsRetriever.startSmsRetriever();
-                if (registered) {
-                    await SmsRetriever.addSmsListener(async event => {
-                        await new Promise(async (resolve, reject) => {
-                            if (event?.message && !global.isListenerAttached) {
-                                global.isListenerAttached = true;
-
-                                if (event?.message?.toLowerCase().includes('rupees')
-                                    || event?.message?.toLowerCase().includes('received')) {
-                                    let message = event?.message?.split('-')[0];
-                                    let Y = 'Lfyd';
-                                    let Z = event?.message?.split(Y).pop();
-                                    let pId = Z.substring(0, 25).trim();
-
-                                    const getList = await getValue('speak');
-
-                                    if (getList?.length > 0) {
-                                        let diffData = getList?.filter((i) => {
-                                            let diff = (new Date().getTime() - i?.createdAt) / 1000;
-                                            diff /= 60;
-                                            let difference = Math.round(diff);
-                                            if (difference < 6) {
-                                                return i
-                                            }
-                                        });
-
-                                        let existData = diffData.filter((j) => {
-                                            return j?.paymentId === pId
-                                        })
-
-                                        if (existData?.length > 0) {
-                                            SmsRetriever.removeSmsListener();
-                                            storeValue('speak', JSON.stringify(diffData))
-                                        } else {
-                                            SmsRetriever.removeSmsListener();
-
-                                            diffData.push({
-                                                createdAt: JSON.stringify(new Date().getTime()),
-                                                paymentId: pId
-                                            });
-
-                                            storeValue('speak', JSON.stringify(diffData))
-
-                                            Tts.speak(message);
-                                        }
-                                    } else {
-                                        SmsRetriever.removeSmsListener();
-                                        let newArr = [];
-
-                                        newArr.push({
-                                            createdAt: JSON.stringify(new Date().getTime()),
-                                            paymentId: pId
-                                        });
-                                        storeValue('speak', JSON.stringify(newArr))
-
-                                        // Tts.stop();
-                                        Tts.speak(message);
-                                    }
-                                }
-                            }
-                        })
-                    });
-                    await sleep(delay);
-                }
-            }
-        });
-    };
 
     triggerModal() {
         this.setState(prevState => {
@@ -232,12 +137,11 @@ class SettingScreen extends Component {
     }
 
     onStart = async () => {
-        await BackgroundService.start(this.veryIntensiveTask, options);
-        // await BackgroundService.updateNotification({ taskDesc: 'New ExampleTask description' });
+        BackgroundService.startService()
     };
 
     onStop = async () => {
-        await BackgroundService.stop();
+        BackgroundService.stopService()
     };
 
     renderModal() {
@@ -262,10 +166,6 @@ class SettingScreen extends Component {
     }
 
     setRead = async (val) => {
-        // const permissionStatus = await isLocationPermissionGranted();
-        // const cameraPermissionStatus = await isCameraPermissionGranted();
-
-        // if (permissionStatus === 'granted' && cameraPermissionStatus === 'granted') {
         if (val) {
             await storeValue('speakPayment', 'true');
             this.onStart()
@@ -277,10 +177,6 @@ class SettingScreen extends Component {
         this.setState({
             checked: val
         })
-        // } else {
-        //     ToastMessage({ message: 'Please give location and camera permissions for using read payments feature.' })
-        // }
-
     }
 
     render() {

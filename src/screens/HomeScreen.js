@@ -107,19 +107,11 @@ class HomeScreen extends Component {
     if (permissionStatus !== 'granted') {
       await requestLocationPermission();
     }
-    const bluetoothConnectPermissionStatus = await isBleConnectPermissionGranted();
-    if (bluetoothConnectPermissionStatus !== 'granted') {
-      await requestBleConnectPermission();
-    }
-    const bluetoothScanPermissionStatus = await isBleScanPermissionGranted();
-    if (bluetoothScanPermissionStatus !== 'granted') {
-      await requestBleScanPermission();
-    }
 
     await this.callApis();
     await this.fetchShopData();
     await this.getSections();
-    // await this.showUpdateDialog();
+    await this.showUpdateDialog();
     // this.NotifcationListnes();
   }
 
@@ -197,6 +189,10 @@ class HomeScreen extends Component {
     let minAndroidVersion = supportVersion?.minAndroidVersion;
     let minIosVersion = supportVersion?.minIosVersion;
 
+    console.log('====================================');
+    console.log("versions==>", appVersion, minAndroidVersion, minIosVersion);
+    console.log('====================================');
+
     if (minIosVersion == undefined || minAndroidVersion == undefined || appVersion == null)
       return;
 
@@ -206,7 +202,7 @@ class HomeScreen extends Component {
       this.setState({ updateViewVisible: true });
     }
     else {
-      this.setState({ updateViewVisible: false });
+      this.setState({ updateViewVisible: true });
     }
   }
 

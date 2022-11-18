@@ -40,4 +40,4 @@ export const GET_SETTLEMENT = BASE + "transaction/v1/fetch-my-shop-settlements";
 export const GET_TRANSACTION_AMOUNT = BASE + "transaction/v1/fetch-unsettled-amount"
 
 export const GET_POSTAL_ADDRESS = "https://maps.googleapis.com/maps/api/geocode/json";
-export const CHECK_UPDATE = BASE + "user/min-supported-version";
+export const CHECK_UPDATE = BASE + "shop/min-supported-version";

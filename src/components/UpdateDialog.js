@@ -26,16 +26,16 @@ export default function UpdateDialog({ updateVisible }) {
             <DialogContent
                 style={{ alignItems: 'center' }}>
                 <Text style={styles.title}>We are now available with new features, tap to update!</Text>
-                {/* <LottieView
+                <LottieView
                     style={{
                         width: HEIGHT * .35,
                         height: WIDTH * .60,
                         alignSelf: 'center',
                     }}
-                    source={require('../../assets/update.json')}
+                    source={require('../assets/update.json')}
                     loop={true}
                     autoPlay={true}
-                /> */}
+                />
                 <TouchableOpacity
                     style={styles.updateButton}
                     onPress={navigateToPlayStore}>
@@ -50,10 +50,11 @@ const styles = StyleSheet.create({
     title: {
         width: '80%',
         fontSize: 16,
-        fontFamily: 'Gilroy-Semibold',
+        fontFamily: 'Gilroy-SemiBold',
         textAlign: 'center',
         marginTop: 20,
-        alignSelf: 'center'
+        alignSelf: 'center',
+        color: 'black'
     },
     updateButton: {
         width: '90%',
@@ -66,7 +67,7 @@ const styles = StyleSheet.create({
     },
     updateButtonLabel: {
         color: 'white',
-        fontFamily: 'Gilroy-Semibold',
+        fontFamily: 'Gilroy-SemiBold',
         fontSize: 14,
     }
 })

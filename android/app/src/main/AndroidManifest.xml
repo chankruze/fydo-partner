@@ -10,9 +10,7 @@
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/> 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-
-    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
-    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
   <application 
   android:name=".MainApplication" 
@@ -37,8 +35,26 @@
 
     <!-- You will also only need to add this uses-library tag -->
     <uses-library android:name="org.apache.http.legacy" android:required="false" />
-  <service android:name="com.asterinet.react.bgactions.RNBackgroundActionsTask" 
-android:foregroundServiceType="location"
-  />
+
+<activity 
+android:name="com.facebook.react.devsupport.DevSettingsActivity" />
+        <service
+            android:name="com.letsdevelopit.lfydnewapp.BackgroundService"
+            android:enabled="true"
+            android:exported="false" >
+        </service>
+        <service
+            android:name="com.letsdevelopit.lfydnewapp.BackgroundEventService">
+        </service>
+        <receiver
+        android:exported="false"
+            android:name="com.letsdevelopit.lfydnewapp.BootUpReceiver"
+            android:enabled="true"
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
   </application>
 </manifest>
