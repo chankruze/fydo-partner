@@ -112,7 +112,7 @@ const TransactionCard = ({ item }) => {
           </Text>
         </View>
       </View>
-      {/* {item?.transactionPurpose === 'SHOP_PAYMENT' && (
+      {item?.transactionPurpose === 'SHOP_PAYMENT' && (
         <Text
           style={{
             ...styles.secondaryText,
@@ -126,7 +126,7 @@ const TransactionCard = ({ item }) => {
             : `To be settled: ${'\u20B9'}${item?.directTransferAmount ? item?.directTransferAmount : 0
             }`}
         </Text>
-      )} */}
+      )}
     </View>
   )
 }

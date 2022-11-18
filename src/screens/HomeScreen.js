@@ -202,7 +202,7 @@ class HomeScreen extends Component {
       this.setState({ updateViewVisible: true });
     }
     else {
-      this.setState({ updateViewVisible: true });
+      this.setState({ updateViewVisible: false });
     }
   }
 
