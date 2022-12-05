@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import NetInfo from '@react-native-community/netinfo';
-import { View, Modal, Text, StyleSheet, Pressable, Image } from 'react-native';
+import { View, Text, StyleSheet, Pressable, Image, TouchableOpacity } from 'react-native';
 import { DARKBLUE } from '../../assets/colors';
+import Modal from 'react-native-modal'
 
 const WithNetInfo = WrappedComponent => {
   const NewComponent = (props) => {
     const [networkStatus, setNetworkStatus] = useState(true);
+
     const networkCheck = () => {
       return removeNetInfoSubscription = NetInfo.addEventListener((state) => {
+
         const offline = (state.isConnected && state.isInternetReachable);
         setNetworkStatus(offline);
       });
@@ -23,16 +26,19 @@ const WithNetInfo = WrappedComponent => {
         unsubscribe();
       };
     }, []);
+
     if (!networkStatus) {
       return (
         <View>
           <Modal
-            animationType="slide"
-            transparent={true}
-            visible={!networkStatus}
-            onRequestClose={() => {
-              console.log("Hardware back button pressed(Android)")
-            }}>
+            animationIn={'slideInUp'}
+            animationOut={'slideOutDown'}
+            // transparent={true}
+            isVisible={!networkStatus}
+          // onRequestClose={() => {
+          //   console.log("Hardware back button pressed(Android)")
+          // }}
+          >
             <View style={styles.centeredView}>
               <View style={styles.modalView}>
                 <Image
@@ -43,9 +49,9 @@ const WithNetInfo = WrappedComponent => {
                 <Text style={styles.modalText}>
                   Oops! Looks like your device is not connected to the internet
                 </Text>
-                <Pressable style={styles.button} onPress={networkCheck}>
+                <TouchableOpacity style={styles.button} onPress={networkCheck}>
                   <Text style={styles.textStyle}>Try Again</Text>
-                </Pressable>
+                </TouchableOpacity>
               </View>
             </View>
           </Modal>
@@ -53,6 +59,9 @@ const WithNetInfo = WrappedComponent => {
         </View>
       );
     } else {
+      console.log('====================================');
+      console.log("status==>", networkStatus);
+      console.log('====================================');
       return <WrappedComponent {...props} />;
     }
   };

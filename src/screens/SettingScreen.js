@@ -33,6 +33,8 @@ import { getValue, storeValue } from '../utils/sharedPreferences';
 import { Platform } from 'react-native';
 import ToastMessage from '../components/common/ToastComponent';
 import BackgroundService from './BackgroundService';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import PopOver from 'react-native-popover-view';
 
 // You can do anything in your task such as network requests, timers and so on,
 // as long as it doesn't touch UI. Once your task completes (i.e. the promise is resolved),
@@ -204,21 +206,49 @@ class SettingScreen extends Component {
                     <Text style={styles.label}>{language == 'HINDI' ? 'गोपनीयता नीति' : 'Privacy policy'}</Text>
                 </TouchableOpacity>
                 <View style={styles.line} />
-                <TouchableOpacity
-                    style={styles.row}
-                // onPress={this.openPrivacyPage}
-                >
-                    <Switch
-                        trackColor={{ false: "#767577", true: "#81b0ff" }}
-                        thumbColor={this.state.checked ? "#f5dd4b" : "#f4f3f4"}
-                        value={this.state.checked}
-                        onValueChange={(val) => {
-                            this.setRead(val)
-                        }
-                        }
-                    />
-                    <Text style={styles.label}>{language == 'HINDI' ? 'गोपनीयता नीति' : 'Read Payments'}</Text>
-                </TouchableOpacity>
+                {Platform.OS === 'android' && (
+                    <>
+                        <View style={styles.line} />
+                        <TouchableOpacity
+                            style={styles.row}
+                        // onPress={this.openPrivacyPage}
+                        >
+                            <Switch
+                                trackColor={{ false: "#767577", true: "#81b0ff" }}
+                                thumbColor={this.state.checked ? "#f5dd4b" : "#f4f3f4"}
+                                value={this.state.checked}
+                                onValueChange={(val) => {
+                                    this.setRead(val)
+                                }
+                                }
+                            />
+                            <Text style={[styles.label, {
+                                flex: 1
+                            }]}>{language == 'HINDI' ? 'गोपनीयता नीति' : 'Read Payments'}</Text>
+                            <PopOver
+                                from={(
+                                    <TouchableOpacity>
+                                        <Ionicons
+                                            name='information-circle-outline'
+                                            size={22}
+                                            color={'black'}
+                                            style={{
+                                                marginLeft: 4
+                                            }}
+                                        />
+                                    </TouchableOpacity>
+                                )}>
+                                <View>
+                                    <Text style={styles.infoText}> 1. Readout payment might not work if phone is on low battery or power saver mode.
+                                        {"\n"} 2. Please check the "listening to payments" permanent notification.
+                                        {"\n"} 3. Keep opening the app within each 45 minutes to one hour in order for payment readout to work seamlessly.
+                                        {"\n"} 4. If there's no notification, switch off the read payments and switch on again. The notification will come within 10 seconds of switch on.
+                                    </Text>
+                                </View>
+                            </PopOver>
+                        </TouchableOpacity>
+                    </>
+                )}
                 <View style={styles.line} />
                 <TouchableOpacity
                     style={styles.row}
@@ -321,4 +351,12 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, .5)',
         height: '100%',
     },
+    infoText: {
+        fontFamily: 'Gilroy-SemiBold',
+        fontSize: 14,
+        color: 'black',
+        width: '90%',
+        marginLeft: 15,
+        marginVertical: 6
+    }
 });

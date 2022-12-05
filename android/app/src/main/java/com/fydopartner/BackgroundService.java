@@ -68,7 +68,8 @@ public class BackgroundService extends Service {
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Fydo Partner")
                 .setContentText("Listening to payments...")
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.notification_icon)
+                .setColor(R.color.white)
                 .setContentIntent(contentIntent)
                 .setOngoing(true)
                 .build();

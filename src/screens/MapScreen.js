@@ -44,6 +44,7 @@ const MapScreen = ({ navigation, route }) => {
   const [locationChange, setLocationChange] = useState(false);
   const [text, onChangeText] = useState('');
   const [address, setAddress] = useState(route.params?.address);
+  const [pincode, setPincode] = useState('');
   // const [address, setAddress] = useState('Sikar');
 
   useEffect(() => {
@@ -70,6 +71,12 @@ const MapScreen = ({ navigation, route }) => {
             let { latitude, longitude } = coords;
             let location = { latitude: latitude, longitude: longitude };
             const address = await GetPostalAddress(latitude, longitude);
+
+            address?.results[0]?.address_components?.map(item => {
+              if (item.types.includes('postal_code')) {
+                setPincode(item?.long_name)
+              }
+            });
 
             if (address?.status === 'OK') {
               setAddress(address?.results[0]?.formatted_address);
@@ -138,7 +145,11 @@ const MapScreen = ({ navigation, route }) => {
     let { latitude, longitude } = coordinate;
     const address = await GetPostalAddress(latitude, longitude);
 
-    console.log("add==>", address, coordinate)
+    address?.results[0]?.address_components?.map(item => {
+      if (item.types.includes('postal_code')) {
+        setPincode(item?.long_name)
+      }
+    });
 
     if (address?.status === 'OK') {
       setAddress(address?.results[0]?.formatted_address);
@@ -154,7 +165,8 @@ const MapScreen = ({ navigation, route }) => {
       coordinates: [
         region.latitude,
         region.longitude
-      ]
+      ],
+      pincode: pincode
     }
     navigation.navigate('RegisterShop', { map: data })
   };
@@ -200,6 +212,12 @@ const MapScreen = ({ navigation, route }) => {
             setSelectedLocation(location);
             setLocationChange(true);
             const address = await GetPostalAddress(lat, lng);
+
+            address?.results[0]?.address_components?.map(item => {
+              if (item.types.includes('postal_code')) {
+                setPincode(item?.long_name)
+              }
+            });
 
             if (address?.status === 'OK') {
               setAddress(address?.results[0]?.formatted_address);

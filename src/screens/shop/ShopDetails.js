@@ -6,6 +6,7 @@ import {
   ScrollView,
   Dimensions,
   FlatList,
+  TouchableOpacity,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { RadioButton, TextInput } from 'react-native-paper';
@@ -27,6 +28,10 @@ import { getAmenities, getCategories } from '../../services/shopService';
 import { connect } from 'react-redux';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import DropDownPicker from 'react-native-dropdown-picker';
+import ToastMessage from '../../components/common/ToastComponent';
+import { useIsFocused } from '@react-navigation/native';
+import { getValue } from '../../utils/sharedPreferences';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const WIDTH = Dimensions.get('screen').width;
 
@@ -37,12 +42,11 @@ const mapStateToProps = state => {
 };
 
 const ShopDetails = ({ navigation, route, user }) => {
-  const countries = ["Egypt", "Canada", "Australia", "Ireland"]
 
   const shopDetails = route?.params?.data;
 
   const [premiumService, setPremiumService] = useState(
-    shopDetails?.bankDetails ? true : false
+    shopDetails?.isChannelPartner ? true : false
   );
   const [salesExecutive, setSalesExecutive] = useState(
     shopDetails?.onboardedThroughExecutive ? true : false
@@ -61,14 +65,18 @@ const ShopDetails = ({ navigation, route, user }) => {
   const [IFSC, setIFSC] = useState(
     shopDetails?.bankDetails?.ifsc ? shopDetails?.bankDetails?.ifsc : ''
   );
-  const [UPI, setUPI] = useState(
-    shopDetails?.bankDetails?.upiIds ? shopDetails?.bankDetails?.upiIds[0] : ''
+  const [email, setEmail] = useState(
+    shopDetails?.bankDetails?.emailId ? shopDetails?.bankDetails?.emailId : ''
   );
+  const [UPI, setUPI] = useState('');
+  const [upiList, setUpiList] = useState(
+    shopDetails?.bankDetails?.upiIds ? shopDetails?.bankDetails?.upiIds : []);
   const [amenities, setAmenities] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCat, setSelectedCat] = useState();
   const [newAmenities, setNewAmenities] = useState([]);
   const [key, setKey] = useState(0);
+  const [upiKey, setUpiKey] = useState(0);
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
@@ -76,16 +84,32 @@ const ShopDetails = ({ navigation, route, user }) => {
     { label: 'Apple', value: 'apple' },
     { label: 'Banana', value: 'banana' }
   ]);
+  const [qrScan, setQrScan] = useState(false);
+
+  const isFocused = useIsFocused();
 
   useEffect(() => {
+    async function getUpiId() {
+      const upiId = await getValue('upiId');
+      if (upiId) {
+        setUPI(upiId);
+        await AsyncStorage.removeItem('upiId');
+      }
+    }
+
+    getUpiId();
     fetchAllAmenities();
     fetchAllCategories();
-    setValue(shopDetails?.categories)
-  }, []);
+
+  }, [isFocused]);
 
   useEffect(() => {
     fetchOldAmenities();
   }, [amenities])
+
+  useEffect(() => {
+    setValue(shopDetails?.categories)
+  }, [])
 
   const fetchOldAmenities = () => {
     if (shopDetails?.amenities?.length > 0) {
@@ -119,9 +143,6 @@ const ShopDetails = ({ navigation, route, user }) => {
   const fetchAllCategories = async () => {
     try {
       const response = await getCategories(user?.accessToken);
-      console.log('====================================');
-      console.log("cat==>", response);
-      console.log('====================================');
       let newArr = response.map((i) => {
         return {
           label: i?.name,
@@ -178,19 +199,65 @@ const ShopDetails = ({ navigation, route, user }) => {
   };
 
   const next = () => {
-    let newData = {
-      ...route?.params?.data,
-      bankDetails: {
-        accNumber: accountNumber,
-        ifsc: IFSC,
-        name: bankName,
-        upiIds: [UPI],
-      },
-      onboardedThroughExecutive: phonenum,
-      amenities: newAmenities,
-      categories: selectedCat
-    };
-    navigation.navigate('ShopTiming', { data: newData });
+    console.log('====================================');
+    console.log("valo==>", value);
+    console.log('====================================');
+    if (premiumService) {
+      let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+
+
+
+      if (bankName === '') {
+        ToastMessage({ message: 'Please enter bank name' })
+      } else if (email === '') {
+        ToastMessage({ message: 'Please enter email' })
+      } else if (!reg.test(email)) {
+        ToastMessage({ message: 'Please enter valid email' })
+      } else if (accountNumber === '') {
+        ToastMessage({ message: 'Please enter account number' })
+      } else if (IFSC === '') {
+        ToastMessage({ message: 'Please enter ifsc number' })
+      } else if (upiList?.length === 0) {
+        ToastMessage({ message: 'Please enter at least one upi id' })
+      } else if (selectedCat?.length === 0) {
+        ToastMessage({ message: 'Please select at least one category' })
+      } else {
+        let newData = {
+          ...route?.params?.data,
+          bankDetails: {
+            accNumber: accountNumber,
+            ifsc: IFSC,
+            name: bankName,
+            emailId: email,
+            // upiIds: [UPI],
+            upiIds: upiList,
+          },
+          isChannelPartner: premiumService,
+          onboardedThroughExecutive: phonenum,
+          amenities: newAmenities,
+          categories: selectedCat
+        };
+
+        console.log('====================================');
+        console.log("newT123==>", newData);
+        console.log('====================================');
+        navigation.navigate('ShopTiming', { data: newData });
+      }
+    } else {
+      if (selectedCat?.length === 0) {
+        ToastMessage({ message: 'Please select at least one category' })
+      } else {
+        let newData = {
+          ...route?.params?.data,
+          isChannelPartner: premiumService,
+          onboardedThroughExecutive: phonenum,
+          amenities: newAmenities,
+          categories: selectedCat
+        };
+        navigation.navigate('ShopTiming', { data: newData });
+      }
+    }
+
   };
 
   const isValidate = () => {
@@ -209,6 +276,22 @@ const ShopDetails = ({ navigation, route, user }) => {
     if (Object.keys(error).length == 0) return true;
     return false;
   };
+
+  const addUpis = () => {
+    const regx = /^[\w.-]+@[\w.-]+$/;
+    if (regx.test(UPI)) {
+      console.log('====================================');
+      console.log("true");
+      console.log('====================================');
+      upiList.push(UPI);
+      setUpiKey(Math.random())
+    } else {
+      ToastMessage({ message: 'Please enter valid upi id' });
+      console.log('====================================');
+      console.log("false");
+      console.log('====================================');
+    }
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -289,6 +372,21 @@ const ShopDetails = ({ navigation, route, user }) => {
                 <Text style={styles.error}>{error.accountNumber}</Text>
               )} */}
                 <TextInput
+                  value={email}
+                  style={[styles.input]}
+                  selectionColor={DARKBLUE}
+                  onChangeText={value => setEmail(value)}
+                  activeUnderlineColor={GREY_2}
+                  placeholder="Email Address"
+                  theme={{
+                    fonts: {
+                      regular: {
+                        fontFamily: 'Gilroy-Medium',
+                      },
+                    },
+                  }}
+                />
+                <TextInput
                   value={IFSC}
                   style={styles.input}
                   selectionColor={DARKBLUE}
@@ -306,31 +404,93 @@ const ShopDetails = ({ navigation, route, user }) => {
                 {/* {error.IFSC && (
                 <Text style={styles.error}>{error.IFSC}</Text>
               )} */}
-                <TextInput
-                  value={UPI}
-                  style={styles.input}
-                  selectionColor={DARKBLUE}
-                  activeUnderlineColor={GREY_2}
-                  onChangeText={value => setUPI(value)}
-                  placeholder="UPI ID"
-                  theme={{
-                    fonts: {
-                      regular: {
-                        fontFamily: 'Gilroy-Medium',
+                <View style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  alignSelf: 'center'
+                }}>
+                  <TextInput
+                    value={UPI}
+                    style={styles.input}
+                    selectionColor={DARKBLUE}
+                    activeUnderlineColor={GREY_2}
+                    onChangeText={value => setUPI(value)}
+                    placeholder="UPI ID"
+                    theme={{
+                      fonts: {
+                        regular: {
+                          fontFamily: 'Gilroy-Medium',
+                        },
                       },
-                    },
+                    }}
+                    right={
+                      <TextInput.Icon
+                        name={() => (
+                          <MaterialIcon
+                            onPress={() =>
+                              navigation.navigate('QrScan')
+                            }
+                            name="qr-code-scanner"
+                            size={25}
+                            color="#000"
+                          />
+                        )}
+                      />
+                    }
+                  />
+                  <TouchableOpacity
+                    onPress={() => addUpis()}
+                    style={{
+                    }}>
+                    <Text style={{
+                      fontFamily: 'Gilroy-SemiBold',
+                      fontSize: 14,
+                      color: PRIMARY
+                    }}>Add</Text>
+                  </TouchableOpacity>
+                </View>
+
+                <FlatList
+                  key={upiKey}
+                  data={upiList}
+                  style={{
+                    marginHorizontal: 30
                   }}
-                  right={
-                    <TextInput.Icon
-                      name={() => (
-                        <MaterialIcon
-                          name="qr-code-scanner"
-                          size={25}
-                          color="#000"
-                        />
-                      )}
-                    />
+                  contentContainerStyle={{
+                    paddingBottom: 6
+                  }}
+                  ItemSeparatorComponent={() =>
+                    <View style={{
+                      borderColor: GREY,
+                      borderWidth: 0.4,
+                      marginVertical: 5
+                    }} />
                   }
+                  renderItem={({ item, index }) => {
+                    return (
+                      <View style={{
+                        flexDirection: 'row',
+                        alignItems: 'center'
+                      }}>
+                        <Text style={{
+                          fontFamily: 'Gilroy-Medium',
+                          fontSize: 14,
+                          flex: 1
+                        }}>{item}</Text>
+                        <TouchableOpacity
+                          onPress={() => {
+                            upiList.splice(index, 1);
+                            setUpiKey(Math.random())
+                          }}>
+                          <MaterialIcon
+                            name='delete'
+                            size={20}
+                            color={PRIMARY}
+                          />
+                        </TouchableOpacity>
+                      </View>
+                    )
+                  }}
                 />
                 {/* {error.UPI && (
                 <Text style={styles.error}>{error.UPI}</Text>
@@ -430,6 +590,8 @@ const ShopDetails = ({ navigation, route, user }) => {
                 borderColor: 'lightgrey'
               }}
               dropDownContainerStyle={{
+                height: 180,
+                // paddingBottom: 5,
                 borderColor: 'lightgrey',
               }}
               searchTextInputStyle={{
@@ -454,15 +616,12 @@ const ShopDetails = ({ navigation, route, user }) => {
               setItems={setItems}
               onChangeValue={(val) => {
                 setSelectedCat(val);
-                console.log('====================================');
-                console.log("val==>", val);
-                console.log('====================================');
               }}
             />
           </View>
 
           <View
-            style={[salesExecutive && styles.subContainer, { marginTop: 10 }]}>
+            style={[salesExecutive && styles.subContainer, { marginTop: 30 }]}>
             <View
               style={
                 salesExecutive

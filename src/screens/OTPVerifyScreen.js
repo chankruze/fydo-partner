@@ -20,7 +20,8 @@ import WithNetInfo from '../components/hoc/withNetInfo';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import RNOtpVerify from 'react-native-otp-verify';
 import Tts from 'react-native-tts';
-import { storeValue } from '../utils/sharedPreferences';
+import { getValue, storeValue } from '../utils/sharedPreferences';
+import { useIsFocused } from '@react-navigation/native';
 
 const mapDispatchToProps = function (dispatch) {
   return {
@@ -31,9 +32,8 @@ const mapDispatchToProps = function (dispatch) {
 const OTPVerifyScreen = ({ navigationData, navigation, handleNextScreen, setUser }) => {
   const otpInput = createRef();
 
-  const id = navigationData?.otpId;
   const [otp, setOtp] = useState('');
-  const [otpId, setOtpId] = useState(id);
+  const [otpId, setOtpId] = useState(navigationData?.otpId || '');
   const phoneNumber = navigationData?.phoneNumber;
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -53,27 +53,26 @@ const OTPVerifyScreen = ({ navigationData, navigation, handleNextScreen, setUser
       .catch(p => (p));
 
     return () => RNOtpVerify.removeListener();
-  }, [])
+  }, []);
 
-  const otpHandler = (message) => {
-
-    // Tts.stop();
-    // Tts.speak(message);
-
+  const otpHandler = async (message) => {
     const otp = /(\d{6})/g.exec(message)?.[1];
 
     if (otp) {
       setOtp(otp)
       Clipboard.setString(otp);
-      Keyboard.dismiss()
+      verify(otp);
     }
+    Keyboard.dismiss()
   }
 
-  const validateInput = () => {
-    if (otp == null || otp.trim() == '') {
+  const validateInput = (autoOtp) => {
+    let otps = autoOtp ? autoOtp : otp;
+
+    if (otps == null || otps.trim() == '') {
       setError('* Required');
       return false;
-    } else if (otp.length != 6) {
+    } else if (otps.length != 6) {
       setError('Must contain 6 digits');
       return false;
     } else return true;
@@ -82,12 +81,16 @@ const OTPVerifyScreen = ({ navigationData, navigation, handleNextScreen, setUser
   const handleOTP = value => {
     setOtp(value);
   };
-  const verify = async () => {
+
+  const verify = async (autoOtp) => {
+    const otpIds = await getValue('otpId');
+
+    if (!validateInput(autoOtp)) return;
+
     setError(null);
     setLoading(true);
-    if (!validateInput()) return;
     try {
-      const response = await verifyLoginOTP(otpId || id, otp);
+      const response = await verifyLoginOTP(otpIds, autoOtp || otp);
 
       setLoading(false);
       if (response?.message) {
@@ -98,7 +101,10 @@ const OTPVerifyScreen = ({ navigationData, navigation, handleNextScreen, setUser
         saveUserData(response);
         if (response?.profileComplete) {
           // handleNextScreen(SCREENS.LANGUAGE);
-          navigation.navigate('Main');
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'Main' }]
+          })
 
           // navigation.navigate('Language');
           console.log('User Profile Complete, add suitable route');
@@ -122,7 +128,9 @@ const OTPVerifyScreen = ({ navigationData, navigation, handleNextScreen, setUser
     try {
       const response = await sendLoginOTP(phoneNumber);
       const { otpId } = response;
-      setOtp('');
+      // setOtp('');
+      await storeValue('otpId', JSON.stringify(otpId));
+
       setOtpId(otpId);
       setError(null)
       // otpInput.current.clear();
@@ -161,7 +169,7 @@ const OTPVerifyScreen = ({ navigationData, navigation, handleNextScreen, setUser
           backgroundColor={PRIMARY}
           color="white"
           label="Verify & continue"
-          onPress={verify}
+          onPress={() => verify()}
           loading={loading}
         />
         <View style={styles.row}>

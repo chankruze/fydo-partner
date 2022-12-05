@@ -25,6 +25,7 @@ import WithNetInfo from '../components/hoc/withNetInfo';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sendLoginOTP } from '../services/authService';
 import { SCREENS } from '../constants/authScreens';
+import { storeValue } from '../utils/sharedPreferences';
 global.is401Navigated = false;
 
 const HEIGHT = Dimensions.get('screen').height;
@@ -63,6 +64,11 @@ const PhoneLoginScreen = ({ navigation, handleNextScreen }) => {
           //   phoneNumber: phoneNumber,
           //   otpId: otpId,
           // });
+          //   navigation.navigate(SCREENS.OTP_VERIFY, {
+          //     phoneNumber: phoneNumber,
+          //     otpId: otpId
+          // });
+          await storeValue('otpId', JSON.stringify(otpId));
           handleNextScreen(SCREENS.OTP_VERIFY, { phoneNumber: phoneNumber, otpId: otpId })
         }
       } catch (error) {

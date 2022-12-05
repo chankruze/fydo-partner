@@ -20,6 +20,7 @@ import OnboardingScreen from '../screens/OnboardingScreen';
 import { textScale } from '../utils/responsiveSize';
 import MySalesScreen from '../screens/MySalesScreen';
 import ReferralHistoryScreen from '../screens/ReferralHistoryScreen';
+import QrCodeScan from '../screens/shop/QrCodeScan';
 
 const Stack = createNativeStackNavigator();
 
@@ -36,6 +37,7 @@ function RootNavigation() {
         <Stack.Screen options={{ headerShown: false }} name="RegisterShop" component={RegisterShop} />
         <Stack.Screen options={{ headerShown: false }} name="Maps" component={MapScreen} />
         <Stack.Screen options={{ headerShown: false }} name="ShopDetails" component={ShopDetails} />
+        <Stack.Screen options={{ headerShown: false }} name="QrScan" component={QrCodeScan} />
         <Stack.Screen options={{ headerShown: false }} name="MyShop" component={MyShop} />
         <Stack.Screen options={{ headerShown: false }} name="ShopTiming" component={ShopTiming} />
         <Stack.Screen options={{ headerShown: false }} name="Splash" component={SplashScreen} />

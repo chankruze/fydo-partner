@@ -111,6 +111,7 @@ function RegisterShop({ route, navigation, user, myshop }) {
     if (map) {
       setAddress(map?.address)
       setCoordinates(map?.coordinates)
+      setPincode(map?.pincode)
     } else if (myshop) {
       setAddress(myshop?.address?.addressLine1)
       setCoordinates(myshop?.location)

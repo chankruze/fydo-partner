@@ -39,6 +39,10 @@ export async function sendLoginOTP(phoneNumber) {
 
 //verify login otp
 export async function verifyLoginOTP(otpId, otp) {
+
+  console.log('====================================');
+  console.log("params==>", otpId, otp);
+  console.log('====================================');
   try {
     const response = await ApiInstance({
       method: 'POST',

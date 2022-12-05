@@ -14,8 +14,6 @@ import OnboardingScreen from './src/screens/OnboardingScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Provider } from 'react-redux';
 import store from './src/store';
-import SplashScreen from './src/screens/SplashScreen';
-import Tts from 'react-native-tts';
 
 const Stack = createNativeStackNavigator();
 
@@ -25,15 +23,6 @@ LogBox.ignoreLogs([
 
 
 const App = () => {
-  const [isFirstLaunch, setIsFirstLaunch] = useState(true);
-
-  const otpHandler = (msg) => {
-    alert(msg);
-  }
-
-  const handleFirstLaunch = () => {
-    setIsFirstLaunch(false);
-  };
 
   return (
     <Provider store={store}>

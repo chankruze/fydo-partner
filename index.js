@@ -62,8 +62,9 @@ const speakPayment = async (remoteMessage) => {
             });
 
             storeValue('speak', JSON.stringify(diffData))
-
-            Tts.speak(message);
+            Tts.setDefaultRate(0.42);
+            let newMsg = message?.replace('Fydo', 'Phydo');
+            Tts.speak(newMsg);
         }
     } else {
         let newArr = [];
@@ -73,8 +74,9 @@ const speakPayment = async (remoteMessage) => {
             paymentId: pId
         });
         storeValue('speak', JSON.stringify(newArr))
-
-        Tts.speak(message);
+        Tts.setDefaultRate(0.42);
+        let newMsg = message?.replace('Fydo', 'Phydo');
+        Tts.speak(newMsg);
     }
 
 }
@@ -95,10 +97,6 @@ const MyHeadlessTask = async () => {
         await SmsRetriever.addSmsListener(async event => {
             if (event?.message && !global.isListenerAttached) {
                 global.isListenerAttached = true;
-
-                console.log('====================================');
-                console.log("message==>", event?.message);
-                console.log('====================================');
 
                 if (event?.message?.toLowerCase().includes('rupees')
                     || event?.message?.toLowerCase().includes('received')) {
@@ -136,7 +134,9 @@ const MyHeadlessTask = async () => {
 
                             storeValue('speak', JSON.stringify(diffData))
 
-                            Tts.speak(message);
+                            Tts.setDefaultRate(0.42);
+                            let newMsg = message?.replace('Fydo', 'Phydo');
+                            Tts.speak(newMsg);
                         }
                     } else {
                         SmsRetriever.removeSmsListener();
@@ -149,7 +149,9 @@ const MyHeadlessTask = async () => {
                         storeValue('speak', JSON.stringify(newArr))
 
                         // Tts.stop();
-                        Tts.speak(message);
+                        Tts.setDefaultRate(0.42);
+                        let newMsg = message?.replace('Fydo', 'Phydo');
+                        Tts.speak(newMsg);
                     }
                 }
             }

@@ -68,6 +68,7 @@ const OnboardingScreen = (props) => {
   };
 
   const handleNextScreen = (screen, data) => {
+    console.log("kl==>", screen, data)
     setCurrentScreen(screen);
     setNavigationData(data);
   }
@@ -129,7 +130,7 @@ const OnboardingScreen = (props) => {
 
           {currentScreen == SCREENS.PHONE_LOGIN && (<PhoneLoginScreen {...props} handleNextScreen={handleNextScreen} />)}
           {/* {currentScreen == SCREENS.LANGUAGE && (<ChooseLanguage {...props} handleNextScreen={handleNextScreen} />)} */}
-          {currentScreen == SCREENS.OTP_VERIFY && (<OTPVerifyScreen {...props} handleNextScreen={handleNextScreen} navigationData={navigationData} />)}
+          {currentScreen == SCREENS.OTP_VERIFY && navigationData && (<OTPVerifyScreen {...props} handleNextScreen={handleNextScreen} navigationData={navigationData} />)}
           {/* </Modal> */}
         </View>
       )}
