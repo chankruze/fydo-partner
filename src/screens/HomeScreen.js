@@ -189,10 +189,6 @@ class HomeScreen extends Component {
     let minAndroidVersion = supportVersion?.minAndroidVersion;
     let minIosVersion = supportVersion?.minIosVersion;
 
-    console.log('====================================');
-    console.log("versions==>", appVersion, minAndroidVersion, minIosVersion);
-    console.log('====================================');
-
     if (minIosVersion == undefined || minAndroidVersion == undefined || appVersion == null)
       return;
 

@@ -15,7 +15,7 @@ export async function buildLink(type, id, data) {
       packageName: 'com.letsdevelopit.lfydcustomer',
     },
     ios: {
-      bundleId: 'org.reactjs.native.example.fydopartner',
+      bundleId: 'com.letsdevelopit.lfydnewapp',
       appStoreId: '1612594091'
     },
     social: {
@@ -41,7 +41,7 @@ export async function buildReferalLink(referralCode, referralText) {
         packageName: 'com.letsdevelopit.lfydcustomer',
       },
       ios: {
-        bundleId: 'org.reactjs.native.example.fydopartner',
+        bundleId: 'com.letsdevelopit.lfydnewapp',
         appStoreId: '1612594091'
       },
       social: {

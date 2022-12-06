@@ -162,9 +162,13 @@ const MapScreen = ({ navigation, route }) => {
   const confirmAddress = () => {
     let data = {
       address: address,
+      // coordinates: [
+      //   region.latitude,
+      //   region.longitude
+      // ],
       coordinates: [
-        region.latitude,
-        region.longitude
+        region.longitude,
+        region.latitude
       ],
       pincode: pincode
     }
