@@ -59,9 +59,6 @@ const WithNetInfo = WrappedComponent => {
         </View>
       );
     } else {
-      console.log('====================================');
-      console.log("status==>", networkStatus);
-      console.log('====================================');
       return <WrappedComponent {...props} />;
     }
   };

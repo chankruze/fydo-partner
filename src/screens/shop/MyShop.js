@@ -59,7 +59,6 @@ const MyShop = ({ navigation, user, setShop }) => {
     async function fetchData() {
       try {
         const response = await getMyShop(user?.accessToken);
-        console.log("resp==>", response)
         if (response) {
           setData(response);
           setShop(response);
@@ -116,9 +115,21 @@ const MyShop = ({ navigation, user, setShop }) => {
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               {result?.map(({ _id, name, iconUrl }) => (
                 <View style={styles.option} key={_id}>
+                  {console.log("url==>", iconUrl)}
                   {iconUrl &&
                     (iconUrl?.split('.').pop() == 'svg' ? (
-                      <SvgUri width={50} height={50} uri={iconUrl} />
+                      <View style={{
+                        width: 40,
+                        height: 40,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}>
+                        <SvgUri
+                          width={20}
+                          height={20}
+                          uri={`${iconUrl}`}
+                        />
+                      </View>
                     ) : (
                       <Image
                         source={{ uri: iconUrl }}

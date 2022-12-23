@@ -118,12 +118,12 @@ const TransactionScreen = ({ user }) => {
                         <Text style={styles.headerTotal}>
                           {'\u20B9'} {total ? total : 0}
                         </Text>
-                        <Text style={{
+                        {/* <Text style={{
                           fontSize: textScale(12),
                           color: WHITE,
                           fontFamily: 'Gilroy-Medium',
                           marginTop: verticalScale(8)
-                        }}>Total Number of Payments 23</Text>
+                        }}>Total Number of Payments 23</Text> */}
                       </>
                     ) : (
                       <>

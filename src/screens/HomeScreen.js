@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -13,6 +13,7 @@ import {
   Image,
   KeyboardAvoidingView,
   Alert,
+  ImageBackground,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import HomeFab from '../components/home/HomeFab';
@@ -54,6 +55,7 @@ import { getSupportVersion, uploadDeviceInfo } from '../services/homeService';
 import { Platform } from 'react-native';
 import { compareVersions } from 'compare-versions';
 import UpdateDialog from '../components/UpdateDialog';
+import ViewShot from 'react-native-view-shot';
 import Permissions, { PERMISSIONS, RESULTS, request } from 'react-native-permissions'
 import { isBleConnectPermissionGranted, isBleScanPermissionGranted, isBluetoothPermissionGranted, isCameraPermissionGranted, isLocationPermissionGranted, requestBleConnectPermission, requestBleScanPermission, requestCameraPermission, requestLocationPermission } from '../utils/permissionManager';
 
@@ -84,6 +86,7 @@ class HomeScreen extends Component {
       supportVersion: null,
       deviceInfo: null,
       updateViewVisible: false,
+      card: false
     }
     this.openShop = this.openShop.bind(this);
     this.closeShop = this.closeShop.bind(this);
@@ -96,6 +99,7 @@ class HomeScreen extends Component {
     this.triggerOfferModal = this.triggerOfferModal.bind(this);
     this.triggerSaleModel = this.triggerSaleModel.bind(this);
     this.NotifcationListnes = this.NotifcationListnes.bind(this);
+    this.cardSnap = createRef();
   }
 
   async componentDidMount() {
@@ -246,15 +250,26 @@ class HomeScreen extends Component {
       console.log('notification on froground state....')
     })
   }
+
   async shareCard() {
     const { myshop } = this.props;
     try {
-
-      const shareResponse = await Share.open({
-        message: `Check ${myshop && myshop?.name} out. Get all your Automobile Repair needs from ${myshop && myshop?.name} only on Fydo.`,
-        //title: 'Title',
-        //url: 'https://www.npmjs.com/package/react-native-share',
-      });
+      this.cardSnap.current.capture({
+        snapshotContentContainer: true,
+      }).then((uri) => {
+        let shareImage = {
+          url: uri,
+          message: `Check ${myshop && myshop?.name} out. Get all your Automobile Repair needs from ${myshop && myshop?.name} only on Fydo.`
+        };
+        Share.open(shareImage).catch(err => console.log(err));
+        this.setState({
+          card: !this.state.card
+        })
+      })
+      // const shareResponse = Share.open({
+      //   message: `Check ${myshop && myshop?.name} out. Get all your Automobile Repair needs from ${myshop && myshop?.name} only on Fydo.`,
+      //   title: 'Title',
+      // });
     } catch (error) {
       console.log(error);
     }
@@ -407,14 +422,129 @@ class HomeScreen extends Component {
       </Modal>
     )
   }
+
+  renderModal() {
+    let { user } = this.props;
+    const { myshop } = this.props;
+
+    return (
+      <Modal
+        statusBarTranslucent
+        animationType="fade"
+        transparent={true}
+        visible={this.state.card}
+        onRequestClose={() => {
+          this.setState({
+            card: false
+          })
+        }}
+      >
+        <Pressable
+          activeOpacity={1}
+          style={styles.addTagsBottomSheetContainer}
+          onPress={() => {
+            this.setState({
+              card: false
+            })
+          }}>
+          <View style={{
+            minHeight: moderateScale(300),
+            backgroundColor: WHITE,
+            position: 'absolute',
+            width: '100%',
+            bottom: 0,
+            borderTopLeftRadius: moderateScale(10),
+            borderTopRightRadius: moderateScale(10),
+            zIndex: 10,
+            // paddingHorizontal: moderateScale(10)
+          }}>
+            <ViewShot
+              ref={this.cardSnap}
+              style={{
+                flex: 1,
+                // justifyContent: 'center',
+                borderTopLeftRadius: moderateScale(10),
+                borderTopRightRadius: moderateScale(10),
+                // height: '92%',
+                // paddingBottom: 10,
+                backgroundColor: 'white',
+              }}
+              options={{ format: 'jpg', quality: 0.9 }}>
+              <ImageBackground
+                source={require('../assets/images/card.png')}
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                }}
+                resizeMode='contain'
+              >
+                <View style={styles.shopTitleView}>
+                  <Text style={styles.shopTitle}>ANTMAN BUDDIES</Text>
+                </View>
+                <View style={styles.cardRow}>
+                  <Image
+                    source={require('../assets/images/pincode.png')}
+                    style={{
+                      width: 10,
+                      height: 10
+                    }}
+                  />
+                  <Text style={styles.extraTxt}>103,Shivdarshan society,near kantareshwar temple,katargam-395004</Text>
+                </View>
+                <View style={styles.cardRow}>
+                  <Image
+                    source={require('../assets/images/telephone.png')}
+                    style={{
+                      width: 10,
+                      height: 10
+                    }}
+                  />
+                  <Text style={styles.extraTxt}>9601994607</Text>
+                </View>
+                <View style={styles.cardRow}>
+                  <Image
+                    source={require('../assets/images/user.png')}
+                    style={{
+                      width: 10,
+                      height: 10
+                    }}
+                  />
+                  <Text style={styles.extraTxt}>Aman Narola</Text>
+                </View>
+                <View style={styles.cardRow}>
+                  <Image
+                    source={require('../assets/images/list.png')}
+                    style={{
+                      width: 10,
+                      height: 10
+                    }}
+                  />
+                  <Text style={styles.extraTxt}>Agro Products,Auto Mobile Accessories</Text>
+                </View>
+              </ImageBackground>
+            </ViewShot>
+            <TouchableOpacity
+              style={styles.cardBtn}
+              onPress={() => {
+                this.shareCard()
+              }}>
+              <Text style={styles.cardBtnTxt}>Share card</Text>
+            </TouchableOpacity>
+          </View>
+        </Pressable>
+      </Modal>
+    )
+  }
+
   render() {
     let { shopOpen, carousels } = this.state;
-    let { language } = this.props;
+    let { language, myshop } = this.props;
 
     return (
       <SafeAreaView style={styles.container}>
         <HomeFab handleModal={this.handleModal} />
         <UpdateDialog updateVisible={this.state.updateViewVisible} />
+        {this.state.card && this.renderModal()}
         <Modal
           statusBarTranslucent
           transparent={true}
@@ -459,7 +589,11 @@ class HomeScreen extends Component {
         <ScrollView showsVerticalScrollIndicator={false}>
           <StatusBar backgroundColor={PRIMARY} />
           <HomeSlider carousels={carousels && carousels} />
-          <CardIconButton title="Share your business card to get more customer!" buttonTitle="Tap to share" icons={<MaterialIcons name="card-giftcard" size={30} color={WHITE} />} onPress={this.shareCard} />
+          <CardIconButton title="Share your business card to get more customer!" buttonTitle="Tap to share" icons={<MaterialIcons name="card-giftcard" size={30} color={WHITE} />} onPress={() => {
+            this.setState({
+              card: !this.state.card
+            })
+          }} />
           <View style={styles.line} />
           <CardIconButton title="Add Tags to your shops to make user search you" buttonTitle="Tap to Add" icons={<Ionicons name="pricetag-outline" size={30} color={WHITE} />} onPress={this.triggerTagModal} />
           <View style={styles.line} />
@@ -485,7 +619,9 @@ class HomeScreen extends Component {
             /> */}
           </View>
           <View style={styles.line} />
-          <CardlabelButton title="Get guranteed customer in your shop" subTitle="Be Our Exclusive Channel Partner" buttonTitle="Join now" onPress={this.triggerTopTagModal} />
+          {!myshop?.isChannelPartner && (
+            <CardlabelButton title="Get guranteed customer in your shop" subTitle="Be Our Exclusive Channel Partner" buttonTitle="Join now" onPress={this.triggerTopTagModal} />
+          )}
           <View style={styles.line} />
           <View style={styles.row}>
             <SquareIconButton
@@ -633,4 +769,43 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40
   },
+  shopTitleView: {
+    backgroundColor: PRIMARY,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    width: '40%'
+  },
+  shopTitle: {
+    fontFamily: 'Gilroy-SemiBold',
+    fontSize: 14,
+    color: 'white'
+  },
+  extraTxt: {
+    fontFamily: 'Gilroy-SemiBold',
+    fontSize: 10,
+    color: 'black',
+    paddingLeft: 8
+  },
+  cardRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '40%',
+    marginTop: 4,
+    marginLeft: 8
+  },
+  cardBtn: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    backgroundColor: PRIMARY,
+    borderRadius: 10,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    marginBottom: 8
+  },
+  cardBtnTxt: {
+    fontFamily: 'Gilroy-SemiBold',
+    fontSize: 14,
+    color: 'white',
+  }
 });
