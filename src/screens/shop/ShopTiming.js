@@ -239,7 +239,7 @@ const ShopTiming = props => {
   const takePhotoFromCamera = () => {
     ImagePicker.openCamera({
       width: 300,
-      height: 400,
+      height: 300,
       cropping: true,
     })
       .then(image => {
@@ -268,8 +268,8 @@ const ShopTiming = props => {
 
   const choosePhotosFromGallery = () => {
     ImagePicker.openPicker({
-      // width: 300,
-      // height: 400,
+      width: 300,
+      height: 300,
       // multiple: true,
       waitAnimationEnd: false,
       cropping: true,
