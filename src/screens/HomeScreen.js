@@ -36,6 +36,7 @@ import AddTagsBottomSheet from '../components/home/AddTagsBottomSheet';
 import {
   closeShop,
   getCarousels,
+  getCategories,
   getMyShop,
   getShopStatus,
   openShop,
@@ -86,7 +87,8 @@ class HomeScreen extends Component {
       supportVersion: null,
       deviceInfo: null,
       updateViewVisible: false,
-      card: false
+      card: false,
+      myCategories: []
     }
     this.openShop = this.openShop.bind(this);
     this.closeShop = this.closeShop.bind(this);
@@ -116,7 +118,28 @@ class HomeScreen extends Component {
     await this.fetchShopData();
     await this.getSections();
     await this.showUpdateDialog();
+    await this.fetchAllCategories();
     // this.NotifcationListnes();
+  }
+
+  async fetchAllCategories() {
+    let { user, myshop } = this.props;
+    try {
+      const response = await getCategories(user?.accessToken);
+      let result = response?.filter(function (o1) {
+        return myshop?.categories.some(function (o2) {
+          return o1._id == o2;
+        });
+      });
+      let newArr = result.map((i) => {
+        return i?.name
+      })
+      this.setState({
+        myCategories: newArr
+      })
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async callApis() {
@@ -424,8 +447,10 @@ class HomeScreen extends Component {
   }
 
   renderModal() {
-    let { user } = this.props;
+    let { myCategories } = this.state;
     const { myshop } = this.props;
+
+    console.log("shop==>", myCategories)
 
     return (
       <Modal
@@ -479,7 +504,7 @@ class HomeScreen extends Component {
                 resizeMode='contain'
               >
                 <View style={styles.shopTitleView}>
-                  <Text style={styles.shopTitle}>ANTMAN BUDDIES</Text>
+                  <Text style={styles.shopTitle}>{myshop?.name}</Text>
                 </View>
                 <View style={styles.cardRow}>
                   <Image
@@ -489,7 +514,9 @@ class HomeScreen extends Component {
                       height: 10
                     }}
                   />
-                  <Text style={styles.extraTxt}>103,Shivdarshan society,near kantareshwar temple,katargam-395004</Text>
+                  <Text style={styles.extraTxt}>
+                    {myshop?.address?.addressLine1}
+                  </Text>
                 </View>
                 <View style={styles.cardRow}>
                   <Image
@@ -499,7 +526,7 @@ class HomeScreen extends Component {
                       height: 10
                     }}
                   />
-                  <Text style={styles.extraTxt}>9601994607</Text>
+                  <Text style={styles.extraTxt}>{myshop?.mobile}</Text>
                 </View>
                 <View style={styles.cardRow}>
                   <Image
@@ -509,7 +536,9 @@ class HomeScreen extends Component {
                       height: 10
                     }}
                   />
-                  <Text style={styles.extraTxt}>Aman Narola</Text>
+                  <Text style={styles.extraTxt}>
+                    {myshop?.owner?.ownerName}
+                  </Text>
                 </View>
                 <View style={styles.cardRow}>
                   <Image
@@ -519,7 +548,7 @@ class HomeScreen extends Component {
                       height: 10
                     }}
                   />
-                  <Text style={styles.extraTxt}>Agro Products,Auto Mobile Accessories</Text>
+                  <Text style={styles.extraTxt}>{myCategories?.join(',')}</Text>
                 </View>
               </ImageBackground>
             </ViewShot>

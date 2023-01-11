@@ -320,12 +320,15 @@ const ShopTiming = props => {
 
         imageResponse.map(async (i) => {
           images.map(async (j) => {
-            const imageBody = await getBlob(j.url);
+            if (j?.fileName) {
+              const imageBody = await getBlob(j.url);
 
-            await fetch(i, {
-              method: 'PUT',
-              body: imageBody
-            });
+              const data = await fetch(i, {
+                method: 'PUT',
+                body: imageBody
+              });
+
+            }
           })
         })
 
@@ -371,6 +374,8 @@ const ShopTiming = props => {
       pics.push(i.url)
     })
     const prevParams = props?.route?.params?.data;
+
+    console.log("images==>", finalImages)
 
     try {
       const params = {

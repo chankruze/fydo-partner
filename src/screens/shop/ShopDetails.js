@@ -89,6 +89,7 @@ const ShopDetails = ({ navigation, route, user }) => {
   const isFocused = useIsFocused();
 
   useEffect(() => {
+    console.log("jl==>", shopDetails)
     async function getUpiId() {
       const upiId = await getValue('upiId');
       if (upiId) {
@@ -199,9 +200,6 @@ const ShopDetails = ({ navigation, route, user }) => {
   };
 
   const next = () => {
-    console.log('====================================');
-    console.log("valo==>", value);
-    console.log('====================================');
     if (premiumService) {
       let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 
@@ -238,9 +236,6 @@ const ShopDetails = ({ navigation, route, user }) => {
           categories: selectedCat
         };
 
-        console.log('====================================');
-        console.log("newT123==>", newData);
-        console.log('====================================');
         navigation.navigate('ShopTiming', { data: newData });
       }
     } else {
@@ -280,16 +275,10 @@ const ShopDetails = ({ navigation, route, user }) => {
   const addUpis = () => {
     const regx = /^[\w.-]+@[\w.-]+$/;
     if (regx.test(UPI)) {
-      console.log('====================================');
-      console.log("true");
-      console.log('====================================');
       upiList.push(UPI);
       setUpiKey(Math.random())
     } else {
       ToastMessage({ message: 'Please enter valid upi id' });
-      console.log('====================================');
-      console.log("false");
-      console.log('====================================');
     }
   }
 
@@ -329,7 +318,7 @@ const ShopDetails = ({ navigation, route, user }) => {
                   style={styles.radioBtn}
                   value={premiumService}
                   tintColors={{ true: PRIMARY, false: DARKGREY }}
-                  disabled={false}
+                  disabled={shopDetails?.isChannelPartner}
                   onValueChange={() => {
                     setPremiumService(!premiumService);
                   }}
@@ -339,12 +328,13 @@ const ShopDetails = ({ navigation, route, user }) => {
             {premiumService && (
               <View style={{ width: '100%' }}>
                 <TextInput
+                  editable={shopDetails?.isChannelPartner ? false : true}
                   value={bankName}
                   style={styles.input}
                   selectionColor={DARKBLUE}
                   onChangeText={value => setBankName(value)}
                   activeUnderlineColor={GREY_2}
-                  placeholder="Bank Name"
+                  placeholder="Bank account holder name"
                   theme={{
                     fonts: {
                       regular: {
@@ -354,6 +344,7 @@ const ShopDetails = ({ navigation, route, user }) => {
                   }}
                 />
                 <TextInput
+                  editable={shopDetails?.isChannelPartner ? false : true}
                   value={accountNumber}
                   style={[styles.input]}
                   selectionColor={DARKBLUE}
@@ -372,6 +363,7 @@ const ShopDetails = ({ navigation, route, user }) => {
                 <Text style={styles.error}>{error.accountNumber}</Text>
               )} */}
                 <TextInput
+                  editable={shopDetails?.isChannelPartner ? false : true}
                   value={email}
                   style={[styles.input]}
                   selectionColor={DARKBLUE}
@@ -387,6 +379,7 @@ const ShopDetails = ({ navigation, route, user }) => {
                   }}
                 />
                 <TextInput
+                  editable={shopDetails?.isChannelPartner ? false : true}
                   value={IFSC}
                   style={styles.input}
                   selectionColor={DARKBLUE}
@@ -410,6 +403,7 @@ const ShopDetails = ({ navigation, route, user }) => {
                   alignSelf: 'center'
                 }}>
                   <TextInput
+                    editable={shopDetails?.isChannelPartner ? false : true}
                     value={UPI}
                     style={styles.input}
                     selectionColor={DARKBLUE}
@@ -427,6 +421,7 @@ const ShopDetails = ({ navigation, route, user }) => {
                       <TextInput.Icon
                         name={() => (
                           <MaterialIcon
+                            disabled={shopDetails?.isChannelPartner}
                             onPress={() =>
                               navigation.navigate('QrScan')
                             }
@@ -439,6 +434,7 @@ const ShopDetails = ({ navigation, route, user }) => {
                     }
                   />
                   <TouchableOpacity
+                    disabled={shopDetails?.isChannelPartner}
                     onPress={() => addUpis()}
                     style={{
                     }}>
@@ -478,6 +474,7 @@ const ShopDetails = ({ navigation, route, user }) => {
                           flex: 1
                         }}>{item}</Text>
                         <TouchableOpacity
+                          disabled={shopDetails?.isChannelPartner}
                           onPress={() => {
                             upiList.splice(index, 1);
                             setUpiKey(Math.random())

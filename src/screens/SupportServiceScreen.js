@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   Linking,
   StyleSheet,
@@ -7,10 +7,11 @@ import {
   View,
   TouchableOpacity,
 } from 'react-native';
-import {GREY_1, LIGHTBLUE, PRIMARY} from '../assets/colors';
+import { GREY_1, LIGHTBLUE, PRIMARY } from '../assets/colors';
 import WithNetInfo from '../components/hoc/withNetInfo';
 import ButtonComponent from '../components/ButtonComponent';
 import { moderateScale, textScale } from '../utils/responsiveSize';
+import IonIcons from 'react-native-vector-icons/Ionicons';
 class SupportServiceScreen extends Component {
   constructor() {
     super();
@@ -27,7 +28,7 @@ class SupportServiceScreen extends Component {
   async sendEmail() {
     try {
       let url = `mailto:${this.state.email}`;
-        Linking.openURL(url)
+      Linking.openURL(url)
     } catch (error) {
       console.log(error);
     }
@@ -56,16 +57,38 @@ class SupportServiceScreen extends Component {
       <SafeAreaView style={styles.container}>
         <View style={styles.phoneEmail}>
           <TouchableOpacity onPress={this.sendEmail} style={styles.button}>
-            <Text style={styles.title}>Send us email at</Text>
+            <IonIcons
+              name='mail-outline'
+              size={36}
+              color={PRIMARY}
+            />
+            <Text style={[styles.title, {
+              paddingTop: 10
+            }]}>Send us email at</Text>
             <Text style={styles.label}>{this.state.email}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={this.makeCall} style={styles.button}>
-            <Text style={styles.title}>Contact our customer care</Text>
+            <IonIcons
+              name='call-outline'
+              size={36}
+              color={PRIMARY}
+            />
+            <Text style={[styles.title, {
+              paddingTop: 10
+            }]}>Contact our customer care</Text>
             <Text style={styles.label}>{this.state.phoneNo}</Text>
           </TouchableOpacity>
         </View>
 
         <TouchableOpacity style={styles.row}>
+          <IonIcons
+            name='logo-whatsapp'
+            size={38}
+            color={PRIMARY}
+            style={{
+              marginVertical: 8
+            }}
+          />
           <Text style={styles.title}>Chat with us now</Text>
           <View style={styles.buttonContainer}>
             <ButtonComponent
@@ -106,31 +129,31 @@ const styles = StyleSheet.create({
     backgroundColor: LIGHTBLUE,
     justifyContent: 'center',
     alignItems: 'center',
-    height: 130,
+    paddingVertical: 10,
     marginHorizontal: 12,
     borderRadius: 10,
   },
   title: {
     fontSize: textScale(14),
     textAlign: 'center',
-    fontWeight:'400',
+    fontWeight: '400',
     fontFamily: 'Gilroy-Medium',
     letterSpacing: 0.3,
-    color:GREY_1,
+    color: GREY_1,
     width: '85%',
   },
 
   label: {
     color: PRIMARY,
     fontSize: 16,
-    marginVertical: 13,
+    marginVertical: 6,
     fontFamily: 'Gilroy-Medium',
     letterSpacing: 0.3,
 
   },
   buttonContainer: {
     width: '85%',
-    marginTop: 18,
+    marginTop: 10,
     borderRadius: moderateScale(10),
   },
 });

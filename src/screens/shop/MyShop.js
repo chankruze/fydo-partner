@@ -49,6 +49,7 @@ const MyShop = ({ navigation, user, setShop }) => {
 
   const onRefresh = () => {
     setRefreshing(true);
+    fetchData();
   };
 
   const handleTiming = () => {
@@ -56,20 +57,23 @@ const MyShop = ({ navigation, user, setShop }) => {
   };
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await getMyShop(user?.accessToken);
-        if (response) {
-          setData(response);
-          setShop(response);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }
+
     fetchData();
 
   }, []);
+
+  async function fetchData() {
+    try {
+      const response = await getMyShop(user?.accessToken);
+      if (response) {
+        setData(response);
+        setShop(response);
+        setRefreshing(false);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   useEffect(() => {
     async function getAmenitiesData() {
@@ -115,7 +119,6 @@ const MyShop = ({ navigation, user, setShop }) => {
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               {result?.map(({ _id, name, iconUrl }) => (
                 <View style={styles.option} key={_id}>
-                  {console.log("url==>", iconUrl)}
                   {iconUrl &&
                     (iconUrl?.split('.').pop() == 'svg' ? (
                       <View style={{
@@ -127,7 +130,7 @@ const MyShop = ({ navigation, user, setShop }) => {
                         <SvgUri
                           width={20}
                           height={20}
-                          uri={`${iconUrl}`}
+                          uri={iconUrl}
                         />
                       </View>
                     ) : (
