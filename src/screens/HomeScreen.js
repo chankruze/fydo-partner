@@ -403,22 +403,22 @@ class HomeScreen extends Component {
         visible={this.state.modalOfferVisible}
         onRequestClose={this.triggerOfferModal}
       >
-        <KeyboardAvoidingView
-          style={{
-            justifyContent: 'center'
-          }}
+        {/* <KeyboardAvoidingView
+          // style={{
+          //   justifyContent: 'center'
+          // }}
           behavior={Platform.OS == 'android' ? 'height' : 'padding'}
-        >
-          <Pressable
-            activeOpacity={1}
-            style={styles.addTagsBottomSheetContainer}
-            onPress={this.triggerOfferModal}>
+        > */}
+        <Pressable
+          activeOpacity={1}
+          style={styles.addTagsBottomSheetContainer}
+          onPress={this.triggerOfferModal}>
 
-            <MyOffersBottomSheet
-              token={user?.accessToken}
-              toggle={this.triggerOfferModal} />
-          </Pressable>
-        </KeyboardAvoidingView>
+          <MyOffersBottomSheet
+            token={user?.accessToken}
+            toggle={this.triggerOfferModal} />
+        </Pressable>
+        {/* </KeyboardAvoidingView> */}
 
       </Modal>
     )

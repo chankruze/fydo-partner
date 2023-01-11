@@ -14,6 +14,8 @@ import uuid from 'react-native-uuid';
 import { moderateScale } from '../../utils/responsiveSize';
 import { KeyboardAvoidingView } from 'react-native';
 import { Platform } from 'react-native';
+import ToastMessage from '../common/ToastComponent';
+import { ScrollView } from 'react-native';
 
 export default function MyOffersBottomSheet({ token, toggle }) {
 
@@ -102,7 +104,10 @@ export default function MyOffersBottomSheet({ token, toggle }) {
                     endDate: endDate,
                     imageUrl: [imagePath]
                 });
-                const json = await response.json();
+
+                if (response) {
+                    ToastMessage({ message: 'Offer added' })
+                }
                 setLoading(false);
                 toggle();
             } catch (error) {
@@ -238,101 +243,117 @@ export default function MyOffersBottomSheet({ token, toggle }) {
     return (
         <View
             style={styles.container}
-            onStartShouldSetResponder={onStartShouldSetResponder}>
-            {renderDialog()}
-            <Image
-                source={BottomsheetIcon}
-                style={styles.bottomSheetIcon}
-            />
-            <Text style={styles.title}>Add Offer</Text>
-            <View style={styles.row}>
-                <TouchableOpacity
-                    onPress={pickImage}
-                    style={styles.addPhotosButton}>
-                    <Ionicons
-                        color={PRIMARY}
-                        size={32}
-                        name='md-add-circle-outline' />
-                    <Text style={styles.addPhotoLabel}>Add photos</Text>
-                </TouchableOpacity>
-                <Text style={styles.otherLabel}>If any</Text>
-            </View>
-            <TextInput
-                placeholder='Product Name'
-                style={styles.input}
-                onChangeText={handleProductName}
-            />
-            {error?.productName && <Text style={styles.error}>{error?.productName}</Text>}
-            <TextInput
-                placeholder='Add Description (Buy 1 get 1 free /Buy 2 get 20% off)'
-                style={styles.input}
-                onChangeText={handleDescription}
-            />
-            {error?.description && <Text style={styles.error}>{error?.description}</Text>}
-            <Text style={styles.title}>Add Search Tags</Text>
-            <Text style={styles.label}>Please add some tags to make the customer feel easy to find your offers!</Text>
-            <View style={styles.row}>
-                <View style={styles.inputContainer}>
-                    <Ionicons
-                        name='pricetag-outline'
-                        size={18}
-                        style={styles.inputIcon} />
-                    <TextInput
-                        value={tag}
-                        onChangeText={handleInput}
-                        style={styles.tagInput}
-                        placeholder="Try fruits"
+            onStartShouldSetResponder={onStartShouldSetResponder}
+        >
+            <ScrollView
+                showsVerticalScrollIndicator={false}
+                keyboardShouldPersistTaps='handled'
+            >
+                <KeyboardAvoidingView
+                    behavior="padding"
+                    style={{ flex: 1 }}
+                >
+                    {renderDialog()}
+                    <Image
+                        source={BottomsheetIcon}
+                        style={styles.bottomSheetIcon}
                     />
-                </View>
-                <TouchableOpacity
-                    onPress={addTag}
-                    style={styles.addButton}>
-                    <Text style={styles.addButtonLabel}>ADD</Text>
-                </TouchableOpacity>
-            </View>
-            {error?.tag && <Text style={styles.error}>{error?.tag}</Text>}
-            <View style={styles.tags}>
-                {tags?.map((tag, index) => {
-                    return renderItem(tag, index);
-                })}
-            </View>
-            <View style={styles.row}>
-                <View style={styles.box}>
-                    <Text style={styles.dateLabel}>Start Date</Text>
+                    <Text style={styles.title}>Add Offer</Text>
+                    <View style={[styles.row, {
+                    }]}>
+                        <TouchableOpacity
+                            onPress={pickImage}
+                            style={styles.addPhotosButton}>
+                            <Ionicons
+                                color={PRIMARY}
+                                size={32}
+                                name='md-add-circle-outline' />
+                            <Text style={styles.addPhotoLabel}>Add photos</Text>
+                        </TouchableOpacity>
+                        <Text style={[styles.otherLabel, {
+                            alignSelf: 'center'
+                        }]}>If any</Text>
+                    </View>
+
+                    <TextInput
+                        placeholder='Product Name'
+                        style={styles.input}
+                        onChangeText={handleProductName}
+                    />
+                    {error?.productName && <Text style={styles.error}>{error?.productName}</Text>}
+                    <TextInput
+                        placeholder='Add Description (Buy 1 get 1 free /Buy 2 get 20% off)'
+                        style={styles.input}
+                        onChangeText={handleDescription}
+                    />
+                    {error?.description && <Text style={styles.error}>{error?.description}</Text>}
+                    <Text style={styles.title}>Add Search Tags</Text>
+                    <Text style={styles.label}>Please add some tags to make the customer feel easy to find your offers!</Text>
+                    <View style={styles.row}>
+                        <View style={styles.inputContainer}>
+                            <Ionicons
+                                name='pricetag-outline'
+                                size={18}
+                                style={styles.inputIcon} />
+                            <TextInput
+                                value={tag}
+                                onChangeText={handleInput}
+                                style={styles.tagInput}
+                                placeholder="Try fruits"
+                            />
+                        </View>
+                        <TouchableOpacity
+                            onPress={addTag}
+                            style={styles.addButton}>
+                            <Text style={styles.addButtonLabel}>ADD</Text>
+                        </TouchableOpacity>
+                    </View>
+                    {error?.tag && <Text style={styles.error}>{error?.tag}</Text>}
+                    <View style={styles.tags}>
+                        {tags?.map((tag, index) => {
+                            return renderItem(tag, index);
+                        })}
+                    </View>
+
+                    <View style={styles.row}>
+                        <View style={styles.box}>
+                            <Text style={styles.dateLabel}>Start Date</Text>
+                            <TouchableOpacity
+                                onPress={handleStartTimePicker}
+                                style={styles.dateContainer}>
+                                <Text style={styles.date}>{getDate(startDate)}</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.box}>
+                            <Text style={styles.dateLabel}>End Date</Text>
+                            <TouchableOpacity
+                                onPress={handleEndTimePicker}
+                                style={styles.dateContainer}>
+                                <Text style={styles.date}>{getDate(endDate)}</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <DateTimePickerModal
+                            isVisible={startTimePicker}
+                            mode="date"
+                            onConfirm={handleStartDate}
+                            onCancel={setStartTimePicker}
+                        />
+                        <DateTimePickerModal
+                            isVisible={endTimePicker}
+                            mode="date"
+                            onConfirm={handleEndDate}
+                            onCancel={setEndTimePicker}
+                        />
+                    </View>
                     <TouchableOpacity
-                        onPress={handleStartTimePicker}
-                        style={styles.dateContainer}>
-                        <Text style={styles.date}>{getDate(startDate)}</Text>
+                        onPress={submit}
+                        activeOpacity={.8}
+                        style={styles.submitButton}>
+                        {!loading && <Text style={styles.submitButtonLabel}>Submit</Text>}
+                        {loading && <ActivityIndicator size="small" color="white" />}
                     </TouchableOpacity>
-                </View>
-                <View style={styles.box}>
-                    <Text style={styles.dateLabel}>End Date</Text>
-                    <TouchableOpacity
-                        onPress={handleEndTimePicker}
-                        style={styles.dateContainer}>
-                        <Text style={styles.date}>{getDate(endDate)}</Text>
-                    </TouchableOpacity>
-                </View>
-                <DateTimePickerModal
-                    isVisible={startTimePicker}
-                    mode="date"
-                    onConfirm={handleStartDate}
-                    onCancel={setStartTimePicker}
-                />
-                <DateTimePickerModal
-                    isVisible={endTimePicker}
-                    mode="date"
-                    onConfirm={handleEndDate}
-                    onCancel={setEndTimePicker}
-                />
-            </View>
-            <TouchableOpacity
-                onPress={submit}
-                activeOpacity={.8}
-                style={styles.submitButton}>
-                {!loading && <Text style={styles.submitButtonLabel}>Submit</Text>}
-                {loading && <ActivityIndicator size="small" color="white" />}
-            </TouchableOpacity>
+                </KeyboardAvoidingView>
+            </ScrollView>
         </View>
     )
 }
