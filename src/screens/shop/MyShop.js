@@ -20,7 +20,7 @@ import StoreOffers from '../../components/shop/StoreOffers';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { connect } from 'react-redux';
 import { getAmenities, getMyShop } from '../../services/shopService';
-import { SvgUri } from 'react-native-svg';
+import { SvgCssUri, SvgUri } from 'react-native-svg';
 import { getOffers } from '../../services/offerService';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { setShop } from '../../store/actions/user.action';
@@ -127,9 +127,9 @@ const MyShop = ({ navigation, user, setShop }) => {
                         alignItems: 'center',
                         justifyContent: 'center',
                       }}>
-                        <SvgUri
-                          width={20}
-                          height={20}
+                        <SvgCssUri
+                          width={24}
+                          height={24}
                           uri={iconUrl}
                         />
                       </View>
