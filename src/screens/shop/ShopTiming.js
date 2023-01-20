@@ -307,7 +307,7 @@ const ShopTiming = props => {
   const renderImages = async () => {
     let { user } = props;
     let fileNames = [], finalImages = [], oldImages = [];
-    if (images.length > 0) {
+    if (images?.length > 0) {
       images.map((i) => {
         if (i.fileName) {
           fileNames.push(uuid.v4(i?.fileName.split(".")[0]))

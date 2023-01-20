@@ -287,9 +287,10 @@ function RegisterShop({ route, navigation, user, myshop }) {
             <FoundationIcon name="telephone" size={28} color="black" />
             <TextInput
               value={phoneNumber}
-              onChangeText={value => setPhoneNumber(value)}
+              onChangeText={value => setPhoneNumber(value?.trim())}
               placeholder="Phone Number"
               style={styles.input}
+              maxLength={10}
             />
           </View>
           {error.phoneNumber && (
@@ -333,7 +334,7 @@ function RegisterShop({ route, navigation, user, myshop }) {
             <MaterialIcons name="location-pin" size={28} color={DARKBLACK} />
             <TextInput
               value={pincode}
-              onChangeText={value => setPincode(value)}
+              onChangeText={value => setPincode(value?.trim())}
               placeholder="Pincode"
               style={styles.input}
             />

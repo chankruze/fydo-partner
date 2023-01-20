@@ -114,7 +114,7 @@ const ShopDetails = ({ navigation, route, user }) => {
 
   const fetchOldAmenities = () => {
     if (shopDetails?.amenities?.length > 0) {
-      var newAme = amenities.filter(function (o1) {
+      var newAme = amenities?.filter(function (o1) {
         return shopDetails?.amenities.some(function (o2) {
           return o1._id == o2
         })
@@ -163,7 +163,7 @@ const ShopDetails = ({ navigation, route, user }) => {
       setNewAmenities(newAmenities);
       return;
     } else {
-      const remove = newAmenities.filter(i => {
+      const remove = newAmenities?.filter(i => {
         return i != item?._id;
       });
       setKey(Math.random())
@@ -209,7 +209,7 @@ const ShopDetails = ({ navigation, route, user }) => {
         ToastMessage({ message: 'Please enter bank name' })
       } else if (email === '') {
         ToastMessage({ message: 'Please enter email' })
-      } else if (!reg.test(email)) {
+      } else if (!reg.test(email?.trim())) {
         ToastMessage({ message: 'Please enter valid email' })
       } else if (accountNumber === '') {
         ToastMessage({ message: 'Please enter account number' })
@@ -275,7 +275,7 @@ const ShopDetails = ({ navigation, route, user }) => {
   const addUpis = () => {
     const regx = /^[\w.-]+@[\w.-]+$/;
     if (regx.test(UPI)) {
-      upiList.push(UPI);
+      upiList.push(UPI?.trim());
       setUpiKey(Math.random())
     } else {
       ToastMessage({ message: 'Please enter valid upi id' });
@@ -348,7 +348,7 @@ const ShopDetails = ({ navigation, route, user }) => {
                   value={accountNumber}
                   style={[styles.input]}
                   selectionColor={DARKBLUE}
-                  onChangeText={value => setAccountNumber(value)}
+                  onChangeText={value => setAccountNumber(value?.trim())}
                   activeUnderlineColor={GREY_2}
                   placeholder="Bank Account Number"
                   theme={{
@@ -358,6 +358,7 @@ const ShopDetails = ({ navigation, route, user }) => {
                       },
                     },
                   }}
+                  keyboardType='number-pad'
                 />
                 {/* {error.accountNumber && (
                 <Text style={styles.error}>{error.accountNumber}</Text>
@@ -367,7 +368,7 @@ const ShopDetails = ({ navigation, route, user }) => {
                   value={email}
                   style={[styles.input]}
                   selectionColor={DARKBLUE}
-                  onChangeText={value => setEmail(value)}
+                  onChangeText={value => setEmail(value.trim())}
                   activeUnderlineColor={GREY_2}
                   placeholder="Email Address"
                   theme={{
@@ -384,7 +385,7 @@ const ShopDetails = ({ navigation, route, user }) => {
                   style={styles.input}
                   selectionColor={DARKBLUE}
                   activeUnderlineColor={GREY_2}
-                  onChangeText={value => setIFSC(value)}
+                  onChangeText={value => setIFSC(value?.trim())}
                   placeholder="Bank Account IFSC"
                   theme={{
                     fonts: {
@@ -408,7 +409,7 @@ const ShopDetails = ({ navigation, route, user }) => {
                     style={styles.input}
                     selectionColor={DARKBLUE}
                     activeUnderlineColor={GREY_2}
-                    onChangeText={value => setUPI(value)}
+                    onChangeText={value => setUPI(value?.trim())}
                     placeholder="UPI ID"
                     theme={{
                       fonts: {

@@ -104,28 +104,29 @@ const JoinNowTopSheet = ({ myshop, user, onPress, setUser }) => {
                   placeholder='Email Address'
                   style={styles.input}
                   placeholderTextColor="#383B3F80"
-                  value={email}
+                  value={email?.trim()}
                   onChangeText={setEmail}
                 />
                 <TextInput
                   placeholder='Bank account number'
                   style={styles.input}
                   placeholderTextColor="#383B3F80"
-                  value={bankNo}
+                  value={bankNo?.trim()}
                   onChangeText={setBankNo}
+                  keyboardType='number-pad'
                 />
                 <TextInput
                   placeholder='IFSC Code'
                   style={styles.input}
                   placeholderTextColor="#383B3F80"
-                  value={ifsc}
+                  value={ifsc?.trim()}
                   onChangeText={setIfsc}
                 />
                 <TextInput
                   placeholder='Add UPI ID'
                   style={styles.input}
                   placeholderTextColor="#383B3F80"
-                  value={upi}
+                  value={upi?.trim()}
                   onChangeText={setUpi}
                 />
               </View>
