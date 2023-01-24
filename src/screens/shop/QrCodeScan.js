@@ -71,24 +71,20 @@ const QrCodeScan = ({ navigation }) => {
 
     const onRead = async (res) => {
 
-        let upiId = res?.data?.split('upi://pay?pa=')[1]?.split('&pn=')[0];
+        let paramString = res?.data?.split('?')[1];
+        let queryString = new URLSearchParams(paramString);
+        let search = queryString.get('pa')
 
-        console.log('====================================');
-        console.log("ip==>", res?.data);
-        console.log('====================================');
-
-        if (upiId) {
+        if (search && search !== '') {
             navigation.goBack();
-            await storeValue('upiId', JSON.stringify(upiId));
+            await storeValue('upiId', JSON.stringify(search));
         } else {
             ToastMessage({ message: 'Sorry,we cannot fetch upi id from this qr code.' });
             setTimeout(() => {
                 setKey(Math.random())
             }, 4000);
         }
-        console.log('====================================');
-        console.log("subString==>", res?.data?.split('upi://pay?pa=')[1].split('&pn=')[0]);
-        console.log('====================================');
+
         // if (res) {
         //     let params = {
         //         qrText: res?.data
