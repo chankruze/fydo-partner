@@ -13,6 +13,8 @@ import Tts from 'react-native-tts';
 import SmsRetriever from 'react-native-sms-retriever';
 global.is401Navigated = false;
 
+import 'url-search-params-polyfill';
+
 // let oldRender = Text.render;
 // Text.render = function(...args) {
 //   let origin = oldRender.call(this, ...args);
