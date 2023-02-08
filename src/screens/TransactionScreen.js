@@ -32,6 +32,8 @@ const TransactionScreen = ({ user }) => {
 
   const [types, setTypes] = useState(['payments', 'settlements']);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [totalKey, setTotalKey] = useState(0);
+  const [recentKey, setRecentKey] = useState(0);
 
   const [recentSettlements, setRecentSettlements] = useState([]);
 
@@ -113,7 +115,7 @@ const TransactionScreen = ({ user }) => {
                 >
                   <View style={styles.headerContainer}>
                     {currentIndex === 0 ? (
-                      <>
+                      <View key={totalKey}>
                         <Text style={styles.headerTitle}>Amount to Settled</Text>
                         <Text style={styles.headerTotal}>
                           {'\u20B9'} {total ? total : 0}
@@ -124,10 +126,9 @@ const TransactionScreen = ({ user }) => {
                           fontFamily: 'Gilroy-Medium',
                           marginTop: verticalScale(8)
                         }}>Total Number of Payments 23</Text> */}
-                      </>
+                      </View>
                     ) : (
-                      <>
-                        {console.log("recent==>", recentSettlements)}
+                      <View key={recentKey}>
                         <Text style={styles.headerTitle}>Recent Settlements</Text>
                         <View style={styles.row}>
                           <View>
@@ -159,7 +160,7 @@ const TransactionScreen = ({ user }) => {
                               }`}</Text>
                           </View>
                         </View>
-                      </>
+                      </View>
                     )}
                   </View>
                 </ImageBackground>
@@ -175,10 +176,18 @@ const TransactionScreen = ({ user }) => {
         {currentIndex === 0 ? (
           <TransactionList
             user={user}
+            refreshBalance={() => {
+              apiTransactionAmonut()
+              setTotalKey(Math.random())
+            }}
           />
         ) : (
           <SettlementList
             user={user}
+            refreshBalance={() => {
+              apiRecentSettlements()
+              setRecentKey(Math.random())
+            }}
           />
         )}
       </SafeAreaView>

@@ -7,7 +7,10 @@ import TransactionCard from "../../components/Transaction/TransactionCard"
 import { getTransaction } from "../../services/transactionService"
 import { moderateScale, moderateScaleVertical, textScale, verticalScale } from "../../utils/responsiveSize"
 
-export const TransactionList = ({ user }) => {
+export const TransactionList = ({
+    user,
+    refreshBalance
+}) => {
     const [loading, setLoading] = useState(false);
     const [transactions, setTransactions] = useState([]);
     const [settlements, setSettlements] = useState([]);
@@ -40,6 +43,7 @@ export const TransactionList = ({ user }) => {
 
     const handlRefresh = React.useCallback(() => {
         apiTransactionHit();
+        refreshBalance();
         setKey(Math.random())
     }, []);
 
