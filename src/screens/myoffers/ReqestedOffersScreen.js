@@ -41,7 +41,7 @@ class RequestedOffersScreen extends Component {
                 const paddingJson = []
                 const response = await getOffers(user?.accessToken, limit, skip);
                 response.filter((data) => {
-                    if (data.status == 'PROCESSED') {
+                    if (data.status == 'PENDING') {
                         paddingJson.push(data)
                     }
                 })
