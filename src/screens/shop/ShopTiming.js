@@ -238,8 +238,8 @@ const ShopTiming = props => {
 
   const takePhotoFromCamera = () => {
     ImagePicker.openCamera({
-      cropping: false,
-      compressImageQuality:1,
+      cropping: true,
+      compressImageQuality: 1,
     })
       .then(image => {
         let imageData = [image];
@@ -269,10 +269,10 @@ const ShopTiming = props => {
     ImagePicker.openPicker({
       // multiple: true,
       waitAnimationEnd: false,
-      cropping: false,
+      cropping: true,
       // includeExif: true,
       forceJpg: true,
-      compressImageQuality:1,
+      compressImageQuality: 1,
     })
       .then(res => {
         let imageData = [res];

@@ -142,7 +142,7 @@ const PhoneLoginScreen = ({ navigation, handleNextScreen }) => {
   );
 };
 
-export default WithNetInfo(WithNetInfo(PhoneLoginScreen));
+export default PhoneLoginScreen;
 
 const styles = StyleSheet.create({
   container: {

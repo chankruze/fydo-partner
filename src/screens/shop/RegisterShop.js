@@ -154,8 +154,8 @@ function RegisterShop({ route, navigation, user, myshop }) {
       // height: 400,
       // multiple: true,
       waitAnimationEnd: false,
-      cropping: false,
-      compressImageQuality:1,
+      cropping: true,
+      compressImageQuality: 1,
       // includeExif: true,
       forceJpg: true,
     })

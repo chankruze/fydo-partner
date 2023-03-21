@@ -18,7 +18,10 @@ import ButtonComponent from '../components/ButtonComponent';
 import OTPInputView from '@twotalltotems/react-native-otp-input'
 import WithNetInfo from '../components/hoc/withNetInfo';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import RNOtpVerify from 'react-native-otp-verify';
+import {
+  getHash,
+  startOtpListener,
+} from 'react-native-otp-verify';
 import Tts from 'react-native-tts';
 import { getValue, storeValue } from '../utils/sharedPreferences';
 import { useIsFocused } from '@react-navigation/native';
@@ -43,16 +46,15 @@ const OTPVerifyScreen = ({ navigationData, navigation, handleNextScreen, setUser
       otpInput?.current?.focusField(0)
     }, 500);
     // getHash = () =>
-    RNOtpVerify.getHash()
-      .then()
-      .catch();
-    RNOtpVerify.getOtp()
-      .then(p => {
-        RNOtpVerify.addListener(otpHandler)
-      })
-      .catch(p => (p));
-
-    return () => RNOtpVerify.removeListener();
+    getHash().then(hash => {
+      // use this hash in the message.
+    }).catch(console.log);
+  
+    startOtpListener(message => {
+      // extract the otp using regex e.g. the below regex extracts 4 digit otp from message
+      otpHandler(message)
+    });
+    return () => removeListener();
   }, []);
 
   const otpHandler = async (message) => {
@@ -192,7 +194,7 @@ const OTPVerifyScreen = ({ navigationData, navigation, handleNextScreen, setUser
   );
 };
 
-export default connect(null, mapDispatchToProps)(WithNetInfo(OTPVerifyScreen))
+export default connect(null, mapDispatchToProps)(OTPVerifyScreen)
 
 const styles = StyleSheet.create({
   container: {

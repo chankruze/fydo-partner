@@ -1,5 +1,5 @@
-export const BASE = 'https://api2.lfyd.in/';
-// export const BASE = 'https://api.fydo.in/';
+// export const BASE = 'https://api2.lfyd.in/';
+export const BASE = 'https://api.fydo.in/';
 // export const GOOGLE_MAP_API = 'AIzaSyAqTqXuRHOdBKs9Vmmqyrm966Lu-kGL7Qs';
 export const GOOGLE_MAP_API = 'AIzaSyAJ_qAklmjyYP_fo6as_npbuVTslECfr_A';
 

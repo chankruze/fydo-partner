@@ -35,6 +35,7 @@ import ToastMessage from '../components/common/ToastComponent';
 import BackgroundService from './BackgroundService';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import PopOver from 'react-native-popover-view';
+import { logout } from '../services/authService';
 
 // You can do anything in your task such as network requests, timers and so on,
 // as long as it doesn't touch UI. Once your task completes (i.e. the promise is resolved),
@@ -64,7 +65,7 @@ class SettingScreen extends Component {
             checked: false,
             isRunningService: false
         }
-        this.logout = this.logout.bind(this);
+        this.logoutDevice = this.logoutDevice.bind(this);
         this.navigateToFAQScreen = this.navigateToFAQScreen.bind(this);
         this.navigateToFeedbackScreen = this.navigateToFeedbackScreen.bind(this);
         this.navigateToSupportServiceScreen = this.navigateToSupportServiceScreen.bind(this);
@@ -120,9 +121,10 @@ class SettingScreen extends Component {
         Linking.openURL(PRIVACY_PAGE).catch(err => console.error("Couldn't load page", err));
     }
 
-    async logout() {
+    async logoutDevice() {
         let { clearData, navigation } = this.props;
         try {
+            await logout();
             await clearData();
             navigation.dispatch(
                 CommonActions.reset({
@@ -292,7 +294,7 @@ class SettingScreen extends Component {
                 <View style={styles.line} />
                 <TouchableOpacity
                     style={styles.row}
-                    onPress={this.logout}>
+                    onPress={this.logoutDevice}>
                     <SimpleLineIcons
                         style={styles.logoutIcon}
                         size={18}

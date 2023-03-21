@@ -23,6 +23,7 @@ import OTPVerifyScreen from './OTPVerifyScreen';
 import ChooseLanguage from './ChooseLanguage';
 import { SCREENS } from '../constants/authScreens';
 import { connect } from 'react-redux';
+import WithNetInfo from '../components/hoc/withNetInfo';
 
 const HEIGHT = Dimensions.get('screen').height;
 
@@ -117,7 +118,7 @@ const OnboardingScreen = (props) => {
         visible={showBottomSheet}> */}
       {showBottomSheet && (
         <View style={{
-          backgroundColor: 'red',
+          backgroundColor: 'white',
           position: 'absolute',
           bottom: 0,
           height: HEIGHT * 0.6,
@@ -139,7 +140,7 @@ const OnboardingScreen = (props) => {
   );
 };
 
-export default connect(mapStateToProps)(OnboardingScreen);
+export default connect(mapStateToProps)(WithNetInfo(OnboardingScreen));
 
 const styles = StyleSheet.create({
   container1: {

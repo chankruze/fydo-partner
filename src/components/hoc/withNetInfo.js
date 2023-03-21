@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import NetInfo from '@react-native-community/netinfo';
-import { View, Text, StyleSheet, Pressable, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { DARKBLUE } from '../../assets/colors';
 import Modal from 'react-native-modal'
 
@@ -10,18 +10,13 @@ const WithNetInfo = WrappedComponent => {
 
     const networkCheck = () => {
       return removeNetInfoSubscription = NetInfo.addEventListener((state) => {
-
-        const offline = (state.isConnected && state.isInternetReachable);
-        setNetworkStatus(offline);
+        if (networkStatus !== state.isConnected) {
+          setNetworkStatus(!!state.isConnected && !!state.isInternetReachable)
+        }
       });
-      // NetInfo.fetch().then(state => {
-      //   // setNetworkStatus(state.isConnected);
-      //   setNetworkStatus(state.isConnected);
-      // });
     };
     useEffect(() => {
       const unsubscribe = networkCheck();
-
       return () => {
         unsubscribe();
       };
