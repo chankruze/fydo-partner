@@ -222,6 +222,7 @@ const MyShop = ({ navigation, user, setShop }) => {
 
 
   return (
+    <>
     <FlatList
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -342,14 +343,14 @@ const MyShop = ({ navigation, user, setShop }) => {
               />
             </View>
           )}
-          <View style={styles.editButton}>
+        </View>
+      }/>
+      <View style={styles.editButton}>
             <TouchableOpacity onPress={() => navigation.navigate('RegisterShop', { edit: data })}>
               <FontAwesomeIcon name="edit" color="white" size={25} />
-
             </TouchableOpacity>
           </View>
-        </View>
-      }></FlatList>
+          </>
   );
 };
 
@@ -547,8 +548,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: 50,
     height: 50,
-    bottom: 50,
-    right: 30,
+     bottom: 50,
+     right: 20,
     backgroundColor: DARKBLUE,
     borderRadius: 50,
     justifyContent: 'center',

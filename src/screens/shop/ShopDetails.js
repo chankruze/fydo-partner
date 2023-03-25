@@ -59,6 +59,9 @@ const ShopDetails = ({ navigation, route, user }) => {
   const [accountNumber, setAccountNumber] = useState(
     shopDetails?.bankDetails?.accNumber ? shopDetails?.bankDetails?.accNumber : ''
   );
+  const [commissionPercentage,setCommissionPercentage] = useState(
+    shopDetails?.bankDetails?.commissionPercentage ? shopDetails?.bankDetails?.commissionPercentage : ''
+  )
   const [bankName, setBankName] = useState(
     shopDetails?.bankDetails?.name ? shopDetails?.bankDetails?.name : ''
   );
@@ -228,6 +231,7 @@ const ShopDetails = ({ navigation, route, user }) => {
             name: bankName,
             emailId: email,
             // upiIds: [UPI],
+            commissionPercentage:commissionPercentage,
             upiIds: upiList,
           },
           isChannelPartner: premiumService,
@@ -395,6 +399,23 @@ const ShopDetails = ({ navigation, route, user }) => {
                     },
                   }}
                 />
+                <TextInput
+                  editable={shopDetails?.isChannelPartner ? false : true}
+                  value={commissionPercentage}
+                  style={[styles.input]}
+                  selectionColor={DARKBLUE}
+                  onChangeText={value => setCommissionPercentage(value?.trim())}
+                  activeUnderlineColor={GREY_2}
+                  placeholder="Commission Percentage"
+                  theme={{
+                    fonts: {
+                      regular: {
+                        fontFamily: 'Gilroy-Medium',
+                      },
+                    },
+                  }}
+                  keyboardType='number-pad'
+                />
                 {/* {error.IFSC && (
                 <Text style={styles.error}>{error.IFSC}</Text>
               )} */}
@@ -446,7 +467,6 @@ const ShopDetails = ({ navigation, route, user }) => {
                     }}>Add</Text>
                   </TouchableOpacity>
                 </View>
-
                 <FlatList
                   key={upiKey}
                   data={upiList}
