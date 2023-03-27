@@ -44,7 +44,7 @@ const mapStateToProps = state => {
 const ShopDetails = ({ navigation, route, user }) => {
 
   const shopDetails = route?.params?.data;
-
+  console.log('shopDetails----->',shopDetails.bankDetails)
   const [premiumService, setPremiumService] = useState(
     shopDetails?.isChannelPartner ? true : false
   );
@@ -385,7 +385,7 @@ const ShopDetails = ({ navigation, route, user }) => {
                 />
                 <TextInput
                   editable={shopDetails?.isChannelPartner ? false : true}
-                  value={commissionPercentage}
+                  value={String(commissionPercentage)}
                   style={[styles.input]}
                   selectionColor={DARKBLUE}
                   onChangeText={value => setCommissionPercentage(value?.trim())}
