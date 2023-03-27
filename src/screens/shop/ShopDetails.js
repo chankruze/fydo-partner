@@ -369,22 +369,6 @@ const ShopDetails = ({ navigation, route, user }) => {
               )} */}
                 <TextInput
                   editable={shopDetails?.isChannelPartner ? false : true}
-                  value={email}
-                  style={[styles.input]}
-                  selectionColor={DARKBLUE}
-                  onChangeText={value => setEmail(value.trim())}
-                  activeUnderlineColor={GREY_2}
-                  placeholder="Email Address"
-                  theme={{
-                    fonts: {
-                      regular: {
-                        fontFamily: 'Gilroy-Medium',
-                      },
-                    },
-                  }}
-                />
-                <TextInput
-                  editable={shopDetails?.isChannelPartner ? false : true}
                   value={IFSC}
                   style={styles.input}
                   selectionColor={DARKBLUE}
@@ -415,6 +399,22 @@ const ShopDetails = ({ navigation, route, user }) => {
                     },
                   }}
                   keyboardType='number-pad'
+                />
+                 <TextInput
+                  editable={shopDetails?.isChannelPartner ? false : true}
+                  value={email}
+                  style={[styles.input]}
+                  selectionColor={DARKBLUE}
+                  onChangeText={value => setEmail(value.trim())}
+                  activeUnderlineColor={GREY_2}
+                  placeholder="Email Address"
+                  theme={{
+                    fonts: {
+                      regular: {
+                        fontFamily: 'Gilroy-Medium',
+                      },
+                    },
+                  }}
                 />
                 {/* {error.IFSC && (
                 <Text style={styles.error}>{error.IFSC}</Text>
