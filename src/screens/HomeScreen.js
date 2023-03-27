@@ -572,7 +572,7 @@ class HomeScreen extends Component {
     return (
       <SafeAreaView style={styles.container}>
         <HomeFab handleModal={this.handleModal} />
-        {/* <UpdateDialog updateVisible={this.state.updateViewVisible} /> */}
+        <UpdateDialog updateVisible={this.state.updateViewVisible} />
         {this.state.card && this.renderModal()}
         <Modal
           statusBarTranslucent
