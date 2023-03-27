@@ -600,6 +600,7 @@ const ShopDetails = ({ navigation, route, user }) => {
 
           <View style={{
             marginBottom: 10,
+            zIndex:2000
           }}>
             <DropDownPicker
               listMode='SCROLLVIEW'
