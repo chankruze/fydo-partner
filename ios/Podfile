@@ -2,7 +2,7 @@ require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 use_modular_headers!
 
-platform :ios, '11.0'
+platform :ios, '12.4'
 
 target 'fydopartner' do
   config = use_native_modules!
@@ -51,6 +51,13 @@ target 'fydopartner' do
 
   post_install do |installer|
     react_native_post_install(installer)
+    installer.pods_project.targets.each do |target|
+      if target.respond_to?(:product_type) and target.product_type == "com.apple.product-type.bundle"
+      target.build_configurations.each do |config|
+        config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
+      end
+    end
+    end
     __apply_Xcode_12_5_M1_post_install_workaround(installer)
   end
 end

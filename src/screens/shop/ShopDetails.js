@@ -293,6 +293,7 @@ const ShopDetails = ({ navigation, route, user }) => {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps='handled'
           enableAutomaticScroll={Platform.OS == 'ios'}
+          nestedScrollEnabled={true}
         >
           {/* <ScrollView showsVerticalScrollIndicator={false}> */}
           <View style={premiumService && styles.subContainer}>
@@ -600,7 +601,12 @@ const ShopDetails = ({ navigation, route, user }) => {
 
           <View style={{
             marginBottom: 10,
-            zIndex:2000
+            ...Platform.select({
+              ios: {
+                zIndex:2000,
+              },
+              android: {},
+            })
           }}>
             <DropDownPicker
               listMode='SCROLLVIEW'
@@ -714,8 +720,7 @@ export default connect(mapStateToProps)(ShopDetails);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
-    paddingHorizontal: 15,
+    paddingHorizontal: 13,
     paddingTop: 30,
     backgroundColor: GREY_3,
   },
