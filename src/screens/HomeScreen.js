@@ -126,14 +126,16 @@ class HomeScreen extends Component {
     let { user, myshop } = this.props;
     try {
       const response = await getCategories(user?.accessToken);
+      console.log('response',response)
       let result = response?.filter(function (o1) {
         return myshop?.categories.some(function (o2) {
-          return o1._id == o2;
+          return o1._id === o2;
         });
       });
       let newArr = result.map((i) => {
         return i?.name
       })
+      console.log('newArr---->',newArr)
       this.setState({
         myCategories: newArr
       })
@@ -275,6 +277,7 @@ class HomeScreen extends Component {
   }
 
   async shareCard() {
+    let { myCategories } = this.state;
     const { myshop } = this.props;
     try {
       this.cardSnap.current.capture({
@@ -282,7 +285,7 @@ class HomeScreen extends Component {
       }).then((uri) => {
         let shareImage = {
           url: uri,
-          message: `Check ${myshop && myshop?.name} out. Get all your Automobile Repair needs from ${myshop && myshop?.name} only on Fydo.`
+          message: `Check ${myshop && myshop?.name} out. Get all your ${myCategories && myCategories?.join(', ')} needs from ${myshop && myshop?.name} only on Fydo.`
         };
         Share.open(shareImage).catch(err => console.log(err));
         this.setState({

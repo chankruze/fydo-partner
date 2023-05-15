@@ -44,7 +44,7 @@ const mapStateToProps = state => {
 const ShopDetails = ({ navigation, route, user }) => {
 
   const shopDetails = route?.params?.data;
-  console.log('shopDetails----->',shopDetails.bankDetails)
+  const [learnMore,setLearnMore] = useState(false)
   const [premiumService, setPremiumService] = useState(
     shopDetails?.isChannelPartner ? true : false
   );
@@ -657,11 +657,12 @@ const ShopDetails = ({ navigation, route, user }) => {
                 <Text style={styles.partnerProgramme}>
                   Have any sales executive visited your shop?
                 </Text>
+                <TouchableOpacity onPress={() => setLearnMore(!learnMore)}>
                 <Text style={styles.learnMore}>
                   Learn more about Sales executive
                 </Text>
+                </TouchableOpacity>
               </View>
-
               <CheckBox
                 style={[styles.radioBtn, { right: 5 }]}
                 value={salesExecutive}
@@ -672,6 +673,7 @@ const ShopDetails = ({ navigation, route, user }) => {
                 }}
               />
             </View>
+            {learnMore ? <Text style={{ paddingHorizontal:salesExecutive ? 15 : 0, ...styles.partnerProgramme,fontSize:12,marginTop:10}}>This should be only be ticked by a fydo representative if he/she has visited the shop for onboarding.</Text> : null}
             {salesExecutive && (
               <View style={{ width: '100%', marginTop: 15 }}>
                 <TextInput

@@ -26,6 +26,7 @@ import 'url-search-params-polyfill';
 TextInput.defaultProps = {
     ...(TextInput.defaultProps || {}),
     color: 'black',
+    placeholderTextColor:DARKGREY
 };
 Text.defaultProps = {
     ...(Text.defaultProps || {}),
@@ -34,6 +35,7 @@ Text.defaultProps = {
 
 import './src/utils/notificationManager';
 import { getValue, storeValue } from './src/utils/sharedPreferences';
+import { DARKGREY } from './src/assets/colors';
 
 const speakPayment = async (remoteMessage) => {
     let message = remoteMessage?.split('-')[0];
