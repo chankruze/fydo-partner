@@ -32,7 +32,7 @@ const TAB_BAR_HEIGHT = 49;
 global.is401Navigated = false;
 
 const PhoneLoginScreen = ({navigation, handleNextScreen}) => {
-  const [phoneNumber, setPhoneNumber] = useState(null);
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [country, setCountry] = useState({
@@ -40,10 +40,6 @@ const PhoneLoginScreen = ({navigation, handleNextScreen}) => {
     icon: null,
     name: 'India',
   });
-
-  useEffect(() => {
-    requestHint().then(s => setPhoneNumber(s.slice(3)));
-  }, []);
 
   const validateInput = () => {
     if (phoneNumber === null || phoneNumber.trim() === '') {
@@ -63,28 +59,21 @@ const PhoneLoginScreen = ({navigation, handleNextScreen}) => {
 
     if (validateInput()) {
       try {
-        const response = await sendLoginOTP(phoneNumber);
-        const {otpId} = response;
-        setLoading(false);
+        const res = await sendLoginOTP(phoneNumber);
 
-        if (otpId) {
-          // navigation.navigate('OTPVerify', {
-          //   phoneNumber: phoneNumber,
-          //   otpId: otpId,
-          // });
-          //   navigation.navigate(SCREENS.OTP_VERIFY, {
-          //     phoneNumber: phoneNumber,
-          //     otpId: otpId
-          // });
-          await storeValue('otpId', JSON.stringify(otpId));
+        if (res.otpId) {
+          setLoading(false);
+          await storeValue('otpId', JSON.stringify(res.otpId));
           handleNextScreen(SCREENS.OTP_VERIFY, {
             phoneNumber: phoneNumber,
-            otpId: otpId,
+            otpId: res.otpId,
           });
+        } else {
+          console.log(res);
         }
       } catch (e) {
         console.log(e);
-        if (e.message === 'Network Error') {
+        if (e.message) {
           setError(e.message);
           setLoading(false);
         } else {
@@ -104,6 +93,22 @@ const PhoneLoginScreen = ({navigation, handleNextScreen}) => {
       Keyboard.dismiss();
     }
   };
+
+  useEffect(() => {
+    (async () => {
+      const phone = await requestHint();
+
+      if (phone) {
+        setPhoneNumber(phone.slice(3));
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    if (phoneNumber) {
+      sendOTP();
+    }
+  }, [phoneNumber]);
 
   return (
     <View style={styles.container}>
