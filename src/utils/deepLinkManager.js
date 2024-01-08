@@ -5,7 +5,7 @@ import dynamicLinks from '@react-native-firebase/dynamic-links';
 
 export async function buildLink(type, id, data) {
   const link = await dynamicLinks().buildShortLink({
-    link: `https://play.google.com/store/apps/details?id=com.letsdevelopit.lfydnewapp`,
+    link: 'https://play.google.com/store/apps/details?id=com.letsdevelopit.lfydnewapp',
     // domainUriPrefix is created in your Firebase console
     domainUriPrefix: 'https://fydo.page.link',
     // domainUriPrefix: 'https://lfydnewapp.page.link',
@@ -16,13 +16,13 @@ export async function buildLink(type, id, data) {
     },
     ios: {
       bundleId: 'com.letsdevelopit.lfydnewapp',
-      appStoreId: '1612594091'
+      appStoreId: '1612594091',
     },
     social: {
       imageUrl: data?.imageUrl,
       title: data?.title,
       descriptionText: data?.description,
-    }
+    },
   });
 
   return link;
@@ -42,16 +42,17 @@ export async function buildReferalLink(referralCode, referralText) {
       },
       ios: {
         bundleId: 'com.letsdevelopit.lfydnewapp',
-        appStoreId: '1612594091'
+        appStoreId: '1612594091',
       },
       social: {
-        imageUrl: 'https://fydoprod.s3.ap-south-1.amazonaws.com/REFER_AND_EARN/refer-and-earn',
+        imageUrl:
+          'https://fydoprod.s3.ap-south-1.amazonaws.com/REFER_AND_EARN/refer-and-earn',
         descriptionText: `${referralText && referralCode}\n${link}`,
-      }
+      },
     });
 
     return link;
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 }

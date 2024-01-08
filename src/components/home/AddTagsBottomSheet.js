@@ -1,37 +1,45 @@
-import React, { useEffect, useState } from 'react';
+import React, {useState} from 'react';
 import {
-  StyleSheet,
-  View,
-  TextInput,
   Image,
+  StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
-  FlatList,
+  View,
 } from 'react-native';
-import { PRIMARY, DARKBLACK, LIGHTBLUE, WHITE } from '../../assets/colors';
-import BottomsheetIcon from './../../assets/icons/bottomsheet-icon.png';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {connect} from 'react-redux';
+import {DARKBLACK, LIGHTBLUE, PRIMARY, WHITE} from '../../assets/colors';
+import {updateShop} from '../../services/shopService';
+import {setShop} from '../../store/actions/user.action';
 import ButtonComponent from '../ButtonComponent';
-import { updateShop } from '../../services/shopService';
-import { connect } from 'react-redux';
-import { setShop } from '../../store/actions/user.action';
+import BottomsheetIcon from './../../assets/icons/bottomsheet-icon.png';
 
-const AddTagsBottomSheet = ({ user, myshop, setShop, triggerTagModal }) => {
-  const [tags, setTags] = useState(myshop?.searchTags.length > 0 ? myshop.searchTags : [])
+const AddTagsBottomSheet = ({user, myshop, setShop, triggerTagModal}) => {
+  const [tags, setTags] = useState(
+    myshop?.searchTags.length > 0 ? myshop.searchTags : [],
+  );
   const [tag, setTag] = useState(null);
   const onStartShouldSetResponder = () => {
     return true;
   };
 
   const [error, setError] = useState({});
+
   const isValidate = () => {
-    const error = {};
-    if (tag == null || tag?.trim() == '') {
-      error.tag = 'Enter The Tag';
+    const e = {};
+
+    if (tag === null || tag?.trim() === '') {
+      e.tag = 'Enter The Tag';
     }
-    setError(error);
-    if (Object.keys(error).length == 0) return true;
+
+    setError(e);
+
+    if (Object.keys(e).length === 0) {
+      return true;
+    }
+
     return false;
   };
 
@@ -44,12 +52,12 @@ const AddTagsBottomSheet = ({ user, myshop, setShop, triggerTagModal }) => {
   };
   const handleClosePress = async () => {
     myshop.searchTags = tags;
-    const response = await updateShop(user?.accessToken, myshop)
+    const response = await updateShop(user?.accessToken, myshop);
     if (response) {
-      setShop(response)
+      setShop(response);
     }
-    triggerTagModal()
-  }
+    triggerTagModal();
+  };
 
   const handleInput = value => {
     setTag(value);
@@ -65,8 +73,8 @@ const AddTagsBottomSheet = ({ user, myshop, setShop, triggerTagModal }) => {
     );
   };
 
-  const removeTag = tag => {
-    let list = tags.filter(item => item != tag);
+  const removeTag = t => {
+    let list = tags.filter(item => item !== t);
     setTags(list);
   };
 
@@ -81,7 +89,11 @@ const AddTagsBottomSheet = ({ user, myshop, setShop, triggerTagModal }) => {
       </Text>
       <View style={styles.row}>
         <View style={styles.inputContainer}>
-          <Ionicons name="pricetag-outline" size={18} style={styles.inputIcon} />
+          <Ionicons
+            name="pricetag-outline"
+            size={18}
+            style={styles.inputIcon}
+          />
           <TextInput
             value={tag}
             onChangeText={handleInput}
@@ -93,12 +105,10 @@ const AddTagsBottomSheet = ({ user, myshop, setShop, triggerTagModal }) => {
           <Text style={styles.addButtonLabel}>ADD</Text>
         </TouchableOpacity>
       </View>
-      {error.tag && (
-        <Text style={styles.error}>{error.tag}</Text>
-      )}
+      {error.tag && <Text style={styles.error}>{error.tag}</Text>}
       <View style={styles.tags}>
-        {tags?.map((tag, index) => {
-          return renderItem(tag, index);
+        {tags?.map((t, index) => {
+          return renderItem(t, index);
         })}
       </View>
       <View style={styles.submitButton}>
@@ -111,19 +121,19 @@ const AddTagsBottomSheet = ({ user, myshop, setShop, triggerTagModal }) => {
       </View>
     </View>
   );
-}
-const mapStateToProps = (state) => {
+};
+const mapStateToProps = state => {
   return {
     user: state?.userReducer?.user,
-    myshop: state?.userReducer?.myshop
-  }
-}
-const mapDispatchToProps = dispatch => {
-  return {
-    setShop: myshop => dispatch(setShop(myshop))
+    myshop: state?.userReducer?.myshop,
   };
 };
-export default connect(mapStateToProps, mapDispatchToProps)(AddTagsBottomSheet)
+const mapDispatchToProps = dispatch => {
+  return {
+    setShop: myshop => dispatch(setShop(myshop)),
+  };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(AddTagsBottomSheet);
 const styles = StyleSheet.create({
   container: {
     backgroundColor: WHITE,
@@ -134,7 +144,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 10,
     zIndex: 10,
     paddingHorizontal: 10,
-    paddingBottom: 50
+    paddingBottom: 50,
   },
   bottomSheetIcon: {
     height: 8,

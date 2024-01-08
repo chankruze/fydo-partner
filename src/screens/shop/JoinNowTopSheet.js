@@ -1,20 +1,16 @@
-import { StyleSheet, Text, View, Image, TextInput } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
+import {Image, StyleSheet, Text, TextInput, View} from 'react-native';
+import {connect} from 'react-redux';
+import {PRIMARY, WHITE} from '../../assets/colors';
+import shield from '../../assets/images/shield.png';
+import ButtonComponent from '../../components/ButtonComponent';
+import {updateShop} from '../../services/shopService';
+import {setUser} from '../../store/actions/user.action';
 import {
-  height,
   moderateScale,
   moderateScaleVertical,
   textScale,
-  width,
 } from '../../utils/responsiveSize';
-import { BLACK, GREEN, PRIMARY, WHITE } from '../../assets/colors';
-import shield from '../../assets/images/shield.png';
-import ButtonComponent from '../../components/ButtonComponent';
-import { useState } from 'react';
-import { connect } from 'react-redux';
-import { updateShop } from '../../services/shopService';
-import { saveUserData } from '../../utils/defaultPreference';
-import { setUser } from '../../store/actions/user.action';
 
 const mapStateToProps = state => {
   return {
@@ -29,7 +25,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const JoinNowTopSheet = ({ myshop, user, onPress, setUser }) => {
+const JoinNowTopSheet = ({myshop, user, onPress, setUser}) => {
   const [nextStep, setNextStep] = useState(false);
   const [accountName, setAccountName] = useState('');
   const [email, setEmail] = useState('');
@@ -49,16 +45,16 @@ const JoinNowTopSheet = ({ myshop, user, onPress, setUser }) => {
         ifsc: ifsc,
         name: accountName,
         upiIds: [upi],
-        email: email
+        email: email,
       },
-    }
+    };
 
     const response = await updateShop(user?.accessToken, request);
 
     if (response) {
       onPress();
     }
-  }
+  };
 
   return (
     <View style={styles.container}>
@@ -94,36 +90,36 @@ const JoinNowTopSheet = ({ myshop, user, onPress, setUser }) => {
             <View style={styles.wrapper}>
               <View style={styles.inputWrapper}>
                 <TextInput
-                  placeholder='Account Name'
+                  placeholder="Account Name"
                   style={styles.input}
                   placeholderTextColor="#383B3F80"
                   value={accountName}
                   onChangeText={setAccountName}
                 />
                 <TextInput
-                  placeholder='Email Address'
+                  placeholder="Email Address"
                   style={styles.input}
                   placeholderTextColor="#383B3F80"
                   value={email?.trim()}
                   onChangeText={setEmail}
                 />
                 <TextInput
-                  placeholder='Bank account number'
+                  placeholder="Bank account number"
                   style={styles.input}
                   placeholderTextColor="#383B3F80"
                   value={bankNo?.trim()}
                   onChangeText={setBankNo}
-                  keyboardType='number-pad'
+                  keyboardType="number-pad"
                 />
                 <TextInput
-                  placeholder='IFSC Code'
+                  placeholder="IFSC Code"
                   style={styles.input}
                   placeholderTextColor="#383B3F80"
                   value={ifsc?.trim()}
                   onChangeText={setIfsc}
                 />
                 <TextInput
-                  placeholder='Add UPI ID'
+                  placeholder="Add UPI ID"
                   style={styles.input}
                   placeholderTextColor="#383B3F80"
                   value={upi?.trim()}
@@ -156,7 +152,7 @@ const styles = StyleSheet.create({
     backgroundColor: WHITE,
     width: moderateScale(350),
     borderRadius: moderateScale(10),
-    paddingVertical: moderateScaleVertical(15)
+    paddingVertical: moderateScaleVertical(15),
   },
   wrapper: {
     paddingHorizontal: moderateScale(15),
@@ -187,5 +183,5 @@ const styles = StyleSheet.create({
   },
   inputWrapper: {
     marginBottom: moderateScale(10),
-  }
+  },
 });

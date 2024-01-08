@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, Image, Text, TouchableOpacity} from 'react-native';
-import {PRIMARY} from '../../assets/colors';
-import BottomsheetIcon from './../../assets/icons/bottomsheet-icon.png';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import RadioGroup from 'react-native-radio-buttons-group';
-import { connect } from 'react-redux';
-import { setLanguage } from '../../store/actions/user.action';
+import {connect} from 'react-redux';
+import {PRIMARY} from '../../assets/colors';
+import {setLanguage} from '../../store/actions/user.action';
+import BottomsheetIcon from './../../assets/icons/bottomsheet-icon.png';
 
 const LANGUAGES = {
   ENGLISH: 'ENGLISH',
@@ -42,17 +42,17 @@ const radioButtonsData = [
   },
 ];
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
-    language: state?.userReducer?.language
-  }
-}
+    language: state?.userReducer?.language,
+  };
+};
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    setLanguage: (language) => dispatch(setLanguage(language))
-  }
-}
+    setLanguage: language => dispatch(setLanguage(language)),
+  };
+};
 
 function ChooseLanguageComponent({toggle, language, setLanguage}) {
   const [userLanguage, setUserLanguage] = useState(language);
@@ -60,27 +60,30 @@ function ChooseLanguageComponent({toggle, language, setLanguage}) {
 
   function getButtons() {
     return radioButtonsData.map(item => {
-      if (item.value == language)
+      if (item.value === language) {
         return Object.assign({...item}, {selected: true});
+      }
       return item;
     });
   }
 
   function onPressRadioButton(radioButtonsArray) {
-    setUserLanguage(getSelectedLanguage(radioButtonsArray))
+    setUserLanguage(getSelectedLanguage(radioButtonsArray));
     setRadioButtons(radioButtonsArray);
   }
 
-  function getSelectedLanguage(array){
-    let language = null;
+  function getSelectedLanguage(array) {
+    let _language = null;
+
     array?.map(item => {
-      if(item?.selected == true){
-        language = item?.value;
+      if (item?.selected === true) {
+        _language = item?.value;
         return;
       }
-    })
-    return language;
-  } 
+    });
+
+    return _language;
+  }
 
   const onStartShouldSetResponder = () => {
     return true;
@@ -116,7 +119,10 @@ function ChooseLanguageComponent({toggle, language, setLanguage}) {
   );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ChooseLanguageComponent);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ChooseLanguageComponent);
 
 const styles = StyleSheet.create({
   container: {

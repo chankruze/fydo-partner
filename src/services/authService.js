@@ -1,8 +1,7 @@
-import axios from 'axios';
 import {
+  LOGOUT,
   SEND_LOGIN_OTP_API,
   VERIFY_LOGIN_OTP_API,
-  LOGOUT,
 } from '../config/endpoints';
 import ApiInstance from '../utils/ApiInstance';
 
@@ -39,9 +38,8 @@ export async function sendLoginOTP(phoneNumber) {
 
 //verify login otp
 export async function verifyLoginOTP(otpId, otp) {
-
   console.log('====================================');
-  console.log("params==>", otpId, otp);
+  console.log('params==>', otpId, otp);
   console.log('====================================');
   try {
     const response = await ApiInstance({
@@ -73,7 +71,7 @@ export async function logout() {
   try {
     const response = await ApiInstance({
       method: 'GET',
-      url: LOGOUT
+      url: LOGOUT,
     });
     return Promise.resolve(response);
   } catch (error) {

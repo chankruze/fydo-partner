@@ -1,8 +1,8 @@
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import React from 'react';
-import { DARKBLUE, DARKGREY } from '../assets/colors';
+import {StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {DARKGREY} from '../assets/colors';
 
-const SkipButton = ({ skip }) => {
+const SkipButton = ({skip}) => {
   return (
     <TouchableOpacity onPress={skip}>
       <Text style={styles.button}>Skip</Text>
@@ -15,7 +15,7 @@ export default SkipButton;
 const styles = StyleSheet.create({
   button: {
     fontSize: 18,
-    color: 'black',
+    // color: 'black',
     fontFamily: 'Gilroy-Bold',
     color: DARKGREY,
   },

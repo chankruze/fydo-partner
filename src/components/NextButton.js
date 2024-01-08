@@ -1,6 +1,6 @@
-import {StyleSheet, Text, View, TouchableOpacity, Animated} from 'react-native';
 import React, {useEffect, useRef} from 'react';
-import Svg, {G, Circle} from 'react-native-svg';
+import {Animated, StyleSheet, TouchableOpacity, View} from 'react-native';
+import Svg, {Circle, G} from 'react-native-svg';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 
 const NextButton = ({percentage, scrollTo}) => {
@@ -31,7 +31,6 @@ const NextButton = ({percentage, scrollTo}) => {
         const strokeDashoffset =
           circumference - (circumference * value.value) / 100;
 
-
         if (progressRef?.current) {
           progressRef.current.setNativeProps({
             strokeDashoffset,
@@ -40,10 +39,12 @@ const NextButton = ({percentage, scrollTo}) => {
       },
       [percentage],
     );
+
     return () => {
       progressAnimation.removeAllListeners();
     };
   }, []);
+
   return (
     <View style={styles.container}>
       <Svg width={size} height={size}>

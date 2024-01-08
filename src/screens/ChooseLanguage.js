@@ -1,43 +1,40 @@
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import React, {useState} from 'react';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {RadioButton} from 'react-native-paper';
-import {DARKBLACK, DARKBLUE, PRIMARY, DARKGREY} from '../assets/colors/index';
+import {connect} from 'react-redux';
+import {DARKBLACK, DARKBLUE, DARKGREY, PRIMARY} from '../assets/colors/index';
 import ButtonComponent from '../components/ButtonComponent';
-import { setLanguage } from '../store/actions/user.action';
-import { connect } from 'react-redux';
+import {setLanguage} from '../store/actions/user.action';
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    changeLangauge: (language) => dispatch(setLanguage(language))
-  }
-}
+    changeLangauge: language => dispatch(setLanguage(language)),
+  };
+};
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
-    user: state?.userReducer?.user
-  }
-}
+    user: state?.userReducer?.user,
+  };
+};
 
 const ChooseLanguage = ({changeLangauge, navigation, user}) => {
   const [language, setLanguage] = useState(null);
   const [error, setError] = useState(null);
 
   const next = () => {
-    if(!language){
-      setError("Please select your langauge")
-    }
-    else{
+    if (!language) {
+      setError('Please select your langauge');
+    } else {
       setError(null);
       changeLangauge(language);
-      if(user?.profileComplete){
-        navigation.navigate('Main');         
-      }
-      else {
-        navigation.navigate('RegisterShop'); 
+      if (user?.profileComplete) {
+        navigation.navigate('Main');
+      } else {
+        navigation.navigate('RegisterShop');
       }
     }
-  }
-
+  };
 
   return (
     <View style={styles.container}>
@@ -99,7 +96,7 @@ const styles = StyleSheet.create({
     // minHeight: HEIGHT * 0.6,
     width: '100%',
     position: 'absolute',
-    bottom: 0
+    bottom: 0,
   },
   title: {
     fontFamily: 'Gilroy-Bold',
@@ -130,13 +127,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: '100%',
     fontFamily: 'Gilroy-Medium',
-
   },
   footerLabel: {
     fontSize: 12,
     color: DARKGREY,
     fontFamily: 'Gilroy-Medium',
-
   },
   footerOtherLabel: {
     fontSize: 12,
@@ -151,6 +146,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     color: 'red',
     fontSize: 13,
-    fontWeight: 'bold'
-  }
+    fontWeight: 'bold',
+  },
 });

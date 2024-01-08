@@ -1,6 +1,6 @@
-import {StyleSheet, View, Animated, useWindowDimensions} from 'react-native';
 import React from 'react';
-import { DARKBLACK, DARKBLUE } from '../assets/colors';
+import {Animated, StyleSheet, View, useWindowDimensions} from 'react-native';
+import {DARKBLUE} from '../assets/colors';
 
 const Paginator = ({data, scrollX}) => {
   const {width} = useWindowDimensions();
@@ -16,11 +16,16 @@ const Paginator = ({data, scrollX}) => {
         });
 
         const opacity = scrollX.interpolate({
-            inputRange,
-            outputRange: [0.3, 1, 0.3],
-            extrapolate: 'clamp'
-        })
-        return <Animated.View style={[styles.dot, {width: dotWidth, opacity}]} key={i.toString()} />;
+          inputRange,
+          outputRange: [0.3, 1, 0.3],
+          extrapolate: 'clamp',
+        });
+        return (
+          <Animated.View
+            style={[styles.dot, {width: dotWidth, opacity}]}
+            key={i.toString()}
+          />
+        );
       })}
     </View>
   );

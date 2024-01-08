@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
-  BackHandler,
   Dimensions,
   FlatList,
   Image,
@@ -13,31 +12,36 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import ImageSlider from '../../components/ImageSlider';
-import { DARKBLACK, DARKBLUE, GREY_2, LIGHTBLUE, PRIMARY } from '../../assets/colors';
-import { response } from '../../utils/dummyStore';
-import StoreOffers from '../../components/shop/StoreOffers';
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
-import { connect } from 'react-redux';
-import { getAmenities, getMyShop } from '../../services/shopService';
-import { SvgCssUri, SvgUri } from 'react-native-svg';
-import { getOffers } from '../../services/offerService';
+import {SvgCssUri} from 'react-native-svg';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { setShop } from '../../store/actions/user.action';
+import {connect} from 'react-redux';
+import {
+  DARKBLACK,
+  DARKBLUE,
+  GREY_2,
+  LIGHTBLUE,
+  PRIMARY,
+} from '../../assets/colors';
+import ImageSlider from '../../components/ImageSlider';
+import StoreOffers from '../../components/shop/StoreOffers';
+import {getOffers} from '../../services/offerService';
+import {getAmenities, getMyShop} from '../../services/shopService';
+import {setShop} from '../../store/actions/user.action';
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
-    user: state?.userReducer?.user
-  }
-}
-
-const mapDispatchToProps = dispatch => {
-  return {
-    setShop: myshop => dispatch(setShop(myshop))
+    user: state?.userReducer?.user,
   };
 };
 
-const MyShop = ({ navigation, user, setShop }) => {
+const mapDispatchToProps = dispatch => {
+  return {
+    setShop: myshop => dispatch(setShop(myshop)),
+  };
+};
+
+const MyShop = ({navigation, user, setShop}) => {
   // const store = response
   const [isOpen, setIsOpen] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -57,9 +61,7 @@ const MyShop = ({ navigation, user, setShop }) => {
   };
 
   useEffect(() => {
-
     fetchData();
-
   }, []);
 
   async function fetchData() {
@@ -88,7 +90,7 @@ const MyShop = ({ navigation, user, setShop }) => {
     }
 
     getAmenitiesData();
-  }, [])
+  }, []);
 
   useEffect(() => {
     async function fetchOffers() {
@@ -108,7 +110,7 @@ const MyShop = ({ navigation, user, setShop }) => {
   const setMyAmenities = () => {
     var result = amenities?.filter(function (o1) {
       return data?.amenities.some(function (o2) {
-        return o1._id == o2;
+        return o1._id === o2;
       });
     });
 
@@ -117,25 +119,22 @@ const MyShop = ({ navigation, user, setShop }) => {
         {result?.length > 0 && (
           <View style={styles.options}>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {result?.map(({ _id, name, iconUrl }) => (
+              {result?.map(({_id, name, iconUrl}) => (
                 <View style={styles.option} key={_id}>
                   {iconUrl &&
-                    (iconUrl?.split('.').pop() == 'svg' ? (
-                      <View style={{
-                        width: 40,
-                        height: 40,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}>
-                        <SvgCssUri
-                          width={24}
-                          height={24}
-                          uri={iconUrl}
-                        />
+                    (iconUrl?.split('.').pop() === 'svg' ? (
+                      <View
+                        style={{
+                          width: 40,
+                          height: 40,
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}>
+                        <SvgCssUri width={24} height={24} uri={iconUrl} />
                       </View>
                     ) : (
                       <Image
-                        source={{ uri: iconUrl }}
+                        source={{uri: iconUrl}}
                         style={{
                           width: 50,
                           height: 50,
@@ -149,11 +148,11 @@ const MyShop = ({ navigation, user, setShop }) => {
           </View>
         )}
       </>
-    )
-  }
+    );
+  };
 
   const renderTag = item => {
-    let { _id, name } = item;
+    let {_id, name} = item;
     return (
       <TouchableOpacity key={_id} style={styles.tag}>
         <Text style={styles.tagName}>{name}</Text>
@@ -161,7 +160,7 @@ const MyShop = ({ navigation, user, setShop }) => {
     );
   };
 
-  const renderTiming = ({ item, index }) => {
+  const renderTiming = ({item, index}) => {
     const today = new Date().getDay();
     let d = item.dayOfWeek.slice(0, 3);
 
@@ -178,10 +177,10 @@ const MyShop = ({ navigation, user, setShop }) => {
           style={[
             styles.dayStyle,
             {
-              color: days[today] == d ? DARKBLACK : GREY_2,
+              color: days[today] === d ? DARKBLACK : GREY_2,
             },
           ]}>
-          {(item.dayOfWeek.slice(0, 3))}
+          {item.dayOfWeek.slice(0, 3)}
         </Text>
         <View
           style={{
@@ -192,7 +191,7 @@ const MyShop = ({ navigation, user, setShop }) => {
             style={[
               styles.startTime,
               {
-                color: days[today] == d ? DARKBLACK : GREY_2,
+                color: days[today] === d ? DARKBLACK : GREY_2,
               },
             ]}>
             {item?.timings?.startTime}
@@ -202,7 +201,7 @@ const MyShop = ({ navigation, user, setShop }) => {
             style={[
               styles.endTime,
               {
-                color: days[today] == d ? DARKBLACK : GREY_2,
+                color: days[today] === d ? DARKBLACK : GREY_2,
               },
             ]}>
             {item?.timings?.endTime}
@@ -220,104 +219,104 @@ const MyShop = ({ navigation, user, setShop }) => {
     );
   }
 
-
   return (
     <>
-    <FlatList
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-      style={styles.container}
-      ListEmptyComponent={
-        <View>
-          <StatusBar
-            backgroundColor="transparent"
-            barStyle="dark-content"
-            translucent={true}
-          />
+      <FlatList
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        style={styles.container}
+        ListEmptyComponent={
+          <View>
+            <StatusBar
+              backgroundColor="transparent"
+              barStyle="dark-content"
+              translucent={true}
+            />
 
-          <ImageSlider images={data?.images} navigation={navigation} />
-          <View style={styles.contentContainer}>
-            <View style={styles.nameRow}>
-              <Text style={styles.name}>{data?.name}</Text>
-            </View>
-            {data?.address?.addressLine1 && (
-              <Text style={styles.address}>{data?.address?.addressLine1}</Text>
-            )}
-            {/* <View style={styles.tags}>
+            <ImageSlider images={data?.images} navigation={navigation} />
+            <View style={styles.contentContainer}>
+              <View style={styles.nameRow}>
+                <Text style={styles.name}>{data?.name}</Text>
+              </View>
+              {data?.address?.addressLine1 && (
+                <Text style={styles.address}>
+                  {data?.address?.addressLine1}
+                </Text>
+              )}
+              {/* <View style={styles.tags}>
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 {data?.categories.map(renderTag)}
               </ScrollView>
             </View> */}
-            {data?.description && (
-              <Text style={styles.about}>{data?.description}</Text>
-            )}
+              {data?.description && (
+                <Text style={styles.about}>{data?.description}</Text>
+              )}
 
-            <View style={styles.row}>
-              {/* {store?.isOpen && (
+              <View style={styles.row}>
+                {/* {store?.isOpen && (
                                     <Text style={styles.open}>Open now</Text>
                                 )}
                                 {!store?.isOpen && (
                                     <Text style={styles.close}>Closed now</Text>
                                 )} */}
-              <TouchableOpacity style={{
-                flex: 1,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-                onPress={() => handleTiming()}
-              >
-                {isOpen ? (
-                  <Text style={styles.open}>Open now</Text>
-
-                ) : (
-                  <Text style={styles.close}>Closed now</Text>
-                  /* <Text style={{
+                <TouchableOpacity
+                  style={{
+                    flex: 1,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                  onPress={() => handleTiming()}>
+                  {isOpen ? (
+                    <Text style={styles.open}>Open now</Text>
+                  ) : (
+                    <Text style={styles.close}>Closed now</Text>
+                    /* <Text style={{
                       fontSize: 28,
                       marginLeft: 5
                   }}>{'\u2022'}</Text>
                   <Text style={[styles.open, {
                       marginLeft: 5
                   }]}>Opens at {store?.timings[0].timings?.endTime}</Text> */
-                )}
-                {timeView ? (
-                  <MaterialIcons
-                    name='keyboard-arrow-up'
-                    color={'black'}
-                    size={18}
-                    style={{
-                      flex: 1,
-                      alignSelf: 'center',
-                      marginLeft: 5
-                    }}
-                  />
-                ) : (
-                  <MaterialIcons
-                    name='keyboard-arrow-down'
-                    color={'black'}
-                    size={18}
-                    style={{
-                      flex: 1,
-                      alignSelf: 'center',
-                      marginLeft: 5
-                    }}
-                  />
-                )}
-              </TouchableOpacity>
-              {/* <Text style={styles.timing}>{store?.timing}</Text> */}
-            </View>
-            {timeView && (
-              <View style={styles.timeView}>
-                <FlatList
-                  data={data?.timing}
-                  keyExtractor={item => item?._id.toString()}
-                  renderItem={item => renderTiming(item)}
-                  ItemSeparatorComponent={() => <View style={{ height: 5 }} />}
-                />
+                  )}
+                  {timeView ? (
+                    <MaterialIcons
+                      name="keyboard-arrow-up"
+                      color={'black'}
+                      size={18}
+                      style={{
+                        flex: 1,
+                        alignSelf: 'center',
+                        marginLeft: 5,
+                      }}
+                    />
+                  ) : (
+                    <MaterialIcons
+                      name="keyboard-arrow-down"
+                      color={'black'}
+                      size={18}
+                      style={{
+                        flex: 1,
+                        alignSelf: 'center',
+                        marginLeft: 5,
+                      }}
+                    />
+                  )}
+                </TouchableOpacity>
+                {/* <Text style={styles.timing}>{store?.timing}</Text> */}
               </View>
-            )}
-            {/* <OptionsComponent
+              {timeView && (
+                <View style={styles.timeView}>
+                  <FlatList
+                    data={data?.timing}
+                    keyExtractor={item => item?._id.toString()}
+                    renderItem={item => renderTiming(item)}
+                    ItemSeparatorComponent={() => <View style={{height: 5}} />}
+                  />
+                </View>
+              )}
+              {/* <OptionsComponent
               id={store?._id}
               type={DeepLinkTypes.STORE}
               navigation={navigation}
@@ -332,25 +331,24 @@ const MyShop = ({ navigation, user, setShop }) => {
                 imageUrl: store?.images[0]?.url,
               }}
             /> */}
-            <Text style={styles.amenities}>My Amenities</Text>
-            {setMyAmenities()}
-          </View>
-          {offers.length > 0 && (
-            <View>
-              <StoreOffers
-                offers={offers}
-                navigation={navigation}
-              />
+              <Text style={styles.amenities}>My Amenities</Text>
+              {setMyAmenities()}
             </View>
-          )}
-        </View>
-      }/>
-      <View style={styles.editButton}>
-            <TouchableOpacity onPress={() => navigation.navigate('RegisterShop', { edit: data })}>
-              <FontAwesomeIcon name="edit" color="white" size={25} />
-            </TouchableOpacity>
+            {offers.length > 0 && (
+              <View>
+                <StoreOffers offers={offers} navigation={navigation} />
+              </View>
+            )}
           </View>
-          </>
+        }
+      />
+      <View style={styles.editButton}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('RegisterShop', {edit: data})}>
+          <FontAwesomeIcon name="edit" color="white" size={25} />
+        </TouchableOpacity>
+      </View>
+    </>
   );
 };
 
@@ -533,7 +531,7 @@ const styles = StyleSheet.create({
   },
   timeView: {
     marginHorizontal: 10,
-    marginBottom: 15
+    marginBottom: 15,
   },
   dayStyle: {
     width: '15%',
@@ -548,11 +546,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: 50,
     height: 50,
-     bottom: 50,
-     right: 20,
+    bottom: 50,
+    right: 20,
     backgroundColor: DARKBLUE,
     borderRadius: 50,
     justifyContent: 'center',
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+  },
 });

@@ -1,20 +1,21 @@
-import React, { useState, useEffect } from 'react';
 import NetInfo from '@react-native-community/netinfo';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import { DARKBLUE } from '../../assets/colors';
-import Modal from 'react-native-modal'
+import React, {useEffect, useState} from 'react';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import Modal from 'react-native-modal';
+import {DARKBLUE} from '../../assets/colors';
 
 const WithNetInfo = WrappedComponent => {
-  const NewComponent = (props) => {
+  const NewComponent = props => {
     const [networkStatus, setNetworkStatus] = useState(true);
 
     const networkCheck = () => {
-      return removeNetInfoSubscription = NetInfo.addEventListener((state) => {
+      return NetInfo.addEventListener(state => {
         if (networkStatus !== state.isConnected) {
-          setNetworkStatus(!!state.isConnected && !!state.isInternetReachable)
+          setNetworkStatus(!!state.isConnected && !!state.isInternetReachable);
         }
       });
     };
+
     useEffect(() => {
       const unsubscribe = networkCheck();
       return () => {
@@ -30,9 +31,9 @@ const WithNetInfo = WrappedComponent => {
             animationOut={'slideOutDown'}
             // transparent={true}
             isVisible={!networkStatus}
-          // onRequestClose={() => {
-          //   console.log("Hardware back button pressed(Android)")
-          // }}
+            // onRequestClose={() => {
+            //   console.log("Hardware back button pressed(Android)")
+            // }}
           >
             <View style={styles.centeredView}>
               <View style={styles.modalView}>

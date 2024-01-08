@@ -1,15 +1,15 @@
 import React, {Component} from 'react';
 import {
-  TouchableOpacity,
-  StyleSheet,
-  Text,
-  View,
   FlatList,
   SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import WithNetInfo from '../components/hoc/withNetInfo';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {DARKBLACK, PRIMARY} from '../assets/colors';
+import WithNetInfo from '../components/hoc/withNetInfo';
 
 const FAQS = [
   {
@@ -74,10 +74,11 @@ class FAQScreen extends Component {
   toggleShowMore(id) {
     let {faqs} = this.state;
     let list = faqs.map(item => {
-      if (item?.id == id && item?.showMore) {
+      if (item?.id === id && item?.showMore) {
         return Object.assign({...item}, {showMore: false});
-      } else if (item?.id == id && !item?.showMore)
+      } else if (item?.id === id && !item?.showMore) {
         return Object.assign({...item}, {showMore: true});
+      }
       return item;
     });
     this.setState({faqs: list});
