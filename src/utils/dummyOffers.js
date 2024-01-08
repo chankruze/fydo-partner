@@ -1,0 +1,173 @@
+export const merchantOffers = [
+    {
+        "_id": "621fd276bd4599f8afa61145",
+        "title": "hbvdhbhjvb",
+        "description": "khbbkhbkbk",
+        "pics": [
+            "https://lfydstaging.s3.ap-south-1.amazonaws.com/OFFERS/1646252642580_Screenshot%202022-02-24%20at%204.15.55%20PM.png"
+        ],
+        "images": [
+            // {
+            //     "url": "https://lfydstaging.s3.ap-south-1.amazonaws.com/SHOP_IMAGE/77df558d-702a-4521-9de6-67c141cbae69.png"
+            // },
+            // {
+            //     "url": 'https://images.unsplash.com/5/unsplash-kitsune-4.jpg?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjEyMDd9&s=fb86e2e09fceac9b363af536b93a1275',
+            //   },
+        ],
+        "highlights": [],
+        "shop": "6204e4badbd2d7d38836f0de",
+        "searchTags": [],
+        "offerRequestId": null,
+        "categories": [],
+        "brands": [],
+        "startDate": 1646073000000,
+        "endDate": 1646504999000,
+        "status": "EXPIRED",
+        "directionsToShop": [],
+        "howToRedeem": [],
+        "isActive": false,
+        "deleted": false,
+        "createdBy": "61549036e8ac5900e6cc05d2",
+        "updatedBy": "61549036e8ac5900e6cc05d2",
+        "createdAt": 1646252662316,
+        "updatedAt": 1646252662316,
+        "__v": 0
+    },
+    {
+        "_id": "621fd14aceb1b231a8fe5b52",
+        "title": "n m. ",
+        "description": "kn k k ",
+        "pics": [
+            "https://lfydstaging.s3.ap-south-1.amazonaws.com/OFFERS/1646252355245_Screenshot%202022-02-24%20at%204.09.20%20PM.png"
+        ],
+        "images": [],
+        "highlights": [],
+        "shop": "6204e4badbd2d7d38836f0de",
+        "searchTags": [],
+        "offerRequestId": null,
+        "categories": [],
+        "brands": [],
+        "startDate": 1646073000000,
+        "endDate": 1646504999000,
+        "status": "EXPIRED",
+        "directionsToShop": [],
+        "howToRedeem": [],
+        "isActive": false,
+        "deleted": false,
+        "createdBy": "61549036e8ac5900e6cc05d2",
+        "updatedBy": "61549036e8ac5900e6cc05d2",
+        "createdAt": 1646252362792,
+        "updatedAt": 1646252362792,
+        "__v": 0
+    },
+    {
+        "_id": "621fd10e7fed6df8036eb660",
+        "title": "n. , ",
+        "description": " nk ",
+        "pics": [
+            "https://lfydstaging.s3.ap-south-1.amazonaws.com/OFFERS/1646252292533_Screenshot%202022-03-02%20at%202.24.24%20PM.png"
+        ],
+        "images": [],
+        "highlights": [],
+        "shop": "6204e4badbd2d7d38836f0de",
+        "searchTags": [],
+        "offerRequestId": null,
+        "categories": [],
+        "brands": [],
+        "startDate": 1646159400000,
+        "endDate": 1646504999000,
+        "status": "EXPIRED",
+        "directionsToShop": [],
+        "howToRedeem": [],
+        "isActive": false,
+        "deleted": false,
+        "createdBy": "61549036e8ac5900e6cc05d2",
+        "updatedBy": "61549036e8ac5900e6cc05d2",
+        "createdAt": 1646252302028,
+        "updatedAt": 1646252302028,
+        "__v": 0
+    },
+    {
+        "_id": "621fd0998df61299e229b6b1",
+        "title": "Hello",
+        "description": "Hello",
+        "pics": [
+            "https://lfydstaging.s3.ap-south-1.amazonaws.com/OFFERS/1646252177027_Screenshot%202022-03-02%20at%202.23.19%20PM.png"
+        ],
+        "images": [],
+        "highlights": [],
+        "shop": "6204e4badbd2d7d38836f0de",
+        "searchTags": [],
+        "offerRequestId": "621fd0784246187fdf1d805c",
+        "categories": [],
+        "brands": [],
+        "startDate": 1646332200000,
+        "endDate": 1648924200000,
+        "status": "LIVE",
+        "directionsToShop": [],
+        "howToRedeem": [],
+        "isActive": true,
+        "deleted": false,
+        "createdBy": "61549036e8ac5900e6cc05d2",
+        "updatedBy": "61549036e8ac5900e6cc05d2",
+        "createdAt": 1646252185353,
+        "updatedAt": 1646252185353,
+        "__v": 0
+    },
+    {
+        "_id": "620deb8fa12c381918010224",
+        "title": "abc",
+        "description": "dsds",
+        "pics": [
+            "https://lfydstaging.s3.ap-south-1.amazonaws.com/OFFERS/1645079432926_Screenshot%20%2896%29.png"
+        ],
+        "images": [],
+        "highlights": [],
+        "shop": "6204e4badbd2d7d38836f0de",
+        "searchTags": [
+            "demo"
+        ],
+        "offerRequestId": "620deaeba12c3819180101c6",
+        "categories": [],
+        "brands": [],
+        "startDate": 1645122600000,
+        "endDate": 1645208999000,
+        "status": "EXPIRED",
+        "directionsToShop": [],
+        "howToRedeem": [],
+        "isActive": false,
+        "deleted": false,
+        "createdBy": "61c6a65402a5aec06e25b7bf",
+        "updatedBy": "61f127364e6ef24cbc909595",
+        "createdAt": 1645079439267,
+        "updatedAt": 1645083666152,
+        "__v": 0
+    },
+    {
+        "_id": "620dea1fa12c38191801016d",
+        "title": "abc",
+        "description": "",
+        "pics": [
+            "https://lfydstaging.s3.ap-south-1.amazonaws.com/OFFERS/1645079067504_Screenshot%20%2898%29.png"
+        ],
+        "images": [],
+        "highlights": [],
+        "shop": "6204e4badbd2d7d38836f0de",
+        "searchTags": [],
+        "offerRequestId": "620de947a12c3819180100d4",
+        "categories": [],
+        "brands": [],
+        "startDate": 1645036200000,
+        "endDate": 1645122599000,
+        "status": "EXPIRED",
+        "directionsToShop": [],
+        "howToRedeem": [],
+        "isActive": false,
+        "deleted": false,
+        "createdBy": "61c6a65402a5aec06e25b7bf",
+        "updatedBy": "61c6a65402a5aec06e25b7bf",
+        "createdAt": 1645079071711,
+        "updatedAt": 1645081308416,
+        "__v": 0
+    }
+]

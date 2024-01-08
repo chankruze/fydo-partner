@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>fydopartner</string>
+	<string>Fydo Partner</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -17,11 +17,28 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.letsdevelopit.lfydnewapp</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.letsdevelopit.lfydnewapp</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>$(MARKETING_VERSION)</string>
+	<key>FirebaseDynamicLinksCustomDomains</key>
+	<array>
+		<string>https://lfydnewapp.page.link/jkhx</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -35,8 +52,59 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>${PRODUCT_NAME} Camera Usage</string>
+	<key>NSContactsUsageDescription</key>
+	<string>We might use contacts for sharing referrals.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Your location is used to provide directions to your destination</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Your location is used to provide directions to your destination</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>Your location is used to provide directions to your destination</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>${PRODUCT_NAME} PhotoLibrary Add Usage</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>${PRODUCT_NAME} PhotoLibrary Usage</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>fonts/AntDesign.ttf</string>
+		<string>fonts/Entypo.ttf</string>
+		<string>fonts/EvilIcons.ttf</string>
+		<string>fonts/Feather.ttf</string>
+		<string>fonts/FontAwesome.ttf</string>
+		<string>fonts/FontAwesome5_Brands.ttf</string>
+		<string>fonts/FontAwesome5_Regular.ttf</string>
+		<string>fonts/FontAwesome5_Solid.ttf</string>
+		<string>fonts/Fontisto.ttf</string>
+		<string>fonts/Foundation.ttf</string>
+		<string>fonts/Ionicons.ttf</string>
+		<string>fonts/MaterialCommunityIcons.ttf</string>
+		<string>fonts/MaterialIcons.ttf</string>
+		<string>fonts/Octicons.ttf</string>
+		<string>fonts/SimpleLineIcons.ttf</string>
+		<string>fonts/Zocial.ttf</string>
+		<string>fonts/Gilroy-Black.ttf</string>
+		<string>fonts/Gilroy-BlackItalic.ttf</string>
+		<string>fonts/Gilroy-Bold.ttf</string>
+		<string>fonts/Gilroy-BoldItalic.ttf</string>
+		<string>fonts/Gilroy-ExtraBold.ttf</string>
+		<string>fonts/Gilroy-ExtraBoldItalic.ttf</string>
+		<string>fonts/Gilroy-Heavy.ttf</string>
+		<string>fonts/Gilroy-HeavyItalic.ttf</string>
+		<string>fonts/Gilroy-Light.ttf</string>
+		<string>fonts/Gilroy-LightItalic.ttf</string>
+		<string>fonts/Gilroy-Medium.ttf</string>
+		<string>fonts/Gilroy-MediumItalic.ttf</string>
+		<string>fonts/Gilroy-Regular.ttf</string>
+		<string>fonts/Gilroy-RegularItalic.ttf</string>
+		<string>fonts/Gilroy-SemiBold.ttf</string>
+		<string>fonts/Gilroy-SemiBoldItalic.ttf</string>
+		<string>fonts/Gilroy-Thin.ttf</string>
+		<string>fonts/Gilroy-ThinItalic.ttf</string>
+		<string>fonts/Gilroy-UltraLight.ttf</string>
+		<string>fonts/Gilroy-UltraLightItalic.ttf</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -46,8 +114,6 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>

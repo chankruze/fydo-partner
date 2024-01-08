@@ -1,0 +1,5 @@
+export const SCREENS = {
+    PHONE_LOGIN: 'PHONE_LOGIN',
+    OTP_VERIFY: 'OTP_VERIFY',
+    LANGUAGE: 'LANGUAGE'
+};
