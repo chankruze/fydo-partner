@@ -6,6 +6,10 @@ import {getValue} from './sharedPreferences';
 
 const instance = axios.create({
   baseURL: '',
+  headers: {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+  },
 });
 
 instance.interceptors.request.use(
@@ -50,25 +54,35 @@ instance.interceptors.response.use(
     console.log('====================================');
     console.log('errp==>', error);
     console.log('====================================');
+
     let {statusCode} = error?.response?.data;
-    if (statusCode === 401) {
-      if (global.is401Navigated === false) {
-        global.is401Navigated = true;
-        await AsyncStorage.clear();
+
+    switch (statusCode) {
+      case 401: {
+        if (global.is401Navigated === false) {
+          global.is401Navigated = true;
+          await AsyncStorage.clear();
+          ToastMessage({message: error?.response?.data?.message});
+          navigationRef?.current?.reset({
+            index: 0,
+            routes: [{name: 'OnBoarding'}],
+          });
+        }
+        break;
+      }
+
+      case 404:
+      case 500: {
         ToastMessage({message: error?.response?.data?.message});
         navigationRef?.current?.reset({
           index: 0,
-          routes: [{name: 'OnBoarding'}],
+          routes: [{name: 'Main'}],
         });
+        break;
       }
-    } else if (statusCode === 404 || statusCode === 500) {
-      ToastMessage({message: error?.response?.data?.message});
-      navigationRef?.current?.reset({
-        index: 0,
-        routes: [{name: 'Main'}],
-      });
-    } else {
-      return Promise.reject(error.response.data);
+
+      default:
+        Promise.reject(error.response.data);
     }
   },
 );

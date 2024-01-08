@@ -15,14 +15,20 @@ export default function ButtonComponent({
   backgroundColor = 'white',
   onPress = () => {},
   loading = false,
+  disabled = false,
 }) {
   let labelStyle = Object.assign({...styles.label}, {color: color});
   let buttonStyle = Object.assign(
     {...styles.button},
     {backgroundColor: backgroundColor},
+    {opacity: disabled ? 0.5 : 1},
   );
   return (
-    <TouchableOpacity style={buttonStyle} activeOpacity={0.6} onPress={onPress}>
+    <TouchableOpacity
+      style={buttonStyle}
+      activeOpacity={0.6}
+      onPress={onPress}
+      disabled={disabled}>
       {!loading && <Text style={labelStyle}>{label}</Text>}
       {loading && <ActivityIndicator color="white" size="large" />}
     </TouchableOpacity>

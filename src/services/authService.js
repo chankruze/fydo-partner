@@ -5,13 +5,6 @@ import {
 } from '../config/endpoints';
 import ApiInstance from '../utils/ApiInstance';
 
-//header
-const headers = {
-  Accept: 'application/json',
-  'Content-Type': 'application/json',
-};
-
-//send login otp
 export async function sendLoginOTP(phoneNumber) {
   try {
     const response = await ApiInstance({
@@ -25,18 +18,8 @@ export async function sendLoginOTP(phoneNumber) {
   } catch (error) {
     return Promise.reject(error);
   }
-  // return axios({
-  //   method: 'POST',
-  //   url: SEND_LOGIN_OTP_API,
-  //   responseType: 'json',
-  //   headers: headers,
-  //   data: {
-  //     mobile: phoneNumber,
-  //   },
-  // });
 }
 
-//verify login otp
 export async function verifyLoginOTP(otpId, otp) {
   console.log('====================================');
   console.log('params==>', otpId, otp);
@@ -54,19 +37,8 @@ export async function verifyLoginOTP(otpId, otp) {
   } catch (error) {
     return Promise.reject(error);
   }
-  // return axios({
-  //   method: 'POST',
-  //   url: VERIFY_LOGIN_OTP_API,
-  //   headers: headers,
-  //   responseType: 'json',
-  //   data: {
-  //     otpId: otpId,
-  //     otp: otp,
-  //   },
-  // });
 }
 
-//logout
 export async function logout() {
   try {
     const response = await ApiInstance({
@@ -77,10 +49,4 @@ export async function logout() {
   } catch (error) {
     return Promise.reject(error);
   }
-  // return axios({
-  //   method: 'GET',
-  //   url: LOGOUT,
-  //   headers: headers,
-  //   responseType: 'json',
-  // });
 }

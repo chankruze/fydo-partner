@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Dimensions,
   Image,
@@ -12,7 +12,9 @@ import {
   View,
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {requestHint} from 'react-native-otp-verify';
 import {
+  BLACK,
   DARKBLACK,
   DARKBLUE,
   DARKGREY,
@@ -24,10 +26,10 @@ import ButtonComponent from '../components/ButtonComponent';
 import {SCREENS} from '../constants/authScreens';
 import {sendLoginOTP} from '../services/authService';
 import {storeValue} from '../utils/sharedPreferences';
-global.is401Navigated = false;
-
 const HEIGHT = Dimensions.get('screen').height;
 const TAB_BAR_HEIGHT = 49;
+
+global.is401Navigated = false;
 
 const PhoneLoginScreen = ({navigation, handleNextScreen}) => {
   const [phoneNumber, setPhoneNumber] = useState(null);
@@ -38,6 +40,10 @@ const PhoneLoginScreen = ({navigation, handleNextScreen}) => {
     icon: null,
     name: 'India',
   });
+
+  useEffect(() => {
+    requestHint().then(s => setPhoneNumber(s.slice(3)));
+  }, []);
 
   const validateInput = () => {
     if (phoneNumber === null || phoneNumber.trim() === '') {
@@ -54,11 +60,13 @@ const PhoneLoginScreen = ({navigation, handleNextScreen}) => {
   const sendOTP = async () => {
     setLoading(true);
     setError(null);
+
     if (validateInput()) {
       try {
         const response = await sendLoginOTP(phoneNumber);
         const {otpId} = response;
         setLoading(false);
+
         if (otpId) {
           // navigation.navigate('OTPVerify', {
           //   phoneNumber: phoneNumber,
@@ -91,6 +99,7 @@ const PhoneLoginScreen = ({navigation, handleNextScreen}) => {
 
   const handlePhoneNumber = value => {
     setPhoneNumber(value);
+
     if (value?.length === 10) {
       Keyboard.dismiss();
     }
@@ -117,13 +126,14 @@ const PhoneLoginScreen = ({navigation, handleNextScreen}) => {
             maxLength={10}
             value={phoneNumber}
             keyboardType="phone-pad"
-            placeholder="Phone number"
+            placeholder="1234567890"
             placeholderTextColor={DARKGREY}
             onChangeText={handlePhoneNumber}
           />
         </TouchableOpacity>
 
         <Text style={styles.error}>{error}</Text>
+
         <ButtonComponent
           backgroundColor={PRIMARY}
           color="white"
@@ -149,21 +159,21 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    paddingHorizontal: 25,
-    // paddingTop: 10,
-    paddingVertical: 20,
+    paddingHorizontal: 24,
+    paddingVertical: 24,
     // minHeight: HEIGHT * 0.6,
   },
   title: {
-    color: DARKBLACK,
-    fontSize: 20,
+    color: BLACK,
+    fontSize: 24,
     fontFamily: 'Gilroy-Bold',
+    textTransform: 'capitalize',
   },
   label: {
-    marginVertical: 15,
+    marginVertical: 16,
     color: DARKGREY,
     lineHeight: 20,
-    fontSize: 13,
+    fontSize: 14,
     fontFamily: 'Gilroy-Medium',
   },
   countryButton: {
@@ -186,27 +196,26 @@ const styles = StyleSheet.create({
   },
   countryCode: {
     color: LIGHTBLACK,
-    // fontFamily: 'Gilroy-Bold',
+    fontFamily: 'Gilroy-Bold',
     paddingLeft: 15,
-    fontFamily: 'Gilroy-Medium',
+    fontSize: 20,
   },
   separator: {
-    height: 13,
+    height: 16,
     borderLeftWidth: 0.8,
     borderLeftColor: 'rgba(0, 53, 121, 0.2)',
     marginHorizontal: 10,
   },
   flagIcon: {
-    width: 20,
-    height: 20,
-  },
-  dropIcon: {
-    marginLeft: 'auto',
+    width: 24,
+    height: 24,
   },
   input: {
     color: DARKBLACK,
     width: '80%',
-    fontFamily: 'Gilroy-Medium',
+    fontFamily: 'Gilroy-Bold',
+    fontSize: 20,
+    letterSpacing: 2,
   },
   error: {
     marginVertical: 5,
@@ -217,11 +226,12 @@ const styles = StyleSheet.create({
     fontFamily: 'Gilroy-Medium',
   },
   footer: {
-    padding: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
+    display: 'flex',
+    padding: 16,
     width: '100%',
     fontFamily: 'Gilroy-Medium',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   footerLabel: {
     fontSize: 12,
@@ -232,39 +242,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: DARKBLUE,
     fontWeight: '500',
-    marginTop: 3,
+    marginTop: 4,
     fontFamily: 'Gilroy-Medium',
-  },
-  otherLabel: {
-    fontSize: 12,
-    color: LIGHTBLACK,
-    fontWeight: '500',
-    alignSelf: 'center',
-    marginVertical: 20,
-    fontFamily: 'Gilroy-Medium',
-  },
-  buttons: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '80%',
-    alignSelf: 'center',
-  },
-  buttonContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  button: {
-    height: 50,
-    width: 50,
-    borderRadius: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 0.8,
-    borderColor: 'rgba(0, 53, 121, 0.2)',
-  },
-  buttonIcon: {
-    height: 22,
-    width: 22,
   },
 });
