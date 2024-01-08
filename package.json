@@ -1,6 +1,6 @@
 {
   "name": "fydopartner",
-  "version": "0.0.1",
+  "version": "5.8.3",
   "private": true,
   "rnpm": {
     "assets": [
@@ -47,10 +47,10 @@
     "react-native-dropdown-picker": "^5.4.3",
     "react-native-fab": "^1.0.18",
     "react-native-geolocation-service": "^5.3.0-beta.4",
-    "react-native-gesture-handler": "^2.3.2",
+    "react-native-gesture-handler": "2.9.0",
     "react-native-google-places-autocomplete": "^2.4.1",
-    "react-native-image-crop-picker": "^0.37.3",
-    "react-native-image-picker": "^4.7.3",
+    "react-native-image-crop-picker": "^0.38.1",
+    "react-native-image-picker": "^4.10.0",
     "react-native-image-slider-box": "^1.1.20",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-linear-gradient": "^2.5.6",
