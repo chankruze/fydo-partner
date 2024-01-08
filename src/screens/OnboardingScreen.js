@@ -1,45 +1,40 @@
-import React, { useState, useRef, createRef } from 'react';
+import React, {createRef, useRef, useState} from 'react';
 import {
+  Animated,
+  Dimensions,
+  FlatList,
+  SafeAreaView,
+  StatusBar,
   StyleSheet,
   View,
-  FlatList,
-  Animated,
   useWindowDimensions,
-  Dimensions,
-  StatusBar,
-  Alert,
-  SafeAreaView
 } from 'react-native';
 
-import slides from '../utils/slides';
+import {connect} from 'react-redux';
+import {PRIMARY} from '../assets/colors';
 import OnboardingItem from '../components/OnboardingItem';
 import Paginator from '../components/Paginator';
-import NextButton from '../components/NextButton';
 import SkipButton from '../components/SkipButton';
-import { GREY, GREY_2, GREY_3, PRIMARY } from '../assets/colors';
-import { Modal } from 'react-native';
-import PhoneLoginScreen from './PhoneLoginScreen';
-import OTPVerifyScreen from './OTPVerifyScreen';
-import ChooseLanguage from './ChooseLanguage';
-import { SCREENS } from '../constants/authScreens';
-import { connect } from 'react-redux';
 import WithNetInfo from '../components/hoc/withNetInfo';
+import {SCREENS} from '../constants/authScreens';
+import slides from '../utils/slides';
+import OTPVerifyScreen from './OTPVerifyScreen';
+import PhoneLoginScreen from './PhoneLoginScreen';
 
 const HEIGHT = Dimensions.get('screen').height;
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
-    user: state?.userReducer?.user
-  }
-}
+    user: state?.userReducer?.user,
+  };
+};
 
-
-const OnboardingScreen = (props) => {
-  let { navigation, user } = props;
+const OnboardingScreen = props => {
+  let {navigation, user} = props;
 
   const [navigationData, setNavigationData] = useState(null);
-  const [currentScreen, setCurrentScreen] = useState(SCREENS.PHONE_LOGIN)
-  const { width } = useWindowDimensions();
+  const [currentScreen, setCurrentScreen] = useState(SCREENS.PHONE_LOGIN);
+  const {width} = useWindowDimensions();
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef(null);
@@ -50,17 +45,17 @@ const OnboardingScreen = (props) => {
 
   React.useEffect(() => {
     if (showBottomSheet) {
-      setScrollEnable(false)
+      setScrollEnable(false);
     }
-  }, [showBottomSheet])
+  }, [showBottomSheet]);
 
-  const viewableItemsChanged = useRef(({ viewableItems }) => {
+  const viewableItemsChanged = useRef(({viewableItems}) => {
     setCurrentIndex(viewableItems[0].index);
   }).current;
 
   const scrollTo = () => {
     if (currentIndex < slides.length - 1) {
-      slidesRef.current.scrollToIndex({ index: currentIndex + 1 });
+      slidesRef.current.scrollToIndex({index: currentIndex + 1});
     } else {
       // navigateToAuth();
       setShowBottomSheet(true);
@@ -69,10 +64,10 @@ const OnboardingScreen = (props) => {
   };
 
   const handleNextScreen = (screen, data) => {
-    console.log("kl==>", screen, data)
+    console.log('kl==>', screen, data);
     setCurrentScreen(screen);
     setNavigationData(data);
-  }
+  };
 
   const skip = () => {
     setCurrentIndex(3);
@@ -82,10 +77,15 @@ const OnboardingScreen = (props) => {
 
   //   const viewConfig = useRef({viewAreaCoveragePercentThresold: 50}).current;
   return (
-    <SafeAreaView style={(currentIndex == 3) ? styles.container2 : styles.container1}>
-      <StatusBar translucent={false} backgroundColor={PRIMARY} barStyle='default' />
+    <SafeAreaView
+      style={currentIndex === 3 ? styles.container2 : styles.container1}>
+      <StatusBar
+        translucent={false}
+        backgroundColor={PRIMARY}
+        barStyle="default"
+      />
       <View style={styles.miniContainer}>
-        {currentIndex == 3 ? null : (
+        {currentIndex === 3 ? null : (
           <View style={styles.skipBtn}>
             <SkipButton skip={skip} />
           </View>
@@ -93,7 +93,7 @@ const OnboardingScreen = (props) => {
         <FlatList
           scrollEnabled={scrollEnable}
           data={slides}
-          renderItem={({ item }) => (
+          renderItem={({item}) => (
             <OnboardingItem item={item} index={currentIndex} finish={skip} />
           )}
           horizontal
@@ -102,8 +102,8 @@ const OnboardingScreen = (props) => {
           bounces={false}
           keyExtractor={item => item.id}
           onScroll={Animated.event(
-            [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-            { useNativeDriver: false },
+            [{nativeEvent: {contentOffset: {x: scrollX}}}],
+            {useNativeDriver: false},
           )}
           scrollEventThrottle={32}
           onViewableItemsChanged={viewableItemsChanged}
@@ -117,26 +117,34 @@ const OnboardingScreen = (props) => {
         transparent={true}
         visible={showBottomSheet}> */}
       {showBottomSheet && (
-        <View style={{
-          backgroundColor: 'white',
-          position: 'absolute',
-          bottom: 0,
-          height: HEIGHT * 0.6,
-          width: '100%'
-        }}>
+        <View
+          style={{
+            backgroundColor: 'white',
+            position: 'absolute',
+            bottom: 0,
+            height: HEIGHT * 0.6,
+            width: '100%',
+          }}>
           {/* <StatusBar
             backgroundColor={'rgba(0, 0, 0, .3)'}
             barStyle="light-content" /> */}
           {/* <View style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, .3)' }}></View> */}
 
-          {currentScreen == SCREENS.PHONE_LOGIN && (<PhoneLoginScreen {...props} handleNextScreen={handleNextScreen} />)}
-          {/* {currentScreen == SCREENS.LANGUAGE && (<ChooseLanguage {...props} handleNextScreen={handleNextScreen} />)} */}
-          {currentScreen == SCREENS.OTP_VERIFY && navigationData && (<OTPVerifyScreen {...props} handleNextScreen={handleNextScreen} navigationData={navigationData} />)}
+          {currentScreen === SCREENS.PHONE_LOGIN && (
+            <PhoneLoginScreen {...props} handleNextScreen={handleNextScreen} />
+          )}
+          {/* {currentScreen===SCREENS.LANGUAGE && (<ChooseLanguage {...props} handleNextScreen={handleNextScreen} />)} */}
+          {currentScreen === SCREENS.OTP_VERIFY && navigationData && (
+            <OTPVerifyScreen
+              {...props}
+              handleNextScreen={handleNextScreen}
+              navigationData={navigationData}
+            />
+          )}
           {/* </Modal> */}
         </View>
       )}
     </SafeAreaView>
-
   );
 };
 
@@ -167,6 +175,6 @@ const styles = StyleSheet.create({
   skipBtn: {
     alignSelf: 'flex-end',
     marginRight: 20,
-    marginTop: 10
-  }
+    marginTop: 10,
+  },
 });

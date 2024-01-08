@@ -1,37 +1,35 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
-  SafeAreaView,
+  Dimensions,
+  Image,
+  Keyboard,
+  Platform,
+  StatusBar,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
-  Image,
-  TextInput,
-  Dimensions,
-  Keyboard,
-  StatusBar
 } from 'react-native';
-import flag from '../assets/images/flag.png';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {
   DARKBLACK,
   DARKBLUE,
   DARKGREY,
-  GREY,
   LIGHTBLACK,
   PRIMARY,
 } from '../assets/colors';
+import flag from '../assets/images/flag.png';
 import ButtonComponent from '../components/ButtonComponent';
-import WithNetInfo from '../components/hoc/withNetInfo';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { sendLoginOTP } from '../services/authService';
-import { SCREENS } from '../constants/authScreens';
-import { storeValue } from '../utils/sharedPreferences';
+import {SCREENS} from '../constants/authScreens';
+import {sendLoginOTP} from '../services/authService';
+import {storeValue} from '../utils/sharedPreferences';
 global.is401Navigated = false;
 
 const HEIGHT = Dimensions.get('screen').height;
 const TAB_BAR_HEIGHT = 49;
 
-const PhoneLoginScreen = ({ navigation, handleNextScreen }) => {
+const PhoneLoginScreen = ({navigation, handleNextScreen}) => {
   const [phoneNumber, setPhoneNumber] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -42,13 +40,15 @@ const PhoneLoginScreen = ({ navigation, handleNextScreen }) => {
   });
 
   const validateInput = () => {
-    if (phoneNumber == null || phoneNumber.trim() == '') {
+    if (phoneNumber === null || phoneNumber.trim() === '') {
       setError('* Required');
       return false;
-    } else if (phoneNumber.length != 10) {
+    } else if (phoneNumber.length !== 10) {
       setError('Must contain 10 digits');
       return false;
-    } else return true;
+    } else {
+      return true;
+    }
   };
 
   const sendOTP = async () => {
@@ -57,7 +57,7 @@ const PhoneLoginScreen = ({ navigation, handleNextScreen }) => {
     if (validateInput()) {
       try {
         const response = await sendLoginOTP(phoneNumber);
-        const { otpId } = response;
+        const {otpId} = response;
         setLoading(false);
         if (otpId) {
           // navigation.navigate('OTPVerify', {
@@ -69,12 +69,15 @@ const PhoneLoginScreen = ({ navigation, handleNextScreen }) => {
           //     otpId: otpId
           // });
           await storeValue('otpId', JSON.stringify(otpId));
-          handleNextScreen(SCREENS.OTP_VERIFY, { phoneNumber: phoneNumber, otpId: otpId })
+          handleNextScreen(SCREENS.OTP_VERIFY, {
+            phoneNumber: phoneNumber,
+            otpId: otpId,
+          });
         }
-      } catch (error) {
-        console.log(error);
-        if (error.message == 'Network Error') {
-          setError(error.message);
+      } catch (e) {
+        console.log(e);
+        if (e.message === 'Network Error') {
+          setError(e.message);
           setLoading(false);
         } else {
           setError('Something went wrong');
@@ -88,22 +91,22 @@ const PhoneLoginScreen = ({ navigation, handleNextScreen }) => {
 
   const handlePhoneNumber = value => {
     setPhoneNumber(value);
-    if (value?.length == 10) Keyboard.dismiss();
+    if (value?.length === 10) {
+      Keyboard.dismiss();
+    }
   };
 
   return (
-
     <View style={styles.container}>
-      <KeyboardAwareScrollView enableOnAndroid={true}
+      <KeyboardAwareScrollView
+        enableOnAndroid={true}
         showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps='handled'
-        enableAutomaticScroll={Platform.OS == 'ios'}
-      >
+        keyboardShouldPersistTaps="handled"
+        enableAutomaticScroll={Platform.OS === 'ios'}>
         <StatusBar backgroundColor={PRIMARY} translucent={false} />
         <Text style={styles.title}>Enter phone number</Text>
         <Text style={styles.label}>
-          We will send you a 6-digit OTP to your phone number for
-          verification.
+          We will send you a 6-digit OTP to your phone number for verification.
         </Text>
         <TouchableOpacity style={styles.countryButton} activeOpacity={0.8}>
           <Image source={flag} style={styles.flagIcon} />
@@ -130,9 +133,7 @@ const PhoneLoginScreen = ({ navigation, handleNextScreen }) => {
         />
 
         <View style={styles.footer}>
-          <Text style={styles.footerLabel}>
-            By continuing you agree to our
-          </Text>
+          <Text style={styles.footerLabel}>By continuing you agree to our</Text>
           <TouchableOpacity>
             <Text style={styles.footerOtherLabel}>Terms & Conditions</Text>
           </TouchableOpacity>
@@ -156,16 +157,14 @@ const styles = StyleSheet.create({
   title: {
     color: DARKBLACK,
     fontSize: 20,
-    fontFamily: 'Gilroy-Bold'
-
+    fontFamily: 'Gilroy-Bold',
   },
   label: {
     marginVertical: 15,
     color: DARKGREY,
     lineHeight: 20,
     fontSize: 13,
-    fontFamily: 'Gilroy-Medium'
-
+    fontFamily: 'Gilroy-Medium',
   },
   countryButton: {
     marginTop: 20,
@@ -177,21 +176,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 15,
-    fontFamily: 'Gilroy-Medium'
-
+    fontFamily: 'Gilroy-Medium',
   },
   countryLabel: {
     fontSize: 12,
     color: LIGHTBLACK,
     marginLeft: 15,
-    fontFamily: 'Gilroy-Medium'
+    fontFamily: 'Gilroy-Medium',
   },
   countryCode: {
     color: LIGHTBLACK,
-    fontFamily: 'Gilroy-Bold',
+    // fontFamily: 'Gilroy-Bold',
     paddingLeft: 15,
-    fontFamily: 'Gilroy-Medium'
-
+    fontFamily: 'Gilroy-Medium',
   },
   separator: {
     height: 13,
@@ -217,30 +214,26 @@ const styles = StyleSheet.create({
     fontSize: 12,
     paddingLeft: 5,
     color: 'red',
-    fontFamily: 'Gilroy-Medium'
-
+    fontFamily: 'Gilroy-Medium',
   },
   footer: {
     padding: 15,
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
-    fontFamily: 'Gilroy-Medium'
-
+    fontFamily: 'Gilroy-Medium',
   },
   footerLabel: {
     fontSize: 12,
     color: DARKGREY,
-    fontFamily: 'Gilroy-Medium'
-
+    fontFamily: 'Gilroy-Medium',
   },
   footerOtherLabel: {
     fontSize: 12,
     color: DARKBLUE,
     fontWeight: '500',
     marginTop: 3,
-    fontFamily: 'Gilroy-Medium'
-
+    fontFamily: 'Gilroy-Medium',
   },
   otherLabel: {
     fontSize: 12,
@@ -248,8 +241,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     alignSelf: 'center',
     marginVertical: 20,
-    fontFamily: 'Gilroy-Medium'
-
+    fontFamily: 'Gilroy-Medium',
   },
   buttons: {
     flexDirection: 'row',

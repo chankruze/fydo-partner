@@ -1,14 +1,14 @@
-import {StyleSheet, Text, View, Image, useWindowDimensions} from 'react-native';
 import React from 'react';
-import {DARKBLACK, DARKBLUE, DARKGREY, PRIMARY} from '../assets/colors';
-import appLogo from '../assets/images/app-icon.png';
+import {Image, StyleSheet, Text, View, useWindowDimensions} from 'react-native';
+import {DARKBLACK, DARKGREY, PRIMARY} from '../assets/colors';
 import growth from '../assets/images/Vector.png';
+import appLogo from '../assets/images/app-icon.png';
 import ButtonComponent from './ButtonComponent';
 
 const OnboardingItem = ({item, index, finish}) => {
   const {width} = useWindowDimensions();
 
-  if (index == 3) {
+  if (index === 3) {
     return (
       <View
         style={[styles.container, {width: width, backgroundColor: '#003579'}]}>
@@ -21,7 +21,10 @@ const OnboardingItem = ({item, index, finish}) => {
         />
         <Image
           source={growth}
-          style={[styles.image, {width: width * 0.6, resizeMode: 'contain', flex: 0.5}]}
+          style={[
+            styles.image,
+            {width: width * 0.6, resizeMode: 'contain', flex: 0.5},
+          ]}
         />
         <View style={{flex: 0.3}}>
           <Text style={[styles.title, {color: 'white', marginVertical: 20}]}>
@@ -87,6 +90,6 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     width: '85%',
-    flex: 0.2
+    flex: 0.2,
   },
 });

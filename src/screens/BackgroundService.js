@@ -1,5 +1,5 @@
-import { NativeModules } from 'react-native';
+import {NativeModules} from 'react-native';
 
-const { BackgroundService } = NativeModules;
+const {BackgroundService} = NativeModules;
 
 export default BackgroundService;

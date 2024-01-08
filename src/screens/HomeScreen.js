@@ -1,38 +1,47 @@
-import React, { Component, createRef } from 'react';
+import React, {Component, createRef} from 'react';
 import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  View,
-  Text,
-  StatusBar,
-  Switch,
+  Image,
+  ImageBackground,
+  KeyboardAvoidingView,
   Modal,
   Pressable,
-  Image,
-  KeyboardAvoidingView,
-  Alert,
-  ImageBackground,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Switch,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import HomeFab from '../components/home/HomeFab';
 import HomeSlider from './../components/home/HomeSlider';
 //import Entypo from 'react-native-vector-icons/Entypo';
-import { LIGHTBLUE, PRIMARY, WHITE } from '../assets/colors';
+import {LIGHTBLUE, PRIMARY, WHITE} from '../assets/colors';
 //import { SvgUri } from 'react-native-svg';
 import OfferIcon from './../assets/icons/my offer.svg';
 import MyShopIcon from './../assets/icons/myshop.svg';
 import SupportIcon from './../assets/icons/support.svg';
 //import ReferEarnIcon from './../assets/icons/refer and earn.svg';
+import messaging from '@react-native-firebase/messaging';
+import {compareVersions} from 'compare-versions';
+import {Platform} from 'react-native';
 import Share from 'react-native-share';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { connect } from 'react-redux';
-import AddOfferIcon from './../assets/icons/addoffer.png';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import ViewShot from 'react-native-view-shot';
+import {connect} from 'react-redux';
 import WithNetInfo from '../components/hoc/withNetInfo';
 import AddTagsBottomSheet from '../components/home/AddTagsBottomSheet';
+import CardIconButton from '../components/home/CardIconButton';
+import CardlabelButton from '../components/home/CardlabelButton';
+import RoundIconText from '../components/home/RoundIconText';
+import SquareIconButton from '../components/home/SquareIconButton';
+import MyOffersBottomSheet from '../components/myoffers/MyOffersBottomSheet';
+import MySaleBottomSheet from '../components/sale/MySaleBottomSheet';
+import {getSupportVersion, uploadDeviceInfo} from '../services/homeService';
 import {
   closeShop,
   getCarousels,
@@ -41,24 +50,19 @@ import {
   getShopStatus,
   openShop,
 } from '../services/shopService';
-import CardIconButton from '../components/home/CardIconButton';
-import { setShop } from '../store/actions/user.action';
-import CardlabelButton from '../components/home/CardlabelButton';
-import { moderateScale, moderateScaleVertical, textScale } from '../utils/responsiveSize';
+import {setShop} from '../store/actions/user.action';
+import {getDeviceInfo} from '../utils/getDeviceInfo';
+import {
+  isLocationPermissionGranted,
+  requestLocationPermission,
+} from '../utils/permissionManager';
+import {
+  moderateScale,
+  moderateScaleVertical,
+  textScale,
+} from '../utils/responsiveSize';
+import AddOfferIcon from './../assets/icons/addoffer.png';
 import JoinNowTopSheet from './shop/JoinNowTopSheet';
-import MyOffersBottomSheet from '../components/myoffers/MyOffersBottomSheet';
-import RoundIconText from '../components/home/RoundIconText';
-import SquareIconButton from '../components/home/SquareIconButton';
-import MySaleBottomSheet from '../components/sale/MySaleBottomSheet';
-import messaging from '@react-native-firebase/messaging';
-import { getDeviceInfo } from '../utils/getDeviceInfo';
-import { getSupportVersion, uploadDeviceInfo } from '../services/homeService';
-import { Platform } from 'react-native';
-import { compareVersions } from 'compare-versions';
-import UpdateDialog from '../components/UpdateDialog';
-import ViewShot from 'react-native-view-shot';
-import Permissions, { PERMISSIONS, RESULTS, request } from 'react-native-permissions'
-import { isBleConnectPermissionGranted, isBleScanPermissionGranted, isBluetoothPermissionGranted, isCameraPermissionGranted, isLocationPermissionGranted, requestBleConnectPermission, requestBleScanPermission, requestCameraPermission, requestLocationPermission } from '../utils/permissionManager';
 
 const mapStateToProps = state => {
   return {
@@ -70,7 +74,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setShop: myshop => dispatch(setShop(myshop))
+    setShop: myshop => dispatch(setShop(myshop)),
   };
 };
 class HomeScreen extends Component {
@@ -88,8 +92,8 @@ class HomeScreen extends Component {
       deviceInfo: null,
       updateViewVisible: false,
       card: false,
-      myCategories: []
-    }
+      myCategories: [],
+    };
     this.openShop = this.openShop.bind(this);
     this.closeShop = this.closeShop.bind(this);
     this.handleModal = this.handleModal.bind(this);
@@ -107,7 +111,7 @@ class HomeScreen extends Component {
   async componentDidMount() {
     const response = await getSupportVersion();
     const deviceInfo = await getDeviceInfo();
-    this.setState({ supportVersion: response, deviceInfo: deviceInfo });
+    this.setState({supportVersion: response, deviceInfo: deviceInfo});
 
     const permissionStatus = await isLocationPermissionGranted();
     if (permissionStatus !== 'granted') {
@@ -123,125 +127,144 @@ class HomeScreen extends Component {
   }
 
   async fetchAllCategories() {
-    let { user, myshop } = this.props;
+    let {user, myshop} = this.props;
     try {
       const response = await getCategories(user?.accessToken);
-      console.log('response',response)
+      console.log('response', response);
       let result = response?.filter(function (o1) {
         return myshop?.categories.some(function (o2) {
           return o1._id === o2;
         });
       });
-      let newArr = result.map((i) => {
-        return i?.name
-      })
-      console.log('newArr---->',newArr)
+      let newArr = result.map(i => {
+        return i?.name;
+      });
+      console.log('newArr---->', newArr);
       this.setState({
-        myCategories: newArr
-      })
+        myCategories: newArr,
+      });
     } catch (error) {
       console.log(error);
     }
   }
 
   async callApis() {
-    let { user } = this.props;
+    let {user} = this.props;
     try {
       const [shopStatusResponse, carouselsResponse] = await Promise.all([
-        getShopStatus(user?.accessToken), getCarousels(user?.accessToken)
+        getShopStatus(user?.accessToken),
+        getCarousels(user?.accessToken),
       ]);
-      this.setState({ carousels: carouselsResponse, shopOpen: shopStatusResponse?.isOpen })
-
+      this.setState({
+        carousels: carouselsResponse,
+        shopOpen: shopStatusResponse?.isOpen,
+      });
     } catch (error) {
-      console.log("ty==", error);
+      console.log('ty==', error);
     }
   }
   async fetchShopData() {
-    let { user, setShop } = this.props;
+    let {user, setShop} = this.props;
     try {
       const response = await getMyShop(user?.accessToken);
       if (response) {
-        setShop(response)
+        setShop(response);
       }
     } catch (error) {
       console.log(error);
     }
   }
   async openShop() {
-    let { user } = this.props;
+    let {user} = this.props;
     try {
       const response = await openShop(user?.accessToken);
-      this.setState({ shopOpen: response?.isOpen });
+      this.setState({shopOpen: response?.isOpen});
     } catch (error) {
       console.log(error);
     }
   }
 
   async closeShop() {
-    let { user } = this.props;
+    let {user} = this.props;
     try {
       const response = await closeShop(user?.accessToken);
-      this.setState({ shopOpen: response?.isOpen });
+      this.setState({shopOpen: response?.isOpen});
     } catch (error) {
       console.log(error);
     }
   }
 
   handleModal() {
-    this.setState({ modalVisible: !this.state.modalVisible });
+    this.setState({modalVisible: !this.state.modalVisible});
   }
 
   // handleTagsBottomSheet() {
   //   this.setState({ tagBottomSheetVisible: !this.state.tagBottomSheetVisible });
   // }
   getSections = async () => {
-    const { user } = this.props;
+    const {user} = this.props;
 
     try {
       const accessToken = user?.accessToken || null;
       if (accessToken) {
         const token = await this.getToken();
         const deviceInfo = await getDeviceInfo();
-        this.uploadDeviceInfos(token, deviceInfo, accessToken)
-
+        this.uploadDeviceInfos(token, deviceInfo, accessToken);
       }
     } catch (error) {
-      console.log("calling from getSection", error);
-      this.setState({ loading: false });
+      console.log('calling from getSection', error);
+      this.setState({loading: false});
     }
-  }
+  };
 
   showUpdateDialog = () => {
-    let { supportVersion, deviceInfo } = this.state;
-    if (supportVersion == null || deviceInfo == null) return;
+    let {supportVersion, deviceInfo} = this.state;
+    if (supportVersion === null || deviceInfo === null) {
+      return;
+    }
     let appVersion = deviceInfo?.appVersion;
     let minAndroidVersion = supportVersion?.minAndroidVersion;
     let minIosVersion = supportVersion?.minIosVersion;
 
-    if (minIosVersion == undefined || minAndroidVersion == undefined || appVersion == null)
+    if (
+      minIosVersion === undefined ||
+      minAndroidVersion === undefined ||
+      appVersion === null
+    ) {
       return;
+    }
 
-    if (Platform.OS === 'ios' && compareVersions(appVersion, minIosVersion) == -1) {
-      this.setState({ updateViewVisible: true });
-    } else if (Platform.OS === 'android' && compareVersions(appVersion, minAndroidVersion) == -1) {
-      this.setState({ updateViewVisible: true });
+    if (
+      Platform.OS === 'ios' &&
+      compareVersions(appVersion, minIosVersion) === -1
+    ) {
+      this.setState({updateViewVisible: true});
+    } else if (
+      Platform.OS === 'android' &&
+      compareVersions(appVersion, minAndroidVersion) === -1
+    ) {
+      this.setState({updateViewVisible: true});
+    } else {
+      this.setState({updateViewVisible: false});
     }
-    else {
-      this.setState({ updateViewVisible: false });
-    }
-  }
+  };
 
   uploadDeviceInfos = async (token, deviceInfo, accessToken) => {
-    const { myshop } = this.props;
+    const {myshop} = this.props;
 
-    let params = JSON.stringify(Object.assign({ ...deviceInfo }, {
-      'fcmId': token,
-      'appType': 'Partner',
-      'shopId': myshop?._id,
-      'appTech': 'RN'
-    }));
+    let params = JSON.stringify(
+      Object.assign(
+        {...deviceInfo},
+        {
+          fcmId: token,
+          appType: 'Partner',
+          shopId: myshop?._id,
+          appTech: 'RN',
+        },
+      ),
+    );
     const response = await uploadDeviceInfo(params, accessToken);
-  }
+  };
 
   async getToken() {
     const authStatus = await messaging().requestPermission();
@@ -254,13 +277,11 @@ class HomeScreen extends Component {
     }
   }
   NotifcationListnes() {
-    console.log('NotifcationListnes-->')
+    console.log('NotifcationListnes-->');
     messaging().onNotificationOpenedApp(remoteMessage => {
-      console.log(
-        'Notification caused app to open from background state:'
-      );
+      console.log('Notification caused app to open from background state:');
       if (remoteMessage) {
-        console.log('remoteMessage')
+        console.log('remoteMessage');
       }
     });
 
@@ -268,30 +289,34 @@ class HomeScreen extends Component {
       .getInitialNotification()
       .then(remoteMessage => {
         if (remoteMessage) {
-          console.log('remoteMessage-->')
+          console.log('remoteMessage-->');
         }
       });
     messaging().onMessage(async remoteMessage => {
-      console.log('notification on froground state....')
-    })
+      console.log('notification on froground state....');
+    });
   }
 
   async shareCard() {
-    let { myCategories } = this.state;
-    const { myshop } = this.props;
+    let {myCategories} = this.state;
+    const {myshop} = this.props;
     try {
-      this.cardSnap.current.capture({
-        snapshotContentContainer: true,
-      }).then((uri) => {
-        let shareImage = {
-          url: uri,
-          message: `Check ${myshop && myshop?.name} out. Get all your ${myCategories && myCategories?.join(', ')} needs from ${myshop && myshop?.name} only on Fydo.`
-        };
-        Share.open(shareImage).catch(err => console.log(err));
-        this.setState({
-          card: !this.state.card
+      this.cardSnap.current
+        .capture({
+          snapshotContentContainer: true,
         })
-      })
+        .then(uri => {
+          let shareImage = {
+            url: uri,
+            message: `Check ${myshop && myshop?.name} out. Get all your ${
+              myCategories && myCategories?.join(', ')
+            } needs from ${myshop && myshop?.name} only on Fydo.`,
+          };
+          Share.open(shareImage).catch(err => console.log(err));
+          this.setState({
+            card: !this.state.card,
+          });
+        });
       // const shareResponse = Share.open({
       //   message: `Check ${myshop && myshop?.name} out. Get all your Automobile Repair needs from ${myshop && myshop?.name} only on Fydo.`,
       //   title: 'Title',
@@ -306,29 +331,29 @@ class HomeScreen extends Component {
   // }
 
   navigateToReferEarn() {
-    let { navigation } = this.props;
+    let {navigation} = this.props;
     navigation.navigate('ReferEarn');
   }
 
   navigateToSupportScreen() {
-    let { navigation } = this.props;
+    let {navigation} = this.props;
     navigation.navigate('Support');
   }
   triggerOfferModal() {
-    this.setState({ modalVisible: false })
+    this.setState({modalVisible: false});
     this.setState(prevState => {
       return {
         modalOfferVisible: !prevState.modalOfferVisible,
-      }
+      };
     });
   }
   triggerSaleModel() {
-    this.setState({ modalVisible: false })
+    this.setState({modalVisible: false});
     this.setState(prevState => {
       return {
         modelSaleVisible: !prevState.modelSaleVisible,
-      }
-    })
+      };
+    });
   }
   triggerTagModal() {
     this.setState(prevState => {
@@ -351,23 +376,18 @@ class HomeScreen extends Component {
         animationType="fade"
         transparent={true}
         visible={this.state.tagTopSheetVisibel}
-        onRequestClose={this.triggerTopTagModal}
-      >
+        onRequestClose={this.triggerTopTagModal}>
         <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        >
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
           <Pressable
             activeOpacity={1}
             style={styles.addTagsBottomSheetContainer}
-            onPress={this.triggerTopTagModal}
-          >
-            <JoinNowTopSheet
-              onPress={this.triggerTopTagModal}
-            />
+            onPress={this.triggerTopTagModal}>
+            <JoinNowTopSheet onPress={this.triggerTopTagModal} />
           </Pressable>
         </KeyboardAvoidingView>
       </Modal>
-    )
+    );
   }
   renderTagBottomSheet() {
     return (
@@ -383,7 +403,7 @@ class HomeScreen extends Component {
             // position: 'absolute',
             width: '100%',
             bottom: 0,
-            flex: 1
+            flex: 1,
           }}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
           <Pressable
@@ -397,63 +417,60 @@ class HomeScreen extends Component {
     );
   }
   renderOfferModal() {
-    let { user } = this.props;
+    let {user} = this.props;
     return (
       <Modal
         statusBarTranslucent
         animationType="fade"
         transparent={true}
         visible={this.state.modalOfferVisible}
-        onRequestClose={this.triggerOfferModal}
-      >
+        onRequestClose={this.triggerOfferModal}>
         {/* <KeyboardAvoidingView
           // style={{
           //   justifyContent: 'center'
           // }}
-          behavior={Platform.OS == 'android' ? 'height' : 'padding'}
+          behavior={Platform.OS==='android' ? 'height' : 'padding'}
         > */}
         <Pressable
           activeOpacity={1}
           style={styles.addTagsBottomSheetContainer}
           onPress={this.triggerOfferModal}>
-
           <MyOffersBottomSheet
             token={user?.accessToken}
-            toggle={this.triggerOfferModal} />
+            toggle={this.triggerOfferModal}
+          />
         </Pressable>
         {/* </KeyboardAvoidingView> */}
-
       </Modal>
-    )
+    );
   }
   renderSaleModal() {
-    let { user } = this.props;
+    let {user} = this.props;
     return (
       <Modal
         statusBarTranslucent
         animationType="fade"
         transparent={true}
         visible={this.state.modelSaleVisible}
-        onRequestClose={this.triggerSaleModel}
-      >
+        onRequestClose={this.triggerSaleModel}>
         <Pressable
           activeOpacity={1}
           style={styles.addTagsBottomSheetContainer}
           onPress={this.triggerSaleModel}>
-
           <MySaleBottomSheet
             token={user?.accessToken}
-            toggle={this.triggerSaleModel} />
+            toggle={this.triggerSaleModel}
+          />
         </Pressable>
       </Modal>
-    )
+    );
   }
 
   renderModal() {
-    let { myCategories } = this.state;
-    const { myshop } = this.props;
+    let {myCategories} = this.state;
+    const {myshop} = this.props;
 
-    console.log("shop==>", myCategories)
+    console.log('shop==>', myCategories);
 
     return (
       <Modal
@@ -463,29 +480,29 @@ class HomeScreen extends Component {
         visible={this.state.card}
         onRequestClose={() => {
           this.setState({
-            card: false
-          })
-        }}
-      >
+            card: false,
+          });
+        }}>
         <Pressable
           activeOpacity={1}
           style={styles.addTagsBottomSheetContainer}
           onPress={() => {
             this.setState({
-              card: false
-            })
+              card: false,
+            });
           }}>
-          <View style={{
-            minHeight: moderateScale(300),
-            backgroundColor: WHITE,
-            position: 'absolute',
-            width: '100%',
-            bottom: 0,
-            borderTopLeftRadius: moderateScale(10),
-            borderTopRightRadius: moderateScale(10),
-            zIndex: 10,
-            // paddingHorizontal: moderateScale(10)
-          }}>
+          <View
+            style={{
+              minHeight: moderateScale(300),
+              backgroundColor: WHITE,
+              position: 'absolute',
+              width: '100%',
+              bottom: 0,
+              borderTopLeftRadius: moderateScale(10),
+              borderTopRightRadius: moderateScale(10),
+              zIndex: 10,
+              // paddingHorizontal: moderateScale(10)
+            }}>
             <ViewShot
               ref={this.cardSnap}
               style={{
@@ -497,15 +514,14 @@ class HomeScreen extends Component {
                 // paddingBottom: 10,
                 backgroundColor: 'white',
               }}
-              options={{ format: 'jpg', quality: 0.9 }}>
+              options={{format: 'jpg', quality: 0.9}}>
               <ImageBackground
                 source={require('../assets/images/card.png')}
                 style={{
                   flex: 1,
                   justifyContent: 'center',
                 }}
-                resizeMode='contain'
-              >
+                resizeMode="contain">
                 <View style={styles.shopTitleView}>
                   <Text style={styles.shopTitle}>{myshop?.name}</Text>
                 </View>
@@ -514,7 +530,7 @@ class HomeScreen extends Component {
                     source={require('../assets/images/pincode.png')}
                     style={{
                       width: 10,
-                      height: 10
+                      height: 10,
                     }}
                   />
                   <Text style={styles.extraTxt}>
@@ -526,7 +542,7 @@ class HomeScreen extends Component {
                     source={require('../assets/images/telephone.png')}
                     style={{
                       width: 10,
-                      height: 10
+                      height: 10,
                     }}
                   />
                   <Text style={styles.extraTxt}>{myshop?.mobile}</Text>
@@ -536,7 +552,7 @@ class HomeScreen extends Component {
                     source={require('../assets/images/user.png')}
                     style={{
                       width: 10,
-                      height: 10
+                      height: 10,
                     }}
                   />
                   <Text style={styles.extraTxt}>
@@ -548,7 +564,7 @@ class HomeScreen extends Component {
                     source={require('../assets/images/list.png')}
                     style={{
                       width: 10,
-                      height: 10
+                      height: 10,
                     }}
                   />
                   <Text style={styles.extraTxt}>{myCategories?.join(',')}</Text>
@@ -558,19 +574,19 @@ class HomeScreen extends Component {
             <TouchableOpacity
               style={styles.cardBtn}
               onPress={() => {
-                this.shareCard()
+                this.shareCard();
               }}>
               <Text style={styles.cardBtnTxt}>Share card</Text>
             </TouchableOpacity>
           </View>
         </Pressable>
       </Modal>
-    )
+    );
   }
 
   render() {
-    let { shopOpen, carousels } = this.state;
-    let { language, myshop } = this.props;
+    let {shopOpen, carousels} = this.state;
+    let {language, myshop} = this.props;
 
     return (
       <SafeAreaView style={styles.container}>
@@ -584,20 +600,20 @@ class HomeScreen extends Component {
           <TouchableOpacity
             activeOpacity={1}
             style={styles.modelContainer}
-            onPress={() => this.setState({ modalVisible: false })}>
+            onPress={() => this.setState({modalVisible: false})}>
             <View style={styles.modalItems}>
               <TouchableOpacity
                 style={styles.modalItem}
                 activeOpacity={0.9}
                 onPress={this.triggerOfferModal}>
-                <Image
-                  source={AddOfferIcon}
-                  style={styles.addOfferIcon} />
+                <Image source={AddOfferIcon} style={styles.addOfferIcon} />
                 <View style={styles.modalLabelContainer}>
-                  <Text style={styles.modalLabel}>{language == 'HINDI' ? 'प्रस्ताव जोड़ें' : 'Add Offer'}</Text>
+                  <Text style={styles.modalLabel}>
+                    {language === 'HINDI' ? 'प्रस्ताव जोड़ें' : 'Add Offer'}
+                  </Text>
                 </View>
               </TouchableOpacity>
-              {/* <TouchableOpacity 
+              {/* <TouchableOpacity
                                     style={styles.modalItem}
                                     activeOpacity={.9}
                                     onPress={this.triggerSaleModel}
@@ -621,53 +637,81 @@ class HomeScreen extends Component {
         <ScrollView showsVerticalScrollIndicator={false}>
           <StatusBar backgroundColor={PRIMARY} />
           <HomeSlider carousels={carousels && carousels} />
-          <CardIconButton title="Share your business card to get more customer!" buttonTitle="Tap to share" icons={<MaterialIcons name="card-giftcard" size={30} color={WHITE} />} onPress={() => {
-            this.setState({
-              card: !this.state.card
-            })
-          }} />
+          <CardIconButton
+            title="Share your business card to get more customer!"
+            buttonTitle="Tap to share"
+            icons={
+              <MaterialIcons name="card-giftcard" size={30} color={WHITE} />
+            }
+            onPress={() => {
+              this.setState({
+                card: !this.state.card,
+              });
+            }}
+          />
           <View style={styles.line} />
-          <CardIconButton title="Add Tags to your shops to make user search you" buttonTitle="Tap to Add" icons={<Ionicons name="pricetag-outline" size={30} color={WHITE} />} onPress={this.triggerTagModal} />
+          <CardIconButton
+            title="Add Tags to your shops to make user search you"
+            buttonTitle="Tap to Add"
+            icons={<Ionicons name="pricetag-outline" size={30} color={WHITE} />}
+            onPress={this.triggerTagModal}
+          />
           <View style={styles.line} />
           <View style={styles.row}>
             <RoundIconText
               icon={<MyShopIcon width={24} height={24} />}
               onPress={() => this.props?.navigation?.navigate('MyShop')}
-              label={language == 'HINDI' ? 'मेरी दुकान' : 'My Shops'} />
+              label={language === 'HINDI' ? 'मेरी दुकान' : 'My Shops'}
+            />
             <RoundIconText
               icon={<OfferIcon width={24} height={24} />}
               onPress={() => this.props?.navigation?.navigate('MyOffers')}
-              label={language == 'HINDI' ? 'मेरे प्रस्ताव' : 'My Offers'}
+              label={language === 'HINDI' ? 'मेरे प्रस्ताव' : 'My Offers'}
             />
             <RoundIconText
               icon={<Feather name="arrow-down-left" size={24} color={'#fff'} />}
-              onPress={() => this.props?.navigation?.navigate('ReferralHistory')}
-              label={language == 'HINDI' ? 'मेरे प्रस्ताव' : 'My Referral'}
+              onPress={() =>
+                this.props?.navigation?.navigate('ReferralHistory')
+              }
+              label={language === 'HINDI' ? 'मेरे प्रस्ताव' : 'My Referral'}
             />
-            {/* <RoundIconText 
+            {/* <RoundIconText
               icon={<OfferIcon width={24} height={24} />}
               onPress={()=> this.props?.navigation?.navigate('MySales')}
-              label={language == 'HINDI' ? 'मेरे प्रस्ताव' : 'My Sales'}
+              label={language==='HINDI' ? 'मेरे प्रस्ताव' : 'My Sales'}
             /> */}
           </View>
           <View style={styles.line} />
           {!myshop?.isChannelPartner && (
-            <CardlabelButton title="Get guranteed customer in your shop" subTitle="Be Our Exclusive Channel Partner" buttonTitle="Join now" onPress={this.triggerTopTagModal} />
+            <CardlabelButton
+              title="Get guranteed customer in your shop"
+              subTitle="Be Our Exclusive Channel Partner"
+              buttonTitle="Join now"
+              onPress={this.triggerTopTagModal}
+            />
           )}
           <View style={styles.line} />
           <View style={styles.row}>
             <SquareIconButton
               onPress={() => this.props?.navigation?.navigate('Support')}
-              label={language == 'HINDI' ? 'समर्थन और सेवा' : 'Support and service'}
-              icon={<SupportIcon width={24} height={24} />} />
+              label={
+                language === 'HINDI' ? 'समर्थन और सेवा' : 'Support and service'
+              }
+              icon={<SupportIcon width={24} height={24} />}
+            />
             <SquareIconButton
               onPress={() => this.props?.navigation?.navigate('ReferEarn')}
-              label={language == 'HINDI' ? 'देखें और कमाएं' : 'Refer and earn'}
-              icon={<FontAwesome name='bullhorn' size={24} color={PRIMARY} />} />
+              label={language === 'HINDI' ? 'देखें और कमाएं' : 'Refer and earn'}
+              icon={<FontAwesome name="bullhorn" size={24} color={PRIMARY} />}
+            />
           </View>
           <View style={styles.line} />
           <View style={styles.shopStatusRow}>
-            <Text style={styles.shopStatusLabel}>{language == 'HINDI' ? 'आपकी दुकान की स्थिति' : 'Your shop status'}</Text>
+            <Text style={styles.shopStatusLabel}>
+              {language === 'HINDI'
+                ? 'आपकी दुकान की स्थिति'
+                : 'Your shop status'}
+            </Text>
             <Switch
               style={styles.switchButton}
               value={shopOpen}
@@ -676,11 +720,17 @@ class HomeScreen extends Component {
             />
             <View
               style={Object.assign(
-                { ...styles.shopStatus },
-                { backgroundColor: shopOpen ? '#66bb6a' : '#ff7043' },
+                {...styles.shopStatus},
+                {backgroundColor: shopOpen ? '#66bb6a' : '#ff7043'},
               )}>
               <Text style={styles.shopStatusOtherLabel}>
-                {shopOpen ? (language == 'HINDI' ? 'खुल गया' : 'Opened') : (language == 'HINDI' ? 'बंद किया हुआ' : 'Closed')}
+                {shopOpen
+                  ? language === 'HINDI'
+                    ? 'खुल गया'
+                    : 'Opened'
+                  : language === 'HINDI'
+                    ? 'बंद किया हुआ'
+                    : 'Closed'}
               </Text>
             </View>
           </View>
@@ -691,7 +741,10 @@ class HomeScreen extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(WithNetInfo(HomeScreen));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(WithNetInfo(HomeScreen));
 
 const styles = StyleSheet.create({
   container: {
@@ -713,7 +766,6 @@ const styles = StyleSheet.create({
     fontSize: textScale(13),
     fontFamily: 'Gilroy-Medium',
     letterSpacing: 0.3,
-
   },
   shopStatusRow: {
     padding: moderateScale(10),
@@ -737,7 +789,6 @@ const styles = StyleSheet.create({
     fontSize: textScale(13),
     fontFamily: 'Gilroy-Medium',
     letterSpacing: 0.3,
-
   },
   modelContainer: {
     backgroundColor: 'rgba(0, 0, 0, .3)',
@@ -758,10 +809,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   modalIconContainer: {
-    backgroundColor: PRIMARY,
+    // backgroundColor: PRIMARY,
     height: 40,
     width: 40,
-    borderRadius: 20,
+    // borderRadius: 20,
     justifyContent: 'center',
     elevation: 3,
     borderRadius: 5,
@@ -778,7 +829,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: 133,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.5,
     shadowRadius: 2,
     elevation: 2,
@@ -788,7 +839,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontFamily: 'Gilroy-Medium',
     letterSpacing: 0.3,
-
   },
   addTagsBottomSheetContainer: {
     backgroundColor: 'rgba(0, 0, 0, .5)',
@@ -799,31 +849,31 @@ const styles = StyleSheet.create({
   },
   addOfferIcon: {
     width: 40,
-    height: 40
+    height: 40,
   },
   shopTitleView: {
     backgroundColor: PRIMARY,
     paddingHorizontal: 10,
     paddingVertical: 4,
-    width: '40%'
+    width: '40%',
   },
   shopTitle: {
     fontFamily: 'Gilroy-SemiBold',
     fontSize: 14,
-    color: 'white'
+    color: 'white',
   },
   extraTxt: {
     fontFamily: 'Gilroy-SemiBold',
     fontSize: 10,
     color: 'black',
-    paddingLeft: 8
+    paddingLeft: 8,
   },
   cardRow: {
     flexDirection: 'row',
     alignItems: 'center',
     width: '40%',
     marginTop: 4,
-    marginLeft: 8
+    marginLeft: 8,
   },
   cardBtn: {
     alignItems: 'center',
@@ -833,11 +883,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 16,
     paddingVertical: 10,
-    marginBottom: 8
+    marginBottom: 8,
   },
   cardBtnTxt: {
     fontFamily: 'Gilroy-SemiBold',
     fontSize: 14,
     color: 'white',
-  }
+  },
 });

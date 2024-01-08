@@ -1,19 +1,23 @@
-import React, { Component } from 'react';
-import { ScrollView, StyleSheet, Text, TextInput, View, ToastAndroid } from 'react-native';
-import WithNetInfo from '../components/hoc/withNetInfo';
-import { AirbnbRating } from 'react-native-ratings';
-import { PRIMARY } from '../assets/colors';
-import { feedback, sendFeedback } from '../services/feedbackService';
+import React, {Component} from 'react';
+import {ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
+import {AirbnbRating} from 'react-native-ratings';
+import {connect} from 'react-redux';
+import {PRIMARY} from '../assets/colors';
 import ButtonComponent from '../components/ButtonComponent';
-import { connect } from 'react-redux';
-import { moderateScale, moderateScaleVertical, textScale } from '../utils/responsiveSize';
 import ToastMessage from '../components/common/ToastComponent';
+import WithNetInfo from '../components/hoc/withNetInfo';
+import {sendFeedback} from '../services/feedbackService';
+import {
+  moderateScale,
+  moderateScaleVertical,
+  textScale,
+} from '../utils/responsiveSize';
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
-    user: state?.userReducer?.user
-  }
-}
+    user: state?.userReducer?.user,
+  };
+};
 
 class FeedbackScreen extends Component {
   constructor() {
@@ -22,7 +26,7 @@ class FeedbackScreen extends Component {
       ratingCount: 0,
       feedback: null,
       loading: false,
-      error: null
+      error: null,
     };
     this.onFinishRating = this.onFinishRating.bind(this);
     this.submitFeedback = this.submitFeedback.bind(this);
@@ -30,39 +34,45 @@ class FeedbackScreen extends Component {
   }
 
   isValidated() {
-    let { feedback } = this.state;
-    if (feedback == null || feedback?.length == 0) {
-      this.setState({ error: 'Enter feedback' });
-      return false
+    let {feedback} = this.state;
+    if (feedback === null || feedback?.length === 0) {
+      this.setState({error: 'Enter feedback'});
+      return false;
     }
     return true;
-
   }
 
   onFinishRating(rating) {
-    this.setState({ ratingCount: rating });
+    this.setState({ratingCount: rating});
   }
 
   handleFeedback(feedback) {
-    this.setState({ feedback: feedback });
+    this.setState({feedback: feedback});
   }
 
   async submitFeedback() {
-    let { user } = this.props;
-    let { feedback, ratingCount } = this.state;
-    if (!this.isValidated()) return;
+    let {user} = this.props;
+    let {feedback, ratingCount} = this.state;
+    if (!this.isValidated()) {
+      return;
+    }
 
-    this.setState({ loading: true, error: null });
+    this.setState({loading: true, error: null});
     try {
-      const response = await sendFeedback(user?.accessToken, feedback, ratingCount);
+      const response = await sendFeedback(
+        user?.accessToken,
+        feedback,
+        ratingCount,
+      );
       if (response) {
-        ToastMessage({ message: 'Feedback submitted' });
-        this.setState({ loading: false, feedback: null, ratingCount: null })
+        ToastMessage({message: 'Feedback submitted'});
+        this.setState({loading: false, feedback: null, ratingCount: null});
+      } else {
+        this.setState({loading: false});
       }
-      else this.setState({ loading: false })
     } catch (error) {
       console.log(error);
-      this.setState({ loading: false })
+      this.setState({loading: false});
     }
   }
 
@@ -78,7 +88,9 @@ class FeedbackScreen extends Component {
           onChangeText={this.handleFeedback}
           multiline
         />
-        {this.state.error && <Text style={styles.error}>{this.state.error}</Text>}
+        {this.state.error && (
+          <Text style={styles.error}>{this.state.error}</Text>
+        )}
         <Text style={styles.subTitle}>Rate us</Text>
         <Text style={styles.label}>Your opinion matters</Text>
         <View style={styles.starContainer}>
@@ -122,7 +134,6 @@ const styles = StyleSheet.create({
     color: 'black',
     fontFamily: 'Gilroy-Medium',
     letterSpacing: 0.3,
-
   },
   input: {
     backgroundColor: '#eeeeee',
@@ -134,15 +145,14 @@ const styles = StyleSheet.create({
     fontFamily: 'Gilroy-Medium',
     letterSpacing: 0.3,
     height: moderateScale(267),
-    justifyContent: "flex-start"
+    justifyContent: 'flex-start',
   },
   subTitle: {
     fontSize: textScale(16),
     color: 'black',
     fontFamily: 'Gilroy-Medium',
     letterSpacing: 0.3,
-    marginTop: moderateScaleVertical(20)
-
+    marginTop: moderateScaleVertical(20),
   },
   label: {
     marginVertical: moderateScaleVertical(10),
@@ -150,7 +160,6 @@ const styles = StyleSheet.create({
     fontSize: textScale(13),
     fontFamily: 'Gilroy-Medium',
     letterSpacing: 0.3,
-
   },
   ratingContainer: {
     alignSelf: 'flex-start',
@@ -159,7 +168,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     marginTop: moderateScaleVertical(20),
     width: '80%',
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   starContainer: {
     marginTop: moderateScaleVertical(20),
@@ -168,7 +177,6 @@ const styles = StyleSheet.create({
   error: {
     marginBottom: moderateScale(20),
     color: 'red',
-    fontSize: 12
-  }
+    fontSize: 12,
+  },
 });
-

@@ -1,16 +1,12 @@
-/**
- * @format
- */
-
-import { AppRegistry } from 'react-native';
-import App from './App';
-import { name as appName } from './app.json';
-import { LogBox, Text, TextInput } from 'react-native';
-LogBox.ignoreLogs(["VirtualizedLists should never be nested"])
-LogBox.ignoreAllLogs();
 import messaging from '@react-native-firebase/messaging';
-import Tts from 'react-native-tts';
+import {AppRegistry, LogBox, Text, TextInput} from 'react-native';
 import SmsRetriever from 'react-native-sms-retriever';
+import Tts from 'react-native-tts';
+import App from './App';
+import {name as appName} from './app.json';
+
+LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
+LogBox.ignoreAllLogs();
 global.is401Navigated = false;
 
 import 'url-search-params-polyfill';
@@ -24,143 +20,146 @@ import 'url-search-params-polyfill';
 // };
 
 TextInput.defaultProps = {
-    ...(TextInput.defaultProps || {}),
-    color: 'black',
-    placeholderTextColor:DARKGREY
+  ...(TextInput.defaultProps || {}),
+  color: 'black',
+  placeholderTextColor: DARKGREY,
 };
 Text.defaultProps = {
-    ...(Text.defaultProps || {}),
-    color: 'black',
+  ...(Text.defaultProps || {}),
+  color: 'black',
 };
 
+import {DARKGREY} from './src/assets/colors';
 import './src/utils/notificationManager';
-import { getValue, storeValue } from './src/utils/sharedPreferences';
-import { DARKGREY } from './src/assets/colors';
+import {getValue, storeValue} from './src/utils/sharedPreferences';
 
-const speakPayment = async (remoteMessage) => {
-    let message = remoteMessage?.split('-')[0];
-    let pId = remoteMessage?.split('-')[1]?.trim();
+const speakPayment = async remoteMessage => {
+  let message = remoteMessage?.split('-')[0];
+  let pId = remoteMessage?.split('-')[1]?.trim();
 
-    const getList = await getValue('speak');
+  const getList = await getValue('speak');
 
-    if (getList?.length > 0) {
-        let diffData = getList?.filter((i) => {
-            let diff = (new Date().getTime() - i?.createdAt) / 1000;
-            diff /= 60;
-            let difference = Math.round(diff);
-            if (difference < 6) {
-                return i
-            }
-        });
+  if (getList?.length > 0) {
+    let diffData = getList?.filter(i => {
+      let diff = (new Date().getTime() - i?.createdAt) / 1000;
+      diff /= 60;
+      let difference = Math.round(diff);
+      if (difference < 6) {
+        return i;
+      }
+    });
 
-        let existData = diffData.filter((j) => {
-            return j?.paymentId === pId
-        })
+    let existData = diffData.filter(j => {
+      return j?.paymentId === pId;
+    });
 
-        if (existData?.length > 0) {
-            storeValue('speak', JSON.stringify(diffData))
-        } else {
-            diffData.push({
-                createdAt: JSON.stringify(new Date().getTime()),
-                paymentId: pId
-            });
-
-            storeValue('speak', JSON.stringify(diffData))
-            Tts.setDefaultRate(0.42);
-            let newMsg = message?.replace('Fydo', 'Phydo');
-            Tts.speak(newMsg);
-        }
+    if (existData?.length > 0) {
+      storeValue('speak', JSON.stringify(diffData));
     } else {
-        let newArr = [];
+      diffData.push({
+        createdAt: JSON.stringify(new Date().getTime()),
+        paymentId: pId,
+      });
 
-        newArr.push({
-            createdAt: JSON.stringify(new Date().getTime()),
-            paymentId: pId
-        });
-        storeValue('speak', JSON.stringify(newArr))
-        Tts.setDefaultRate(0.42);
-        let newMsg = message?.replace('Fydo', 'Phydo');
-        Tts.speak(newMsg);
+      storeValue('speak', JSON.stringify(diffData));
+      Tts.setDefaultRate(0.42);
+      let newMsg = message?.replace('Fydo', 'Phydo');
+      Tts.speak(newMsg);
     }
+  } else {
+    let newArr = [];
 
-}
+    newArr.push({
+      createdAt: JSON.stringify(new Date().getTime()),
+      paymentId: pId,
+    });
+    storeValue('speak', JSON.stringify(newArr));
+    Tts.setDefaultRate(0.42);
+    let newMsg = message?.replace('Fydo', 'Phydo');
+    Tts.speak(newMsg);
+  }
+};
 
 messaging().setBackgroundMessageHandler(async remoteMessage => {
-    if (remoteMessage?.data?.body?.toLowerCase().includes('rupees')
-        || remoteMessage?.data?.body?.toLowerCase().includes('received')) {
-        speakPayment(remoteMessage?.data?.body);
-    }
+  if (
+    remoteMessage?.data?.body?.toLowerCase().includes('rupees') ||
+    remoteMessage?.data?.body?.toLowerCase().includes('received')
+  ) {
+    speakPayment(remoteMessage?.data?.body);
+  }
 });
 
 const MyHeadlessTask = async () => {
-    console.log('Receiving Payments!');
-    global.isListenerAttached = false;
+  console.log('Receiving Payments!');
+  global.isListenerAttached = false;
 
-    const registered = await SmsRetriever.startSmsRetriever();
-    if (registered) {
-        await SmsRetriever.addSmsListener(async event => {
-            if (event?.message && !global.isListenerAttached) {
-                global.isListenerAttached = true;
+  const registered = await SmsRetriever.startSmsRetriever();
+  if (registered) {
+    await SmsRetriever.addSmsListener(async event => {
+      if (event?.message && !global.isListenerAttached) {
+        global.isListenerAttached = true;
 
-                if (event?.message?.toLowerCase().includes('rupees')
-                    || event?.message?.toLowerCase().includes('received')) {
-                    let message = event?.message?.split('-')[0];
-                    let Y = 'Lfyd';
-                    let Z = event?.message?.split(Y).pop();
-                    let pId = Z.substring(0, 25).trim();
+        if (
+          event?.message?.toLowerCase().includes('rupees') ||
+          event?.message?.toLowerCase().includes('received')
+        ) {
+          let message = event?.message?.split('-')[0];
+          let Y = 'Lfyd';
+          let Z = event?.message?.split(Y).pop();
+          let pId = Z.substring(0, 25).trim();
 
-                    const getList = await getValue('speak');
+          const getList = await getValue('speak');
 
-                    if (getList?.length > 0) {
-                        let diffData = getList?.filter((i) => {
-                            let diff = (new Date().getTime() - i?.createdAt) / 1000;
-                            diff /= 60;
-                            let difference = Math.round(diff);
-                            if (difference < 6) {
-                                return i
-                            }
-                        });
+          if (getList?.length > 0) {
+            let diffData = getList?.filter(i => {
+              let diff = (new Date().getTime() - i?.createdAt) / 1000;
+              diff /= 60;
+              let difference = Math.round(diff);
+              if (difference < 6) {
+                return i;
+              }
+            });
 
-                        let existData = diffData.filter((j) => {
-                            return j?.paymentId === pId
-                        })
+            let existData = diffData.filter(j => {
+              return j?.paymentId === pId;
+            });
 
-                        if (existData?.length > 0) {
-                            SmsRetriever.removeSmsListener();
-                            storeValue('speak', JSON.stringify(diffData))
-                        } else {
-                            SmsRetriever.removeSmsListener();
+            if (existData?.length > 0) {
+              SmsRetriever.removeSmsListener();
+              storeValue('speak', JSON.stringify(diffData));
+            } else {
+              SmsRetriever.removeSmsListener();
 
-                            diffData.push({
-                                createdAt: JSON.stringify(new Date().getTime()),
-                                paymentId: pId
-                            });
+              diffData.push({
+                createdAt: JSON.stringify(new Date().getTime()),
+                paymentId: pId,
+              });
 
-                            storeValue('speak', JSON.stringify(diffData))
+              storeValue('speak', JSON.stringify(diffData));
 
-                            Tts.setDefaultRate(0.42);
-                            let newMsg = message?.replace('Fydo', 'Phydo');
-                            Tts.speak(newMsg);
-                        }
-                    } else {
-                        SmsRetriever.removeSmsListener();
-                        let newArr = [];
-
-                        newArr.push({
-                            createdAt: JSON.stringify(new Date().getTime()),
-                            paymentId: pId
-                        });
-                        storeValue('speak', JSON.stringify(newArr))
-
-                        // Tts.stop();
-                        Tts.setDefaultRate(0.42);
-                        let newMsg = message?.replace('Fydo', 'Phydo');
-                        Tts.speak(newMsg);
-                    }
-                }
+              Tts.setDefaultRate(0.42);
+              let newMsg = message?.replace('Fydo', 'Phydo');
+              Tts.speak(newMsg);
             }
-        });
-    }
+          } else {
+            SmsRetriever.removeSmsListener();
+            let newArr = [];
+
+            newArr.push({
+              createdAt: JSON.stringify(new Date().getTime()),
+              paymentId: pId,
+            });
+            storeValue('speak', JSON.stringify(newArr));
+
+            // Tts.stop();
+            Tts.setDefaultRate(0.42);
+            let newMsg = message?.replace('Fydo', 'Phydo');
+            Tts.speak(newMsg);
+          }
+        }
+      }
+    });
+  }
 };
 
 AppRegistry.registerHeadlessTask('BackgroundService', () => MyHeadlessTask);

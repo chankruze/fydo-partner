@@ -1,20 +1,10 @@
-import {
-  StyleSheet,
-  View,
-  Image,
-  FlatList,
-  Dimensions,
-  Text,
-} from 'react-native';
 import React from 'react';
-import { merchantOffers } from '../../utils/dummyOffers';
+import {Dimensions, FlatList, StyleSheet, Text, View} from 'react-native';
+import {LIGHTGREEN} from '../../assets/colors';
 import OfferComponent from '../common/OfferComponent';
-import Footer from '../common/Footer';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { GREY, LIGHTGREEN } from '../../assets/colors';
 const WIDTH = Dimensions.get('screen').width;
 
-const StoreOffers = ({ offers, navigation }) => {
+const StoreOffers = ({offers, navigation}) => {
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
@@ -28,7 +18,7 @@ const StoreOffers = ({ offers, navigation }) => {
         horizontal
         style={styles.list}
         data={offers}
-        renderItem={({ item }) => (
+        renderItem={({item}) => (
           <OfferComponent
             // token={token}
             item={item}
@@ -39,7 +29,7 @@ const StoreOffers = ({ offers, navigation }) => {
         ItemSeparatorComponent={() => <View style={styles.dealSeparator} />}
         keyExtractor={item => item._id.toString()}
         showsHorizontalScrollIndicator={false}
-      //   ListFooterComponent={<Footer size={30} />}
+        //   ListFooterComponent={<Footer size={30} />}
       />
     </View>
   );
@@ -56,7 +46,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 10,
-
   },
   viewAll: {
     color: LIGHTGREEN,

@@ -1,20 +1,17 @@
+import React, {createRef, useEffect, useState} from 'react';
 import {
   Dimensions,
   Image,
   StyleSheet,
-  Text,
-  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
 import PagerView from 'react-native-pager-view';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import React, { useState, useEffect, createRef } from 'react';
-
 
 const HEIGHT = Dimensions.get('screen').height;
 
-const ImageSlider = ({ images, navigation }) => {
+const ImageSlider = ({images, navigation}) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isMounted, setIsMounted] = useState(false);
 
@@ -24,7 +21,7 @@ const ImageSlider = ({ images, navigation }) => {
     setIsMounted(true);
     const interval = setInterval(() => {
       if (isMounted) {
-        if (currentIndex == images?.length - 1) {
+        if (currentIndex === images?.length - 1) {
           setCurrentIndex(0);
           viewPagerRef?.current?.setPage(0);
         } else {
@@ -37,22 +34,22 @@ const ImageSlider = ({ images, navigation }) => {
     return clearInterval(interval);
   }, []);
 
-  const handleIndicator = ({ nativeEvent }) => {
+  const handleIndicator = ({nativeEvent}) => {
     setCurrentIndex(nativeEvent.position);
   };
 
   const renderIndicators = () => {
     return images?.map((item, index) => {
       let style =
-        currentIndex == index ? styles.activeIndicator : styles.indicator;
+        currentIndex === index ? styles.activeIndicator : styles.indicator;
       return <View style={style} key={index} />;
     });
   };
 
-  const renderView = ({ url }, id) => {
+  const renderView = ({url}, id) => {
     return (
       <View style={styles.page} key={id}>
-        <Image style={styles.image} source={{ uri: url }} />
+        <Image style={styles.image} source={{uri: url}} />
         {/* <Text style={styles.title}>{title}</Text> */}
       </View>
     );
@@ -77,10 +74,10 @@ const ImageSlider = ({ images, navigation }) => {
               }}>
               <AntDesign name="arrowleft" size={22} color="white" />
             </TouchableOpacity>
-            {/* <TouchableOpacity 
+            {/* <TouchableOpacity
         style={styles.favorite}
         onPress={handleFavoriteToggle}>
-        <MaterialIcons 
+        <MaterialIcons
             size={24}
             color={favorite ? 'white': 'white'}
             name={favorite ? 'favorite' : 'favorite-border'}/>

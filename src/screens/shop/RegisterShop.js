@@ -1,48 +1,41 @@
-import React, { useState, useEffect } from 'react';
+import {useIsFocused} from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
 import {
-  ScrollView,
+  Dimensions,
+  Platform,
+  SafeAreaView,
+  StatusBar,
   StyleSheet,
   Text,
-  StatusBar,
-  View,
-  Dimensions,
   TextInput,
-  TouchableOpacity,
-  SafeAreaView,
-  Platform,
   ToastAndroid,
-  KeyboardAvoidingView
+  TouchableOpacity,
+  View,
 } from 'react-native';
+import ImagePicker from 'react-native-image-crop-picker';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import SelectDropdown from 'react-native-select-dropdown';
+import Toast from 'react-native-simple-toast';
+import EntypoIcon from 'react-native-vector-icons/Entypo';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import FontIsto from 'react-native-vector-icons/Fontisto';
+import FoundationIcon from 'react-native-vector-icons/Foundation';
+import MaterialComunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {connect} from 'react-redux';
 import {
-  PRIMARY,
-  DARKGREY,
-  LIGHTBLACK,
   DARKBLACK,
   DARKBLUE,
-  LIGHTBLUE,
+  DARKGREY,
   GREY_2,
+  LIGHTBLACK,
+  LIGHTBLUE,
+  PRIMARY,
 } from '../../assets/colors';
-import Octicons from 'react-native-vector-icons/Octicons';
-import ImagePicker from 'react-native-image-crop-picker';
 import ButtonComponent from '../../components/ButtonComponent';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
-import FontIsto from 'react-native-vector-icons/Fontisto';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import FoundationIcon from 'react-native-vector-icons/Foundation';
-import AntIcon from 'react-native-vector-icons/AntDesign';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import MaterialComunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import WithNetInfo from '../../components/hoc/withNetInfo';
-import SelectDropdown from 'react-native-select-dropdown';
-import { add, color } from 'react-native-reanimated';
-import { generatePresignUrl } from '../../services/presignUrlService';
-import { connect } from 'react-redux';
-import Toast from 'react-native-simple-toast';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { useIsFocused } from '@react-navigation/native';
-import { getUser } from '../../utils/defaultPreference';
-import { getIpAddress } from 'react-native-device-info';
+import {generatePresignUrl} from '../../services/presignUrlService';
 
 const HEIGHT = Dimensions.get('screen').height;
 
@@ -58,50 +51,43 @@ const options = {
   quality: 0.5,
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     user: state?.userReducer?.user,
     myshop: state?.userReducer?.myshop,
-  }
-}
+  };
+};
 
-function RegisterShop({ route, navigation, user, myshop }) {
+function RegisterShop({route, navigation, user, myshop}) {
   const isFocused = useIsFocused();
   // const edit = route.params?.edit;
 
   const [ownerName, setOwnerName] = useState(
-    myshop ? myshop.owner?.ownerName : ''
+    myshop ? myshop.owner?.ownerName : '',
   );
-  const [phoneNumber, setPhoneNumber] = useState(
-    myshop ? myshop.mobile : ''
+  const [phoneNumber, setPhoneNumber] = useState(myshop ? myshop.mobile : '');
+  const [shopName, setShopName] = useState(myshop ? myshop.name : '');
+  const [address, setAddress] = useState(
+    myshop ? myshop?.address?.addressLine1 : '',
   );
-  const [shopName, setShopName] = useState(
-    myshop ? myshop.name : ''
-  );
-  const [address, setAddress] = useState(myshop ? myshop?.address?.addressLine1
-    : '');
   const [coordinates, setCoordinates] = useState([]);
-  const [pincode, setPincode] = useState(
-    myshop ? myshop?.address?.pin : ''
-  );
+  const [pincode, setPincode] = useState(myshop ? myshop?.address?.pin : '');
   const [website, setWebsite] = useState('');
-  const [shopType, setShopType] = useState(
-    myshop ? myshop.type : ''
-  );
+  const [shopType, setShopType] = useState(myshop ? myshop.type : '');
   const [error, setError] = useState({});
   const [frontImg, setFrontImg] = useState(
-    myshop ? myshop?.documents[0]?.documentFrontUrl : ''
+    myshop ? myshop?.documents[0]?.documentFrontUrl : '',
   );
   const [backImg, setBacktImg] = useState(
-    myshop ? myshop?.documents[0]?.documentBackUrl : ''
+    myshop ? myshop?.documents[0]?.documentBackUrl : '',
   );
   const [idType, setIdType] = useState(
-    myshop ? myshop?.documents[0]?.documentType : ''
+    myshop ? myshop?.documents[0]?.documentType : '',
   );
 
   useEffect(() => {
     if (isFocused) {
-      getAddress()
+      getAddress();
     }
   }, [isFocused]);
 
@@ -109,46 +95,56 @@ function RegisterShop({ route, navigation, user, myshop }) {
     const map = route.params?.map;
     // const edit = route.params?.edit;
     if (map) {
-      setAddress(map?.address)
-      setCoordinates(map?.coordinates)
-      setPincode(map?.pincode)
+      setAddress(map?.address);
+      setCoordinates(map?.coordinates);
+      setPincode(map?.pincode);
     } else if (myshop) {
-      setAddress(myshop?.address?.addressLine1)
-      setCoordinates(myshop?.location)
+      setAddress(myshop?.address?.addressLine1);
+      setCoordinates(myshop?.location);
     } else {
-      setAddress('')
-      setCoordinates([])
+      setAddress('');
+      setCoordinates([]);
     }
-  }
+  };
 
   const isValidate = () => {
     const map = route.params?.map;
-    const error = {};
-    if (ownerName == null || ownerName?.trim() == '') {
-      error.ownerName = 'Enter owner name';
+    const e = {};
+
+    if (ownerName === null || ownerName?.trim() === '') {
+      e.ownerName = 'Enter owner name';
     }
-    if (pincode == null || pincode?.trim() == '') {
-      error.pincode = 'Enter pin code';
+
+    if (pincode === null || pincode?.trim() === '') {
+      e.pincode = 'Enter pin code';
     }
+
     if (
-      phoneNumber == null ||
-      phoneNumber?.trim() == '' ||
+      phoneNumber === null ||
+      phoneNumber?.trim() === '' ||
       phoneNumber.length !== 10
     ) {
-      error.phoneNumber = 'Enter valid phone number';
+      e.phoneNumber = 'Enter valid phone number';
     }
-    if (shopName == null || shopName?.trim() == '') {
-      error.shopName = 'Enter shop name';
+
+    if (shopName === null || shopName?.trim() === '') {
+      e.shopName = 'Enter shop name';
     }
+
     if (!address) {
-      error.address = 'Enter the shop address';
+      e.address = 'Enter the shop address';
     }
-    setError(error);
-    if (Object.keys(error).length == 0) return true;
+
+    setError(e);
+
+    if (Object.keys(e).length === 0) {
+      return true;
+    }
+
     return false;
   };
 
-  const pickImage = (type) => {
+  const pickImage = type => {
     ImagePicker.openPicker({
       // width: 300,
       // height: 400,
@@ -158,58 +154,59 @@ function RegisterShop({ route, navigation, user, myshop }) {
       compressImageQuality: 1,
       // includeExif: true,
       forceJpg: true,
-    })
-      .then((assets) => {
-        if (assets) {
-          let imageData = [assets];
-          const data = imageData.map((i, index) => {
-            return {
-              // uri: i.path,
-              uri:
-                Platform.OS === 'android'
-                  ? i.path
-                  : i.path.replace('file://', ''),
-              fileName: Platform.OS == 'ios' ? i.filename
-                : i.path.substring(i.path.lastIndexOf('/') + 1)
-            };
-          });
-          setImages(data, type)
-        }
-      });
+    }).then(assets => {
+      if (assets) {
+        let imageData = [assets];
+        const data = imageData.map((i, index) => {
+          return {
+            // uri: i.path,
+            uri:
+              Platform.OS === 'android'
+                ? i.path
+                : i.path.replace('file://', ''),
+            fileName:
+              Platform.OS === 'ios'
+                ? i.filename
+                : i.path.substring(i.path.lastIndexOf('/') + 1),
+          };
+        });
+        setImages(data, type);
+      }
+    });
   };
 
-  setImages = async (res, type) => {
-    const shortUri = [res[0].fileName.split(".")[0]];
+  const setImages = async (res, type) => {
+    const shortUri = [res[0].fileName.split('.')[0]];
     const imageResponse = await generatePresignUrl(user?.accessToken, shortUri);
     const imageBody = await getBlob(res[0]?.uri);
 
     const final = await fetch(imageResponse[0], {
       method: 'PUT',
-      body: imageBody
+      body: imageBody,
     });
-    if (final.status == "200") {
-      if (Platform.OS == 'android') {
+    if (final.status === '200') {
+      if (Platform.OS === 'android') {
         ToastAndroid.show('Image upload Successfully', ToastAndroid.SHORT);
       } else {
         Toast.show('Image upload Successfully', Toast.SHORT);
       }
-      if (type == 'front') {
-        const frontImage = imageResponse[0]?.split("?")[0];
-        setFrontImg(frontImage)
-      } else if (type == 'back') {
-        const backImg = imageResponse[0]?.split("?")[0];
-        setBacktImg(backImg)
+      if (type === 'front') {
+        const frontImage = imageResponse[0]?.split('?')[0];
+        setFrontImg(frontImage);
+      } else if (type === 'back') {
+        const backImg = imageResponse[0]?.split('?')[0];
+        setBacktImg(backImg);
       }
     } else {
-      if (Platform.OS == 'android') {
+      if (Platform.OS === 'android') {
         ToastAndroid.show('Unable To Upload Image', ToastAndroid.SHORT);
       } else {
         Toast.show('Unable To Upload Image', Toast.SHORT);
       }
     }
-  }
+  };
 
-  getBlob = async (fileUri) => {
+  const getBlob = async fileUri => {
     const resp = await fetch(fileUri);
     const imageBody = await resp.blob();
     return imageBody;
@@ -226,34 +223,34 @@ function RegisterShop({ route, navigation, user, myshop }) {
         type: shopType,
         owner: {
           ownerName: ownerName,
-          ownerMobile: phoneNumber
+          ownerMobile: phoneNumber,
         },
         location: coordinates,
         address: {
           addressLine1: address,
-          pin: pincode
+          pin: pincode,
         },
         documents: [
           {
             documentType: idType,
             documentBackUrl: backImg,
             documentFrontUrl: frontImg,
-          }
-        ]
+          },
+        ],
       };
-      navigation.navigate('ShopDetails', { data: data });
+      navigation.navigate('ShopDetails', {data: data});
     }
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
       <StatusBar barStyle="default" backgroundColor={PRIMARY} translucent />
       <View style={styles.contentContainer}>
-        <KeyboardAwareScrollView enableOnAndroid={true}
+        <KeyboardAwareScrollView
+          enableOnAndroid={true}
           showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps='handled'
-          enableAutomaticScroll={Platform.OS == 'ios'}
-        >
+          keyboardShouldPersistTaps="handled"
+          enableAutomaticScroll={Platform.OS === 'ios'}>
           {/* <ScrollView
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps='handled'
@@ -315,7 +312,7 @@ function RegisterShop({ route, navigation, user, myshop }) {
               value={address}
               editable={false}
               multiline
-              style={[styles.input, { width: '80%' }]}
+              style={[styles.input, {width: '80%'}]}
               placeholder="Shop Address"
             />
             <MaterialIcons
@@ -346,21 +343,21 @@ function RegisterShop({ route, navigation, user, myshop }) {
             <FontAwesome name="id-card-o" size={18} color={DARKBLACK} />
             <SelectDropdown
               data={idCards}
-              defaultButtonText={myshop ? idType : "Your ID Proof"}
+              defaultButtonText={myshop ? idType : 'Your ID Proof'}
               onSelect={(selectedItem, index) => {
-                setIdType(selectedItem)
+                setIdType(selectedItem);
               }}
               button
               renderDropdownIcon={() => (
                 <EntypoIcon name="chevron-down" size={25} color={DARKBLACK} />
               )}
-              buttonStyle={{ backgroundColor: 'transparent', width: '95%' }}
+              buttonStyle={{backgroundColor: 'transparent', width: '95%'}}
               buttonTextStyle={{
                 textAlign: 'left',
                 fontFamily: 'Gilroy-Medium',
                 fontSize: 14,
               }}
-              dropdownStyle={{ borderRadius: 10 }}
+              dropdownStyle={{borderRadius: 10}}
               buttonTextAfterSelection={(selectedItem, index) => {
                 return selectedItem;
               }}
@@ -407,12 +404,12 @@ function RegisterShop({ route, navigation, user, myshop }) {
               onSelect={(selectedItem, index) => {
                 setShopType(selectedItem);
               }}
-              defaultButtonText={shopType ? shopType : "Type of store"}
+              defaultButtonText={shopType ? shopType : 'Type of store'}
               renderDropdownIcon={() => (
                 <EntypoIcon name="chevron-down" size={25} color="#000" />
               )}
-              dropdownStyle={{ borderRadius: 10 }}
-              buttonStyle={{ backgroundColor: 'transparent', width: '100%' }}
+              dropdownStyle={{borderRadius: 10}}
+              buttonStyle={{backgroundColor: 'transparent', width: '100%'}}
               buttonTextStyle={{
                 color: DARKGREY,
                 textAlign: 'left',
@@ -436,7 +433,6 @@ function RegisterShop({ route, navigation, user, myshop }) {
           />
           {/* </ScrollView> */}
         </KeyboardAwareScrollView>
-
       </View>
     </SafeAreaView>
   );
@@ -459,7 +455,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Gilroy-Medium',
     color: 'black',
     fontSize: 14,
-    letterSpacing: 0.3
+    letterSpacing: 0.3,
   },
   contentContainer: {
     paddingVertical: 10,
@@ -570,7 +566,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Gilroy-Medium',
     width: '90%',
     color: 'black',
-    letterSpacing: 0.3
+    letterSpacing: 0.3,
   },
   nextButton: {
     height: 48,
@@ -626,7 +622,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   transparentButton: {
-    paddingVertical: 4,
+    // paddingVertical: 4,
     backgroundColor: LIGHTBLUE,
     borderRadius: 10,
     flexDirection: 'row',

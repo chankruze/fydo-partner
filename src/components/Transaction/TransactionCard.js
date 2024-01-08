@@ -1,46 +1,49 @@
-import { StyleSheet, Text, View, ToastAndroid } from 'react-native'
-import React from 'react'
+import Clipboard from '@react-native-clipboard/clipboard';
 import moment from 'moment';
+import React from 'react';
+import {StyleSheet, Text, View} from 'react-native';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Fontisto from 'react-native-vector-icons/Fontisto';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {
-  moderateScaleVertical,
-  textScale,
-  moderateScale,
-  verticalScale,
-} from '../../utils/responsiveSize';
 import {
   BLACK,
   ERROR_MESSAGE,
-  GREY,
   GREY_2,
   PRIMARY,
   SUCCESS_MESSAGE,
-  WHITE
+  WHITE,
 } from '../../assets/colors';
-import Clipboard from '@react-native-clipboard/clipboard';
-import Toast from 'react-native-simple-toast';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Fontisto from 'react-native-vector-icons/Fontisto';
+import {
+  moderateScale,
+  moderateScaleVertical,
+  textScale,
+  verticalScale,
+} from '../../utils/responsiveSize';
 import ToastMessage from '../common/ToastComponent';
 
-const TransactionCard = ({ item }) => {
-  const getImageType = (transactionType) => {
+const TransactionCard = ({item}) => {
+  const getImageType = transactionType => {
     switch (transactionType) {
       case 'REFERRAL': {
-        return <FontAwesome name='bullhorn' style={styles.iconContent} />;
+        return <FontAwesome name="bullhorn" style={styles.iconContent} />;
       }
       case 'SHOP_PAYMENT': {
-        return <Fontisto name='shopping-store' style={styles.iconContent} />;
+        return <Fontisto name="shopping-store" style={styles.iconContent} />;
       }
       default: {
-        return <MaterialIcons style={styles.iconContent} name="account-balance-wallet" />;
+        return (
+          <MaterialIcons
+            style={styles.iconContent}
+            name="account-balance-wallet"
+          />
+        );
       }
     }
-  }
-  const copyId = (id) => {
+  };
+  const copyId = id => {
     Clipboard.setString(id);
-    ToastMessage({ message: 'Copied' });
-  }
+    ToastMessage({message: 'Copied'});
+  };
   return (
     <View style={styles.itemWrapper} key={item._id}>
       <View
@@ -53,60 +56,61 @@ const TransactionCard = ({ item }) => {
             style={{
               ...styles.primaryText,
               color:
-                item?.status === 'SUCCESS'
-                  ? SUCCESS_MESSAGE
-                  : ERROR_MESSAGE,
+                item?.status === 'SUCCESS' ? SUCCESS_MESSAGE : ERROR_MESSAGE,
             }}>
             {item?.status}
           </Text>
         </View>
         <View style={styles.rightWrapper}>
-          <Text style={{ ...styles.secondaryText, color: GREY_2 }}>
+          <Text style={{...styles.secondaryText, color: GREY_2}}>
             {moment(item?.createdAt).format('DD MMMM YYYY hh:mm A')}
           </Text>
         </View>
       </View>
       <View style={styles.cardWrapper}>
         <View style={styles.leftWrapper}>
-          <View style={{ ...styles.icon, backgroundColor: PRIMARY }}>
+          <View style={{...styles.icon, backgroundColor: PRIMARY}}>
             {getImageType(item?.transactionPurpose)}
           </View>
           <View>
             {/* <Text style={{ ...styles.secondaryText, color: BLACK }}>
               {item?.transactionPurpose === 'SHOP_PAYMENT' ? 'Transaction Id:' : 'Referral Id:'}
             </Text> */}
-            <Text style={{
-              ...styles.primaryText,
-              fontFamily: 'Gilroy-Medium',
-              fontSize: 12,
-              color: BLACK
-            }}>
+            <Text
+              style={{
+                ...styles.primaryText,
+                fontFamily: 'Gilroy-Medium',
+                fontSize: 12,
+                color: BLACK,
+              }}>
               {item?._id}{' '}
               <MaterialIcons
                 name="content-copy"
                 onPress={() => copyId(item?._id)}
               />
             </Text>
-            <Text style={{
-              ...styles.secondaryText,
-              marginTop: verticalScale(2),
-              color: GREY_2
-            }}>
+            <Text
+              style={{
+                ...styles.secondaryText,
+                marginTop: verticalScale(2),
+                color: GREY_2,
+              }}>
               Phone Number:
             </Text>
-            <Text style={{
-              ...styles.primaryText,
-              fontFamily: 'Gilroy-Medium',
-              fontSize: 12,
-              color: BLACK,
-              marginTop: verticalScale(2),
-            }}>
+            <Text
+              style={{
+                ...styles.primaryText,
+                fontFamily: 'Gilroy-Medium',
+                fontSize: 12,
+                color: BLACK,
+                marginTop: verticalScale(2),
+              }}>
               {item?.customerPhone}
             </Text>
           </View>
         </View>
         <View style={styles.rightWrapper}>
-          <Text style={{ ...styles.primaryText, color: BLACK, fontSize: 18 }}>
+          <Text style={{...styles.primaryText, color: BLACK, fontSize: 18}}>
             {'\u20B9'}
             {item?.totalAmount}
           </Text>
@@ -121,17 +125,18 @@ const TransactionCard = ({ item }) => {
           }}>
           {item?.settlementDone
             ? `Settled: ${moment(item?.directTransferSettlementTime).format(
-              'DD MMMM YYYY hh:mm A',
-            )}`
-            : `To be settled: ${'\u20B9'}${item?.directTransferAmount ? item?.directTransferAmount : 0
-            }`}
+                'DD MMMM YYYY hh:mm A',
+              )}`
+            : `To be settled: ${'\u20B9'}${
+                item?.directTransferAmount ? item?.directTransferAmount : 0
+              }`}
         </Text>
       )}
     </View>
-  )
-}
+  );
+};
 
-export default TransactionCard
+export default TransactionCard;
 
 const styles = StyleSheet.create({
   cardWrapper: {
@@ -157,12 +162,12 @@ const styles = StyleSheet.create({
   itemWrapper: {
     backgroundColor: WHITE,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.2,
     padding: moderateScale(16),
     borderRadius: moderateScale(4),
     margin: 2,
-    elevation: 3
+    elevation: 3,
   },
   iconContent: {
     flex: 1,
@@ -179,4 +184,4 @@ const styles = StyleSheet.create({
     marginRight: moderateScale(15),
     padding: moderateScale(12),
   },
-})
+});

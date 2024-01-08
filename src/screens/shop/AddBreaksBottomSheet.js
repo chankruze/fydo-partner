@@ -1,21 +1,11 @@
+import moment from 'moment';
 import React, {useState} from 'react';
-import {
-  StyleSheet,
-  View,
-  TextInput,
-  Image,
-  Text,
-  TouchableOpacity,
-  FlatList,
-} from 'react-native';
-import {PRIMARY, DARKBLACK, LIGHTBLUE} from '../../assets/colors';
-import BottomsheetIcon from './../../assets/icons/bottomsheet-icon.png';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import {set} from 'react-native-reanimated';
 import {Checkbox} from 'react-native-paper';
+import {DARKBLACK, PRIMARY} from '../../assets/colors';
 import ButtonComponent from '../../components/ButtonComponent';
+import BottomsheetIcon from './../../assets/icons/bottomsheet-icon.png';
 
 export default function AddBreaksBottomSheet({handleClosePress}) {
   const onStartShouldSetResponder = () => {

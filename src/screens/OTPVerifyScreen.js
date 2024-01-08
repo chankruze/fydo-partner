@@ -1,30 +1,27 @@
+import OTPInputView from '@twotalltotems/react-native-otp-input';
+import React, {createRef, useEffect, useState} from 'react';
 import {
+  Clipboard,
+  Keyboard,
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  Keyboard,
-  Clipboard,
-  Alert,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { DARKBLUE, DARKGREY, GREY, LIGHTBLACK, PRIMARY } from '../assets/colors';
-import { sendLoginOTP, verifyLoginOTP } from '../services/authService';
-import { setUser } from '../store/actions/user.action';
-import { createRef } from 'react';
-import { connect } from 'react-redux';
-import { saveUserData } from '../utils/defaultPreference';
-import ButtonComponent from '../components/ButtonComponent';
-import OTPInputView from '@twotalltotems/react-native-otp-input'
-import WithNetInfo from '../components/hoc/withNetInfo';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {
   getHash,
+  removeListener,
   startOtpListener,
 } from 'react-native-otp-verify';
-import Tts from 'react-native-tts';
-import { getValue, storeValue } from '../utils/sharedPreferences';
-import { useIsFocused } from '@react-navigation/native';
+import {connect} from 'react-redux';
+import {DARKBLUE, DARKGREY, LIGHTBLACK, PRIMARY} from '../assets/colors';
+import ButtonComponent from '../components/ButtonComponent';
+import {sendLoginOTP, verifyLoginOTP} from '../services/authService';
+import {setUser} from '../store/actions/user.action';
+import {saveUserData} from '../utils/defaultPreference';
+import {getValue, storeValue} from '../utils/sharedPreferences';
 
 const mapDispatchToProps = function (dispatch) {
   return {
@@ -32,7 +29,12 @@ const mapDispatchToProps = function (dispatch) {
   };
 };
 
-const OTPVerifyScreen = ({ navigationData, navigation, handleNextScreen, setUser }) => {
+const OTPVerifyScreen = ({
+  navigationData,
+  navigation,
+  handleNextScreen,
+  setUser,
+}) => {
   const otpInput = createRef();
 
   const [otp, setOtp] = useState('');
@@ -43,51 +45,60 @@ const OTPVerifyScreen = ({ navigationData, navigation, handleNextScreen, setUser
 
   useEffect(() => {
     setTimeout(() => {
-      otpInput?.current?.focusField(0)
+      otpInput?.current?.focusField(0);
     }, 500);
+
     // getHash = () =>
-    getHash().then(hash => {
-      // use this hash in the message.
-    }).catch(console.log);
-  
+    getHash()
+      .then(hash => {
+        // use this hash in the message.
+      })
+      .catch(console.log);
+
     startOtpListener(message => {
       // extract the otp using regex e.g. the below regex extracts 4 digit otp from message
-      otpHandler(message)
+      otpHandler(message);
     });
+
     return () => removeListener();
   }, []);
 
-  const otpHandler = async (message) => {
-    const otp = /(\d{6})/g.exec(message)?.[1];
+  const otpHandler = async message => {
+    const _otp = /(\d{6})/g.exec(message)?.[1];
 
-    if (otp) {
-      setOtp(otp)
-      Clipboard.setString(otp);
-      verify(otp);
+    if (_otp) {
+      setOtp(_otp);
+      Clipboard.setString(_otp);
+      verify(_otp);
     }
-    Keyboard.dismiss()
-  }
 
-  const validateInput = (autoOtp) => {
+    Keyboard.dismiss();
+  };
+
+  const validateInput = autoOtp => {
     let otps = autoOtp ? autoOtp : otp;
 
-    if (otps == null || otps.trim() == '') {
+    if (otps === null || otps.trim() === '') {
       setError('* Required');
       return false;
-    } else if (otps.length != 6) {
+    } else if (otps.length !== 6) {
       setError('Must contain 6 digits');
       return false;
-    } else return true;
+    } else {
+      return true;
+    }
   };
 
   const handleOTP = value => {
     setOtp(value);
   };
 
-  const verify = async (autoOtp) => {
+  const verify = async autoOtp => {
     const otpIds = await getValue('otpId');
 
-    if (!validateInput(autoOtp)) return;
+    if (!validateInput(autoOtp)) {
+      return;
+    }
 
     setError(null);
     setLoading(true);
@@ -105,8 +116,8 @@ const OTPVerifyScreen = ({ navigationData, navigation, handleNextScreen, setUser
           // handleNextScreen(SCREENS.LANGUAGE);
           navigation.reset({
             index: 0,
-            routes: [{ name: 'Main' }]
-          })
+            routes: [{name: 'Main'}],
+          });
 
           // navigation.navigate('Language');
           console.log('User Profile Complete, add suitable route');
@@ -114,13 +125,13 @@ const OTPVerifyScreen = ({ navigationData, navigation, handleNextScreen, setUser
           navigation.navigate('RegisterShop');
         }
       }
-    } catch (error) {
-      console.log(error)
-      if (error?.message == 'Request failed with status code 403') {
+    } catch (e) {
+      console.log(e);
+      if (e?.message === 'Request failed with status code 403') {
         setError('Invalid OTP');
         setLoading(false);
       } else {
-        setError(error?.message);
+        setError(e?.message);
         setLoading(false);
       }
     }
@@ -129,24 +140,24 @@ const OTPVerifyScreen = ({ navigationData, navigation, handleNextScreen, setUser
   const resendOTP = async () => {
     try {
       const response = await sendLoginOTP(phoneNumber);
-      const { otpId } = response;
+      const {otpId} = response;
       // setOtp('');
       await storeValue('otpId', JSON.stringify(otpId));
 
       setOtpId(otpId);
-      setError(null)
+      setError(null);
       // otpInput.current.clear();
-    } catch (error) {
-      console.log(error);
+    } catch (e) {
+      console.log(e);
     }
   };
   return (
     <View style={styles.container}>
-      <KeyboardAwareScrollView enableOnAndroid={true}
+      <KeyboardAwareScrollView
+        enableOnAndroid={true}
         showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps='handled'
-        enableAutomaticScroll={Platform.OS == 'ios'}
-      >
+        keyboardShouldPersistTaps="handled"
+        enableAutomaticScroll={Platform.OS === 'ios'}>
         <Text style={styles.title}>Verify OTP</Text>
         <Text style={styles.label}>
           Please enter the 6-digit OTP sent to you at {phoneNumber}
@@ -164,7 +175,6 @@ const OTPVerifyScreen = ({ navigationData, navigation, handleNextScreen, setUser
           codeInputFieldStyle={styles.otpBox}
           // codeInputHighlightStyle={styles.optContainer}
           onCodeFilled={handleOTP}
-
         />
         {error != null && <Text style={styles.error}>{error}</Text>}
         <ButtonComponent
@@ -194,7 +204,7 @@ const OTPVerifyScreen = ({ navigationData, navigation, handleNextScreen, setUser
   );
 };
 
-export default connect(null, mapDispatchToProps)(OTPVerifyScreen)
+export default connect(null, mapDispatchToProps)(OTPVerifyScreen);
 
 const styles = StyleSheet.create({
   container: {
@@ -264,13 +274,6 @@ const styles = StyleSheet.create({
   },
   optContainer: {
     width: '100%',
-    // backgroundColor: 'red',
-    flexDirection: 'row',
-    alignItems: 'center',
-    // justifyContent: 'space-between',
-    marginVertical: 15,
-  },
-  optContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     // justifyContent: 'space-between',
@@ -285,7 +288,7 @@ const styles = StyleSheet.create({
     width: 45,
     // marginRight: 10,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   error: {
     marginVertical: 5,

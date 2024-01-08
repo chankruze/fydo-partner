@@ -1,32 +1,31 @@
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {useHeaderHeight} from '@react-navigation/elements';
 import React from 'react';
-import { TouchableOpacity, Text, View, StyleSheet } from 'react-native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import HomeScreen from '../screens/HomeScreen';
-import { useHeaderHeight } from '@react-navigation/elements';
-import NotificationScreen from '../screens/NotificationScreen';
+import {StyleSheet, TouchableOpacity} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { BLACK, PRIMARY, WHITE } from '../assets/colors';
-import { connect } from 'react-redux';
-import { moderateScaleVertical, textScale } from '../utils/responsiveSize';
+import {connect} from 'react-redux';
+import {PRIMARY, WHITE} from '../assets/colors';
+import HomeScreen from '../screens/HomeScreen';
+import NotificationScreen from '../screens/NotificationScreen';
 import TransactionScreen from '../screens/TransactionScreen';
+import {moderateScaleVertical, textScale} from '../utils/responsiveSize';
 
 const Tab = createBottomTabNavigator();
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     language: state?.userReducer?.language,
     user: state?.userReducer?.user,
     myshop: state?.userReducer?.myshop,
-  }
-}
+  };
+};
 
-function MainNavigation({ language, user, myshop }) {
-
+function MainNavigation({language, user, myshop}) {
   const headerHeight = useHeaderHeight();
 
-  const navigateToSetting = (navigation) => {
+  const navigateToSetting = navigation => {
     navigation.navigate('Settings');
-  }
+  };
 
   return (
     <Tab.Navigator
@@ -39,52 +38,49 @@ function MainNavigation({ language, user, myshop }) {
       <Tab.Screen
         name="Home"
         component={HomeScreen}
-        options={(({ navigation }) => (
-          {
-            title: myshop?.name ? myshop.name : 'Home',
-            tabBarIcon: ({ color, size, focused }) => (
-              <Ionicons
-                name={focused ? "home" : "home-outline"}
-                size={20}
-                color={PRIMARY}
-              />
-            ),
-            tabBarStyle: {
-              // paddingBottom: 5
-            },
-            headerTintColor: PRIMARY,
-            headerTitleStyle: {
-              fontSize: textScale(18),
-              fontWeight: 'bold',
-              fontFamily: 'Gilroy-Bold',
-            },
-            headerTitleAlign: 'left',
-            tabBarLabel: language == 'HINDI' ? 'घर' : 'Home',
-            headerRight: () => (
-              <TouchableOpacity
-                onPress={navigateToSetting.bind(this, navigation)}>
-                <Ionicons
-                  name='settings'
-                  size={22}
-                  color={PRIMARY} />
-              </TouchableOpacity>
-            ),
-            headerRightContainerStyle: {
-              paddingRight: 10
-            }
-          }
-        ))} />
+        options={({navigation}) => ({
+          title: myshop?.name ? myshop.name : 'Home',
+          tabBarIcon: ({color, size, focused}) => (
+            <Ionicons
+              name={focused ? 'home' : 'home-outline'}
+              size={20}
+              color={PRIMARY}
+            />
+          ),
+          tabBarStyle: {
+            // paddingBottom: 5
+          },
+          headerTintColor: PRIMARY,
+          headerTitleStyle: {
+            fontSize: textScale(18),
+            fontWeight: 'bold',
+            fontFamily: 'Gilroy-Bold',
+          },
+          headerTitleAlign: 'left',
+          tabBarLabel: language === 'HINDI' ? 'घर' : 'Home',
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={navigateToSetting.bind(this, navigation)}>
+              <Ionicons name="settings" size={22} color={PRIMARY} />
+            </TouchableOpacity>
+          ),
+          headerRightContainerStyle: {
+            paddingRight: 10,
+          },
+        })}
+      />
       <Tab.Screen
         name="Alerts"
         component={NotificationScreen}
         options={{
-          tabBarLabel: language == 'HINDI' ? 'अधिसूचना' : 'Alerts',
+          tabBarLabel: language === 'HINDI' ? 'अधिसूचना' : 'Alerts',
           headerShown: true,
-          tabBarIcon: ({ color, size, focused }) => (
+          tabBarIcon: ({color, size, focused}) => (
             <Ionicons
-              name={focused ? "notifications" : "notifications-outline"}
+              name={focused ? 'notifications' : 'notifications-outline'}
               size={20}
-              color={PRIMARY} />
+              color={PRIMARY}
+            />
           ),
           tabBarStyle: {
             // paddingBottom: 5
@@ -99,18 +95,20 @@ function MainNavigation({ language, user, myshop }) {
           //     <Text style={styles.label}>1 New Notification</Text>
           //   </View>
           // )
-        }} />
+        }}
+      />
       <Tab.Screen
         name="Transactions"
         component={TransactionScreen}
         options={{
-          tabBarLabel: language == 'HINDI' ? 'अधिसूचना' : 'Transactions',
+          tabBarLabel: language === 'HINDI' ? 'अधिसूचना' : 'Transactions',
           headerShown: false,
-          tabBarIcon: ({ color, size, focused }) => (
+          tabBarIcon: ({color, size, focused}) => (
             <Ionicons
-              name={focused ? "wallet" : "wallet-outline"}
+              name={focused ? 'wallet' : 'wallet-outline'}
               size={20}
-              color={PRIMARY} />
+              color={PRIMARY}
+            />
           ),
           tabBarStyle: {
             // paddingBottom: 5
@@ -119,10 +117,10 @@ function MainNavigation({ language, user, myshop }) {
           headerStyle: {
             backgroundColor: PRIMARY,
             shadowOpacity: 0,
-            elevation: 0
+            elevation: 0,
           },
-
-        }} />
+        }}
+      />
     </Tab.Navigator>
   );
 }
@@ -132,21 +130,19 @@ export default connect(mapStateToProps)(MainNavigation);
 const styles = StyleSheet.create({
   header: {
     backgroundColor: PRIMARY,
-    width: '100%'
+    width: '100%',
   },
-  titleContainer: {
-
-  },
+  titleContainer: {},
   title: {
     fontSize: textScale(18),
     color: 'white',
     fontWeight: 'bold',
-    letterSpacing: .5
+    letterSpacing: 0.5,
   },
   label: {
     marginTop: moderateScaleVertical(3),
     color: 'white',
     fontSize: textScale(10),
-    letterSpacing: .5
-  }
-})
+    letterSpacing: 0.5,
+  },
+});

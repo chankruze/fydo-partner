@@ -1,36 +1,26 @@
+import React, {useEffect, useState} from 'react';
 import {
-  StyleSheet,
-  Text,
-  View,
   PermissionsAndroid,
-  Image,
+  Platform,
+  StyleSheet,
   TextInput,
   TouchableOpacity,
-  SafeAreaView,
-  Platform,
-  StatusBar,
+  View,
 } from 'react-native';
-import React, { useState, useEffect } from 'react';
-import MapView, { Marker } from 'react-native-maps';
-import Geolocation from 'react-native-geolocation-service';
-import { DARKBLUE, GREY, PRIMARY } from '../assets/colors/index';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import locationPin from '../assets/images/location-pin.png';
-import pinIcon from '../assets/images/pin.png';
+import {hasNotch} from 'react-native-device-info';
 import FAB from 'react-native-fab';
+import Geolocation from 'react-native-geolocation-service';
+import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
+import MapView, {Marker} from 'react-native-maps';
+import {PERMISSIONS, request} from 'react-native-permissions';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { SearchLocation, GetPostalAddress } from '../services/mapService';
-import { isNotchDevice } from '../utils/deviceInfo';
-import Permissions, {
-  PERMISSIONS,
-  RESULTS,
-  request,
-} from 'react-native-permissions';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import { GOOGLE_MAP_API } from '../config/endpoints';
-import { hasNotch } from 'react-native-device-info';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {DARKBLUE, GREY, PRIMARY} from '../assets/colors/index';
+import {GOOGLE_MAP_API} from '../config/endpoints';
+import {GetPostalAddress} from '../services/mapService';
+import {isNotchDevice} from '../utils/deviceInfo';
 
-const MapScreen = ({ navigation, route }) => {
+const MapScreen = ({navigation, route}) => {
   const [region, setRegion] = useState({
     latitude: 27.2046,
     longitude: 77.4977,
@@ -54,7 +44,7 @@ const MapScreen = ({ navigation, route }) => {
   const requestLocation = async () => {
     try {
       let granted;
-      if (Platform.OS == 'android') {
+      if (Platform.OS === 'android') {
         granted = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
         );
@@ -67,19 +57,19 @@ const MapScreen = ({ navigation, route }) => {
       }
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         Geolocation.getCurrentPosition(
-          async ({ coords }) => {
-            let { latitude, longitude } = coords;
-            let location = { latitude: latitude, longitude: longitude };
-            const address = await GetPostalAddress(latitude, longitude);
+          async ({coords}) => {
+            let {latitude, longitude} = coords;
+            let location = {latitude: latitude, longitude: longitude};
+            const _address = await GetPostalAddress(latitude, longitude);
 
-            address?.results[0]?.address_components?.map(item => {
+            _address?.results[0]?.address_components?.map(item => {
               if (item.types.includes('postal_code')) {
-                setPincode(item?.long_name)
+                setPincode(item?.long_name);
               }
             });
 
-            if (address?.status === 'OK') {
-              setAddress(address?.results[0]?.formatted_address);
+            if (_address?.status === 'OK') {
+              setAddress(_address?.results[0]?.formatted_address);
             }
 
             // GetPostalAddress(latitude, longitude)
@@ -88,7 +78,7 @@ const MapScreen = ({ navigation, route }) => {
             //   })
             //   .catch(err => console.log(err));
             setSelectedLocation(location);
-            setRegion(Object.assign({ ...region }, { ...location }));
+            setRegion(Object.assign({...region}, {...location}));
             setLocationChange(true);
           },
           error => {
@@ -105,7 +95,7 @@ const MapScreen = ({ navigation, route }) => {
         );
       } else {
         console.log('location permission denied');
-        alert('Location permission denied');
+        // alert('Location permission denied');
       }
     } catch (err) {
       console.warn(err);
@@ -114,16 +104,16 @@ const MapScreen = ({ navigation, route }) => {
 
   const setLocation = () => {
     Geolocation.getCurrentPosition(
-      async ({ coords }) => {
-        let { latitude, longitude } = coords;
-        let location = { latitude: latitude, longitude: longitude };
-        const address = await GetPostalAddress(latitude, longitude);
+      async ({coords}) => {
+        let {latitude, longitude} = coords;
+        let location = {latitude: latitude, longitude: longitude};
+        const _address = await GetPostalAddress(latitude, longitude);
 
-        if (address?.status === 'OK') {
-          setAddress(address?.results[0]?.formatted_address);
+        if (_address?.status === 'OK') {
+          setAddress(_address?.results[0]?.formatted_address);
         }
         setSelectedLocation(location);
-        setRegion(Object.assign({ ...region }, { ...location }));
+        setRegion(Object.assign({...region}, {...location}));
         setLocationChange(true);
       },
       error => {
@@ -142,20 +132,20 @@ const MapScreen = ({ navigation, route }) => {
 
   const onDragEnd = async e => {
     let coordinate = e.nativeEvent.coordinate;
-    let { latitude, longitude } = coordinate;
-    const address = await GetPostalAddress(latitude, longitude);
+    let {latitude, longitude} = coordinate;
+    const _address = await GetPostalAddress(latitude, longitude);
 
-    address?.results[0]?.address_components?.map(item => {
+    _address?.results[0]?.address_components?.map(item => {
       if (item.types.includes('postal_code')) {
-        setPincode(item?.long_name)
+        setPincode(item?.long_name);
       }
     });
 
-    if (address?.status === 'OK') {
-      setAddress(address?.results[0]?.formatted_address);
+    if (_address?.status === 'OK') {
+      setAddress(_address?.results[0]?.formatted_address);
     }
     setSelectedLocation(coordinate);
-    setRegion(Object.assign({ ...region }, { ...coordinate }));
+    setRegion(Object.assign({...region}, {...coordinate}));
     setLocationChange(true);
   };
 
@@ -166,13 +156,10 @@ const MapScreen = ({ navigation, route }) => {
       //   region.latitude,
       //   region.longitude
       // ],
-      coordinates: [
-        region.longitude,
-        region.latitude
-      ],
-      pincode: pincode
-    }
-    navigation.navigate('RegisterShop', { map: data })
+      coordinates: [region.longitude, region.latitude],
+      pincode: pincode,
+    };
+    navigation.navigate('RegisterShop', {map: data});
   };
   return (
     <View style={styles.container}>
@@ -197,59 +184,64 @@ const MapScreen = ({ navigation, route }) => {
           returnKeyType="search"
           onSubmitEditing={e => onSubmit(e.nativeEvent.text)}
         /> */}
-        <Icon name="search-outline" size={22} color="black" style={styles.iconView} />
+        <Icon
+          name="search-outline"
+          size={22}
+          color="black"
+          style={styles.iconView}
+        />
         <GooglePlacesAutocomplete
-          placeholder='Search City'
+          placeholder="Search City"
           minLength={2} // minimum length of text to search
           autoFocus={true}
-          returnKeyType={'search'} // Can be left out for default return key 
-          listViewDisplayed={true}    // true/false/undefined
+          returnKeyType={'search'} // Can be left out for default return key
+          listViewDisplayed={true} // true/false/undefined
           fetchDetails={true}
-          onPress={async (data, details = null) => { // 'details' is provided when fetchDetails = true
+          onPress={async (data, details = null) => {
+            // 'details' is provided when fetchDetails = true
             let lat = details.geometry.location?.lat;
             let lng = details.geometry.location?.lng;
             let location = {
               latitude: lat,
-              longitude: lng
+              longitude: lng,
             };
-            setRegion(Object.assign({ ...region }, { ...location }));
+            setRegion(Object.assign({...region}, {...location}));
             setSelectedLocation(location);
             setLocationChange(true);
-            const address = await GetPostalAddress(lat, lng);
+            const _address = await GetPostalAddress(lat, lng);
 
-            address?.results[0]?.address_components?.map(item => {
+            _address?.results[0]?.address_components?.map(item => {
               if (item.types.includes('postal_code')) {
-                setPincode(item?.long_name)
+                setPincode(item?.long_name);
               }
             });
 
-            if (address?.status === 'OK') {
-              setAddress(address?.results[0]?.formatted_address);
+            if (_address?.status === 'OK') {
+              setAddress(_address?.results[0]?.formatted_address);
             }
-          }
-          }
+          }}
           query={{
             key: GOOGLE_MAP_API,
-            language: 'en'
+            language: 'en',
           }}
           textInputProps={{
             zIndex: 1,
             selectTextOnFocus: true,
-            placeholderTextColor: 'gray'
+            placeholderTextColor: 'gray',
           }}
           styles={{
             textInput: styles.searchInput,
-            listView: { color: 'black', zIndex: 1 },
-            description: { color: 'black' }
+            listView: {color: 'black', zIndex: 1},
+            description: {color: 'black'},
           }}
-          nearbyPlacesAPI='GooglePlacesSearch'
+          nearbyPlacesAPI="GooglePlacesSearch"
           debounce={300}
         />
       </View>
       <View
         style={Object.assign(
-          { ...styles.confirmButton },
-          { opacity: locationChange ? 1 : 0.8 },
+          {...styles.confirmButton},
+          {opacity: locationChange ? 1 : 0.8},
         )}>
         <TextInput
           style={styles.selectedLocation}
@@ -312,7 +304,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 1,
     width: '95%',
-    top: hasNotch ? 50 : 30
+    top: hasNotch ? 50 : 30,
   },
   confirmButton: {
     borderRadius: 5,
@@ -320,7 +312,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     position: 'absolute',
     bottom: isNotchDevice ? 20 : 10,
-    justifyContent: 'center',
+    // justifyContent: 'center',
     alignItems: 'center',
     zIndex: 1,
     flexDirection: 'row',
@@ -361,12 +353,12 @@ const styles = StyleSheet.create({
     paddingLeft: 40,
     color: 'black',
     fontFamily: 'Gilroy-Medium',
-    letterSpacing: 0.3
+    letterSpacing: 0.3,
   },
   iconView: {
     color: PRIMARY,
     left: 30,
     top: 12,
-    zIndex: 2
+    zIndex: 2,
   },
 });

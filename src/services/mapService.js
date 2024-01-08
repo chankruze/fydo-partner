@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { GET_POSTAL_ADDRESS, GOOGLE_MAP_API } from '../config/endpoints';
+import {GET_POSTAL_ADDRESS, GOOGLE_MAP_API} from '../config/endpoints';
 import ApiInstance from '../utils/ApiInstance';
 
 export const SearchLocation = async location => {
@@ -15,7 +15,6 @@ export const SearchLocation = async location => {
   return resp.data.results[0].geometry.location;
 };
 
-
 export const GetPostalAddress = async (lat, lng) => {
   const location = lat + ',' + lng;
 
@@ -27,7 +26,7 @@ export const GetPostalAddress = async (lat, lng) => {
 
     return Promise.resolve(response);
   } catch (error) {
-    return Promise.reject("lp==>", error);
+    return Promise.reject('lp==>', error);
   }
   // const resp = await axios.get(
   //   'https://maps.googleapis.com/maps/api/geocode/json',
@@ -40,4 +39,3 @@ export const GetPostalAddress = async (lat, lng) => {
   // );
   // return resp.data.results[0];
 };
-

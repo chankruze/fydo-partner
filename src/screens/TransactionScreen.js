@@ -1,32 +1,32 @@
+import moment from 'moment';
+import React, {useEffect, useRef, useState} from 'react';
 import {
+  ActivityIndicator,
+  ImageBackground,
   SafeAreaView,
+  StatusBar,
   StyleSheet,
   Text,
   View,
-  StatusBar,
-  ActivityIndicator,
-  ImageBackground,
 } from 'react-native';
-import React, { useEffect, useRef, useState } from 'react';
-import {
-  moderateScaleVertical,
-  textScale,
-  moderateScale,
-  verticalScale,
-} from '../utils/responsiveSize';
-import { BLACK, GREY, GREY_2, PRIMARY, WHITE } from '../assets/colors';
-import { connect } from 'react-redux';
+import PagerView from 'react-native-pager-view';
+import {connect} from 'react-redux';
+import {BLACK, PRIMARY, WHITE} from '../assets/colors';
+import WithNetInfo from '../components/hoc/withNetInfo';
 import {
   getSettlement,
   getTransactionAmount,
 } from '../services/transactionService';
-import WithNetInfo from '../components/hoc/withNetInfo';
-import PagerView from 'react-native-pager-view';
-import { TransactionList } from './transaction/TransactionList';
-import { SettlementList } from './transaction/SettlementList';
-import moment from 'moment';
+import {
+  moderateScale,
+  moderateScaleVertical,
+  textScale,
+  verticalScale,
+} from '../utils/responsiveSize';
+import {SettlementList} from './transaction/SettlementList';
+import {TransactionList} from './transaction/TransactionList';
 
-const TransactionScreen = ({ user }) => {
+const TransactionScreen = ({user}) => {
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0);
 
@@ -51,8 +51,8 @@ const TransactionScreen = ({ user }) => {
     try {
       let params = {
         startDate: 0,
-        endDate: 1761611872252
-      }
+        endDate: 1761611872252,
+      };
 
       const response = await getSettlement(2, 0, params);
       setRecentSettlements(response);
@@ -83,20 +83,28 @@ const TransactionScreen = ({ user }) => {
 
   const renderIndicators = () => {
     return types.map((item, index) => {
-      return <View style={[styles.dot, {
-        backgroundColor: currentIndex == index ?
-          '#F1F2F6' : 'rgba(255,255,255,0.5)'
-      }]} key={index} />
-    })
-  }
+      return (
+        <View
+          style={[
+            styles.dot,
+            {
+              backgroundColor:
+                currentIndex == index ? '#F1F2F6' : 'rgba(255,255,255,0.5)',
+            },
+          ]}
+          key={index}
+        />
+      );
+    });
+  };
 
-  const handleIndicator = ({ nativeEvent }) => {
+  const handleIndicator = ({nativeEvent}) => {
     setCurrentIndex(nativeEvent.position);
-  }
+  };
 
   return (
     <View style={styles.container}>
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={{flex: 1}}>
         <StatusBar backgroundColor={PRIMARY} barStyle="light-content" />
         <View>
           <PagerView
@@ -110,13 +118,14 @@ const TransactionScreen = ({ user }) => {
                   source={require('../assets/images/bgTransaction.png')}
                   style={{
                     justifyContent: 'center',
-                    backgroundColor: 'white'
-                  }}
-                >
+                    backgroundColor: 'white',
+                  }}>
                   <View style={styles.headerContainer}>
                     {currentIndex === 0 ? (
                       <View key={totalKey}>
-                        <Text style={styles.headerTitle}>Amount to Settled</Text>
+                        <Text style={styles.headerTitle}>
+                          Amount to Settled
+                        </Text>
                         <Text style={styles.headerTotal}>
                           {'\u20B9'} {total ? total : 0}
                         </Text>
@@ -129,64 +138,84 @@ const TransactionScreen = ({ user }) => {
                       </View>
                     ) : (
                       <View key={recentKey}>
-                        <Text style={styles.headerTitle}>Recent Settlements</Text>
+                        <Text style={styles.headerTitle}>
+                          Recent Settlements
+                        </Text>
                         <View style={styles.row}>
                           <View>
-                            <Text style={[styles.headerTotal, {
-                              fontSize: textScale(28)
-                            }]}>
+                            <Text
+                              style={[
+                                styles.headerTotal,
+                                {
+                                  fontSize: textScale(28),
+                                },
+                              ]}>
                               {'\u20B9'} {recentSettlements[0]?.amount || 0}
                             </Text>
-                            <Text style={[styles.headerTotal, {
-                              fontSize: textScale(12)
-                            }]}>{`Settled on ${moment(recentSettlements[0]?.createdAt).format('DD MMM')
-                              }`}</Text>
+                            <Text
+                              style={[
+                                styles.headerTotal,
+                                {
+                                  fontSize: textScale(12),
+                                },
+                              ]}>{`Settled on ${moment(
+                              recentSettlements[0]?.createdAt,
+                            ).format('DD MMM')}`}</Text>
                           </View>
-                          <View style={{
-                            borderRightWidth: 1,
-                            borderRightColor: WHITE,
-                            height: verticalScale(50),
-                            marginHorizontal: moderateScale(15)
-                          }} />
+                          <View
+                            style={{
+                              borderRightWidth: 1,
+                              borderRightColor: WHITE,
+                              height: verticalScale(50),
+                              marginHorizontal: moderateScale(15),
+                            }}
+                          />
                           <View>
-                            <Text style={[styles.headerTotal, {
-                              fontSize: textScale(28)
-                            }]}>
+                            <Text
+                              style={[
+                                styles.headerTotal,
+                                {
+                                  fontSize: textScale(28),
+                                },
+                              ]}>
                               {'\u20B9'} {recentSettlements[1]?.amount || 0}
                             </Text>
-                            <Text style={[styles.headerTotal, {
-                              fontSize: textScale(12)
-                            }]}>{`Settled on ${moment(recentSettlements[1]?.createdAt).format('DD MMM')
-                              }`}</Text>
+                            <Text
+                              style={[
+                                styles.headerTotal,
+                                {
+                                  fontSize: textScale(12),
+                                },
+                              ]}>{`Settled on ${moment(
+                              recentSettlements[1]?.createdAt,
+                            ).format('DD MMM')}`}</Text>
                           </View>
                         </View>
                       </View>
                     )}
                   </View>
                 </ImageBackground>
-              )
+              );
             })}
           </PagerView>
 
-          <View style={styles.indicators}>
-            {renderIndicators()}
-          </View>
+          <View style={styles.indicators}>{renderIndicators()}</View>
         </View>
 
         {currentIndex === 0 ? (
           <TransactionList
             user={user}
             refreshBalance={() => {
-              apiTransactionAmonut()
-              setTotalKey(Math.random())
+              apiTransactionAmonut();
+              setTotalKey(Math.random());
             }}
           />
         ) : (
           <SettlementList
             user={user}
             refreshBalance={() => {
-              apiRecentSettlements()
-              setRecentKey(Math.random())
+              apiRecentSettlements();
+              setRecentKey(Math.random());
             }}
           />
         )}
@@ -244,7 +273,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: verticalScale(200),
     borderRadius: 8,
-    paddingVertical: 10
+    paddingVertical: 10,
   },
   indicators: {
     flexDirection: 'row',
@@ -254,7 +283,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 15,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   dot: {
     height: 8,
@@ -262,8 +291,8 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: '#505050',
     marginHorizontal: 3,
-    borderWidth: .4,
-    borderColor: 'grey'
+    borderWidth: 0.4,
+    borderColor: 'grey',
   },
   row: {
     flexDirection: 'row',

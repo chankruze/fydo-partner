@@ -1,26 +1,26 @@
-import { StyleSheet, StatusBar, Image } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import LinearGradient from 'react-native-linear-gradient';
-import appIcon from '../assets/images/app-icon.png';
-import { setUser } from '../store/actions/user.action';
-import { connect } from 'react-redux';
-import { getUser } from '../utils/defaultPreference';
-import { PRIMARY } from '../assets/colors';
 import messaging from '@react-native-firebase/messaging';
+import React, {useEffect, useState} from 'react';
+import {Image, StatusBar, StyleSheet} from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+import {connect} from 'react-redux';
+import {PRIMARY} from '../assets/colors';
+import appIcon from '../assets/images/app-icon.png';
+import {setUser} from '../store/actions/user.action';
+import {getUser} from '../utils/defaultPreference';
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    setUser: (user) => dispatch(setUser(user))
-  }
-}
+    setUser: user => dispatch(setUser(user)),
+  };
+};
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     user: state?.userReducer?.user,
-  }
-}
+  };
+};
 
-const SplashScreen = ({ navigation, setUser, user }) => {
+const SplashScreen = ({navigation, setUser, user}) => {
   const [userData, setUserInfo] = useState(null);
 
   useEffect(() => {
@@ -29,13 +29,11 @@ const SplashScreen = ({ navigation, setUser, user }) => {
         const user = await getUser();
         setUserInfo(user);
         setUser(user);
-        if (user == null) {
-          navigation.navigate('OnBoarding')
-        }
-        else if (user?.profileComplete == false) {
+        if (user === null) {
+          navigation.navigate('OnBoarding');
+        } else if (user?.profileComplete === false) {
           navigation.navigate('RegisterShop');
-        }
-        else {
+        } else {
           navigation.navigate('Main');
         }
       } catch (error) {
@@ -45,11 +43,9 @@ const SplashScreen = ({ navigation, setUser, user }) => {
     setUserData();
 
     messaging().onNotificationOpenedApp(remoteMessage => {
-      console.log(
-        'Notification caused app to open from background state:'
-      );
+      console.log('Notification caused app to open from background state:');
       if (remoteMessage) {
-        console.log('remoteMessage')
+        console.log('remoteMessage');
       }
     });
 
@@ -57,15 +53,13 @@ const SplashScreen = ({ navigation, setUser, user }) => {
       .getInitialNotification()
       .then(remoteMessage => {
         if (remoteMessage) {
-          console.log('remoteMessage-->')
+          console.log('remoteMessage-->');
         }
       });
   }, []);
 
   return (
-    <LinearGradient
-      colors={[PRIMARY, '#093c7e']}
-      style={styles.container}>
+    <LinearGradient colors={[PRIMARY, '#093c7e']} style={styles.container}>
       <StatusBar translucent={true} backgroundColor={'transparent'} />
       <Image source={appIcon} style={styles.icon} />
     </LinearGradient>

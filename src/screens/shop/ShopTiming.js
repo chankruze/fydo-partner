@@ -1,49 +1,41 @@
+import CheckBox from '@react-native-community/checkbox';
+import {CommonActions} from '@react-navigation/native';
+import moment from 'moment';
+import React, {createRef, useEffect, useRef, useState} from 'react';
 import {
-  StyleSheet,
-  Text,
-  View,
+  Dimensions,
+  FlatList,
+  Image,
+  Platform,
   SafeAreaView,
   ScrollView,
-  TouchableOpacity,
-  Image,
-  FlatList,
-  Dimensions,
-  Platform,
+  StyleSheet,
+  Text,
   ToastAndroid,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import React, { createRef, useEffect, useRef, useState } from 'react';
+import ImagePicker from 'react-native-image-crop-picker';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import RBSheet from 'react-native-raw-bottom-sheet';
+import Toast from 'react-native-simple-toast';
+import uuid from 'react-native-uuid';
+import {connect} from 'react-redux';
 import {
   DARKBLACK,
-  DARKBLUE,
   DARKGREY,
   GREEN,
-  GREY,
-  GREY_2,
   LIGHTBLUE,
   PRIMARY,
 } from '../../assets/colors';
-import RBSheet from 'react-native-raw-bottom-sheet';
-import ImagePicker, { openPicker } from 'react-native-image-crop-picker';
 import Cross from '../../assets/icons/cross.svg';
-import { CommonActions } from '@react-navigation/native';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import CheckBox from '@react-native-community/checkbox';
-import moment from 'moment';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import ButtonComponent from '../../components/ButtonComponent';
-import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
-import AddTags from './AddTags';
-import AddBreaks from './AddBreaksBottomSheet';
 import AddTagsBottomSheet from '../../components/home/AddTagsBottomSheet';
+import {generatePresignUrl} from '../../services/presignUrlService';
+import {updateShop} from '../../services/shopService';
+import {setUser} from '../../store/actions/user.action';
+import {saveUserData} from '../../utils/defaultPreference';
 import AddBreaksBottomSheet from './AddBreaksBottomSheet';
-import { updateShop } from '../../services/shopService';
-import { connect } from 'react-redux';
-import { generatePresignUrl } from '../../services/presignUrlService';
-import uuid from 'react-native-uuid';
-import { setShop, setUser } from '../../store/actions/user.action';
-import { getUser, saveUserData } from '../../utils/defaultPreference';
-import Toast from 'react-native-simple-toast';
 
 const HEIGHT = Dimensions.get('screen').height;
 
@@ -68,7 +60,7 @@ const ShopTiming = props => {
   const shopDetails = props.route?.params?.data;
 
   const [images, setImages] = useState(
-    shopDetails?.images ? shopDetails?.images : []
+    shopDetails?.images ? shopDetails?.images : [],
   );
   const [timePicker, setTimePicker] = useState(false);
   const [opentimePicker, setOpenTimePicker] = useState(false);
@@ -94,138 +86,144 @@ const ShopTiming = props => {
   ];
   const [pickerType, setPickerType] = useState();
   const [individualTimings, setIndividualTimings] = useState(
-    shopDetails?.timing ? shopDetails?.timing :
-      [
-        {
-          timings: {
-            startTime: null,
-            endTime: null,
+    shopDetails?.timing
+      ? shopDetails?.timing
+      : [
+          {
+            timings: {
+              startTime: null,
+              endTime: null,
+            },
+            dayOfWeek: 'SUN',
+            _id: '62137c449c5674a6e62aed14',
           },
-          dayOfWeek: 'SUN',
-          _id: '62137c449c5674a6e62aed14',
-        },
-        {
-          timings: {
-            startTime: null,
-            endTime: null,
+          {
+            timings: {
+              startTime: null,
+              endTime: null,
+            },
+            dayOfWeek: 'MON',
+            _id: '62137c449c5674a6e62aed15',
           },
-          dayOfWeek: 'MON',
-          _id: '62137c449c5674a6e62aed15',
-        },
-        {
-          timings: {
-            startTime: null,
-            endTime: null,
+          {
+            timings: {
+              startTime: null,
+              endTime: null,
+            },
+            dayOfWeek: 'TUE',
+            _id: '62137c449c5674a6e62aed16',
           },
-          dayOfWeek: 'TUE',
-          _id: '62137c449c5674a6e62aed16',
-        },
-        {
-          timings: {
-            startTime: null,
-            endTime: null,
+          {
+            timings: {
+              startTime: null,
+              endTime: null,
+            },
+            dayOfWeek: 'WED',
+            _id: '62137c449c5674a6e62aed17',
           },
-          dayOfWeek: 'WED',
-          _id: '62137c449c5674a6e62aed17',
-        },
-        {
-          timings: {
-            startTime: null,
-            endTime: null,
+          {
+            timings: {
+              startTime: null,
+              endTime: null,
+            },
+            dayOfWeek: 'THU',
+            _id: '62137c449c5674a6e62aed18',
           },
-          dayOfWeek: 'THU',
-          _id: '62137c449c5674a6e62aed18',
-        },
-        {
-          timings: {
-            startTime: null,
-            endTime: null,
+          {
+            timings: {
+              startTime: null,
+              endTime: null,
+            },
+            dayOfWeek: 'FRI',
+            _id: '62137c449c5674a6e62aed19',
           },
-          dayOfWeek: 'FRI',
-          _id: '62137c449c5674a6e62aed19',
-        },
-        {
-          timings: {
-            startTime: null,
-            endTime: null,
+          {
+            timings: {
+              startTime: null,
+              endTime: null,
+            },
+            dayOfWeek: 'SAT',
+            _id: '62137c449c5674a6e62aed1a',
           },
-          dayOfWeek: 'SAT',
-          _id: '62137c449c5674a6e62aed1a',
-        },
-      ]);
+        ],
+  );
 
   const [individualBreaks, setIndividualBreaks] = useState(
-    shopDetails?.break ? shopDetails?.break :
-      [
-        {
-          timings: {
-            startTime: null,
-            endTime: null,
+    shopDetails?.break
+      ? shopDetails?.break
+      : [
+          {
+            timings: {
+              startTime: null,
+              endTime: null,
+            },
+            dayOfWeek: 'SUN',
+            _id: '62137c449c5674a6e62aed14',
           },
-          dayOfWeek: 'SUN',
-          _id: '62137c449c5674a6e62aed14',
-        },
-        {
-          timings: {
-            startTime: null,
-            endTime: null,
+          {
+            timings: {
+              startTime: null,
+              endTime: null,
+            },
+            dayOfWeek: 'MON',
+            _id: '62137c449c5674a6e62aed15',
           },
-          dayOfWeek: 'MON',
-          _id: '62137c449c5674a6e62aed15',
-        },
-        {
-          timings: {
-            startTime: null,
-            endTime: null,
+          {
+            timings: {
+              startTime: null,
+              endTime: null,
+            },
+            dayOfWeek: 'TUE',
+            _id: '62137c449c5674a6e62aed16',
           },
-          dayOfWeek: 'TUE',
-          _id: '62137c449c5674a6e62aed16',
-        },
-        {
-          timings: {
-            startTime: null,
-            endTime: null,
+          {
+            timings: {
+              startTime: null,
+              endTime: null,
+            },
+            dayOfWeek: 'WED',
+            _id: '62137c449c5674a6e62aed17',
           },
-          dayOfWeek: 'WED',
-          _id: '62137c449c5674a6e62aed17',
-        },
-        {
-          timings: {
-            startTime: null,
-            endTime: null,
+          {
+            timings: {
+              startTime: null,
+              endTime: null,
+            },
+            dayOfWeek: 'THU',
+            _id: '62137c449c5674a6e62aed18',
           },
-          dayOfWeek: 'THU',
-          _id: '62137c449c5674a6e62aed18',
-        },
-        {
-          timings: {
-            startTime: null,
-            endTime: null,
+          {
+            timings: {
+              startTime: null,
+              endTime: null,
+            },
+            dayOfWeek: 'FRI',
+            _id: '62137c449c5674a6e62aed19',
           },
-          dayOfWeek: 'FRI',
-          _id: '62137c449c5674a6e62aed19',
-        },
-        {
-          timings: {
-            startTime: null,
-            endTime: null,
+          {
+            timings: {
+              startTime: null,
+              endTime: null,
+            },
+            dayOfWeek: 'SAT',
+            _id: '62137c449c5674a6e62aed1a',
           },
-          dayOfWeek: 'SAT',
-          _id: '62137c449c5674a6e62aed1a',
-        },
-      ]);
+        ],
+  );
 
   useEffect(() => {
-    let newBreaks = individualBreaks?.map((i) => {
+    let newBreaks = individualBreaks?.map(i => {
       return {
         ...i,
-        break: i?.timings?.startTime !== null && i?.timings?.endTime !== null
-          ? true : false
-      }
+        break:
+          i?.timings?.startTime !== null && i?.timings?.endTime !== null
+            ? true
+            : false,
+      };
     });
 
     setIndividualBreaks(newBreaks);
-  }, [])
+  }, []);
 
   const selectImages = () => {
     rbSheet.open();
@@ -251,8 +249,10 @@ const ShopTiming = props => {
               Platform.OS === 'android'
                 ? i.path
                 : i.path.replace('file://', ''),
-            fileName: Platform.OS == 'ios' ? i.filename
-              : i.path.substring(i.path.lastIndexOf('/') + 1)
+            fileName:
+              Platform.OS === 'ios'
+                ? i.filename
+                : i.path.substring(i.path.lastIndexOf('/') + 1),
           };
         });
 
@@ -284,8 +284,10 @@ const ShopTiming = props => {
               Platform.OS === 'android'
                 ? i.path
                 : i.path.replace('file://', ''),
-            fileName: Platform.OS == 'ios' ? i.filename
-              : i.path.substring(i.path.lastIndexOf('/') + 1)
+            fileName:
+              Platform.OS === 'ios'
+                ? i.filename
+                : i.path.substring(i.path.lastIndexOf('/') + 1),
           };
         });
         const newImages = [...images, ...data];
@@ -296,51 +298,58 @@ const ShopTiming = props => {
       });
   };
 
-  const getBlob = async (fileUri) => {
+  const getBlob = async fileUri => {
     const resp = await fetch(fileUri);
     const imageBody = await resp.blob();
     return imageBody;
   };
 
   const renderImages = async () => {
-    let { user } = props;
-    let fileNames = [], finalImages = [], oldImages = [];
+    let {user} = props;
+    let fileNames = [],
+      finalImages = [],
+      oldImages = [];
     if (images?.length > 0) {
-      images.map((i) => {
+      images.map(i => {
         if (i.fileName) {
-          fileNames.push(uuid.v4(i?.fileName.split(".")[0]))
+          fileNames.push(uuid.v4(i?.fileName.split('.')[0]));
         } else {
           oldImages.push(i);
         }
-      })
+      });
       if (fileNames.length > 0) {
-        const imageResponse = await generatePresignUrl(user?.accessToken, fileNames);
+        const imageResponse = await generatePresignUrl(
+          user?.accessToken,
+          fileNames,
+        );
 
-        imageResponse.map(async (i) => {
-          images.map(async (j) => {
+        imageResponse.map(async i => {
+          images.map(async j => {
             if (j?.fileName) {
               const imageBody = await getBlob(j.url);
 
               const data = await fetch(i, {
                 method: 'PUT',
-                body: imageBody
+                body: imageBody,
               });
-
             }
-          })
-        })
+          });
+        });
 
-        await imageResponse.map((i) => {
-          finalImages.push({ url: i?.split("?")[0] })
-        })
-        const newAr = [...oldImages, ...finalImages]
+        await imageResponse.map(i => {
+          finalImages.push({url: i?.split('?')[0]});
+        });
+        const newAr = [...oldImages, ...finalImages];
         return newAr;
       } else {
         return oldImages;
       }
     } else {
-      if (Platform.OS == 'android') {
-        ToastAndroid.show('Please select at least one image', ToastAndroid.SHORT);
+      if (Platform.OS === 'android') {
+        ToastAndroid.show(
+          'Please select at least one image',
+          ToastAndroid.SHORT,
+        );
       } else {
         Toast.show('Please select at least one image', Toast.SHORT);
       }
@@ -363,17 +372,17 @@ const ShopTiming = props => {
         object.break = false;
       }
 
-      return object
+      return object;
     });
 
     let pics = [];
     const finalImages = await renderImages();
-    finalImages.map((i) => {
-      pics.push(i.url)
-    })
+    finalImages.map(i => {
+      pics.push(i.url);
+    });
     const prevParams = props?.route?.params?.data;
 
-    console.log("images==>", finalImages)
+    console.log('images==>', finalImages);
 
     try {
       const params = {
@@ -381,27 +390,25 @@ const ShopTiming = props => {
         timing: individualTimings,
         break: selectedBreaks,
         images: finalImages,
-        pics: pics
-      }
+        pics: pics,
+      };
 
-      let { navigation, user } = props;
+      let {navigation, user} = props;
       const response = await updateShop(user?.accessToken, params);
 
-      let { setUser } = props;
+      let {setUser} = props;
       if (response) {
         let object = {
           ...user,
-          profileComplete: response?.profileComplete
+          profileComplete: response?.profileComplete,
         };
         setUser(object);
         saveUserData(object);
         navigation.dispatch(
           CommonActions.reset({
             index: 0,
-            routes: [
-              { name: 'Main' },
-            ],
-          })
+            routes: [{name: 'Main'}],
+          }),
         );
       }
     } catch (error) {
@@ -448,41 +455,41 @@ const ShopTiming = props => {
     const d = moment(item).format('hh:mm A');
     let list = [];
 
-    if (selectedDay == 'all') {
+    if (selectedDay === 'all') {
       if (pickerType === 'break') {
         setUsualOpenBreak(d);
 
-        list = individualBreaks.map(item => {
-          item.timings.startTime = d;
-          return item;
+        list = individualBreaks.map(i => {
+          i.timings.startTime = d;
+          return i;
         });
       } else {
         setUsualOpen(d);
 
-        list = individualTimings.map(item => {
-          item.timings.startTime = d;
-          return item;
+        list = individualTimings.map(i => {
+          i.timings.startTime = d;
+          return i;
         });
       }
     } else {
       if (pickerType === 'break') {
-        list = individualBreaks.map(item => {
-          if (item._id == selectedDay) {
-            let object = item;
+        list = individualBreaks.map(i => {
+          if (i._id === selectedDay) {
+            let object = i;
             object.timings.startTime = d;
             return object;
           } else {
-            return item;
+            return i;
           }
         });
       } else {
-        list = individualTimings.map(item => {
-          if (item._id == selectedDay) {
-            let object = item;
+        list = individualTimings.map(i => {
+          if (i._id === selectedDay) {
+            let object = i;
             object.timings.startTime = d;
             return object;
           } else {
-            return item;
+            return i;
           }
         });
       }
@@ -498,41 +505,41 @@ const ShopTiming = props => {
     setCloseTimePicker(!closetimePicker);
     const d = moment(item).format('hh:mm A');
     let list = [];
-    if (selectedDay == 'all') {
+    if (selectedDay === 'all') {
       if (pickerType === 'break') {
         setUsualCloseBreak(d);
 
-        list = individualBreaks.map(item => {
-          item.timings.endTime = d;
-          return item;
+        list = individualBreaks.map(i => {
+          i.timings.endTime = d;
+          return i;
         });
       } else {
         setUsualClose(d);
 
-        list = individualTimings.map(item => {
-          item.timings.endTime = d;
-          return item;
+        list = individualTimings.map(i => {
+          i.timings.endTime = d;
+          return i;
         });
       }
     } else {
       if (pickerType === 'break') {
-        list = individualBreaks.map(item => {
-          if (item._id == selectedDay) {
-            let object = item;
+        list = individualBreaks.map(i => {
+          if (i._id === selectedDay) {
+            let object = i;
             object.timings.endTime = d;
             return object;
           } else {
-            return item;
+            return i;
           }
         });
       } else {
-        list = individualTimings.map(item => {
-          if (item._id == selectedDay) {
-            let object = item;
+        list = individualTimings.map(i => {
+          if (i._id === selectedDay) {
+            let object = i;
             object.timings.endTime = d;
             return object;
           } else {
-            return item;
+            return i;
           }
         });
       }
@@ -544,10 +551,9 @@ const ShopTiming = props => {
     }
   };
 
-
   const handleClosedCheckbox = id => {
     const tempArray = checked.map((item, index) => {
-      if (index == id) {
+      if (index === id) {
         let bool = !item;
         return bool;
       } else {
@@ -558,7 +564,7 @@ const ShopTiming = props => {
 
     let list = [];
     list = individualTimings.map((item, index) => {
-      if (index == id) {
+      if (index === id) {
         let object = item;
         object.timings.startTime = null;
         object.timings.endTime = null;
@@ -571,10 +577,9 @@ const ShopTiming = props => {
   };
 
   const handleBreakCheckBox = id => {
-
     let list = [];
     list = individualBreaks.map((item, index) => {
-      if (index == id) {
+      if (index === id) {
         let object;
         if (item?.break) {
           object = item;
@@ -596,7 +601,7 @@ const ShopTiming = props => {
     setIndividualBreaks(list);
   };
 
-  const renderTimings = ({ item, index }) => {
+  const renderTimings = ({item, index}) => {
     return (
       <View
         style={{
@@ -617,7 +622,7 @@ const ShopTiming = props => {
         <TouchableOpacity
           style={
             checked[index]
-              ? [styles.timeButton, { opacity: 0.5 }]
+              ? [styles.timeButton, {opacity: 0.5}]
               : styles.timeButton
           }
           disabled={checked[index]}
@@ -633,7 +638,7 @@ const ShopTiming = props => {
         <TouchableOpacity
           style={
             checked[index]
-              ? [styles.timeButton, { opacity: 0.5 }]
+              ? [styles.timeButton, {opacity: 0.5}]
               : styles.timeButton
           }
           disabled={checked[index]}
@@ -654,9 +659,9 @@ const ShopTiming = props => {
           }}>
           <Text style={styles.closeTxt}>Closed</Text>
           <CheckBox
-            style={[styles.radioBtn, { marginLeft: 8 }]}
+            style={[styles.radioBtn, {marginLeft: 8}]}
             value={checked[index]}
-            tintColors={{ true: PRIMARY, false: DARKGREY }}
+            tintColors={{true: PRIMARY, false: DARKGREY}}
             disabled={false}
             onValueChange={handleClosedCheckbox.bind(this, index)}
           />
@@ -665,7 +670,7 @@ const ShopTiming = props => {
     );
   };
 
-  const renderBreaks = ({ item, index }) => {
+  const renderBreaks = ({item, index}) => {
     return (
       <View
         style={{
@@ -686,7 +691,7 @@ const ShopTiming = props => {
         <TouchableOpacity
           style={
             checked[index]
-              ? [styles.timeButton, { opacity: 0.5 }]
+              ? [styles.timeButton, {opacity: 0.5}]
               : styles.timeButton
           }
           disabled={checked[index]}
@@ -702,7 +707,7 @@ const ShopTiming = props => {
         <TouchableOpacity
           style={
             checked[index]
-              ? [styles.timeButton, { opacity: 0.5 }]
+              ? [styles.timeButton, {opacity: 0.5}]
               : styles.timeButton
           }
           disabled={checked[index]}
@@ -722,11 +727,11 @@ const ShopTiming = props => {
             right: 5,
           }}>
           <Text style={styles.closeTxt}>Break</Text>
-          {console.log("index123==>", breakChecked[index])}
+          {console.log('index123==>', breakChecked[index])}
           <CheckBox
-            style={[styles.radioBtn, { marginLeft: 8 }]}
+            style={[styles.radioBtn, {marginLeft: 8}]}
             value={item?.break}
-            tintColors={{ true: PRIMARY, false: DARKGREY }}
+            tintColors={{true: PRIMARY, false: DARKGREY}}
             disabled={false}
             onValueChange={handleBreakCheckBox.bind(this, index)}
           />
@@ -743,7 +748,7 @@ const ShopTiming = props => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
       <View style={styles.container}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View>
@@ -765,10 +770,10 @@ const ShopTiming = props => {
                 showsHorizontalScrollIndicator={false}>
                 {images
                   ? images.map(i => (
-                    <View style={styles.imgView} key={i.uri}>
-                      {renderImage(i)}
-                    </View>
-                  ))
+                      <View style={styles.imgView} key={i.uri}>
+                        {renderImage(i)}
+                      </View>
+                    ))
                   : null}
               </ScrollView>
             </View>
@@ -902,7 +907,9 @@ const ShopTiming = props => {
             />
           </View>
           <View style={styles.footer}>
-            <Text style={styles.footerLabel}>By continuing you agree to our</Text>
+            <Text style={styles.footerLabel}>
+              By continuing you agree to our
+            </Text>
             <TouchableOpacity>
               <Text style={styles.footerOtherLabel}>Terms & Conditions</Text>
             </TouchableOpacity>
@@ -956,7 +963,6 @@ const ShopTiming = props => {
             <View>
               <AddTagsBottomSheet handleClosePress={handleClosePress} />
             </View>
-
           )}
           {addBreaks && (
             <View>
@@ -993,7 +999,7 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#ECECEC',
     borderWidth: 0.4,
-    borderRadius: 20,
+    // borderRadius: 20,
     borderColor: 'grey',
     alignItems: 'center',
     justifyContent: 'center',
@@ -1004,7 +1010,7 @@ const styles = StyleSheet.create({
   buttonChoose: {
     backgroundColor: '#ECECEC',
     borderWidth: 0.4,
-    borderRadius: 20,
+    // borderRadius: 20,
     borderColor: 'grey',
     alignItems: 'center',
     justifyContent: 'center',
@@ -1162,7 +1168,7 @@ const styles = StyleSheet.create({
   radioBtn: {
     width: 20,
     height: 20,
-  }
+  },
 });
 
 // import {
@@ -1341,7 +1347,7 @@ const styles = StyleSheet.create({
 //               Platform.OS === 'android'
 //                 ? i.path
 //                 : i.path.replace('file://', ''),
-//             fileName: Platform.OS == 'ios' ? i.filename
+//             fileName: Platform.OS==='ios' ? i.filename
 //               : i.path.substring(i.path.lastIndexOf('/') + 1)
 //           };
 //         });
@@ -1375,7 +1381,7 @@ const styles = StyleSheet.create({
 //               Platform.OS === 'android'
 //                 ? i.path
 //                 : i.path.replace('file://', ''),
-//             fileName: Platform.OS == 'ios' ? i.filename
+//             fileName: Platform.OS==='ios' ? i.filename
 //               : i.path.substring(i.path.lastIndexOf('/') + 1)
 //           };
 //         });
@@ -1427,7 +1433,7 @@ const styles = StyleSheet.create({
 //         return oldImages;
 //       }
 //     } else {
-//       if (Platform.OS == 'android') {
+//       if (Platform.OS==='android') {
 //         ToastAndroid.show('Please select at least one image', ToastAndroid.SHORT);
 //       } else {
 //         Toast.show('Please select at least one image', Toast.SHORT);
@@ -1517,7 +1523,7 @@ const styles = StyleSheet.create({
 //     setOpenTimePicker(!opentimePicker);
 //     const d = moment(item).format('hh:mm A');
 //     let list = [];
-//     if (selectedDay == 'all') {
+//     if (selectedDay==='all') {
 //       setUsualOpen(d);
 
 //       list = individualTimings.map(item => {
@@ -1526,7 +1532,7 @@ const styles = StyleSheet.create({
 //       });
 //     } else {
 //       list = individualTimings.map(item => {
-//         if (item._id == selectedDay) {
+//         if (item._id===selectedDay) {
 //           let object = item;
 //           object.timings.startTime = d;
 //           return object;
@@ -1542,7 +1548,7 @@ const styles = StyleSheet.create({
 //     setCloseTimePicker(!closetimePicker);
 //     const d = moment(item).format('hh:mm A');
 //     let list = [];
-//     if (selectedDay == 'all') {
+//     if (selectedDay==='all') {
 //       setUsualClose(d);
 
 //       list = individualTimings.map(item => {
@@ -1551,7 +1557,7 @@ const styles = StyleSheet.create({
 //       });
 //     } else {
 //       list = individualTimings.map(item => {
-//         if (item._id == selectedDay) {
+//         if (item._id===selectedDay) {
 //           let object = item;
 //           object.timings.endTime = d;
 //           return object;
@@ -1563,10 +1569,9 @@ const styles = StyleSheet.create({
 //     setIndividualTimings(list);
 //   };
 
-
 //   const handleClosedCheckbox = id => {
 //     const tempArray = checked.map((item, index) => {
-//       if (index == id) {
+//       if (index===id) {
 //         let bool = !item;
 //         return bool;
 //       } else {
@@ -1577,7 +1582,7 @@ const styles = StyleSheet.create({
 
 //     let list = [];
 //     list = individualTimings.map((item, index) => {
-//       if (index == id) {
+//       if (index===id) {
 //         let object = item;
 //         object.timings.startTime = null;
 //         object.timings.endTime = null;
@@ -2036,6 +2041,3 @@ const styles = StyleSheet.create({
 //     height: 20,
 //   }
 // });
-
-
-

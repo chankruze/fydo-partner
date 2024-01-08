@@ -1,26 +1,24 @@
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import MainNavigation from './mainNavigation';
-import SettingScreen from '../screens/SettingScreen';
-import { PRIMARY, WHITE } from '../assets/colors';
+import {PRIMARY, WHITE} from '../assets/colors';
+import AboutUsScreen from '../screens/AboutUsScreen';
 import FAQScreen from '../screens/FAQScreen';
 import FeedbackScreen from '../screens/FeedbackScreen';
-import SupportServiceScreen from '../screens/SupportServiceScreen';
-import AboutUsScreen from '../screens/AboutUsScreen';
-import MyOffersScreen from '../screens/MyOffersScreen';
-import ReferAndEarnScreen from '../screens/ReferAndEarnScreen';
-import RegisterShop from '../screens/shop/RegisterShop';
 import MapScreen from '../screens/MapScreen';
-import ShopDetails from '../screens/shop/ShopDetails';
-import MyShop from '../screens/shop/MyShop';
-import ShopTiming from '../screens/shop/ShopTiming'
-import SplashScreen from '../screens/SplashScreen';
+import MyOffersScreen from '../screens/MyOffersScreen';
 import OnboardingScreen from '../screens/OnboardingScreen';
-import { textScale } from '../utils/responsiveSize';
-import MySalesScreen from '../screens/MySalesScreen';
+import ReferAndEarnScreen from '../screens/ReferAndEarnScreen';
 import ReferralHistoryScreen from '../screens/ReferralHistoryScreen';
+import SettingScreen from '../screens/SettingScreen';
+import SplashScreen from '../screens/SplashScreen';
+import SupportServiceScreen from '../screens/SupportServiceScreen';
+import MyShop from '../screens/shop/MyShop';
 import QrCodeScan from '../screens/shop/QrCodeScan';
+import RegisterShop from '../screens/shop/RegisterShop';
+import ShopDetails from '../screens/shop/ShopDetails';
+import ShopTiming from '../screens/shop/ShopTiming';
+import MainNavigation from './mainNavigation';
 
 const Stack = createNativeStackNavigator();
 
@@ -33,15 +31,49 @@ function RootNavigation() {
           <Stack.Screen name="Main" component={MainNavigation} />
           <Stack.Screen name="Auth" component={AuthNavigation} />
           <Stack.Navigator/> */}
-      <Stack.Navigator initialRouteName="Splash" screenOptions={{ headerBackTitleVisible: false }}>
-        <Stack.Screen options={{ headerShown: false }} name="RegisterShop" component={RegisterShop} />
-        <Stack.Screen options={{ headerShown: false }} name="Maps" component={MapScreen} />
-        <Stack.Screen options={{ headerShown: false }} name="ShopDetails" component={ShopDetails} />
-        <Stack.Screen options={{ headerShown: false }} name="QrScan" component={QrCodeScan} />
-        <Stack.Screen options={{ headerShown: false }} name="MyShop" component={MyShop} />
-        <Stack.Screen options={{ headerShown: false }} name="ShopTiming" component={ShopTiming} />
-        <Stack.Screen options={{ headerShown: false }} name="Splash" component={SplashScreen} />
-        <Stack.Screen options={{ headerShown: false }} name="OnBoarding" component={OnboardingScreen} />
+      <Stack.Navigator
+        initialRouteName="Splash"
+        screenOptions={{headerBackTitleVisible: false}}>
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="RegisterShop"
+          component={RegisterShop}
+        />
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="Maps"
+          component={MapScreen}
+        />
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="ShopDetails"
+          component={ShopDetails}
+        />
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="QrScan"
+          component={QrCodeScan}
+        />
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="MyShop"
+          component={MyShop}
+        />
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="ShopTiming"
+          component={ShopTiming}
+        />
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="Splash"
+          component={SplashScreen}
+        />
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="OnBoarding"
+          component={OnboardingScreen}
+        />
         {/* <Stack.Screen
           name="Auth"
           component={AuthNavigation}
@@ -50,7 +82,7 @@ function RootNavigation() {
         <Stack.Screen
           name="Main"
           component={MainNavigation}
-          options={{ headerShown: false }}
+          options={{headerShown: false}}
         />
         <Stack.Screen
           name="Settings"
@@ -97,7 +129,7 @@ function RootNavigation() {
             headerStyle: {
               backgroundColor: PRIMARY,
             },
-            
+
           }}
         /> */}
         <Stack.Screen
