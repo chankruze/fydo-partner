@@ -297,7 +297,7 @@ class SettingScreen extends Component {
           </Text>
         </TouchableOpacity>
         <View style={styles.line} />
-        <Text style={styles.version}>v {getAppVersion()}</Text>
+        <Text style={styles.version}>Version {getAppVersion()}</Text>
       </ScrollView>
     );
   }
@@ -319,28 +319,24 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   label: {
-    marginLeft: 14,
-    // color: PRIMARY,
+    marginLeft: 8,
+    color: PRIMARY,
     fontSize: 14,
     fontFamily: 'Gilroy-Medium',
-    letterSpacing: 0.25,
-    color: 'black',
   },
   line: {
-    borderWidth: 0.3,
-    // height: 0.3,
-    borderColor: 'lightgrey',
+    height: 0.4,
+    backgroundColor: 'lightgrey',
   },
   logoutIcon: {
     width: 22,
   },
   version: {
     alignSelf: 'center',
-    marginTop: 60,
-    marginBottom: 20,
-    fontWeight: '500',
+    padding: 24,
     color: PRIMARY,
-    fontSize: 15,
+    fontFamily: 'Gilroy-Medium',
+    fontSize: 12,
   },
   modalContainer: {
     backgroundColor: 'rgba(0, 0, 0, .5)',
