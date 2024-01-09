@@ -23,6 +23,8 @@ import {setUser} from '../store/actions/user.action';
 import {saveUserData} from '../utils/defaultPreference';
 import {getValue, storeValue} from '../utils/sharedPreferences';
 
+// const HEIGHT = Dimensions.get('screen').height;
+
 const mapDispatchToProps = function (dispatch) {
   return {
     setUser: user => dispatch(setUser(user)),
@@ -55,6 +57,7 @@ const OTPVerifyScreen = ({
     getHash()
       .then(hash => {
         // use this hash in the message.
+        console.log(hash);
       })
       .catch(console.log);
 
@@ -77,8 +80,6 @@ const OTPVerifyScreen = ({
   const isValidOTPFormat = autoOtp => {
     let _otp = autoOtp ? autoOtp : otp;
 
-    console.log({_otp});
-
     if (typeof _otp === 'string' && _otp.length === 6) {
       return /^\d+$/.test(_otp);
     }
@@ -87,7 +88,6 @@ const OTPVerifyScreen = ({
   };
 
   const handleOTP = value => {
-    setError(null);
     setOtp(value);
   };
 
@@ -113,6 +113,7 @@ const OTPVerifyScreen = ({
         storeValue('token', JSON.stringify(response?.accessToken));
         setUser(response);
         saveUserData(response);
+
         if (response?.profileComplete) {
           // handleNextScreen(SCREENS.LANGUAGE);
           navigation.reset({
@@ -178,6 +179,7 @@ const OTPVerifyScreen = ({
           autoFocusOnLoad={false}
           codeInputFieldStyle={styles.otpBox}
           onCodeFilled={handleOTP}
+          keyboardType="number-pad"
         />
 
         {/* error message */}

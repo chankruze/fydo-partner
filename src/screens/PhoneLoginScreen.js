@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {
-  Dimensions,
   Image,
   Keyboard,
   Platform,
@@ -26,8 +25,9 @@ import ButtonComponent from '../components/ButtonComponent';
 import {SCREENS} from '../constants/authScreens';
 import {sendLoginOTP} from '../services/authService';
 import {storeValue} from '../utils/sharedPreferences';
-const HEIGHT = Dimensions.get('screen').height;
-const TAB_BAR_HEIGHT = 49;
+
+// const HEIGHT = Dimensions.get('screen').height;
+// const TAB_BAR_HEIGHT = 49;
 
 global.is401Navigated = false;
 
@@ -59,17 +59,16 @@ const PhoneLoginScreen = ({navigation, handleNextScreen}) => {
 
     if (validateInput()) {
       try {
-        const res = await sendLoginOTP(phoneNumber);
+        const {otpId} = await sendLoginOTP(phoneNumber);
 
-        if (res.otpId) {
-          setLoading(false);
-          await storeValue('otpId', JSON.stringify(res.otpId));
+        setLoading(false);
+
+        if (otpId) {
+          await storeValue('otpId', JSON.stringify(otpId));
           handleNextScreen(SCREENS.OTP_VERIFY, {
             phoneNumber: phoneNumber,
-            otpId: res.otpId,
+            otpId,
           });
-        } else {
-          console.log(res);
         }
       } catch (e) {
         console.log(e);
@@ -105,9 +104,11 @@ const PhoneLoginScreen = ({navigation, handleNextScreen}) => {
   }, []);
 
   useEffect(() => {
-    if (phoneNumber) {
-      sendOTP();
-    }
+    (async () => {
+      if (phoneNumber) {
+        await sendOTP();
+      }
+    })();
   }, [phoneNumber]);
 
   return (
