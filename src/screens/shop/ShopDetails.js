@@ -5,6 +5,7 @@ import {
   FlatList,
   Platform,
   SafeAreaView,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -13,6 +14,7 @@ import {
 import {TextInput} from 'react-native-paper';
 
 import {
+  BLACK,
   DARKBLACK,
   DARKBLUE,
   DARKGREY,
@@ -20,6 +22,7 @@ import {
   GREY_2,
   GREY_3,
   PRIMARY,
+  RED,
 } from '../../assets/colors';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -92,16 +95,20 @@ const ShopDetails = ({navigation, route, user}) => {
     {label: 'Apple', value: 'apple'},
     {label: 'Banana', value: 'banana'},
   ]);
-  const [qrScan, setQrScan] = useState(false);
+
+  const [isQrScanned, setIsQrScanned] = useState(false);
 
   const isFocused = useIsFocused();
 
   useEffect(() => {
     console.log('jl==>', shopDetails);
+
     async function getUpiId() {
       const upiId = await getValue('upiId');
+
       if (upiId) {
         setUPI(upiId);
+        setIsQrScanned(prev => !prev);
         await AsyncStorage.removeItem('upiId');
       }
     }
@@ -118,6 +125,10 @@ const ShopDetails = ({navigation, route, user}) => {
   useEffect(() => {
     setValue(shopDetails?.categories);
   }, []);
+
+  useEffect(() => {
+    addUpis();
+  }, [isQrScanned]);
 
   const fetchOldAmenities = () => {
     if (shopDetails?.amenities?.length > 0) {
@@ -285,6 +296,7 @@ const ShopDetails = ({navigation, route, user}) => {
 
   const addUpis = () => {
     const regx = /^[\w.-]+@[\w.-]+$/;
+
     if (regx.test(UPI)) {
       upiList.push(UPI?.trim());
       setUpiKey(Math.random());
@@ -295,94 +307,150 @@ const ShopDetails = ({navigation, route, user}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.container}>
-        <KeyboardAwareScrollView
-          enableOnAndroid={true}
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled"
-          enableAutomaticScroll={Platform.OS === 'ios'}
-          nestedScrollEnabled={true}>
-          {/* <ScrollView showsVerticalScrollIndicator={false}> */}
-          <View style={premiumService && styles.subContainer}>
-            <View
-              style={
-                premiumService
-                  ? styles.premiumCheckBox2
-                  : styles.premiumCheckBox
-              }>
-              <View style={{width: '80%', marginLeft: premiumService ? 20 : 0}}>
-                <Text style={styles.partnerProgramme}>
-                  Do you want to join our channel partner Programme?
-                  <Text style={[styles.premiumText, {paddingLeft: 10}]}>
-                    {' '}
-                    Premium Service{' '}
-                  </Text>
+      <KeyboardAwareScrollView
+        contentContainerStyle={styles.contentContainerStyle}
+        enableOnAndroid={true}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        enableAutomaticScroll={Platform.OS === 'ios'}
+        nestedScrollEnabled={true}>
+        {/* <ScrollView showsVerticalScrollIndicator={false}> */}
+        <View style={premiumService && styles.subContainer}>
+          <View
+            style={
+              premiumService ? styles.premiumCheckBox2 : styles.premiumCheckBox
+            }>
+            <View style={{width: '80%', marginLeft: premiumService ? 20 : 0}}>
+              <Text style={styles.partnerProgramme}>
+                Do you want to join our channel partner Programme?
+                <Text style={[styles.premiumText, {paddingLeft: 10}]}>
+                  {' '}
+                  Premium Service{' '}
                 </Text>
-              </View>
-              <View
-                style={[
-                  styles.radioBtnView,
-                  {
-                    right: premiumService ? 20 : 5,
-                  },
-                ]}>
-                <CheckBox
-                  style={styles.radioBtn}
-                  value={premiumService}
-                  tintColors={{true: PRIMARY, false: DARKGREY}}
-                  disabled={shopDetails?.isChannelPartner}
-                  onValueChange={() => {
-                    setPremiumService(!premiumService);
-                  }}
-                />
-              </View>
+              </Text>
             </View>
-            {premiumService && (
-              <View style={{width: '100%'}}>
-                <TextInput
-                  editable={shopDetails?.isChannelPartner ? false : true}
-                  value={bankName}
-                  style={styles.input}
-                  selectionColor={DARKBLUE}
-                  onChangeText={val => setBankName(val)}
-                  activeUnderlineColor={GREY_2}
-                  placeholder="Bank account holder name"
-                  theme={{
-                    fonts: {
-                      regular: {
-                        fontFamily: 'Gilroy-Medium',
-                      },
+            <View
+              style={[
+                styles.radioBtnView,
+                {
+                  right: premiumService ? 20 : 5,
+                },
+              ]}>
+              <CheckBox
+                style={styles.radioBtn}
+                value={premiumService}
+                tintColors={{true: PRIMARY, false: DARKGREY}}
+                disabled={shopDetails?.isChannelPartner}
+                onValueChange={() => {
+                  setPremiumService(!premiumService);
+                }}
+              />
+            </View>
+          </View>
+          {premiumService && (
+            <View style={{flex: 1}}>
+              <TextInput
+                editable={shopDetails?.isChannelPartner ? false : true}
+                value={bankName}
+                style={styles.input}
+                selectionColor={DARKBLUE}
+                onChangeText={val => setBankName(val)}
+                activeUnderlineColor={GREY_2}
+                placeholder="Bank account holder name"
+                theme={{
+                  fonts: {
+                    regular: {
+                      fontFamily: 'Gilroy-Medium',
                     },
-                  }}
-                />
-                <TextInput
-                  editable={shopDetails?.isChannelPartner ? false : true}
-                  value={accountNumber}
-                  style={[styles.input]}
-                  selectionColor={DARKBLUE}
-                  onChangeText={val => setAccountNumber(val?.trim())}
-                  activeUnderlineColor={GREY_2}
-                  placeholder="Bank Account Number"
-                  theme={{
-                    fonts: {
-                      regular: {
-                        fontFamily: 'Gilroy-Medium',
-                      },
+                  },
+                }}
+              />
+              <TextInput
+                editable={shopDetails?.isChannelPartner ? false : true}
+                value={accountNumber}
+                style={[styles.input]}
+                selectionColor={DARKBLUE}
+                onChangeText={val => setAccountNumber(val?.trim())}
+                activeUnderlineColor={GREY_2}
+                placeholder="Bank Account Number"
+                theme={{
+                  fonts: {
+                    regular: {
+                      fontFamily: 'Gilroy-Medium',
                     },
-                  }}
-                  keyboardType="number-pad"
-                />
-                {/* {error.accountNumber && (
+                  },
+                }}
+                keyboardType="number-pad"
+              />
+              {/* {error.accountNumber && (
                 <Text style={styles.error}>{error.accountNumber}</Text>
               )} */}
+              <TextInput
+                editable={shopDetails?.isChannelPartner ? false : true}
+                value={IFSC}
+                style={styles.input}
+                selectionColor={DARKBLUE}
+                activeUnderlineColor={GREY_2}
+                onChangeText={val => setIFSC(val?.trim())}
+                placeholder="Bank Account IFSC"
+                theme={{
+                  fonts: {
+                    regular: {
+                      fontFamily: 'Gilroy-Medium',
+                    },
+                  },
+                }}
+              />
+              <TextInput
+                editable={shopDetails?.isChannelPartner ? false : true}
+                value={String(commissionPercentage)}
+                style={[styles.input]}
+                selectionColor={DARKBLUE}
+                onChangeText={val => setCommissionPercentage(val?.trim())}
+                activeUnderlineColor={GREY_2}
+                placeholder="Enter Loyalty Percentage"
+                theme={{
+                  fonts: {
+                    regular: {
+                      fontFamily: 'Gilroy-Medium',
+                    },
+                  },
+                }}
+                keyboardType="number-pad"
+              />
+              <TextInput
+                editable={shopDetails?.isChannelPartner ? false : true}
+                value={email}
+                style={[styles.input]}
+                selectionColor={DARKBLUE}
+                onChangeText={val => setEmail(val.trim())}
+                activeUnderlineColor={GREY_2}
+                placeholder="Email Address"
+                theme={{
+                  fonts: {
+                    regular: {
+                      fontFamily: 'Gilroy-Medium',
+                    },
+                  },
+                }}
+              />
+              {/* {error.IFSC && (
+                <Text style={styles.error}>{error.IFSC}</Text>
+              )} */}
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  alignSelf: 'center',
+                }}>
                 <TextInput
                   editable={shopDetails?.isChannelPartner ? false : true}
-                  value={IFSC}
+                  value={UPI}
                   style={styles.input}
                   selectionColor={DARKBLUE}
                   activeUnderlineColor={GREY_2}
-                  onChangeText={val => setIFSC(val?.trim())}
-                  placeholder="Bank Account IFSC"
+                  onChangeText={val => setUPI(val?.trim())}
+                  placeholder="UPI ID"
                   theme={{
                     fonts: {
                       regular: {
@@ -390,79 +458,21 @@ const ShopDetails = ({navigation, route, user}) => {
                       },
                     },
                   }}
+                  right={
+                    <TextInput.Icon
+                      name={() => (
+                        <MaterialIcon
+                          disabled={shopDetails?.isChannelPartner}
+                          onPress={() => navigation.navigate('QrScan')}
+                          name="qr-code-scanner"
+                          size={24}
+                          color={BLACK}
+                        />
+                      )}
+                    />
+                  }
                 />
-                <TextInput
-                  editable={shopDetails?.isChannelPartner ? false : true}
-                  value={String(commissionPercentage)}
-                  style={[styles.input]}
-                  selectionColor={DARKBLUE}
-                  onChangeText={val => setCommissionPercentage(val?.trim())}
-                  activeUnderlineColor={GREY_2}
-                  placeholder="Commission Percentage"
-                  theme={{
-                    fonts: {
-                      regular: {
-                        fontFamily: 'Gilroy-Medium',
-                      },
-                    },
-                  }}
-                  keyboardType="number-pad"
-                />
-                <TextInput
-                  editable={shopDetails?.isChannelPartner ? false : true}
-                  value={email}
-                  style={[styles.input]}
-                  selectionColor={DARKBLUE}
-                  onChangeText={val => setEmail(val.trim())}
-                  activeUnderlineColor={GREY_2}
-                  placeholder="Email Address"
-                  theme={{
-                    fonts: {
-                      regular: {
-                        fontFamily: 'Gilroy-Medium',
-                      },
-                    },
-                  }}
-                />
-                {/* {error.IFSC && (
-                <Text style={styles.error}>{error.IFSC}</Text>
-              )} */}
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    alignSelf: 'center',
-                  }}>
-                  <TextInput
-                    editable={shopDetails?.isChannelPartner ? false : true}
-                    value={UPI}
-                    style={styles.input}
-                    selectionColor={DARKBLUE}
-                    activeUnderlineColor={GREY_2}
-                    onChangeText={val => setUPI(val?.trim())}
-                    placeholder="UPI ID"
-                    theme={{
-                      fonts: {
-                        regular: {
-                          fontFamily: 'Gilroy-Medium',
-                        },
-                      },
-                    }}
-                    right={
-                      <TextInput.Icon
-                        name={() => (
-                          <MaterialIcon
-                            disabled={shopDetails?.isChannelPartner}
-                            onPress={() => navigation.navigate('QrScan')}
-                            name="qr-code-scanner"
-                            size={25}
-                            color="#000"
-                          />
-                        )}
-                      />
-                    }
-                  />
-                  <TouchableOpacity
+                {/* <TouchableOpacity
                     disabled={shopDetails?.isChannelPartner}
                     onPress={() => addUpis()}
                     style={{}}>
@@ -474,73 +484,66 @@ const ShopDetails = ({navigation, route, user}) => {
                       }}>
                       Add
                     </Text>
-                  </TouchableOpacity>
-                </View>
-                <FlatList
-                  key={upiKey}
-                  data={upiList}
-                  style={{
-                    marginHorizontal: 30,
-                  }}
-                  contentContainerStyle={{
-                    paddingBottom: 6,
-                  }}
-                  ItemSeparatorComponent={() => (
+                  </TouchableOpacity> */}
+              </View>
+              <FlatList
+                key={upiKey}
+                data={upiList}
+                style={{
+                  padding: 16,
+                }}
+                ItemSeparatorComponent={() => (
+                  <View
+                    style={{
+                      height: 0.4,
+                      backgroundColor: GREY,
+                      marginVertical: 4,
+                    }}
+                  />
+                )}
+                renderItem={({item, index}) => {
+                  return (
                     <View
                       style={{
-                        borderColor: GREY,
-                        borderWidth: 0.4,
-                        marginVertical: 5,
-                      }}
-                    />
-                  )}
-                  renderItem={({item, index}) => {
-                    return (
-                      <View
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                      }}>
+                      <Text
                         style={{
-                          flexDirection: 'row',
-                          alignItems: 'center',
+                          fontFamily: 'Gilroy-Medium',
+                          fontSize: 14,
+                          flex: 1,
                         }}>
-                        <Text
-                          style={{
-                            fontFamily: 'Gilroy-Medium',
-                            fontSize: 14,
-                            flex: 1,
-                          }}>
-                          {item}
-                        </Text>
-                        <TouchableOpacity
-                          disabled={shopDetails?.isChannelPartner}
-                          onPress={() => {
-                            upiList.splice(index, 1);
-                            setUpiKey(Math.random());
-                          }}>
-                          <MaterialIcon
-                            name="delete"
-                            size={20}
-                            color={PRIMARY}
-                          />
-                        </TouchableOpacity>
-                      </View>
-                    );
-                  }}
-                />
-                {/* {error.UPI && (
+                        {item}
+                      </Text>
+                      <TouchableOpacity
+                        disabled={shopDetails?.isChannelPartner}
+                        onPress={() => {
+                          upiList.splice(index, 1);
+                          setUpiKey(Math.random());
+                        }}>
+                        <MaterialIcon name="delete" size={24} color={RED} />
+                      </TouchableOpacity>
+                    </View>
+                  );
+                }}
+              />
+              {/* {error.UPI && (
                 <Text style={styles.error}>{error.UPI}</Text>
               )} */}
-                {/* <Text style={styles.upi}>Add More UPI IDs</Text> */}
-              </View>
-            )}
-          </View>
-          <View style={{marginVertical: 20}}>
-            <View style={styles.radioContainer}>
-              <FlatList
-                data={amenities}
-                renderItem={renderAmenities}
-                numColumns={2}
-                key={item => item.toString()}
-              />
-              {/* <View style={styles.radioButton}>
+              {/* <Text style={styles.upi}>Add More UPI IDs</Text> */}
+            </View>
+          )}
+        </View>
+        <View style={{marginVertical: 20}}>
+          <View style={styles.radioContainer}>
+            <FlatList
+              data={amenities}
+              renderItem={renderAmenities}
+              numColumns={2}
+              key={item => item.toString()}
+            />
+            {/* <View style={styles.radioButton}>
                 <Text style={styles.radioText}>Parking availability</Text>
                 <CheckBox
                   style={styles.radioBtn}
@@ -591,10 +594,10 @@ const ShopDetails = ({navigation, route, user}) => {
                   }}
                 />
               </View> */}
-            </View>
           </View>
+        </View>
 
-          {/* <View style={[styles.radioButton, { width: '100%' }]}>
+        {/* <View style={[styles.radioButton, { width: '100%' }]}>
             <View>
               <Text style={styles.radioText}>
                 Do you provide home delivery/service?
@@ -613,131 +616,129 @@ const ShopDetails = ({navigation, route, user}) => {
             />
           </View> */}
 
-          <View
+        <View
+          style={{
+            flex: 1,
+            marginBottom: 10,
+            ...Platform.select({
+              ios: {
+                zIndex: 2000,
+              },
+              android: {},
+            }),
+          }}>
+          <DropDownPicker
+            listMode="SCROLLVIEW"
+            mode="BADGE"
+            placeholder="Select business type"
             style={{
-              marginBottom: 10,
-              ...Platform.select({
-                ios: {
-                  zIndex: 2000,
-                },
-                android: {},
-              }),
-            }}>
-            <DropDownPicker
-              listMode="SCROLLVIEW"
-              placeholder="Select business type"
-              style={{
-                borderColor: 'lightgrey',
-              }}
-              dropDownContainerStyle={{
-                height: 180,
-                // paddingBottom: 5,
-                borderColor: 'lightgrey',
-              }}
-              searchTextInputStyle={{
-                borderWidth: 0,
-                fontSize: 16,
-              }}
-              placeholderStyle={{
-                fontFamily: 'Gilroy-Medium',
-              }}
-              listItemLabelStyle={{
-                fontFamily: 'Gilroy-Medium',
-              }}
-              searchPlaceholder="Search category..."
-              searchPlaceholderTextColor="grey"
-              searchable
-              multiple
-              open={open}
-              value={value}
-              items={categories}
-              setOpen={setOpen}
-              setValue={setValue}
-              setItems={setItems}
-              onChangeValue={val => {
-                setSelectedCat(val);
+              borderColor: 'lightgrey',
+            }}
+            dropDownContainerStyle={{
+              flex: 1,
+              minHeight: 600,
+              // paddingBottom: 5,
+              borderColor: 'lightgrey',
+            }}
+            searchTextInputStyle={{
+              borderWidth: 0,
+              fontSize: 16,
+            }}
+            placeholderStyle={{
+              fontFamily: 'Gilroy-Medium',
+            }}
+            listItemLabelStyle={{
+              fontFamily: 'Gilroy-Medium',
+            }}
+            searchPlaceholder="Search category..."
+            searchPlaceholderTextColor="grey"
+            searchable
+            multiple
+            open={open}
+            value={value}
+            items={categories}
+            setOpen={setOpen}
+            setValue={setValue}
+            setItems={setItems}
+            onChangeValue={val => {
+              setSelectedCat(val);
+            }}
+          />
+        </View>
+
+        <View style={[salesExecutive && styles.subContainer, {marginTop: 16}]}>
+          <View
+            style={
+              salesExecutive ? styles.premiumCheckBox2 : styles.premiumCheckBox
+            }>
+            <View style={{width: '80%', marginLeft: salesExecutive ? 20 : 0}}>
+              <Text style={styles.partnerProgramme}>
+                Have any sales executive visited your shop?
+              </Text>
+              <TouchableOpacity onPress={() => setLearnMore(!learnMore)}>
+                <Text style={styles.learnMore}>
+                  Learn more about Sales executive
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <CheckBox
+              style={[styles.radioBtn, {right: 5}]}
+              value={salesExecutive}
+              tintColors={{true: PRIMARY, false: DARKGREY}}
+              disabled={false}
+              onValueChange={() => {
+                setSalesExecutive(!salesExecutive);
               }}
             />
           </View>
-
-          <View
-            style={[salesExecutive && styles.subContainer, {marginTop: 30}]}>
-            <View
-              style={
-                salesExecutive
-                  ? styles.premiumCheckBox2
-                  : styles.premiumCheckBox
-              }>
-              <View style={{width: '80%', marginLeft: salesExecutive ? 20 : 0}}>
-                <Text style={styles.partnerProgramme}>
-                  Have any sales executive visited your shop?
-                </Text>
-                <TouchableOpacity onPress={() => setLearnMore(!learnMore)}>
-                  <Text style={styles.learnMore}>
-                    Learn more about Sales executive
-                  </Text>
-                </TouchableOpacity>
-              </View>
-              <CheckBox
-                style={[styles.radioBtn, {right: 5}]}
-                value={salesExecutive}
-                tintColors={{true: PRIMARY, false: DARKGREY}}
-                disabled={false}
-                onValueChange={() => {
-                  setSalesExecutive(!salesExecutive);
+          {learnMore ? (
+            <Text
+              style={{
+                paddingHorizontal: salesExecutive ? 15 : 0,
+                ...styles.partnerProgramme,
+                fontSize: 12,
+                marginTop: 10,
+              }}>
+              This should be only be ticked by a fydo representative if he/she
+              has visited the shop for onboarding.
+            </Text>
+          ) : null}
+          {salesExecutive && (
+            <View style={{width: '100%', marginTop: 15}}>
+              <TextInput
+                value={phonenum}
+                style={[styles.input, {paddingLeft: 10, marginBottom: 25}]}
+                selectionColor={DARKBLUE}
+                onChangeText={val => setPhoneNum(val)}
+                activeUnderlineColor={GREY_2}
+                placeholder="Phone Number"
+                keyboardType="numeric"
+                theme={{
+                  fonts: {
+                    regular: {
+                      fontFamily: 'Gilroy-Medium',
+                    },
+                  },
                 }}
+                left={
+                  <TextInput.Icon
+                    name={() => (
+                      <MaterialIcon name="phone" size={25} color="#000" />
+                    )}
+                  />
+                }
               />
             </View>
-            {learnMore ? (
-              <Text
-                style={{
-                  paddingHorizontal: salesExecutive ? 15 : 0,
-                  ...styles.partnerProgramme,
-                  fontSize: 12,
-                  marginTop: 10,
-                }}>
-                This should be only be ticked by a fydo representative if he/she
-                has visited the shop for onboarding.
-              </Text>
-            ) : null}
-            {salesExecutive && (
-              <View style={{width: '100%', marginTop: 15}}>
-                <TextInput
-                  value={phonenum}
-                  style={[styles.input, {paddingLeft: 10, marginBottom: 25}]}
-                  selectionColor={DARKBLUE}
-                  onChangeText={val => setPhoneNum(val)}
-                  activeUnderlineColor={GREY_2}
-                  placeholder="Phone Number"
-                  keyboardType="numeric"
-                  theme={{
-                    fonts: {
-                      regular: {
-                        fontFamily: 'Gilroy-Medium',
-                      },
-                    },
-                  }}
-                  left={
-                    <TextInput.Icon
-                      name={() => (
-                        <MaterialIcon name="phone" size={25} color="#000" />
-                      )}
-                    />
-                  }
-                />
-              </View>
-            )}
-          </View>
-          <View style={styles.next}>
-            <ButtonComponent
-              label="Next"
-              color="white"
-              backgroundColor={DARKBLUE}
-              onPress={next}
-            />
-          </View>
-          {/* </ScrollView> */}
-        </KeyboardAwareScrollView>
+          )}
+        </View>
+      </KeyboardAwareScrollView>
+      <View style={styles.next}>
+        <ButtonComponent
+          label="Next"
+          color="white"
+          backgroundColor={DARKBLUE}
+          onPress={next}
+        />
       </View>
     </SafeAreaView>
   );
@@ -748,9 +749,12 @@ export default connect(mapStateToProps)(ShopDetails);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 13,
-    paddingTop: 30,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
     backgroundColor: GREY_3,
+  },
+  contentContainerStyle: {
+    padding: 16,
+    paddingBottom: 600,
   },
   premiumCheckBox: {
     flexDirection: 'row',
@@ -770,14 +774,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   input: {
-    width: '80%',
-    height: 30,
-    alignSelf: 'center',
+    // width: '80%',
+    flex: 1,
+    height: 48,
+    // alignSelf: 'center',
     fontFamily: 'Gilroy-Medium',
     borderBottomColor: DARKGREY,
     backgroundColor: 'white',
-    marginVertical: 10,
     fontSize: 14,
+    marginHorizontal: 16,
   },
   partnerProgramme: {
     fontSize: 14,
@@ -828,7 +833,8 @@ const styles = StyleSheet.create({
   },
   next: {
     width: '100%',
-    marginVertical: 20,
+    paddingHorizontal: 16,
+    paddingBottom: 16,
   },
   error: {
     fontSize: 12,

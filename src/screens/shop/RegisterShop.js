@@ -488,15 +488,16 @@ function RegisterShop({route, navigation, user, myshop}) {
             }}
           />
         </View>
-        <View style={styles.gutter} />
-        {/* next button */}
+      </KeyboardAwareScrollView>
+      <View style={styles.next}>
         <ButtonComponent
           label="Next"
           color="white"
           backgroundColor={DARKBLUE}
           onPress={next}
         />
-      </KeyboardAwareScrollView>
+      </View>
+      {/* next button */}
     </SafeAreaView>
   );
 }
@@ -521,11 +522,9 @@ const styles = StyleSheet.create({
   },
   title: {
     color: PRIMARY,
-    fontSize: 24,
-    paddingVertical: 16,
+    fontSize: 16,
+    paddingVertical: 8,
     fontWeight: 'bold',
-    textAlign: 'center',
-    // fontFamily: 'Gilroy-Bold',
     textTransform: 'capitalize',
   },
   updateButton: {
@@ -577,12 +576,6 @@ const styles = StyleSheet.create({
     color: 'black',
     flex: 1,
   },
-  nextButton: {
-    height: 48,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 16,
-  },
   transparentButton: {
     backgroundColor: LIGHTBLUE,
     borderRadius: 16,
@@ -608,6 +601,11 @@ const styles = StyleSheet.create({
     width: 140,
     height: 140,
     borderRadius: 16,
+  },
+  next: {
+    width: '100%',
+    paddingHorizontal: 16,
+    paddingBottom: 16,
   },
 });
 

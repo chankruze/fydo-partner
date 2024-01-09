@@ -20,3 +20,4 @@ export const GREY_3 = '#f7f7f5';
 export const GREY_2 = '#938989';
 export const LIGHTGREEN = '#4BB543';
 export const YELLOW = '#F4BF02';
+export const RED = '#dc2626';
