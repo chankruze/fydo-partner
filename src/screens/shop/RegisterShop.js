@@ -312,6 +312,7 @@ function RegisterShop({route, navigation, user, myshop}) {
             placeholder="Phone Number (Required)"
             style={styles.input}
             maxLength={10}
+            keyboardType="number-pad"
           />
           {error.phoneNumber ? (
             <Text style={styles.error}>{error.phoneNumber}</Text>
