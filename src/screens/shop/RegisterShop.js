@@ -1,7 +1,7 @@
 import {useIsFocused} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {
-  Dimensions,
+  Image,
   Platform,
   SafeAreaView,
   StatusBar,
@@ -16,40 +16,28 @@ import ImagePicker from 'react-native-image-crop-picker';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import SelectDropdown from 'react-native-select-dropdown';
 import Toast from 'react-native-simple-toast';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import FontIsto from 'react-native-vector-icons/Fontisto';
-import FoundationIcon from 'react-native-vector-icons/Foundation';
-import MaterialComunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {connect} from 'react-redux';
 import {
-  DARKBLACK,
+  BLACK,
   DARKBLUE,
   DARKGREY,
-  GREY_2,
+  GREY,
   LIGHTBLACK,
   LIGHTBLUE,
   PRIMARY,
+  WHITE,
 } from '../../assets/colors';
 import ButtonComponent from '../../components/ButtonComponent';
 import WithNetInfo from '../../components/hoc/withNetInfo';
 import {generatePresignUrl} from '../../services/presignUrlService';
 
-const HEIGHT = Dimensions.get('screen').height;
-
-const idCards = ['Pan Card', 'Aadhaar Card', 'Driving License', 'Voter ID'];
+const idCards = ['Aadhaar Card', 'Driving License', 'Pan Card', 'Voter ID'];
 const shopTypes = [
   'Independent store owner',
   'Franchise store',
   'Mall representative',
 ];
-
-const options = {
-  mediaType: 'photo',
-  quality: 0.5,
-};
 
 const mapStateToProps = state => {
   return {
@@ -72,17 +60,17 @@ function RegisterShop({route, navigation, user, myshop}) {
   );
   const [coordinates, setCoordinates] = useState([]);
   const [pincode, setPincode] = useState(myshop ? myshop?.address?.pin : '');
-  const [website, setWebsite] = useState('');
+  const [website, setWebsite] = useState(myshop ? myshop.website : '');
   const [shopType, setShopType] = useState(myshop ? myshop.type : '');
   const [error, setError] = useState({});
+  const [idType, setIdType] = useState(
+    myshop ? myshop.documents[0].documentType : '',
+  );
   const [frontImg, setFrontImg] = useState(
-    myshop ? myshop?.documents[0]?.documentFrontUrl : '',
+    myshop ? myshop.documents[0].documentFrontUrl : '',
   );
   const [backImg, setBacktImg] = useState(
-    myshop ? myshop?.documents[0]?.documentBackUrl : '',
-  );
-  const [idType, setIdType] = useState(
-    myshop ? myshop?.documents[0]?.documentType : '',
+    myshop ? myshop.documents[0].documentBackUrl : '',
   );
 
   useEffect(() => {
@@ -184,18 +172,20 @@ function RegisterShop({route, navigation, user, myshop}) {
       method: 'PUT',
       body: imageBody,
     });
-    if (final.status === '200') {
+
+    if (final.status === 200) {
       if (Platform.OS === 'android') {
         ToastAndroid.show('Image upload Successfully', ToastAndroid.SHORT);
       } else {
         Toast.show('Image upload Successfully', Toast.SHORT);
       }
+
       if (type === 'front') {
-        const frontImage = imageResponse[0]?.split('?')[0];
-        setFrontImg(frontImage);
+        const _frontImage = imageResponse[0]?.split('?')[0];
+        setFrontImg(_frontImage);
       } else if (type === 'back') {
-        const backImg = imageResponse[0]?.split('?')[0];
-        setBacktImg(backImg);
+        const _backImage = imageResponse[0]?.split('?')[0];
+        setBacktImg(_backImage);
       }
     } else {
       if (Platform.OS === 'android') {
@@ -237,306 +227,336 @@ function RegisterShop({route, navigation, user, myshop}) {
             documentFrontUrl: frontImg,
           },
         ],
+        website,
       };
       navigation.navigate('ShopDetails', {data: data});
     }
   };
 
+  const ownerNameChangeHandler = name => {
+    error.ownerName = '';
+    setOwnerName(name);
+  };
+
+  const phoneNumberChangeHandler = number => {
+    error.phoneNumber = '';
+    setPhoneNumber(number?.trim());
+  };
+
+  const shopNameChangeHandler = name => {
+    error.shopName = '';
+    setShopName(name);
+  };
+
+  const locationUpdateHandler = () =>
+    navigation.navigate('Maps', {
+      address: address,
+    });
+
+  const pincodeChangeHandler = number => {
+    error.pincode = '';
+    setPincode(number?.trim());
+  };
+
+  const storeTypeSelectionHandler = (selectedItem, index) => {
+    setShopType(selectedItem);
+  };
+
+  const idSelectionHandler = (selectedItem, index) => {
+    setIdType(selectedItem);
+  };
+
+  console.log({
+    frontImg,
+    backImg,
+  });
+
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+    <SafeAreaView style={styles.container}>
       <StatusBar barStyle="default" backgroundColor={PRIMARY} translucent />
-      <View style={styles.contentContainer}>
-        <KeyboardAwareScrollView
-          enableOnAndroid={true}
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled"
-          enableAutomaticScroll={Platform.OS === 'ios'}>
-          {/* <ScrollView
-            showsVerticalScrollIndicator={false}
-            keyboardShouldPersistTaps='handled'
-          > */}
-          <View style={styles.information}>
-            <MaterialComunityIcons
-              name="information-outline"
-              size={25}
-              color="red"
-            />
-            <Text style={styles.informationText}>
-              Be at your shop while entering information so that we can get
-              exact location of your shop.
-            </Text>
-          </View>
-          <Text style={styles.title}>Add shop details</Text>
 
-          <View style={styles.box}>
-            <FontAwesome5 name="user-circle" size={25} color="black" />
-            <TextInput
-              value={ownerName}
-              onChangeText={value => setOwnerName(value)}
-              placeholder="Your Name"
-              style={styles.input}
-            />
-          </View>
-          {error.ownerName && (
+      <Text style={styles.informationText}>
+        Be at your shop while entering information so that we can get exact
+        location of your shop
+      </Text>
+
+      <KeyboardAwareScrollView
+        contentContainerStyle={styles.contentContainerStyle}
+        enableOnAndroid={true}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        enableAutomaticScroll={Platform.OS === 'ios'}>
+        {/* title */}
+        <Text style={styles.title}>Add shop details</Text>
+
+        {/* owner name */}
+        <View style={styles.inputGroup}>
+          <FontAwesome5 name="user-alt" size={24} color={LIGHTBLACK} />
+          <TextInput
+            value={ownerName}
+            onChangeText={ownerNameChangeHandler}
+            placeholder="Owner Name (Required)"
+            style={styles.input}
+          />
+          {error.ownerName ? (
             <Text style={styles.error}>{error.ownerName}</Text>
-          )}
+          ) : null}
+        </View>
 
-          <View style={styles.box}>
-            <FoundationIcon name="telephone" size={28} color="black" />
-            <TextInput
-              value={phoneNumber}
-              onChangeText={value => setPhoneNumber(value?.trim())}
-              placeholder="Phone Number"
-              style={styles.input}
-              maxLength={10}
-            />
-          </View>
-          {error.phoneNumber && (
+        {/* phone number */}
+        <View style={styles.inputGroup}>
+          <FontAwesome5 name="phone-alt" size={24} color={LIGHTBLACK} />
+          <TextInput
+            value={phoneNumber}
+            onChangeText={phoneNumberChangeHandler}
+            placeholder="Phone Number (Required)"
+            style={styles.input}
+            maxLength={10}
+          />
+          {error.phoneNumber ? (
             <Text style={styles.error}>{error.phoneNumber}</Text>
+          ) : null}
+        </View>
+
+        {/* shop name */}
+        <View style={styles.inputGroup}>
+          <FontAwesome5 name="store-alt" size={24} color={LIGHTBLACK} />
+          <TextInput
+            value={shopName}
+            onChangeText={shopNameChangeHandler}
+            placeholder="Shop Name (Required)"
+            style={styles.input}
+          />
+          {error.shopName ? (
+            <Text style={styles.error}>{error.shopName}</Text>
+          ) : null}
+        </View>
+
+        {/* address */}
+        <View style={styles.inputGroup}>
+          <FontAwesome5 name="map-marked-alt" size={24} color={LIGHTBLACK} />
+          {address ? (
+            <>
+              <TextInput
+                value={address}
+                editable={false}
+                multiline
+                style={styles.input}
+                placeholder="Shop Address (Required)"
+              />
+              <TouchableOpacity onPress={locationUpdateHandler}>
+                <Text style={styles.updateButton}>Update</Text>
+              </TouchableOpacity>
+            </>
+          ) : (
+            <TouchableOpacity onPress={locationUpdateHandler} style={{flex: 1}}>
+              <Text style={{padding: 12, color: DARKGREY}}>
+                Click to Fetch Location
+              </Text>
+            </TouchableOpacity>
           )}
 
-          <View style={styles.box}>
-            <FontIsto name="shopping-store" size={20} color="black" />
-            <TextInput
-              value={shopName}
-              onChangeText={value => setShopName(value)}
-              placeholder="Shop Name"
-              style={styles.input}
-            />
-          </View>
-          {error.shopName && <Text style={styles.error}>{error.shopName}</Text>}
+          {error.address ? (
+            <Text style={styles.error}>{error.address}</Text>
+          ) : null}
+        </View>
 
-          <View style={styles.box}>
-            <EntypoIcon name="location" size={25} color={DARKBLACK} />
-            <TextInput
-              value={address}
-              editable={false}
-              multiline
-              style={[styles.input, {width: '80%'}]}
-              placeholder="Shop Address"
-            />
-            <MaterialIcons
-              name="my-location"
-              size={25}
-              color={DARKBLACK}
-              onPress={() =>
-                navigation.navigate('Maps', {
-                  address: address,
-                })
-              }
-            />
-          </View>
-          {error.address && <Text style={styles.error}>{error.address}</Text>}
+        {/* pincode */}
+        <View style={styles.inputGroup}>
+          <FontAwesome5 name="map-marker-alt" size={24} color={LIGHTBLACK} />
+          <TextInput
+            value={pincode}
+            onChangeText={pincodeChangeHandler}
+            placeholder="Pincode (Required)"
+            style={styles.input}
+          />
+          {error.pincode ? (
+            <Text style={styles.error}>{error.pincode}</Text>
+          ) : null}
+        </View>
 
-          <View style={styles.box}>
-            <MaterialIcons name="location-pin" size={28} color={DARKBLACK} />
-            <TextInput
-              value={pincode}
-              onChangeText={value => setPincode(value?.trim())}
-              placeholder="Pincode"
-              style={styles.input}
-            />
-          </View>
-          {error.pincode && <Text style={styles.error}>{error.pincode}</Text>}
+        {/* website */}
+        <View style={styles.inputGroup}>
+          <FontAwesome5 name="globe" size={24} color={LIGHTBLACK} />
+          <TextInput
+            value={website}
+            onChangeText={value => setWebsite(value)}
+            placeholder="Website (if any)"
+            style={styles.input}
+          />
+        </View>
 
-          <View style={styles.dropdown}>
-            <FontAwesome name="id-card-o" size={18} color={DARKBLACK} />
-            <SelectDropdown
-              data={idCards}
-              defaultButtonText={myshop ? idType : 'Your ID Proof'}
-              onSelect={(selectedItem, index) => {
-                setIdType(selectedItem);
-              }}
-              button
-              renderDropdownIcon={() => (
-                <EntypoIcon name="chevron-down" size={25} color={DARKBLACK} />
-              )}
-              buttonStyle={{backgroundColor: 'transparent', width: '95%'}}
-              buttonTextStyle={{
-                textAlign: 'left',
-                fontFamily: 'Gilroy-Medium',
-                fontSize: 14,
-              }}
-              dropdownStyle={{borderRadius: 10}}
-              buttonTextAfterSelection={(selectedItem, index) => {
-                return selectedItem;
-              }}
-              rowTextForSelection={(item, index) => {
-                return item;
-              }}
-            />
-          </View>
-          <View style={styles.uploadImage}>
+        {/* id card */}
+        <View style={styles.inputGroup}>
+          <FontAwesome5 name="id-card-alt" size={24} color={LIGHTBLACK} />
+          <SelectDropdown
+            data={idCards}
+            defaultButtonText={idType ? idType : 'Your ID Proof'}
+            onSelect={idSelectionHandler}
+            renderDropdownIcon={() => (
+              <FontAwesome5 name="chevron-down" size={16} color={LIGHTBLACK} />
+            )}
+            dropdownStyle={{borderRadius: 16}}
+            buttonStyle={{backgroundColor: 'transparent', flex: 1}}
+            buttonTextStyle={{
+              color: BLACK,
+              textAlign: 'left',
+              fontFamily: 'Gilroy-Medium',
+              fontSize: 14,
+            }}
+            buttonTextAfterSelection={(selectedItem, index) => {
+              return selectedItem;
+            }}
+            rowTextForSelection={(item, index) => {
+              return item;
+            }}
+          />
+        </View>
+
+        {/* upload id card */}
+        <View style={styles.uploadImage}>
+          {/* front image */}
+          {frontImg ? (
+            <View style={styles.idImageWrapper}>
+              <Image
+                style={styles.idImage}
+                source={{
+                  uri: frontImg,
+                }}
+              />
+              <View style={styles.gutter} />
+              <TouchableOpacity onPress={() => pickImage('front')}>
+                <Text style={styles.updateButton}>Update</Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
             <TouchableOpacity
               onPress={() => pickImage('front')}
               style={styles.transparentButton}>
-              <MaterialIcons
-                name="add-circle-outline"
-                size={22}
-                color={PRIMARY}
-              />
-              <Text style={styles.buttonText}>Add Front image</Text>
+              <FontAwesome5 name="plus-circle" size={22} color={LIGHTBLACK} />
+              <Text style={styles.buttonText}>Add Front Image</Text>
             </TouchableOpacity>
+          )}
+
+          {/* back image */}
+          {backImg ? (
+            <View style={styles.idImageWrapper}>
+              <Image
+                style={styles.idImage}
+                source={{
+                  uri: backImg,
+                }}
+              />
+              <View style={styles.gutter} />
+              <TouchableOpacity onPress={() => pickImage('back')}>
+                <Text style={styles.updateButton}>Update</Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
             <TouchableOpacity
               onPress={() => pickImage('back')}
               style={styles.transparentButton}>
-              <MaterialIcons
-                name="add-circle-outline"
-                size={22}
-                color={PRIMARY}
-              />
-              <Text style={styles.buttonText}>Add Back image</Text>
+              <FontAwesome5 name="plus-circle" size={22} color={LIGHTBLACK} />
+              <Text style={styles.buttonText}>Add Back Image</Text>
             </TouchableOpacity>
-          </View>
-          <View style={styles.box}>
-            <MaterialComunityIcons name="web" size={22} color="#000" />
-            <TextInput
-              value={website}
-              onChangeText={value => setWebsite(value)}
-              placeholder="Website (if any)"
-              style={styles.input}
-            />
-          </View>
+          )}
+        </View>
 
-          <View style={styles.shoptype}>
-            <SelectDropdown
-              data={shopTypes}
-              onSelect={(selectedItem, index) => {
-                setShopType(selectedItem);
-              }}
-              defaultButtonText={shopType ? shopType : 'Type of store'}
-              renderDropdownIcon={() => (
-                <EntypoIcon name="chevron-down" size={25} color="#000" />
-              )}
-              dropdownStyle={{borderRadius: 10}}
-              buttonStyle={{backgroundColor: 'transparent', width: '100%'}}
-              buttonTextStyle={{
-                color: DARKGREY,
-                textAlign: 'left',
-                fontFamily: 'Gilroy-Medium',
-                fontSize: 14,
-              }}
-              buttonTextAfterSelection={(selectedItem, index) => {
-                return selectedItem;
-              }}
-              rowTextForSelection={(item, index) => {
-                return item;
-              }}
-            />
-          </View>
-
-          <ButtonComponent
-            label="Next"
-            color="white"
-            backgroundColor={DARKBLUE}
-            onPress={next}
+        {/* shop type */}
+        <View style={styles.inputGroup}>
+          <FontAwesome5 name="briefcase" size={24} color={LIGHTBLACK} />
+          <SelectDropdown
+            data={shopTypes}
+            onSelect={storeTypeSelectionHandler}
+            defaultButtonText={shopType ? shopType : 'Type of Store'}
+            renderDropdownIcon={() => (
+              <FontAwesome5 name="chevron-down" size={16} color={LIGHTBLACK} />
+            )}
+            dropdownStyle={{borderRadius: 16}}
+            buttonStyle={{backgroundColor: 'transparent', flex: 1}}
+            buttonTextStyle={{
+              color: DARKGREY,
+              textAlign: 'left',
+              fontFamily: 'Gilroy-Medium',
+              fontSize: 14,
+            }}
+            buttonTextAfterSelection={(selectedItem, index) => {
+              return selectedItem;
+            }}
+            rowTextForSelection={(item, index) => {
+              return item;
+            }}
           />
-          {/* </ScrollView> */}
-        </KeyboardAwareScrollView>
-      </View>
+        </View>
+        <View style={styles.gutter} />
+        {/* next button */}
+        <ButtonComponent
+          label="Next"
+          color="white"
+          backgroundColor={DARKBLUE}
+          onPress={next}
+        />
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    flex: 1,
     backgroundColor: 'white',
   },
-  information: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 15,
-    marginTop: 30,
-    paddingHorizontal: 10,
+  contentContainerStyle: {
+    paddingHorizontal: 12,
+    paddingBottom: 200,
   },
   informationText: {
-    paddingHorizontal: 10,
+    backgroundColor: LIGHTBLACK,
     fontFamily: 'Gilroy-Medium',
-    color: 'black',
+    color: WHITE,
     fontSize: 14,
-    letterSpacing: 0.3,
-  },
-  contentContainer: {
-    paddingVertical: 10,
-    paddingHorizontal: 13,
+    textAlign: 'center',
+    padding: 12,
   },
   title: {
-    color: DARKBLACK,
-    fontSize: 18,
-    paddingLeft: 10,
-    marginVertical: 5,
-    fontFamily: 'Gilroy-Bold',
+    color: PRIMARY,
+    fontSize: 24,
+    paddingVertical: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    // fontFamily: 'Gilroy-Bold',
+    textTransform: 'capitalize',
+  },
+  updateButton: {
+    backgroundColor: LIGHTBLACK,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 16,
+    textTransform: 'capitalize',
+    color: 'white',
+    fontSize: 12,
+    textAlign: 'center',
   },
   uploadImage: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginVertical: 10,
+    padding: 16,
   },
   error: {
     fontSize: 12,
     color: 'red',
     fontFamily: 'Gilroy-Regular',
-    paddingLeft: 15,
   },
-  dropdown: {
+  inputGroup: {
+    padding: 8,
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 10,
-    // justifyContent: 'space-around',
-    borderBottomWidth: 1,
-    borderBottomColor: DARKGREY,
-    marginHorizontal: 10,
+    borderBottomWidth: 0.8,
+    borderBottomColor: GREY,
   },
-  shoptype: {
+  inputWrapper: {
     flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 15,
-    justifyContent: 'space-between',
-    borderWidth: 1,
-    borderColor: DARKGREY,
-    borderRadius: 10,
-  },
-  label: {
-    marginVertical: 15,
-    color: DARKGREY,
-    lineHeight: 20,
-    fontSize: 13,
-  },
-  footer: {
-    // position: 'absolute',
-    // bottom: 30,
-    padding: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-  },
-  footerLabel: {
-    fontSize: 12,
-    color: DARKGREY,
-  },
-  footerOtherLabel: {
-    fontSize: 12,
-    color: PRIMARY,
-    marginTop: 3,
-  },
-  subLabel: {
-    color: LIGHTBLACK,
-    fontSize: 13,
-  },
-  optionalLabel: {
-    marginLeft: 5,
-    color: DARKGREY,
-  },
-  box: {
-    paddingBottom: 8,
-    marginVertical: 10,
-    marginHorizontal: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderBottomWidth: 1,
-    borderBottomColor: GREY_2,
   },
   row: {
     flexDirection: 'row',
@@ -544,98 +564,50 @@ const styles = StyleSheet.create({
   },
   uploadButton: {
     marginTop: 10,
-    borderWidth: 0.8,
-    borderColor: 'rgba(0, 53, 121, 0.2)',
-    borderRadius: 8,
-    height: 48,
+    borderRadius: 16,
     backgroundColor: 'white',
     flexDirection: 'row',
     alignItems: 'center',
   },
-  uploadButtonLabel: {
-    fontSize: 12,
-    color: PRIMARY,
-  },
-  uploadIcon: {
-    marginHorizontal: 20,
-  },
   input: {
     backgroundColor: 'transparent',
     fontSize: 14,
-    paddingLeft: 10,
+    marginLeft: 12,
     fontFamily: 'Gilroy-Medium',
-    width: '90%',
     color: 'black',
-    letterSpacing: 0.3,
+    flex: 1,
   },
   nextButton: {
     height: 48,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 0.8,
-    borderColor: 'rgba(0, 53, 121, 0.2)',
-    borderRadius: 8,
-  },
-  nextButtonLabel: {
-    color: LIGHTBLACK,
-    fontFamily: 'Gilroy-Bold',
-  },
-  dobContainer: {
-    height: 48,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    marginVertical: 10,
-  },
-  box2: {
-    height: 48,
-    borderWidth: 0.8,
-    width: '27%',
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderColor: 'rgba(0, 53, 121, 0.2)',
-    flexDirection: 'row',
-    paddingHorizontal: 15,
-  },
-  box3: {
-    height: 48,
-    borderWidth: 0.8,
-    width: '35%',
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderColor: 'rgba(0, 53, 121, 0.2)',
-    flexDirection: 'row',
-    paddingHorizontal: 15,
-  },
-  boxLabel: {
-    color: DARKGREY,
-    fontSize: 13,
-    fontFamily: 'Gilroy-Medium',
-  },
-  arrowIcon: {
-    marginLeft: 'auto',
-  },
-  imagePath: {
-    marginVertical: 5,
-    fontSize: 12,
+    borderRadius: 16,
   },
   transparentButton: {
-    // paddingVertical: 4,
     backgroundColor: LIGHTBLUE,
-    borderRadius: 10,
+    borderRadius: 16,
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 10,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
     width: '45%',
   },
   buttonText: {
     fontFamily: 'Gilroy-Medium',
     fontSize: 12,
-    color: DARKBLACK,
+    color: PRIMARY,
+  },
+  gutter: {
+    height: 4,
+  },
+  idImageWrapper: {
+    flexDirection: 'column',
+  },
+  idImage: {
+    width: 140,
+    height: 140,
+    borderRadius: 16,
   },
 });
 
