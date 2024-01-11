@@ -1,9 +1,12 @@
 import React, {useState} from 'react';
 import {Image, StyleSheet, Text, TextInput, View} from 'react-native';
+import {FlatList, TouchableOpacity} from 'react-native-gesture-handler';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import {connect} from 'react-redux';
 import {PRIMARY, WHITE} from '../../assets/colors';
 import shield from '../../assets/images/shield.png';
 import ButtonComponent from '../../components/ButtonComponent';
+import ToastMessage from '../../components/common/ToastComponent';
 import {updateShop} from '../../services/shopService';
 import {setUser} from '../../store/actions/user.action';
 import {
@@ -25,13 +28,15 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const JoinNowTopSheet = ({myshop, user, onPress, setUser}) => {
+const JoinNowTopSheet = ({navigation, myshop, user, onPress, setUser}) => {
   const [nextStep, setNextStep] = useState(false);
   const [accountName, setAccountName] = useState('');
   const [email, setEmail] = useState('');
   const [bankNo, setBankNo] = useState('');
   const [ifsc, setIfsc] = useState('');
   const [upi, setUpi] = useState('');
+  const [upiList, setUpiList] = useState([]);
+  const [loyaltyPercentage, setLoyaltyPercentage] = useState('');
 
   const getNextStep = () => {
     setNextStep(state => !state);
@@ -44,8 +49,9 @@ const JoinNowTopSheet = ({myshop, user, onPress, setUser}) => {
         accNumber: bankNo,
         ifsc: ifsc,
         name: accountName,
-        upiIds: [upi],
+        upiIds: upiList,
         email: email,
+        loyaltyPercentage: loyaltyPercentage,
       },
     };
 
@@ -53,6 +59,23 @@ const JoinNowTopSheet = ({myshop, user, onPress, setUser}) => {
 
     if (response) {
       onPress();
+    }
+  };
+
+  const addUpiToList = _upi =>
+    setUpiList(prev => [_upi, ...prev.filter(p => p !== _upi)]);
+
+  const deleteUpiFromList = _upi => {
+    setUpiList(prev => [...prev.filter(u => u !== _upi)]);
+  };
+
+  const addUpis = () => {
+    const regx = /^[\w.-]+@[\w.-]+$/;
+
+    if (regx.test(upi)) {
+      addUpiToList(upi?.trim());
+    } else {
+      ToastMessage({message: 'Please enter valid UPI id'});
     }
   };
 
@@ -119,11 +142,73 @@ const JoinNowTopSheet = ({myshop, user, onPress, setUser}) => {
                   onChangeText={setIfsc}
                 />
                 <TextInput
-                  placeholder="Add UPI ID"
+                  value={String(loyaltyPercentage).trim()}
                   style={styles.input}
+                  onChangeText={val => setLoyaltyPercentage(val?.trim())}
                   placeholderTextColor="#383B3F80"
-                  value={upi?.trim()}
-                  onChangeText={setUpi}
+                  placeholder="Enter Loyalty Percentage"
+                  keyboardType="number-pad"
+                />
+                <View style={styles.upiContainer}>
+                  <TextInput
+                    value={upi}
+                    style={[styles.input, styles.upiInput]}
+                    onChangeText={val => setUpi(val?.trim())}
+                    placeholder="UPI ID"
+                    placeholderTextColor="#383B3F80"
+                  />
+                  <TouchableOpacity
+                    style={styles.upiScanButton}
+                    onPress={() => navigation.navigate('QrScan')}>
+                    <MaterialIcon
+                      name="qr-code-scanner"
+                      size={24}
+                      color={WHITE}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => addUpis()}
+                    style={styles.upiAddButton}>
+                    <MaterialIcon name="save" size={24} color={WHITE} />
+                  </TouchableOpacity>
+                </View>
+                <FlatList
+                  data={upiList}
+                  style={{
+                    padding: 16,
+                  }}
+                  ItemSeparatorComponent={() => (
+                    <View
+                      style={{
+                        height: 0.4,
+                        backgroundColor: GREY,
+                        marginVertical: 4,
+                      }}
+                    />
+                  )}
+                  renderItem={({item, index}) => (
+                    <View
+                      key={`${index}-${item}`}
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                      }}>
+                      <Text
+                        style={{
+                          fontFamily: 'Gilroy-Medium',
+                          fontSize: 14,
+                          flex: 1,
+                        }}>
+                        {item}
+                      </Text>
+                      <TouchableOpacity
+                        onPress={() => {
+                          deleteUpiFromList(item);
+                        }}>
+                        <MaterialIcon name="delete" size={24} color={RED} />
+                      </TouchableOpacity>
+                    </View>
+                  )}
                 />
               </View>
               <ButtonComponent
@@ -183,5 +268,25 @@ const styles = StyleSheet.create({
   },
   inputWrapper: {
     marginBottom: moderateScale(10),
+  },
+  upiContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  upiInput: {
+    flex: 1,
+  },
+  upiScanButton: {
+    padding: moderateScale(8),
+    backgroundColor: PRIMARY,
+    borderRadius: moderateScale(8),
+  },
+  upiAddButton: {
+    marginHorizontal: moderateScale(8),
+    padding: moderateScale(8),
+    backgroundColor: PRIMARY,
+    borderRadius: moderateScale(8),
   },
 });
