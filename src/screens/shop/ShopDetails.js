@@ -311,7 +311,7 @@ const ShopDetails = ({navigation, route, user}) => {
             style={styles.radioBtn}
             value={premiumService}
             tintColors={{true: PRIMARY, false: GREY}}
-            // disabled={shopDetails?.isChannelPartner}
+            disabled={shopDetails?.isChannelPartner}
             onValueChange={() => {
               setPremiumService(!premiumService);
             }}
