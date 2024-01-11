@@ -14,7 +14,6 @@ import {
 import {TextInput} from 'react-native-paper';
 
 import {
-  BLACK,
   DARKBLACK,
   DARKBLUE,
   DARKGREY,
@@ -23,6 +22,7 @@ import {
   GREY_3,
   PRIMARY,
   RED,
+  WHITE,
 } from '../../assets/colors';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -64,9 +64,9 @@ const ShopDetails = ({navigation, route, user}) => {
       ? shopDetails?.bankDetails?.accNumber
       : '',
   );
-  const [commissionPercentage, setCommissionPercentage] = useState(
-    shopDetails?.bankDetails?.commissionPercentage
-      ? shopDetails?.bankDetails?.commissionPercentage
+  const [loyaltyPercentage, setLoyaltyPercentage] = useState(
+    shopDetails?.bankDetails?.loyaltyPercentage
+      ? shopDetails?.bankDetails?.loyaltyPercentage
       : '',
   );
   const [bankName, setBankName] = useState(
@@ -82,12 +82,12 @@ const ShopDetails = ({navigation, route, user}) => {
   const [upiList, setUpiList] = useState(
     shopDetails?.bankDetails?.upiIds ? shopDetails?.bankDetails?.upiIds : [],
   );
+
   const [amenities, setAmenities] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCat, setSelectedCat] = useState();
   const [newAmenities, setNewAmenities] = useState([]);
   const [key, setKey] = useState(0);
-  const [upiKey, setUpiKey] = useState(0);
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
@@ -101,9 +101,9 @@ const ShopDetails = ({navigation, route, user}) => {
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    console.log('jl==>', shopDetails);
+    // console.log('jl==>', shopDetails);
 
-    async function getUpiId() {
+    const getUpiId = async () => {
       const upiId = await getValue('upiId');
 
       if (upiId) {
@@ -111,7 +111,7 @@ const ShopDetails = ({navigation, route, user}) => {
         setIsQrScanned(prev => !prev);
         await AsyncStorage.removeItem('upiId');
       }
-    }
+    };
 
     getUpiId();
     fetchAllAmenities();
@@ -243,8 +243,7 @@ const ShopDetails = ({navigation, route, user}) => {
             ifsc: IFSC,
             name: bankName,
             emailId: email,
-            // upiIds: [UPI],
-            commissionPercentage: commissionPercentage,
+            loyaltyPercentage: loyaltyPercentage,
             upiIds: upiList,
           },
           isChannelPartner: premiumService,
@@ -294,12 +293,18 @@ const ShopDetails = ({navigation, route, user}) => {
     return false;
   };
 
+  const addUpiToList = upi =>
+    setUpiList(prev => [upi, ...prev.filter(p => p !== upi)]);
+
+  const deleteUpiFromList = upi => {
+    setUpiList(prev => [...prev.filter(u => u !== upi)]);
+  };
+
   const addUpis = () => {
     const regx = /^[\w.-]+@[\w.-]+$/;
 
     if (regx.test(UPI)) {
-      upiList.push(UPI?.trim());
-      setUpiKey(Math.random());
+      addUpiToList(UPI?.trim());
     } else {
       ToastMessage({message: 'Please enter valid upi id'});
     }
@@ -314,7 +319,6 @@ const ShopDetails = ({navigation, route, user}) => {
         keyboardShouldPersistTaps="handled"
         enableAutomaticScroll={Platform.OS === 'ios'}
         nestedScrollEnabled={true}>
-        {/* <ScrollView showsVerticalScrollIndicator={false}> */}
         <View style={premiumService && styles.subContainer}>
           <View
             style={
@@ -403,10 +407,10 @@ const ShopDetails = ({navigation, route, user}) => {
               />
               <TextInput
                 editable={shopDetails?.isChannelPartner ? false : true}
-                value={String(commissionPercentage)}
+                value={String(loyaltyPercentage)}
                 style={[styles.input]}
                 selectionColor={DARKBLUE}
-                onChangeText={val => setCommissionPercentage(val?.trim())}
+                onChangeText={val => setLoyaltyPercentage(val?.trim())}
                 activeUnderlineColor={GREY_2}
                 placeholder="Enter Loyalty Percentage"
                 theme={{
@@ -466,28 +470,33 @@ const ShopDetails = ({navigation, route, user}) => {
                           onPress={() => navigation.navigate('QrScan')}
                           name="qr-code-scanner"
                           size={24}
-                          color={BLACK}
+                          color={PRIMARY}
                         />
                       )}
                     />
                   }
                 />
-                {/* <TouchableOpacity
-                    disabled={shopDetails?.isChannelPartner}
-                    onPress={() => addUpis()}
-                    style={{}}>
-                    <Text
-                      style={{
-                        fontFamily: 'Gilroy-SemiBold',
-                        fontSize: 14,
-                        color: PRIMARY,
-                      }}>
-                      Add
-                    </Text>
-                  </TouchableOpacity> */}
+                <TouchableOpacity
+                  disabled={shopDetails?.isChannelPartner}
+                  onPress={() => addUpis()}
+                  style={{
+                    marginRight: 16,
+                    padding: 8,
+                    backgroundColor: PRIMARY,
+                    borderRadius: 8,
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: 'Gilroy-SemiBold',
+                      fontSize: 14,
+                      color: WHITE,
+                      textTransform: 'uppercase',
+                    }}>
+                    Add
+                  </Text>
+                </TouchableOpacity>
               </View>
               <FlatList
-                key={upiKey}
                 data={upiList}
                 style={{
                   padding: 16,
@@ -504,6 +513,7 @@ const ShopDetails = ({navigation, route, user}) => {
                 renderItem={({item, index}) => {
                   return (
                     <View
+                      key={`${index}-${item}`}
                       style={{
                         flexDirection: 'row',
                         alignItems: 'center',
@@ -519,8 +529,7 @@ const ShopDetails = ({navigation, route, user}) => {
                       <TouchableOpacity
                         disabled={shopDetails?.isChannelPartner}
                         onPress={() => {
-                          upiList.splice(index, 1);
-                          setUpiKey(Math.random());
+                          deleteUpiFromList(item);
                         }}>
                         <MaterialIcon name="delete" size={24} color={RED} />
                       </TouchableOpacity>
@@ -723,7 +732,7 @@ const ShopDetails = ({navigation, route, user}) => {
                 left={
                   <TextInput.Icon
                     name={() => (
-                      <MaterialIcon name="phone" size={25} color="#000" />
+                      <MaterialIcon name="phone" size={24} color={PRIMARY} />
                     )}
                   />
                 }
