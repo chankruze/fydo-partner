@@ -77,6 +77,7 @@ const mapDispatchToProps = dispatch => {
     setShop: myshop => dispatch(setShop(myshop)),
   };
 };
+
 class HomeScreen extends Component {
   constructor() {
     super();
@@ -128,6 +129,7 @@ class HomeScreen extends Component {
 
   async fetchAllCategories() {
     let {user, myshop} = this.props;
+
     try {
       const response = await getCategories(user?.accessToken);
       console.log('response', response);
@@ -163,10 +165,13 @@ class HomeScreen extends Component {
       console.log('ty==', error);
     }
   }
+
   async fetchShopData() {
     let {user, setShop} = this.props;
+
     try {
       const response = await getMyShop(user?.accessToken);
+
       if (response) {
         setShop(response);
       }
@@ -176,6 +181,7 @@ class HomeScreen extends Component {
   }
   async openShop() {
     let {user} = this.props;
+
     try {
       const response = await openShop(user?.accessToken);
       this.setState({shopOpen: response?.isOpen});
@@ -276,6 +282,7 @@ class HomeScreen extends Component {
       return await messaging().getToken();
     }
   }
+
   NotifcationListnes() {
     console.log('NotifcationListnes-->');
     messaging().onNotificationOpenedApp(remoteMessage => {
@@ -300,6 +307,7 @@ class HomeScreen extends Component {
   async shareCard() {
     let {myCategories} = this.state;
     const {myshop} = this.props;
+
     try {
       this.cardSnap.current
         .capture({
@@ -339,6 +347,7 @@ class HomeScreen extends Component {
     let {navigation} = this.props;
     navigation.navigate('Support');
   }
+
   triggerOfferModal() {
     this.setState({modalVisible: false});
     this.setState(prevState => {
@@ -347,6 +356,7 @@ class HomeScreen extends Component {
       };
     });
   }
+
   triggerSaleModel() {
     this.setState({modalVisible: false});
     this.setState(prevState => {
@@ -355,6 +365,7 @@ class HomeScreen extends Component {
       };
     });
   }
+
   triggerTagModal() {
     this.setState(prevState => {
       return {
@@ -362,6 +373,7 @@ class HomeScreen extends Component {
       };
     });
   }
+
   triggerTopTagModal() {
     this.setState(prevState => {
       return {
@@ -369,6 +381,7 @@ class HomeScreen extends Component {
       };
     });
   }
+
   renderTopSheet() {
     return (
       <Modal
@@ -389,6 +402,7 @@ class HomeScreen extends Component {
       </Modal>
     );
   }
+
   renderTagBottomSheet() {
     return (
       <Modal
@@ -416,6 +430,7 @@ class HomeScreen extends Component {
       </Modal>
     );
   }
+
   renderOfferModal() {
     let {user} = this.props;
     return (
@@ -444,6 +459,7 @@ class HomeScreen extends Component {
       </Modal>
     );
   }
+
   renderSaleModal() {
     let {user} = this.props;
     return (
@@ -593,6 +609,7 @@ class HomeScreen extends Component {
         <HomeFab handleModal={this.handleModal} />
         {/* <UpdateDialog updateVisible={this.state.updateViewVisible} /> */}
         {this.state.card && this.renderModal()}
+
         <Modal
           statusBarTranslucent
           transparent={true}
@@ -630,10 +647,12 @@ class HomeScreen extends Component {
             </View>
           </TouchableOpacity>
         </Modal>
+
         {this.state.modalOfferVisible && this.renderOfferModal()}
         {this.state.modelSaleVisible && this.renderSaleModal()}
         {this.state.tagBottomSheetVisible && this.renderTagBottomSheet()}
         {this.state.tagTopSheetVisibel && this.renderTopSheet()}
+
         <ScrollView showsVerticalScrollIndicator={false}>
           <StatusBar backgroundColor={PRIMARY} />
           <HomeSlider carousels={carousels && carousels} />
@@ -682,14 +701,15 @@ class HomeScreen extends Component {
             /> */}
           </View>
           <View style={styles.line} />
-          {!myshop?.isChannelPartner && (
+          {/* TODO: Fix this */}
+          {!myshop?.isChannelPartner ? (
             <CardlabelButton
               title="Get guranteed customer in your shop"
               subTitle="Be Our Exclusive Channel Partner"
               buttonTitle="Join now"
               onPress={this.triggerTopTagModal}
             />
-          )}
+          ) : null}
           <View style={styles.line} />
           <View style={styles.row}>
             <SquareIconButton
