@@ -1,7 +1,6 @@
 import CheckBox from '@react-native-community/checkbox';
 import React, {useEffect, useState} from 'react';
 import {
-  Dimensions,
   FlatList,
   Platform,
   SafeAreaView,
@@ -14,15 +13,16 @@ import {
 import {TextInput} from 'react-native-paper';
 
 import {
+  BLACK,
   DARKBLACK,
   DARKBLUE,
   DARKGREY,
   GREY,
-  GREY_2,
   GREY_3,
   PRIMARY,
   RED,
   WHITE,
+  YELLOW,
 } from '../../assets/colors';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -34,9 +34,8 @@ import {connect} from 'react-redux';
 import ButtonComponent from '../../components/ButtonComponent';
 import ToastMessage from '../../components/common/ToastComponent';
 import {getAmenities, getCategories} from '../../services/shopService';
+import {moderateScale} from '../../utils/responsiveSize';
 import {getValue} from '../../utils/sharedPreferences';
-
-const WIDTH = Dimensions.get('screen').width;
 
 const mapStateToProps = state => {
   return {
@@ -78,7 +77,7 @@ const ShopDetails = ({navigation, route, user}) => {
   const [email, setEmail] = useState(
     shopDetails?.bankDetails?.emailId ? shopDetails?.bankDetails?.emailId : '',
   );
-  const [UPI, setUPI] = useState('');
+  const [upi, setUpi] = useState('');
   const [upiList, setUpiList] = useState(
     shopDetails?.bankDetails?.upiIds ? shopDetails?.bankDetails?.upiIds : [],
   );
@@ -87,8 +86,6 @@ const ShopDetails = ({navigation, route, user}) => {
   const [categories, setCategories] = useState([]);
   const [selectedCat, setSelectedCat] = useState();
   const [newAmenities, setNewAmenities] = useState([]);
-  const [key, setKey] = useState(0);
-
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([
@@ -107,7 +104,7 @@ const ShopDetails = ({navigation, route, user}) => {
       const upiId = await getValue('upiId');
 
       if (upiId) {
-        setUPI(upiId);
+        setUpi(upiId);
         setIsQrScanned(prev => !prev);
         await AsyncStorage.removeItem('upiId');
       }
@@ -176,16 +173,9 @@ const ShopDetails = ({navigation, route, user}) => {
 
   const handleAmenityCheckbox = (checked, item) => {
     if (checked) {
-      newAmenities.push(item?._id);
-      setKey(Math.random());
-      setNewAmenities(newAmenities);
-      return;
+      setNewAmenities(prev => [item?._id, ...prev]);
     } else {
-      const remove = newAmenities?.filter(i => {
-        return i !== item?._id;
-      });
-      setKey(Math.random());
-      setNewAmenities(remove);
+      setNewAmenities(prev => [...prev.filter(a => a !== item?._id)]);
     }
   };
 
@@ -195,15 +185,7 @@ const ShopDetails = ({navigation, route, user}) => {
 
   const renderAmenities = ({item, index}) => {
     return (
-      <View
-        key={key}
-        style={{
-          flexDirection: 'row',
-          width: '50%',
-          alignItems: 'center',
-          justifyContent: 'space-around',
-          paddingVertical: 5,
-        }}>
+      <View style={styles.amenityCheckBoxView}>
         <Text style={styles.radioText}>{item.name}</Text>
         <CheckBox
           key={item._id}
@@ -281,8 +263,8 @@ const ShopDetails = ({navigation, route, user}) => {
       e.IFSC = 'Enter IFSC code';
     }
 
-    if (UPI === null || UPI?.trim() === null) {
-      e.UPI = 'Enter UPI ID';
+    if (upi === null || upi?.trim() === null) {
+      e.upi = 'Enter UPI ID';
     }
 
     setError(e);
@@ -303,10 +285,10 @@ const ShopDetails = ({navigation, route, user}) => {
   const addUpis = () => {
     const regx = /^[\w.-]+@[\w.-]+$/;
 
-    if (regx.test(UPI)) {
-      addUpiToList(UPI?.trim());
+    if (regx.test(upi)) {
+      addUpiToList(upi?.trim());
     } else {
-      ToastMessage({message: 'Please enter valid upi id'});
+      ToastMessage({message: 'Please enter valid UPI id'});
     }
   };
 
@@ -319,129 +301,140 @@ const ShopDetails = ({navigation, route, user}) => {
         keyboardShouldPersistTaps="handled"
         enableAutomaticScroll={Platform.OS === 'ios'}
         nestedScrollEnabled={true}>
-        <View style={premiumService && styles.subContainer}>
-          <View
-            style={
-              premiumService ? styles.premiumCheckBox2 : styles.premiumCheckBox
-            }>
-            <View style={{width: '80%', marginLeft: premiumService ? 20 : 0}}>
-              <Text style={styles.partnerProgramme}>
-                Do you want to join our channel partner Programme?
-                <Text style={[styles.premiumText, {paddingLeft: 10}]}>
-                  {' '}
-                  Premium Service{' '}
-                </Text>
-              </Text>
-            </View>
-            <View
-              style={[
-                styles.radioBtnView,
-                {
-                  right: premiumService ? 20 : 5,
-                },
-              ]}>
-              <CheckBox
-                style={styles.radioBtn}
-                value={premiumService}
-                tintColors={{true: PRIMARY, false: DARKGREY}}
-                disabled={shopDetails?.isChannelPartner}
-                onValueChange={() => {
-                  setPremiumService(!premiumService);
-                }}
-              />
-            </View>
-          </View>
-          {premiumService && (
-            <View style={{flex: 1}}>
-              <TextInput
-                editable={shopDetails?.isChannelPartner ? false : true}
-                value={bankName}
-                style={styles.input}
-                selectionColor={DARKBLUE}
-                onChangeText={val => setBankName(val)}
-                activeUnderlineColor={GREY_2}
-                placeholder="Bank account holder name"
-                theme={{
-                  fonts: {
-                    regular: {
-                      fontFamily: 'Gilroy-Medium',
-                    },
-                  },
-                }}
-              />
-              <TextInput
-                editable={shopDetails?.isChannelPartner ? false : true}
-                value={accountNumber}
-                style={[styles.input]}
-                selectionColor={DARKBLUE}
-                onChangeText={val => setAccountNumber(val?.trim())}
-                activeUnderlineColor={GREY_2}
-                placeholder="Bank Account Number"
-                theme={{
-                  fonts: {
-                    regular: {
-                      fontFamily: 'Gilroy-Medium',
-                    },
-                  },
-                }}
-                keyboardType="number-pad"
-              />
-              {/* {error.accountNumber && (
+        {/* premium service (partner programme checkbox) */}
+        <View style={styles.premiumServiceContainer}>
+          <Text style={styles.premiumServiceCheckBoxLabel}>
+            Do you want to join our channel partner Programme?
+            <Text style={[styles.premiumText]}> Premium Service</Text>
+          </Text>
+          <CheckBox
+            style={styles.radioBtn}
+            value={premiumService}
+            tintColors={{true: PRIMARY, false: GREY}}
+            // disabled={shopDetails?.isChannelPartner}
+            onValueChange={() => {
+              setPremiumService(!premiumService);
+            }}
+          />
+        </View>
+
+        {/* if premium service is checked then render the bank details */}
+        {premiumService ? (
+          <View style={styles.premiumDataContainer}>
+            <TextInput
+              editable={shopDetails?.isChannelPartner ? false : true}
+              value={bankName}
+              style={styles.input}
+              selectionColor={YELLOW}
+              onChangeText={val => setBankName(val)}
+              activeUnderlineColor={PRIMARY}
+              placeholder="Bank Account Holder Name"
+            />
+            <TextInput
+              editable={shopDetails?.isChannelPartner ? false : true}
+              value={accountNumber}
+              style={styles.input}
+              selectionColor={YELLOW}
+              onChangeText={val => setAccountNumber(val?.trim())}
+              activeUnderlineColor={PRIMARY}
+              placeholder="Bank Account Number"
+              keyboardType="number-pad"
+            />
+            {/* {error.accountNumber && (
                 <Text style={styles.error}>{error.accountNumber}</Text>
               )} */}
-              <TextInput
-                editable={shopDetails?.isChannelPartner ? false : true}
-                value={IFSC}
-                style={styles.input}
-                selectionColor={DARKBLUE}
-                activeUnderlineColor={GREY_2}
-                onChangeText={val => setIFSC(val?.trim())}
-                placeholder="Bank Account IFSC"
-                theme={{
-                  fonts: {
-                    regular: {
-                      fontFamily: 'Gilroy-Medium',
-                    },
-                  },
-                }}
-              />
-              <TextInput
-                editable={shopDetails?.isChannelPartner ? false : true}
-                value={String(loyaltyPercentage)}
-                style={[styles.input]}
-                selectionColor={DARKBLUE}
-                onChangeText={val => setLoyaltyPercentage(val?.trim())}
-                activeUnderlineColor={GREY_2}
-                placeholder="Enter Loyalty Percentage"
-                theme={{
-                  fonts: {
-                    regular: {
-                      fontFamily: 'Gilroy-Medium',
-                    },
-                  },
-                }}
-                keyboardType="number-pad"
-              />
-              <TextInput
-                editable={shopDetails?.isChannelPartner ? false : true}
-                value={email}
-                style={[styles.input]}
-                selectionColor={DARKBLUE}
-                onChangeText={val => setEmail(val.trim())}
-                activeUnderlineColor={GREY_2}
-                placeholder="Email Address"
-                theme={{
-                  fonts: {
-                    regular: {
-                      fontFamily: 'Gilroy-Medium',
-                    },
-                  },
-                }}
-              />
-              {/* {error.IFSC && (
+            <TextInput
+              editable={shopDetails?.isChannelPartner ? false : true}
+              value={IFSC}
+              style={styles.input}
+              selectionColor={YELLOW}
+              activeUnderlineColor={PRIMARY}
+              onChangeText={val => setIFSC(val?.trim())}
+              placeholder="Bank Account IFSC"
+            />
+            <TextInput
+              editable={shopDetails?.isChannelPartner ? false : true}
+              value={String(loyaltyPercentage)}
+              style={styles.input}
+              selectionColor={YELLOW}
+              onChangeText={val => setLoyaltyPercentage(val?.trim())}
+              activeUnderlineColor={PRIMARY}
+              placeholder="Enter Loyalty Percentage"
+              keyboardType="number-pad"
+            />
+            <TextInput
+              editable={shopDetails?.isChannelPartner ? false : true}
+              value={email}
+              style={styles.input}
+              selectionColor={YELLOW}
+              onChangeText={val => setEmail(val.trim())}
+              activeUnderlineColor={PRIMARY}
+              placeholder="Email Address"
+            />
+            {/* {error.IFSC && (
                 <Text style={styles.error}>{error.IFSC}</Text>
               )} */}
-              <View
+            <View style={styles.upiContainer}>
+              <TextInput
+                value={upi}
+                style={[styles.input, styles.upiInput]}
+                onChangeText={val => setUpi(val?.trim())}
+                placeholder="UPI ID"
+                placeholderTextColor="#383B3F80"
+                activeUnderlineColor={PRIMARY}
+              />
+              <TouchableOpacity
+                style={styles.upiScanButton}
+                onPress={() => navigation.navigate('QrScan')}>
+                <MaterialIcon name="qr-code-scanner" size={24} color={WHITE} />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => addUpis()}
+                style={styles.upiAddButton}>
+                <MaterialIcon name="save" size={24} color={WHITE} />
+                {/* <Text
+                      style={{
+                        fontFamily: 'Gilroy-SemiBold',
+                        fontSize: 14,
+                        color: WHITE,
+                        textTransform: 'uppercase',
+                      }}>
+                      Add
+                    </Text> */}
+              </TouchableOpacity>
+            </View>
+            <FlatList
+              data={upiList}
+              style={styles.upiList}
+              ItemSeparatorComponent={() => (
+                <View style={styles.upiListItemSeparator} />
+              )}
+              renderItem={({item, index}) => (
+                <View
+                  key={`${index}-${item}`}
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: 'Gilroy-Medium',
+                      fontSize: 14,
+                      flex: 1,
+                    }}>
+                    {item}
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      deleteUpiFromList(item);
+                    }}>
+                    <MaterialIcon name="delete" size={24} color={RED} />
+                  </TouchableOpacity>
+                </View>
+              )}
+            />
+            {/* <View
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
@@ -449,11 +442,11 @@ const ShopDetails = ({navigation, route, user}) => {
                 }}>
                 <TextInput
                   editable={shopDetails?.isChannelPartner ? false : true}
-                  value={UPI}
+                  value={upi}
                   style={styles.input}
-                  selectionColor={DARKBLUE}
-                  activeUnderlineColor={GREY_2}
-                  onChangeText={val => setUPI(val?.trim())}
+                  selectionColor={YELLOW}
+                  activeUnderlineColor={PRIMARY}
+                  onChangeText={val => setUpi(val?.trim())}
                   placeholder="UPI ID"
                   theme={{
                     fonts: {
@@ -536,14 +529,14 @@ const ShopDetails = ({navigation, route, user}) => {
                     </View>
                   );
                 }}
-              />
-              {/* {error.UPI && (
-                <Text style={styles.error}>{error.UPI}</Text>
+              /> */}
+            {/* {error.upi && (
+                <Text style={styles.error}>{error.upi}</Text>
               )} */}
-              {/* <Text style={styles.upi}>Add More UPI IDs</Text> */}
-            </View>
-          )}
-        </View>
+          </View>
+        ) : null}
+
+        {/* amenities */}
         <View style={{marginVertical: 20}}>
           <View style={styles.radioContainer}>
             <FlatList
@@ -675,7 +668,54 @@ const ShopDetails = ({navigation, route, user}) => {
           />
         </View>
 
-        <View style={[salesExecutive && styles.subContainer, {marginTop: 16}]}>
+        {/* sales executive */}
+        <View style={styles.divider} />
+        {/*  */}
+        <Text style={styles.note}>
+          Note: This should be only be ticked by a fydo representative if he/she
+          has visited the shop for onboarding.
+        </Text>
+
+        {/* sales executive checkbox */}
+        <View style={styles.premiumServiceContainer}>
+          <Text style={styles.premiumServiceCheckBoxLabel}>
+            Have any sales executive visited your shop?{' '}
+          </Text>
+          <CheckBox
+            style={styles.radioBtn}
+            value={salesExecutive}
+            tintColors={{true: PRIMARY, false: DARKGREY}}
+            disabled={false}
+            onValueChange={() => {
+              setSalesExecutive(!salesExecutive);
+            }}
+          />
+        </View>
+
+        {salesExecutive ? (
+          <TextInput
+            value={phonenum}
+            style={[styles.input, {paddingLeft: 10, marginBottom: 25}]}
+            selectionColor={YELLOW}
+            onChangeText={val => setPhoneNum(val)}
+            activeUnderlineColor={PRIMARY}
+            placeholder="Phone Number"
+            keyboardType="numeric"
+            left={
+              <TextInput.Icon
+                name={() => (
+                  <MaterialIcon name="phone" size={24} color={PRIMARY} />
+                )}
+              />
+            }
+          />
+        ) : null}
+
+        {/* <View
+          style={[
+            salesExecutive && styles.premiumDataContainer,
+            {marginTop: 16},
+          ]}>
           <View
             style={
               salesExecutive ? styles.premiumCheckBox2 : styles.premiumCheckBox
@@ -717,18 +757,11 @@ const ShopDetails = ({navigation, route, user}) => {
               <TextInput
                 value={phonenum}
                 style={[styles.input, {paddingLeft: 10, marginBottom: 25}]}
-                selectionColor={DARKBLUE}
+                selectionColor={YELLOW}
                 onChangeText={val => setPhoneNum(val)}
-                activeUnderlineColor={GREY_2}
+                activeUnderlineColor={PRIMARY}
                 placeholder="Phone Number"
                 keyboardType="numeric"
-                theme={{
-                  fonts: {
-                    regular: {
-                      fontFamily: 'Gilroy-Medium',
-                    },
-                  },
-                }}
                 left={
                   <TextInput.Icon
                     name={() => (
@@ -739,7 +772,7 @@ const ShopDetails = ({navigation, route, user}) => {
               />
             </View>
           )}
-        </View>
+        </View> */}
       </KeyboardAwareScrollView>
       <View style={styles.next}>
         <ButtonComponent
@@ -765,55 +798,43 @@ const styles = StyleSheet.create({
     padding: 16,
     paddingBottom: 600,
   },
-  premiumCheckBox: {
+  premiumServiceContainer: {
+    display: 'flex',
+    paddingVertical: moderateScale(8),
+    width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  premiumCheckBox2: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 15,
-    width: '100%',
+  premiumServiceCheckBoxLabel: {
+    flex: 1,
+    color: DARKBLACK,
+    fontFamily: 'Gilroy-Bold',
+    fontSize: 16,
   },
-  subContainer: {
-    borderRadius: 10,
+  premiumDataContainer: {
+    borderRadius: 16,
     backgroundColor: 'white',
-    justifyContent: 'center',
-    alignItems: 'center',
+    padding: 8,
   },
   input: {
     // width: '80%',
     flex: 1,
     height: 48,
     // alignSelf: 'center',
-    fontFamily: 'Gilroy-Medium',
-    borderBottomColor: DARKGREY,
+    borderBottomColor: PRIMARY,
     backgroundColor: 'white',
     fontSize: 14,
-    marginHorizontal: 16,
   },
   partnerProgramme: {
-    fontSize: 14,
-    color: DARKBLACK,
+    fontSize: 16,
+    color: BLACK,
     fontFamily: 'Gilroy-Medium',
-    letterSpacing: 0.3,
   },
   premiumText: {
-    color: DARKBLUE,
+    color: PRIMARY,
     fontFamily: 'Gilroy-Medium',
     textDecorationLine: 'underline',
-    letterSpacing: 0.3,
-  },
-  upi: {
-    color: DARKBLUE,
-    textDecorationLine: 'underline',
-    fontSize: 12,
-    marginVertical: 25,
-    width: '80%',
-    alignSelf: 'center',
-    fontFamily: 'Gilroy-Medium',
-    letterSpacing: 0.3,
   },
   radioContainer: {
     flexDirection: 'row',
@@ -833,13 +854,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Gilroy-Medium',
     letterSpacing: 0.3,
   },
-  learnMore: {
-    fontSize: 10,
-    textDecorationLine: 'underline',
-    color: DARKBLUE,
-    fontFamily: 'Gilroy-Medium',
-    letterSpacing: 0.3,
-  },
   next: {
     width: '100%',
     paddingHorizontal: 16,
@@ -854,12 +868,49 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     letterSpacing: 0.3,
   },
-  radioBtnView: {
-    // right: 10,
-    position: 'absolute',
+  upiContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
-  radioBtn: {
-    width: 20,
-    height: 20,
+  upiScanButton: {
+    padding: moderateScale(8),
+    backgroundColor: PRIMARY,
+    borderRadius: moderateScale(8),
+    marginLeft: moderateScale(8),
+  },
+  upiAddButton: {
+    marginVertical: moderateScale(8),
+    // marginHorizontal: moderateScale(8),
+    marginLeft: moderateScale(8),
+    padding: moderateScale(8),
+    backgroundColor: PRIMARY,
+    borderRadius: moderateScale(8),
+  },
+  upiList: {
+    padding: 8,
+  },
+  upiListItemSeparator: {
+    height: 0.4,
+    backgroundColor: GREY,
+    marginVertical: 4,
+  },
+  note: {
+    fontSize: 12,
+    fontStyle: 'italic',
+    color: BLACK,
+  },
+  divider: {
+    height: 1,
+    backgroundColor: GREY,
+    marginVertical: moderateScale(8),
+  },
+  amenityCheckBoxView: {
+    flexDirection: 'row',
+    width: '50%',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    paddingVertical: 5,
   },
 });
