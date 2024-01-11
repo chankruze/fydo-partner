@@ -18,7 +18,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import HomeFab from '../components/home/HomeFab';
 import HomeSlider from './../components/home/HomeSlider';
 //import Entypo from 'react-native-vector-icons/Entypo';
-import {LIGHTBLUE, PRIMARY, WHITE} from '../assets/colors';
+import {BLACK, GREY, LIGHTBLUE, PRIMARY, WHITE} from '../assets/colors';
 //import { SvgUri } from 'react-native-svg';
 import OfferIcon from './../assets/icons/my offer.svg';
 import MyShopIcon from './../assets/icons/myshop.svg';
@@ -28,7 +28,6 @@ import messaging from '@react-native-firebase/messaging';
 import {compareVersions} from 'compare-versions';
 import {Platform} from 'react-native';
 import Share from 'react-native-share';
-import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ViewShot from 'react-native-view-shot';
@@ -675,33 +674,44 @@ class HomeScreen extends Component {
             icons={<Ionicons name="pricetag-outline" size={30} color={WHITE} />}
             onPress={this.triggerTagModal}
           />
-          <View style={styles.line} />
-          <View style={styles.row}>
+          {/* main actions */}
+          <View
+            style={[
+              styles.row,
+              {
+                backgroundColor: PRIMARY,
+              },
+            ]}>
             <RoundIconText
+              buttonStyle={{backgroundColor: WHITE}}
+              textStyle={{color: WHITE}}
               icon={<MyShopIcon width={24} height={24} />}
               onPress={() => this.props?.navigation?.navigate('MyShop')}
-              label={language === 'HINDI' ? 'मेरी दुकान' : 'My Shops'}
+              label={language === 'HINDI' ? 'मेरी दुकान' : 'My Shop'}
             />
             <RoundIconText
+              buttonStyle={{backgroundColor: WHITE}}
+              textStyle={{color: WHITE}}
               icon={<OfferIcon width={24} height={24} />}
               onPress={() => this.props?.navigation?.navigate('MyOffers')}
               label={language === 'HINDI' ? 'मेरे प्रस्ताव' : 'My Offers'}
             />
             <RoundIconText
-              icon={<Feather name="arrow-down-left" size={24} color={'#fff'} />}
+              buttonStyle={{backgroundColor: WHITE}}
+              textStyle={{color: WHITE}}
+              icon={<FontAwesome name="bullhorn" size={24} color={PRIMARY} />}
               onPress={() =>
                 this.props?.navigation?.navigate('ReferralHistory')
               }
-              label={language === 'HINDI' ? 'मेरे प्रस्ताव' : 'My Referral'}
+              label={language === 'HINDI' ? 'मेरे प्रस्ताव' : 'My Referrals'}
             />
             {/* <RoundIconText
               icon={<OfferIcon width={24} height={24} />}
-              onPress={()=> this.props?.navigation?.navigate('MySales')}
-              label={language==='HINDI' ? 'मेरे प्रस्ताव' : 'My Sales'}
+              onPress={() => this.props?.navigation?.navigate('MySales')}
+              label={language === 'HINDI' ? 'मेरे प्रस्ताव' : 'My Sales'}
             /> */}
           </View>
-          <View style={styles.line} />
-          {/* TODO: Fix this */}
+          {/* join partner programme banner */}
           {!myshop?.isChannelPartner ? (
             <CardlabelButton
               title="Get guranteed customer in your shop"
@@ -743,11 +753,11 @@ class HomeScreen extends Component {
                 {...styles.shopStatus},
                 {backgroundColor: shopOpen ? '#66bb6a' : '#ff7043'},
               )}>
-              <Text style={styles.shopStatusOtherLabel}>
+              <Text style={styles.shopStatusText}>
                 {shopOpen
                   ? language === 'HINDI'
                     ? 'खुल गया'
-                    : 'Opened'
+                    : 'Open'
                   : language === 'HINDI'
                     ? 'बंद किया हुआ'
                     : 'Closed'}
@@ -775,40 +785,36 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
-    padding: moderateScale(15),
+    padding: moderateScale(16),
   },
   line: {
-    backgroundColor: 'lightgrey',
+    backgroundColor: GREY,
     height: moderateScale(1),
   },
-  shopStatusLabel: {
-    color: 'black',
-    fontSize: textScale(13),
-    fontFamily: 'Gilroy-Medium',
-    letterSpacing: 0.3,
-  },
   shopStatusRow: {
-    padding: moderateScale(10),
-    marginHorizontal: moderateScale(5),
-    height: moderateScale(50),
+    padding: moderateScale(12),
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  switchButton: {
-    marginLeft: moderateScale(10),
+    justifyContent: 'space-between',
   },
   shopStatus: {
-    paddingHorizontal: 20,
-    paddingVertical: 4,
-    borderRadius: moderateScale(3),
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: moderateScale(8),
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: moderateScale(20),
   },
-  shopStatusOtherLabel: {
-    fontSize: textScale(13),
+  shopStatusLabel: {
     fontFamily: 'Gilroy-Medium',
-    letterSpacing: 0.3,
+    color: BLACK,
+    fontSize: textScale(14),
+  },
+
+  shopStatusText: {
+    fontFamily: 'Gilroy-Medium',
+    color: WHITE,
+    textTransform: 'uppercase',
   },
   modelContainer: {
     backgroundColor: 'rgba(0, 0, 0, .3)',

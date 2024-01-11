@@ -3,11 +3,11 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {PRIMARY} from '../../assets/colors';
 import {moderateScale, moderateScaleVertical} from '../../utils/responsiveSize';
 
-const RoundIconText = ({label, onPress, icon}) => {
+const RoundIconText = ({label, onPress, icon, buttonStyle, textStyle}) => {
   return (
     <TouchableOpacity style={styles.buttonContainer} onPress={onPress}>
-      <View style={styles.button}>{icon}</View>
-      <Text style={styles.label}>{label}</Text>
+      <View style={[styles.button, buttonStyle]}>{icon}</View>
+      <Text style={[styles.label, textStyle]}>{label}</Text>
     </TouchableOpacity>
   );
 };
@@ -30,6 +30,5 @@ const styles = StyleSheet.create({
     marginTop: moderateScaleVertical(7),
     fontFamily: 'Gilroy-Bold',
     color: PRIMARY,
-    letterSpacing: 0.3,
   },
 });
