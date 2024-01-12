@@ -1,10 +1,9 @@
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import React, {Component} from 'react';
-import {Modal, Pressable, StatusBar, StyleSheet, View} from 'react-native';
+import React, {useState} from 'react';
+import {StatusBar, StyleSheet, View} from 'react-native';
 import {connect} from 'react-redux';
 import {PRIMARY, WHITE} from '../assets/colors';
 import WithNetInfo from '../components/hoc/withNetInfo';
-import MyOffersBottomSheet from '../components/myoffers/MyOffersBottomSheet';
 import LiveOffersScreen from './myoffers/LiveOffersScreen';
 import RequestedOffersScreen from './myoffers/ReqestedOffersScreen';
 
@@ -16,27 +15,16 @@ const mapStateToProps = state => {
   };
 };
 
-class MyOffersScreen extends Component {
-  constructor() {
-    super();
-    this.state = {
-      modalVisible: false,
-    };
-    this.triggerModal = this.triggerModal.bind(this);
-  }
+const MyOffersScreen = ({user}) => {
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
-  triggerModal() {
-    this.setState(prevState => {
-      return {
-        modalVisible: !prevState.modalVisible,
-      };
-    });
-  }
+  const triggerModal = () => setIsModalVisible(prev => !prev);
 
-  renderTabs() {
-    return (
+  return (
+    <View style={styles.container}>
+      <StatusBar backgroundColor={PRIMARY} barStyle="light-content" />
       <Tab.Navigator
-        // initialRouteName='RequestedOffers'
+        // initialRouteName="RequestedOffers"
         screenOptions={{
           tabBarActiveTintColor: PRIMARY,
           tabBarLabelStyle: {
@@ -51,63 +39,42 @@ class MyOffersScreen extends Component {
           name="LiveOffers"
           component={LiveOffersScreen}
           options={{
-            tabBarLabel: 'LIVE OFFERS',
+            tabBarLabel: 'Live Offers',
           }}
         />
         <Tab.Screen
           name="RequestedOffers"
           component={RequestedOffersScreen}
           options={{
-            tabBarLabel: 'REQUESTED OFFERS',
+            tabBarLabel: 'Requested Offers',
           }}
         />
       </Tab.Navigator>
-    );
-  }
-
-  renderModal() {
-    let {user} = this.props;
-    return (
-      <Modal
-        statusBarTranslucent
-        animationType="fade"
-        transparent={true}
-        visible={this.state.modalVisible}
-        onRequestClose={this.triggerModal}>
-        <Pressable
-          activeOpacity={1}
-          style={styles.modalContainer}
-          onPress={this.triggerModal}>
-          <MyOffersBottomSheet
-            token={user?.accessToken}
-            toggle={this.triggerModal}
-          />
-        </Pressable>
-      </Modal>
-    );
-  }
-
-  render() {
-    return (
-      // <SafeAreaView style={styles.container}>
-      // </SafeAreaView>
-      <View style={styles.container}>
-        <StatusBar backgroundColor={PRIMARY} barStyle="light-content" />
-        {/* <TouchableOpacity
-                    onPress={this.triggerModal}
-                    style={styles.fab}>
-                    <MaterialIcons
-                        size={26}
-                        color='white'
-                        name='add'
-                    />
-                </TouchableOpacity> */}
-        {this.renderTabs()}
-        {/* {this.state.modalVisible && this.renderModal()} */}
-      </View>
-    );
-  }
-}
+      {/* if modal is visible */}
+      {/* {isModalVisible ? (
+        <Modal
+          statusBarTranslucent
+          animationType="fade"
+          transparent={true}
+          visible={isModalVisible}
+          onRequestClose={triggerModal}>
+          <Pressable
+            activeOpacity={1}
+            style={styles.modalContainer}
+            onPress={triggerModal}>
+            <MyOffersBottomSheet
+              token={user?.accessToken}
+              toggle={triggerModal}
+            />
+          </Pressable>
+        </Modal>
+      ) : null}
+      <TouchableOpacity onPress={triggerModal} style={styles.fab}>
+        <MaterialIcons size={24} color="white" name="add" />
+      </TouchableOpacity> */}
+    </View>
+  );
+};
 
 export default connect(mapStateToProps)(WithNetInfo(MyOffersScreen));
 
@@ -115,19 +82,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: WHITE,
+    position: 'relative',
   },
   fab: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     backgroundColor: PRIMARY,
-    position: 'absolute',
+    // position: 'absolute',
     bottom: 20,
-    right: 20,
-    elevation: 5,
+    left: 20,
+    elevation: 4,
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 10,
   },
   modalContainer: {
     backgroundColor: 'rgba(0, 0, 0, .5)',

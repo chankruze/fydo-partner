@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Image, ImageBackground, StyleSheet, Text, View} from 'react-native';
 import {LIGHTBLUE, PRIMARY, WHITE} from '../../assets/colors';
 import {
@@ -25,7 +25,7 @@ import {buildLink} from '../../utils/deepLinkManager';
 const CardOffers = ({item}) => {
   const {imageUrl, status, searchTags, title, description, startDate, endDate} =
     item;
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = useState(false);
   // const  newStartDate = moment(startDate).format('MM/DD/YY')
   // const newCurrentDate = moment(new Date()).format('MM/DD/YY')
   // const newEndDate = moment(endDate).format('MM/DD/YY')
@@ -117,7 +117,6 @@ export default CardOffers;
 const styles = StyleSheet.create({
   image: {
     height: moderateScale(110),
-    width: '100%',
     flex: 1,
   },
   offer: {
@@ -127,7 +126,7 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.2,
-    elevation: 3,
+    elevation: 4,
   },
   textContainer: {
     margin: moderateScale(10),
