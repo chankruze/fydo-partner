@@ -11,49 +11,42 @@ const CardIconButton = props => {
   const {title, buttonTitle, icons, cardLabelStyle, cardButtonStyle, onPress} =
     props;
   return (
-    <View style={styles.CardContainer}>
-      <TouchableOpacity style={styles.Card} onPress={onPress}>
-        {icons}
-        <View style={styles.cardLabelContainer}>
-          <Text style={{...styles.cardLabel, ...cardLabelStyle}}>{title}</Text>
-          <Text style={{...styles.cardButtonLabel, ...cardButtonStyle}}>
-            {buttonTitle}
-          </Text>
-        </View>
-      </TouchableOpacity>
-    </View>
+    <TouchableOpacity style={styles.Card} onPress={onPress}>
+      {icons}
+      <View style={styles.cardLabelContainer}>
+        <Text style={{...styles.cardLabel, ...cardLabelStyle}}>{title}</Text>
+        <Text style={{...styles.cardButtonLabel, ...cardButtonStyle}}>
+          {buttonTitle}
+        </Text>
+      </View>
+    </TouchableOpacity>
   );
 };
 
 export default CardIconButton;
 
 const styles = StyleSheet.create({
-  CardContainer: {
-    padding: moderateScale(12),
-    paddingVertical: moderateScaleVertical(10),
-  },
   Card: {
-    height: moderateScale(60),
+    paddingVertical: moderateScale(12),
+    paddingHorizontal: moderateScale(16),
     borderRadius: moderateScale(10),
     backgroundColor: SECONDARY,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: moderateScale(20),
+    margin: moderateScale(4),
   },
   cardLabelContainer: {
-    marginLeft: moderateScale(15),
+    marginLeft: moderateScale(16),
   },
   cardLabel: {
     color: WHITE,
     fontSize: textScale(12),
-    fontWeight: '500',
     fontFamily: 'Gilroy-Medium',
   },
   cardButtonLabel: {
-    fontFamily: 'Gilroy-Medium',
-    letterSpacing: 0.3,
+    fontFamily: 'Gilroy-Regular',
     color: WHITE,
     fontSize: textScale(8),
-    marginTop: moderateScaleVertical(5),
+    marginTop: moderateScaleVertical(4),
   },
 });

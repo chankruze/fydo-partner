@@ -651,29 +651,34 @@ class HomeScreen extends Component {
         {this.state.modelSaleVisible && this.renderSaleModal()}
         {this.state.tagBottomSheetVisible && this.renderTagBottomSheet()}
         {this.state.tagTopSheetVisibel && this.renderTopSheet()}
-
+        {/* main homr screen content */}
         <ScrollView showsVerticalScrollIndicator={false}>
           <StatusBar backgroundColor={PRIMARY} />
           <HomeSlider carousels={carousels && carousels} />
-          <CardIconButton
-            title="Share your business card to get more customer!"
-            buttonTitle="Tap to share"
-            icons={
-              <MaterialIcons name="card-giftcard" size={30} color={WHITE} />
-            }
-            onPress={() => {
-              this.setState({
-                card: !this.state.card,
-              });
-            }}
-          />
-          <View style={styles.line} />
-          <CardIconButton
-            title="Add Tags to your shops to make user search you"
-            buttonTitle="Tap to Add"
-            icons={<Ionicons name="pricetag-outline" size={30} color={WHITE} />}
-            onPress={this.triggerTagModal}
-          />
+          {/* business card */}
+          <View style={styles.businessCardsContainer}>
+            <CardIconButton
+              title="Share your business card to get more customer!"
+              buttonTitle="Tap to share"
+              icons={
+                <MaterialIcons name="card-giftcard" size={30} color={WHITE} />
+              }
+              onPress={() => {
+                this.setState({
+                  card: !this.state.card,
+                });
+              }}
+            />
+            {/* shop tags */}
+            <CardIconButton
+              title="Add Tags to your shops to make user search you"
+              buttonTitle="Tap to Add"
+              icons={
+                <Ionicons name="pricetag-outline" size={30} color={WHITE} />
+              }
+              onPress={this.triggerTagModal}
+            />
+          </View>
           {/* main actions */}
           <View
             style={[
@@ -915,5 +920,8 @@ const styles = StyleSheet.create({
     fontFamily: 'Gilroy-SemiBold',
     fontSize: 14,
     color: 'white',
+  },
+  businessCardsContainer: {
+    padding: moderateScale(4),
   },
 });
