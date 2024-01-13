@@ -1,4 +1,5 @@
-import React, {useEffect, useState} from 'react';
+import moment from 'moment';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -7,9 +8,9 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   View,
 } from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {
   BLACK,
@@ -37,16 +38,18 @@ export const TransactionList = ({user, refreshBalance}) => {
   const [limit, setLimit] = useState(10);
   const [total, setTotal] = useState(0);
   const [isLast, setLast] = useState(false);
-
-  useEffect(() => {
-    apiTransactionHit();
-  }, []);
+  const [filter, setFilter] = useState({
+    key: 'NONE',
+    value: undefined,
+  });
+  const [filteredTransactions, setFilteredTransactions] = useState([]);
 
   const apiTransactionHit = async () => {
     try {
       if (!isLast) {
         const response = await getTransaction(user?.accessToken, limit, skip);
-        setTransactions([...transactions, ...response]);
+
+        setTransactions(prev => [...prev, ...response]);
         setSkip(skip + limit);
         setLast(
           response.length === 0 || response.length < limit ? true : false,
@@ -54,16 +57,37 @@ export const TransactionList = ({user, refreshBalance}) => {
         setIsLoading(false);
       }
     } catch (error) {
-      console.log(error);
+      console.err(error);
       setIsLoading(false);
     }
   };
+
+  const handlRefresh = useCallback(() => {
+    apiTransactionHit();
+    refreshBalance();
+  }, []);
 
   const renderItem = ({item}) => {
     return <TransactionCard item={item} />;
   };
 
   const seperator = () => <View style={styles.lineStyle} />;
+
+  useEffect(() => {
+    apiTransactionHit();
+  }, []);
+
+  useEffect(() => {
+    if (filter.key !== 'NONE') {
+      const _filtered = transactions.filter(txn =>
+        moment(txn.createdAt).isAfter(filter.value),
+      );
+
+      setFilteredTransactions(_filtered);
+    } else {
+      setFilteredTransactions(transactions);
+    }
+  }, [filter, transactions]);
 
   // TODO: think about it later for removing extra style
   if (isLoading) {
@@ -93,7 +117,7 @@ export const TransactionList = ({user, refreshBalance}) => {
                 style={styles.iconButton}
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={apiTransactionHit}>
+            <TouchableOpacity onPress={handlRefresh}>
               <MaterialIcons
                 name="refresh"
                 size={24}
@@ -116,17 +140,68 @@ export const TransactionList = ({user, refreshBalance}) => {
         </View>
         <View style={styles.headerRow}>
           <View style={styles.actions}>
-            <TouchableOpacity style={styles.filterButton}>
-              <Text>Today</Text>
+            <TouchableOpacity
+              style={[
+                styles.filterButton,
+                {
+                  borderColor: filter.key === '1D' ? PRIMARY : GREY,
+                },
+              ]}
+              onPress={() =>
+                setFilter({
+                  key: '1D',
+                  value: moment().subtract(1, 'days'),
+                })
+              }>
+              <Text>1 Day</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.filterButton}>
-              <Text>This week</Text>
+            <TouchableOpacity
+              style={[
+                styles.filterButton,
+                {
+                  borderColor: filter.key === '1W' ? PRIMARY : GREY,
+                },
+              ]}
+              onPress={() =>
+                setFilter({
+                  key: '1W',
+                  value: moment().subtract(1, 'weeks'),
+                })
+              }>
+              <Text>1 Week</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.filterButton}>
-              <Text>This month</Text>
+            <TouchableOpacity
+              style={[
+                styles.filterButton,
+                {
+                  borderColor: filter.key === '1M' ? PRIMARY : GREY,
+                },
+              ]}
+              onPress={() =>
+                setFilter({
+                  key: '1M',
+                  value: moment().subtract(1, 'months'),
+                })
+              }>
+              <Text>1 Month</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.filterButton,
+                {
+                  borderColor: filter.key === 'NONE' ? PRIMARY : GREY,
+                },
+              ]}
+              onPress={() =>
+                setFilter({
+                  key: 'NONE',
+                  value: undefined,
+                })
+              }>
+              <Text>All</Text>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity onPress={apiTransactionHit}>
+          <TouchableOpacity onPress={() => console.log('Not implemented')}>
             <MaterialIcons
               name="date-range"
               size={24}
@@ -143,7 +218,7 @@ export const TransactionList = ({user, refreshBalance}) => {
           padding: moderateScale(16),
         }}
         showsVerticalScrollIndicator={false}
-        data={transactions}
+        data={filteredTransactions}
         renderItem={renderItem}
         keyExtractor={(item, index) => item._id}
         ItemSeparatorComponent={seperator}
@@ -156,11 +231,11 @@ export const TransactionList = ({user, refreshBalance}) => {
         //   />
         // }
         ListFooterComponent={
-          !isLast && (
+          !isLast ? (
             <View style={{padding: moderateScaleVertical(16)}}>
               <ActivityIndicator color={PRIMARY} size="large" />
             </View>
-          )
+          ) : null
         }
         ListEmptyComponent={
           <Text style={styles.notFoundText}>No Data Found</Text>
@@ -217,10 +292,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: moderateScale(12),
     paddingVertical: moderateScale(4),
     borderRadius: moderateScale(16),
-    borderColor: PRIMARY,
     borderWidth: moderateScale(1),
-    marginEnd: moderateScale(4),
-    marginStart: moderateScale(4),
+    marginEnd: moderateScale(8),
   },
   container: {
     flex: 1,
