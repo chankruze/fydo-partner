@@ -62,23 +62,13 @@ const ShopTiming = props => {
   const [closetimePicker, setCloseTimePicker] = useState(false);
   const [usualOpen, setUsualOpen] = useState(null);
   const [usualClose, setUsualClose] = useState(null);
-  const [usualOpenBreak, setUsualOpenBreak] = useState(null);
-  const [usualCloseBreak, setUsualCloseBreak] = useState(null);
-
+  const [usualBreakStart, setUsualBreakStart] = useState(null);
+  const [usualBreakClose, setUsualBreakClose] = useState(null);
   const [addTags, setAddTags] = useState(false);
   const [addBreaks, setAddBreaks] = useState(false);
   const [selectedDay, setSelectedDay] = useState(null);
   const [checked, setChecked] = useState(new Array(7).fill(false));
   const [breakChecked, setBreakChecked] = useState(new Array(7).fill(false));
-  const days = [
-    'Sunday',
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-  ];
   const [pickerType, setPickerType] = useState();
   const [individualTimings, setIndividualTimings] = useState(
     shopDetails?.timing
@@ -142,7 +132,6 @@ const ShopTiming = props => {
           },
         ],
   );
-
   const [individualBreaks, setIndividualBreaks] = useState(
     shopDetails?.break
       ? shopDetails?.break
@@ -205,6 +194,10 @@ const ShopTiming = props => {
           },
         ],
   );
+  const [isIndividualTimingChecked, setIsIndividualTimingChecked] =
+    useState(false);
+  const [isIndividualBreakChecked, setIsIndividualBreakChecked] =
+    useState(false);
 
   useEffect(() => {
     let newBreaks = individualBreaks?.map(i => {
@@ -452,7 +445,7 @@ const ShopTiming = props => {
 
     if (selectedDay === 'all') {
       if (pickerType === 'break') {
-        setUsualOpenBreak(d);
+        setUsualBreakStart(d);
 
         list = individualBreaks.map(i => {
           i.timings.startTime = d;
@@ -502,7 +495,7 @@ const ShopTiming = props => {
     let list = [];
     if (selectedDay === 'all') {
       if (pickerType === 'break') {
-        setUsualCloseBreak(d);
+        setUsualBreakClose(d);
 
         list = individualBreaks.map(i => {
           i.timings.endTime = d;
@@ -603,17 +596,20 @@ const ShopTiming = props => {
           flexDirection: 'row',
           alignItems: 'center',
           marginVertical: 5,
+          justifyContent: 'space-between',
+          flex: 1,
         }}>
+        {/* day */}
         <Text
           style={{
             width: '12%',
-            marginLeft: 5,
-            fontFamily: 'Gilroy-Regular',
+            fontFamily: 'Gilroy-Bold',
             fontSize: 14,
             color: '#383B3F',
           }}>
           {item.dayOfWeek.slice(0, 3).toUpperCase()}
         </Text>
+        {/* open time */}
         <TouchableOpacity
           style={
             checked[index]
@@ -630,6 +626,7 @@ const ShopTiming = props => {
             <Text style={styles.timeTxt}>Open Time</Text>
           )}
         </TouchableOpacity>
+        {/* close time */}
         <TouchableOpacity
           style={
             checked[index]
@@ -646,6 +643,7 @@ const ShopTiming = props => {
             <Text style={styles.timeTxt}>Close Time</Text>
           )}
         </TouchableOpacity>
+        {/* check box */}
         <View
           style={{
             flexDirection: 'row',
@@ -654,7 +652,7 @@ const ShopTiming = props => {
           }}>
           <Text style={styles.closeTxt}>Closed</Text>
           <CheckBox
-            style={[styles.radioBtn, {marginLeft: 8}]}
+            style={[styles.radioBtn]}
             value={checked[index]}
             tintColors={{true: PRIMARY, false: DARKGREY}}
             disabled={false}
@@ -672,12 +670,13 @@ const ShopTiming = props => {
           flexDirection: 'row',
           alignItems: 'center',
           marginVertical: 5,
+          justifyContent: 'space-between',
+          flex: 1,
         }}>
         <Text
           style={{
             width: '12%',
-            marginLeft: 5,
-            fontFamily: 'Gilroy-Regular',
+            fontFamily: 'Gilroy-Bold',
             fontSize: 14,
             color: '#383B3F',
           }}>
@@ -745,6 +744,7 @@ const ShopTiming = props => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
+        {/* images section */}
         <Text style={styles.title}>Add Shop Images</Text>
         <View style={styles.btnViewContainer}>
           <TouchableOpacity style={styles.button} onPress={selectImages}>
@@ -769,16 +769,19 @@ const ShopTiming = props => {
               : null}
           </ScrollView>
         </View>
+
+        {/* timing section */}
         <View
           style={{
             marginTop: 20,
           }}>
           <Text style={styles.title}>Add Timing</Text>
+          {/* usual timing */}
           <View
             style={{
               flexDirection: 'row',
               alignItems: 'center',
-              marginTop: 10,
+              marginTop: 12,
             }}>
             <Text style={styles.usualText}>Usual Timing</Text>
             <TouchableOpacity
@@ -812,14 +815,27 @@ const ShopTiming = props => {
               onCancel={setCloseTimePicker}
             />
           </View>
-          <View
-            style={{
-              marginTop: 15,
-            }}>
-            <FlatList data={individualTimings} renderItem={renderTimings} />
+          <View style={styles.individualTimingsCheckBoxContainer}>
+            <Text>Add timing on a daily basis?</Text>
+            <CheckBox
+              value={isIndividualTimingChecked}
+              tintColors={{true: PRIMARY, false: DARKGREY}}
+              onValueChange={() => {
+                setIsIndividualTimingChecked(prev => !prev);
+              }}
+            />
           </View>
+          {isIndividualTimingChecked ? (
+            <View
+              style={{
+                marginTop: 16,
+              }}>
+              <FlatList data={individualTimings} renderItem={renderTimings} />
+            </View>
+          ) : null}
         </View>
 
+        {/* break section */}
         <View
           style={{
             marginTop: 20,
@@ -829,25 +845,25 @@ const ShopTiming = props => {
             style={{
               flexDirection: 'row',
               alignItems: 'center',
-              marginTop: 10,
+              marginTop: 16,
             }}>
             <Text style={styles.usualText}>Break Timing</Text>
             <TouchableOpacity
               style={styles.timeButton}
               onPress={handleOpenTimePicker.bind(this, 'all', 'break')}>
-              {usualOpenBreak ? (
-                <Text style={styles.timeTxt}>{usualOpenBreak}</Text>
+              {usualBreakStart ? (
+                <Text style={styles.timeTxt}>{usualBreakStart}</Text>
               ) : (
-                <Text style={styles.timeTxt}>Open Time</Text>
+                <Text style={styles.timeTxt}>Start Time</Text>
               )}
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.timeButton}
               onPress={handleCloseTimePicker.bind(this, 'all', 'break')}>
-              {usualCloseBreak ? (
-                <Text style={styles.timeTxt}>{usualCloseBreak}</Text>
+              {usualBreakClose ? (
+                <Text style={styles.timeTxt}>{usualBreakClose}</Text>
               ) : (
-                <Text style={styles.timeTxt}>Close Time</Text>
+                <Text style={styles.timeTxt}>End Time</Text>
               )}
             </TouchableOpacity>
             <DateTimePickerModal
@@ -863,12 +879,26 @@ const ShopTiming = props => {
               onCancel={setCloseTimePicker}
             />
           </View>
-          <View
-            style={{
-              marginTop: 15,
-            }}>
-            <FlatList data={individualBreaks} renderItem={renderBreaks} />
+          {/* breaks - daily basis */}
+          <View style={styles.individualTimingsCheckBoxContainer}>
+            <Text>Add different break timing on different days?</Text>
+            <CheckBox
+              value={isIndividualBreakChecked}
+              tintColors={{true: PRIMARY, false: DARKGREY}}
+              onValueChange={() => {
+                setIsIndividualBreakChecked(prev => !prev);
+              }}
+            />
           </View>
+          {/* if break customization is checked */}
+          {isIndividualBreakChecked ? (
+            <View
+              style={{
+                marginTop: 16,
+              }}>
+              <FlatList data={individualBreaks} renderItem={renderBreaks} />
+            </View>
+          ) : null}
         </View>
         {/* <View style={styles.buttonContainer}>
           <TouchableOpacity
@@ -1020,7 +1050,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Gilroy-SemiBold',
     marginVertical: 7,
     fontSize: 16,
-    letterSpacing: 0.3,
   },
   chooseTextStyle: {
     padding: 10,
@@ -1077,32 +1106,26 @@ const styles = StyleSheet.create({
     fontFamily: 'Gilroy-Medium',
     fontSize: 15,
     color: '#4D535BCC',
-    letterSpacing: 0.3,
   },
   timeTxt: {
     fontFamily: 'Gilroy-Medium',
     fontSize: 12,
     color: 'black',
-    letterSpacing: 0.3,
   },
   openTime: {
     fontFamily: 'Gilroy-Medium',
     fontSize: 12,
     color: GREEN,
-    letterSpacing: 0.3,
   },
   closeTime: {
     fontFamily: 'Gilroy-Medium',
     fontSize: 12,
     color: 'red',
-    letterSpacing: 0.3,
   },
   closeTxt: {
-    marginLeft: 30,
     fontFamily: 'Gilroy-Regular',
     fontSize: 14,
     color: '#383B3F',
-    letterSpacing: 0.3,
   },
   buttonContainer: {
     marginTop: 20,
@@ -1116,7 +1139,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: PRIMARY,
     marginRight: 10,
-    letterSpacing: 0.3,
   },
   transparentButton: {
     paddingVertical: 4,
@@ -1143,7 +1165,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: DARKGREY,
     fontFamily: 'Gilroy-Medium',
-    letterSpacing: 0.3,
   },
   footerOtherLabel: {
     fontSize: 13,
@@ -1151,16 +1172,22 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     marginTop: 3,
     fontFamily: 'Gilroy-Medium',
-    letterSpacing: 0.3,
   },
   radioBtn: {
-    width: 20,
-    height: 20,
+    width: 24,
+    height: 24,
   },
   next: {
     width: '100%',
     paddingHorizontal: 16,
     paddingBottom: 16,
+  },
+  individualTimingsCheckBoxContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginVertical: 8,
   },
 });
 
@@ -1851,7 +1878,7 @@ const styles = StyleSheet.create({
 //   title: {
 //     fontFamily: 'Gilroy-SemiBold',
 //     fontSize: 18,
-//     letterSpacing: 0.3,
+//
 //     color: DARKBLACK,
 //   },
 //   btnViewContainer: {
@@ -1896,7 +1923,7 @@ const styles = StyleSheet.create({
 //     fontFamily: 'Gilroy-SemiBold',
 //     marginVertical: 7,
 //     fontSize: 16,
-//     letterSpacing: 0.3,
+//
 //   },
 //   chooseTextStyle: {
 //     padding: 10,
@@ -1953,32 +1980,32 @@ const styles = StyleSheet.create({
 //     fontFamily: 'Gilroy-Medium',
 //     fontSize: 15,
 //     color: '#4D535BCC',
-//     letterSpacing: 0.3,
+//
 //   },
 //   timeTxt: {
 //     fontFamily: 'Gilroy-Medium',
 //     fontSize: 12,
 //     color: 'black',
-//     letterSpacing: 0.3,
+//
 //   },
 //   openTime: {
 //     fontFamily: 'Gilroy-Medium',
 //     fontSize: 12,
 //     color: GREEN,
-//     letterSpacing: 0.3,
+//
 //   },
 //   closeTime: {
 //     fontFamily: 'Gilroy-Medium',
 //     fontSize: 12,
 //     color: 'red',
-//     letterSpacing: 0.3,
+//
 //   },
 //   closeTxt: {
 //     marginLeft: 30,
 //     fontFamily: 'Gilroy-Regular',
 //     fontSize: 14,
 //     color: '#383B3F',
-//     letterSpacing: 0.3,
+//
 //   },
 //   buttonContainer: {
 //     marginTop: 20,
@@ -1992,7 +2019,7 @@ const styles = StyleSheet.create({
 //     fontSize: 14,
 //     color: PRIMARY,
 //     marginRight: 10,
-//     letterSpacing: 0.3,
+//
 //   },
 //   transparentButton: {
 //     paddingVertical: 4,
@@ -2019,7 +2046,7 @@ const styles = StyleSheet.create({
 //     fontSize: 13,
 //     color: DARKGREY,
 //     fontFamily: 'Gilroy-Medium',
-//     letterSpacing: 0.3,
+//
 //   },
 //   footerOtherLabel: {
 //     fontSize: 13,
@@ -2027,7 +2054,7 @@ const styles = StyleSheet.create({
 //     fontWeight: '500',
 //     marginTop: 3,
 //     fontFamily: 'Gilroy-Medium',
-//     letterSpacing: 0.3,
+//
 //   },
 //   radioBtn: {
 //     width: 20,

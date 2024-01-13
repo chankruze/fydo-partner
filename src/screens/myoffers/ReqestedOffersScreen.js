@@ -88,14 +88,6 @@ const RequestedOffersScreen = ({user}) => {
     );
   }
 
-  console.log({
-    offers,
-    isLast,
-    isRefreshing,
-    isLoading,
-    skip,
-  });
-
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
