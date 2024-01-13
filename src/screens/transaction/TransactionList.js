@@ -7,11 +7,19 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
   View,
 } from 'react-native';
-import IonIcons from 'react-native-vector-icons/Ionicons';
-import {BLACK, GREY, GREY_2, PRIMARY, WHITE} from '../../assets/colors';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {
+  BLACK,
+  GREY,
+  GREY_1,
+  GREY_2,
+  LIGHTBLUE,
+  PRIMARY,
+  WHITE,
+} from '../../assets/colors';
 import TransactionCard from '../../components/Transaction/TransactionCard';
 import {getTransaction} from '../../services/transactionService';
 import {
@@ -22,15 +30,13 @@ import {
 } from '../../utils/responsiveSize';
 
 export const TransactionList = ({user, refreshBalance}) => {
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [transactions, setTransactions] = useState([]);
   const [settlements, setSettlements] = useState([]);
   const [skip, setSkip] = useState(0);
   const [limit, setLimit] = useState(10);
   const [total, setTotal] = useState(0);
   const [isLast, setLast] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
-  const [key, setKey] = useState(0);
 
   useEffect(() => {
     apiTransactionHit();
@@ -42,29 +48,25 @@ export const TransactionList = ({user, refreshBalance}) => {
         const response = await getTransaction(user?.accessToken, limit, skip);
         setTransactions([...transactions, ...response]);
         setSkip(skip + limit);
-        setLoading(false);
         setLast(
           response.length === 0 || response.length < limit ? true : false,
         );
-        setRefreshing(false);
+        setIsLoading(false);
       }
     } catch (error) {
       console.log(error);
-      setLoading(false);
+      setIsLoading(false);
     }
   };
-
-  const handlRefresh = React.useCallback(() => {
-    apiTransactionHit();
-    refreshBalance();
-    setKey(Math.random());
-  }, []);
 
   const renderItem = ({item}) => {
     return <TransactionCard item={item} />;
   };
 
-  if (loading) {
+  const seperator = () => <View style={styles.lineStyle} />;
+
+  // TODO: think about it later for removing extra style
+  if (isLoading) {
     return (
       <View style={styles.container}>
         <StatusBar backgroundColor={PRIMARY} barStyle="light-content" />
@@ -76,88 +78,152 @@ export const TransactionList = ({user, refreshBalance}) => {
   }
 
   return (
-    <View
-      style={{
-        marginHorizontal: moderateScale(15),
-      }}>
-      <View style={[styles.row]}>
-        <Text
-          style={[
-            styles.title,
-            {
-              flex: 1,
-              marginTop: verticalScale(2),
-            },
-          ]}>
-          Transaction
-        </Text>
-        <TouchableOpacity onPress={handlRefresh}>
-          <IonIcons name="refresh" size={24} color={PRIMARY} />
-        </TouchableOpacity>
+    <View style={styles.transactionsList}>
+      {/* action bar (search/filter) */}
+      <View style={styles.header}>
+        {/* header title + actions */}
+        <View style={styles.headerRow}>
+          <Text style={styles.title}>Transactions</Text>
+          <View style={styles.actions}>
+            <TouchableOpacity>
+              <MaterialIcons
+                name="tune"
+                size={24}
+                color={PRIMARY}
+                style={styles.iconButton}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={apiTransactionHit}>
+              <MaterialIcons
+                name="refresh"
+                size={24}
+                color={PRIMARY}
+                style={styles.iconButton}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+        {/* search */}
+        <View style={[styles.headerRow, {marginVertical: moderateScale(4)}]}>
+          <View style={styles.searchContainer}>
+            <MaterialIcons name="search" size={24} color={PRIMARY} />
+            <TextInput
+              placeholder="Search for Name, Bank or UPI"
+              style={styles.searchInput}
+              activeUnderlineColor={PRIMARY}
+            />
+          </View>
+        </View>
+        <View style={styles.headerRow}>
+          <View style={styles.actions}>
+            <TouchableOpacity style={styles.filterButton}>
+              <Text>Today</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.filterButton}>
+              <Text>This week</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.filterButton}>
+              <Text>This month</Text>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity onPress={apiTransactionHit}>
+            <MaterialIcons
+              name="date-range"
+              size={24}
+              color={PRIMARY}
+              style={styles.iconButton}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
 
-      <View style={styles.row}>
-        <IonIcons
-          name="search"
-          size={24}
-          color={PRIMARY}
-          style={styles.searchIcon}
-        />
-        <TextInput
-          placeholder="Search for Names,Bank,UPI ID"
-          style={styles.searchInput}
-        />
-        {/* <TouchableOpacity style={{
-                marginLeft: moderateScale(8)
-              }}>
-                <Filter />
-              </TouchableOpacity> */}
-      </View>
-
-      <View
-        style={{
-          height: '72%',
-        }}>
-        <FlatList
-          key={key}
-          contentContainerStyle={{
-            paddingBottom: verticalScale(20),
-            marginTop: moderateScaleVertical(15),
-          }}
-          showsVerticalScrollIndicator={false}
-          data={transactions}
-          renderItem={renderItem}
-          keyExtractor={(item, index) => item._id}
-          ItemSeparatorComponent={() => <View style={styles.lineStyle} />}
-          onEndReachedThreshold={0.01}
-          // refreshControl={
-          //   <RefreshControl
-          //     refreshing={refreshing}
-          //     onRefresh={handlRefresh}
-          //     tintColor={PRIMARY}
-          //   />
-          // }
-          ListFooterComponent={
-            !isLast && (
-              <View style={{marginTop: moderateScaleVertical(20)}}>
-                <ActivityIndicator color={PRIMARY} size="large" />
-              </View>
-            )
-          }
-          ListEmptyComponent={
-            <Text style={styles.notFoundText}>Not Found</Text>
-          }
-          onEndReached={apiTransactionHit}
-        />
-      </View>
+      {/* transactions list */}
+      <FlatList
+        contentContainerStyle={{
+          padding: moderateScale(16),
+        }}
+        showsVerticalScrollIndicator={false}
+        data={transactions}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => item._id}
+        ItemSeparatorComponent={seperator}
+        onEndReachedThreshold={0.01}
+        // refreshControl={
+        //   <RefreshControl
+        //     isRefreshing={isRefreshing}
+        //     onRefresh={handlRefresh}
+        //     tintColor={PRIMARY}
+        //   />
+        // }
+        ListFooterComponent={
+          !isLast && (
+            <View style={{padding: moderateScaleVertical(16)}}>
+              <ActivityIndicator color={PRIMARY} size="large" />
+            </View>
+          )
+        }
+        ListEmptyComponent={
+          <Text style={styles.notFoundText}>No Data Found</Text>
+        }
+        onEndReached={apiTransactionHit}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  transactionsList: {
+    flex: 1,
+  },
+  header: {
+    backgroundColor: LIGHTBLUE,
+    paddingHorizontal: moderateScale(12),
+    paddingVertical: moderateScale(8),
+  },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  title: {
+    fontFamily: 'Gilroy-Bold',
+    fontSize: moderateScale(18),
+    color: PRIMARY,
+    paddingVertical: moderateScale(8),
+  },
+  searchContainer: {
+    // backgroundColor: LIGHTGREEN,
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  searchInput: {
+    flex: 1,
+    fontFamily: 'Gilroy-Medium',
+    padding: moderateScale(8),
+    borderBottomColor: PRIMARY,
+  },
+  iconButton: {
+    padding: moderateScale(8),
+    borderRadius: moderateScale(12),
+  },
+  actions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  filterButton: {
+    paddingHorizontal: moderateScale(12),
+    paddingVertical: moderateScale(4),
+    borderRadius: moderateScale(16),
+    borderColor: PRIMARY,
+    borderWidth: moderateScale(1),
+    marginEnd: moderateScale(4),
+    marginStart: moderateScale(4),
+  },
   container: {
     flex: 1,
-    // position: 'relative',
     backgroundColor: WHITE,
   },
   linearGradientStyle: {
@@ -171,18 +237,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     // marginBottom: verticalScale(20)
   },
-  headerTitle: {
-    fontSize: textScale(18),
-    color: WHITE,
-    fontFamily: 'Gilroy-Regular',
-    marginVertical: moderateScaleVertical(5),
-  },
-  headerTotal: {
-    fontSize: textScale(50),
-    fontFamily: 'Gilroy-Medium',
-    color: WHITE,
-    // marginBottom: moderateScaleVertical(15),
-  },
   notFoundText: {
     marginTop: moderateScaleVertical(15),
     alignSelf: 'center',
@@ -191,7 +245,8 @@ const styles = StyleSheet.create({
     fontSize: textScale(18),
   },
   lineStyle: {
-    marginVertical: moderateScaleVertical(5),
+    height: 0.4,
+    backgroundColor: GREY_1,
   },
   pagerView: {
     width: '100%',
@@ -218,23 +273,9 @@ const styles = StyleSheet.create({
     borderWidth: 0.4,
     borderColor: 'grey',
   },
-  title: {
-    fontFamily: 'Gilroy-SemiBold',
-    fontSize: 20,
-    marginTop: verticalScale(8),
-    color: 'rgba(97, 90, 90, 0.65)',
-  },
-  searchInput: {
-    fontFamily: 'Gilroy-Regular',
-    fontSize: 12,
-    color: GREY_2,
-    width: '85%',
-    paddingLeft: moderateScale(40),
-  },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: verticalScale(8),
   },
   searchIcon: {
     position: 'absolute',

@@ -202,23 +202,25 @@ const TransactionScreen = ({user}) => {
           <View style={styles.indicators}>{renderIndicators()}</View>
         </View>
 
-        {currentIndex === 0 ? (
-          <TransactionList
-            user={user}
-            refreshBalance={() => {
-              apiTransactionAmonut();
-              setTotalKey(Math.random());
-            }}
-          />
-        ) : (
-          <SettlementList
-            user={user}
-            refreshBalance={() => {
-              apiRecentSettlements();
-              setRecentKey(Math.random());
-            }}
-          />
-        )}
+        <View style={styles.listContainer}>
+          {currentIndex === 0 ? (
+            <TransactionList
+              user={user}
+              refreshBalance={() => {
+                apiTransactionAmonut();
+                setTotalKey(Math.random());
+              }}
+            />
+          ) : (
+            <SettlementList
+              user={user}
+              refreshBalance={() => {
+                apiRecentSettlements();
+                setRecentKey(Math.random());
+              }}
+            />
+          )}
+        </View>
       </SafeAreaView>
     </View>
   );
@@ -298,5 +300,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: verticalScale(8),
+  },
+  listContainer: {
+    flex: 1,
   },
 });
