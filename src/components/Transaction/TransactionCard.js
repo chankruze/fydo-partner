@@ -40,7 +40,7 @@ const TransactionCard = ({item}) => {
           <FontAwesome5
             size={20}
             style={styles.icon}
-            name="wallet"
+            name="store"
             color={WHITE}
           />
         );

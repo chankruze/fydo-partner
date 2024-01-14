@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import Toast from 'react-native-simple-toast';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {
   BLACK,
@@ -22,6 +23,7 @@ import {
   WHITE,
 } from '../../assets/colors';
 import TransactionCard from '../../components/Transaction/TransactionCard';
+import {TransactionFilterButton} from '../../components/Transaction/TransactionFilterButton';
 import {getTransaction} from '../../services/transactionService';
 import {
   moderateScale,
@@ -48,7 +50,6 @@ export const TransactionList = ({user, refreshBalance}) => {
     try {
       if (!isLast) {
         const response = await getTransaction(user?.accessToken, limit, skip);
-
         setTransactions(prev => [...prev, ...response]);
         setSkip(skip + limit);
         setLast(
@@ -63,6 +64,7 @@ export const TransactionList = ({user, refreshBalance}) => {
   };
 
   const handlRefresh = useCallback(() => {
+    setTransactions([]);
     apiTransactionHit();
     refreshBalance();
   }, []);
@@ -109,14 +111,15 @@ export const TransactionList = ({user, refreshBalance}) => {
         <View style={styles.headerRow}>
           <Text style={styles.title}>Transactions</Text>
           <View style={styles.actions}>
-            <TouchableOpacity>
+            {/* <TouchableOpacity
+              onPress={() => Toast.show('Coming soon!', Toast.SHORT)}>
               <MaterialIcons
                 name="tune"
                 size={24}
                 color={PRIMARY}
                 style={styles.iconButton}
               />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity onPress={handlRefresh}>
               <MaterialIcons
                 name="refresh"
@@ -140,68 +143,54 @@ export const TransactionList = ({user, refreshBalance}) => {
         </View>
         <View style={styles.headerRow}>
           <View style={styles.actions}>
-            <TouchableOpacity
-              style={[
-                styles.filterButton,
-                {
-                  borderColor: filter.key === '1D' ? PRIMARY : GREY,
-                },
-              ]}
+            <TransactionFilterButton
+              label="1 Day"
               onPress={() =>
                 setFilter({
                   key: '1D',
                   value: moment().subtract(1, 'days'),
                 })
-              }>
-              <Text>1 Day</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.filterButton,
-                {
-                  borderColor: filter.key === '1W' ? PRIMARY : GREY,
-                },
-              ]}
+              }
+              isSelected={filter.key === '1D'}
+              count={filteredTransactions.length}
+            />
+            {/* week */}
+            <TransactionFilterButton
+              label="1 Week"
               onPress={() =>
                 setFilter({
                   key: '1W',
                   value: moment().subtract(1, 'weeks'),
                 })
-              }>
-              <Text>1 Week</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.filterButton,
-                {
-                  borderColor: filter.key === '1M' ? PRIMARY : GREY,
-                },
-              ]}
+              }
+              isSelected={filter.key === '1W'}
+              count={filteredTransactions.length}
+            />
+            <TransactionFilterButton
+              label="1 Month"
               onPress={() =>
                 setFilter({
                   key: '1M',
                   value: moment().subtract(1, 'months'),
                 })
-              }>
-              <Text>1 Month</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.filterButton,
-                {
-                  borderColor: filter.key === 'NONE' ? PRIMARY : GREY,
-                },
-              ]}
+              }
+              isSelected={filter.key === '1M'}
+              count={filteredTransactions.length}
+            />
+            <TransactionFilterButton
+              label="All"
               onPress={() =>
                 setFilter({
                   key: 'NONE',
                   value: undefined,
                 })
-              }>
-              <Text>All</Text>
-            </TouchableOpacity>
+              }
+              isSelected={filter.key === 'NONE'}
+              count={filteredTransactions.length}
+            />
           </View>
-          <TouchableOpacity onPress={() => console.log('Not implemented')}>
+          <TouchableOpacity
+            onPress={() => Toast.show('Coming soon!', Toast.SHORT)}>
             <MaterialIcons
               name="date-range"
               size={24}
@@ -287,13 +276,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  filterButton: {
-    paddingHorizontal: moderateScale(12),
-    paddingVertical: moderateScale(4),
-    borderRadius: moderateScale(16),
-    borderWidth: moderateScale(1),
-    marginEnd: moderateScale(8),
   },
   container: {
     flex: 1,
