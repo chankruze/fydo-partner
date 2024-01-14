@@ -73,7 +73,7 @@ export const TransactionList = ({user, refreshBalance}) => {
     return <TransactionCard item={item} />;
   };
 
-  const seperator = () => <View style={styles.lineStyle} />;
+  const seperator = () => <View style={styles.separator} />;
 
   useEffect(() => {
     apiTransactionHit();
@@ -299,7 +299,7 @@ const styles = StyleSheet.create({
     color: BLACK,
     fontSize: textScale(18),
   },
-  lineStyle: {
+  separator: {
     height: 0.4,
     backgroundColor: GREY_1,
   },

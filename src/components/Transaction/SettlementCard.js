@@ -2,39 +2,50 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import moment from 'moment';
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Fontisto from 'react-native-vector-icons/Fontisto';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {
-  BLACK,
-  ERROR_MESSAGE,
-  GREY_2,
-  PRIMARY,
-  SUCCESS_MESSAGE,
-  WHITE,
-} from '../../assets/colors';
+import {BLACK, GREY_2, PRIMARY, WHITE} from '../../assets/colors';
 import {
   moderateScale,
-  moderateScaleVertical,
   textScale,
   verticalScale,
 } from '../../utils/responsiveSize';
 import ToastMessage from '../common/ToastComponent';
 
 const SettlementCard = ({item}) => {
+  if (!item) {
+    return null;
+  }
+
   const getImageType = transactionType => {
     switch (transactionType) {
       case 'REFERRAL': {
-        return <FontAwesome name="bullhorn" style={styles.iconContent} />;
+        return (
+          <FontAwesome5
+            name="bullhorn"
+            size={20}
+            style={styles.icon}
+            color={WHITE}
+          />
+        );
       }
       case 'SHOP_PAYMENT': {
-        return <Fontisto name="shopping-store" style={styles.iconContent} />;
+        return (
+          <FontAwesome5
+            size={20}
+            style={styles.icon}
+            name="store"
+            color={WHITE}
+          />
+        );
       }
       default: {
         return (
-          <MaterialIcons
-            style={styles.iconContent}
-            name="account-balance-wallet"
+          <FontAwesome5
+            size={20}
+            style={styles.icon}
+            name="wallet"
+            color={WHITE}
           />
         );
       }
@@ -47,132 +58,61 @@ const SettlementCard = ({item}) => {
   };
 
   return (
-    <View style={styles.itemWrapper} key={item._id}>
-      <View
-        style={{
-          ...styles.cardWrapper,
-          marginBottom: moderateScaleVertical(5),
-        }}>
-        <View style={styles.leftWrapper}>
-          <Text
-            style={{
-              ...styles.primaryText,
-              color:
-                item?.status === 'SUCCESS' ? SUCCESS_MESSAGE : ERROR_MESSAGE,
-            }}>
-            {item?.status}
-          </Text>
-        </View>
-        <View style={styles.rightWrapper}>
-          <Text style={{...styles.secondaryText, color: GREY_2}}>
-            {moment(item?.createdAt).format('DD MMMM YYYY hh:mm A')}
-          </Text>
+    <View style={styles.card} key={item._id}>
+      {/* left */}
+      <View style={styles.left}>
+        <View style={styles.iconPaymentType}>
+          {getImageType(item.transactionPurpose)}
         </View>
       </View>
 
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-        }}>
-        <View style={{...styles.icon, backgroundColor: PRIMARY}}>
-          {getImageType(item?.transactionPurpose)}
-        </View>
-        <View
-          style={{
-            flex: 1,
-          }}>
-          <Text
-            style={{
-              ...styles.primaryText,
-              fontFamily: 'Gilroy-Medium',
-              fontSize: 14,
-              color: BLACK,
-            }}>
-            {item?.settlementId}{' '}
-            <MaterialIcons
-              name="content-copy"
-              onPress={() => copyId(item?.settlementId)}
-            />
-          </Text>
-
-          <View>
-            <Text
-              style={{
-                ...styles.secondaryText,
-                marginTop: verticalScale(2),
-                color: GREY_2,
-              }}>
-              UTR no:
-            </Text>
-            <Text
-              style={{
-                ...styles.primaryText,
-                fontFamily: 'Gilroy-Medium',
-                fontSize: 12,
-                color: BLACK,
-                marginTop: verticalScale(2),
-              }}>
-              {item?.utr}
-            </Text>
-          </View>
-        </View>
-        <Text style={{...styles.primaryText, color: BLACK}}>
-          {'\u20B9'}
-          {item?.amount}
+      {/* mid */}
+      <View style={styles.mid}>
+        <Text style={styles.primaryText}>
+          {item.settlementId}{' '}
+          <MaterialIcons
+            name="content-copy"
+            onPress={() => copyId(item.settlementId)}
+          />
         </Text>
+        <Text
+          style={{
+            ...styles.secondaryText,
+            marginVertical: verticalScale(4),
+          }}>
+          <Text style={styles.secondaryText}>UTR No: </Text>
+          {item.utr}
+        </Text>
+        {/* date */}
+        <View>
+          <Text style={styles.textSettlementDate}>
+            Settled on {moment(item.createdAt).format('DD MMM YYYY, hh:mm A')}
+          </Text>
+        </View>
       </View>
-      {/* <View style={styles.cardWrapper}>
-                <View style={styles.leftWrapper}>
-                    <View style={{ ...styles.icon, backgroundColor: PRIMARY }}>
-                        {getImageType(item?.transactionPurpose)}
-                    </View>
-                    <View style={{
-                        flex: 1,
-                        flexWrap: 'wrap',
-                        backgroundColor: 'red'
-                    }}>
-                        <Text style={{
-                            ...styles.primaryText,
-                            fontFamily: 'Gilroy-Medium',
-                            fontSize: 14,
-                            color: BLACK
-                        }}>
-                            {item?.settlementId}{' '}
-                            <MaterialIcons
-                                name="content-copy"
-                                onPress={() => copyId(item?.settlementId)}
-                            />
-                        </Text>
-                        <View style={{
-                            flexDirection: 'row',
-                            alignItems: 'center'
-                        }}>
-                            <Text style={{
-                                ...styles.secondaryText,
-                                marginTop: verticalScale(2),
-                                color: GREY_2
-                            }}>
-                                UTR no:
-                            </Text>
-                            <Text style={{
-                                ...styles.primaryText,
-                                fontFamily: 'Gilroy-Medium',
-                                fontSize: 12,
-                                color: BLACK,
-                                marginTop: verticalScale(2),
-                                marginLeft: moderateScale(4)
-                            }}>
-                                {item?.utr}dfgdfjkldjdlkjdlkgjldfkgjldgjgldj
-                            </Text>
-                        </View>
-                    </View>
-                    <Text style={{ ...styles.primaryText, color: BLACK }}>
-                        {'\u20B9'}
-                        {item?.amount}
-                    </Text>
-                </View>
-            </View> */}
+
+      {/* right */}
+      <View style={styles.right}>
+        <Text style={{...styles.primaryText, color: BLACK, fontSize: 18}}>
+          {'\u20B9'}
+          {item.amount}
+        </Text>
+        {/* <View style={styles.status}>
+          {item.status === 'SUCCESS' ? (
+            <MaterialIcons name="check" size={14} color={SUCCESS_MESSAGE} />
+          ) : (
+            <MaterialIcons name="check" size={14} color={ERROR_MESSAGE} />
+          )}
+          <Text
+            style={{
+              ...styles.statusText,
+              color:
+                item.status === 'SUCCESS' ? SUCCESS_MESSAGE : ERROR_MESSAGE,
+            }}>
+            {item.status}
+          </Text>
+        </View> */}
+      </View>
     </View>
   );
 };
@@ -180,49 +120,59 @@ const SettlementCard = ({item}) => {
 export default SettlementCard;
 
 const styles = StyleSheet.create({
-  cardWrapper: {
+  card: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-  },
-  leftWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  rightWrapper: {
-    alignItems: 'flex-end',
-  },
-  primaryText: {
-    fontSize: textScale(12),
-    fontFamily: 'Gilroy-Bold',
-  },
-  secondaryText: {
-    fontSize: textScale(12),
-    fontFamily: 'Gilroy-Medium',
-  },
-  itemWrapper: {
+    margin: moderateScale(4),
     backgroundColor: WHITE,
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.2,
-    padding: moderateScale(16),
-    borderRadius: moderateScale(4),
-    margin: 2,
-    elevation: 3,
+    paddingVertical: moderateScale(16),
   },
-  iconContent: {
-    flex: 1,
-    fontSize: textScale(20),
-    fontFamily: 'Gilroy-Bold',
-    color: WHITE,
+  left: {
     justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
   },
-  icon: {
-    borderRadius: moderateScale(25),
-    aspectRatio: 1,
+  mid: {
+    flex: 1,
+    marginHorizontal: moderateScale(12),
+  },
+  right: {
+    alignItems: 'flex-end',
+  },
+  textSettlementDate: {
+    color: GREY_2,
+    fontSize: textScale(10),
+  },
+  primaryText: {
+    fontSize: textScale(14),
+    fontFamily: 'Gilroy-Bold',
+    color: PRIMARY,
+  },
+  secondaryText: {
+    fontSize: textScale(12),
+    fontFamily: 'Gilroy-Medium',
+    color: BLACK,
+  },
+  iconPaymentType: {
+    borderRadius: moderateScale(1000),
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: moderateScale(15),
-    padding: moderateScale(12),
+    backgroundColor: PRIMARY,
+    padding: moderateScale(16),
+  },
+  status: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  statusText: {
+    fontSize: textScale(10),
+    fontFamily: 'Gilroy-Bold',
+    textTransform: 'capitalize',
+    marginStart: moderateScale(4),
   },
 });

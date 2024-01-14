@@ -9,15 +9,14 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import IonIcons from 'react-native-vector-icons/Ionicons';
-import {BLACK, GREY, GREY_2, PRIMARY, WHITE} from '../../assets/colors';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {BLACK, GREY_1, LIGHTBLUE, PRIMARY, WHITE} from '../../assets/colors';
 import SettlementCard from '../../components/Transaction/SettlementCard';
 import {getSettlement} from '../../services/transactionService';
 import {
   moderateScale,
   moderateScaleVertical,
   textScale,
-  verticalScale,
 } from '../../utils/responsiveSize';
 
 export const SettlementList = ({refreshBalance}) => {
@@ -25,10 +24,7 @@ export const SettlementList = ({refreshBalance}) => {
   const [settlements, setSettlements] = useState([]);
   const [skip, setSkip] = useState(0);
   const [limit, setLimit] = useState(10);
-  const [total, setTotal] = useState(0);
   const [isLast, setLast] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
-  const [key, setKey] = useState(0);
 
   useEffect(() => {
     getSettlements();
@@ -44,7 +40,7 @@ export const SettlementList = ({refreshBalance}) => {
 
         const response = await getSettlement(limit, skip, params);
 
-        setSettlements([...settlements, ...response]);
+        setSettlements(prev => [...prev, ...response]);
         setSkip(skip + limit);
         setLoading(false);
         setLast(
@@ -58,14 +54,16 @@ export const SettlementList = ({refreshBalance}) => {
   };
 
   const handlRefresh = React.useCallback(() => {
+    setSettlements([]);
     getSettlements();
-    setKey(Math.random());
     refreshBalance();
   }, []);
 
   const renderItem = ({item}) => {
     return <SettlementCard item={item} />;
   };
+
+  const seperator = () => <View style={styles.separator} />;
 
   if (loading) {
     return (
@@ -79,88 +77,106 @@ export const SettlementList = ({refreshBalance}) => {
   }
 
   return (
-    <View
-      style={{
-        marginHorizontal: moderateScale(15),
-      }}>
-      <View style={[styles.row]}>
-        <Text
-          style={[
-            styles.title,
-            {
-              flex: 1,
-              marginTop: verticalScale(2),
-            },
-          ]}>
-          Settlements
-        </Text>
-        <TouchableOpacity onPress={handlRefresh}>
-          <IonIcons name="refresh" size={24} color={PRIMARY} />
-        </TouchableOpacity>
+    <View style={styles.settlementsList}>
+      <View style={styles.header}>
+        {/* header title + actions */}
+        <View style={styles.headerRow}>
+          <Text style={styles.title}>Settlements</Text>
+          <View style={styles.actions}>
+            {/* <TouchableOpacity
+              onPress={() => Toast.show('Coming soon!', Toast.SHORT)}>
+              <MaterialIcons
+                name="tune"
+                size={24}
+                color={PRIMARY}
+                style={styles.iconButton}
+              />
+            </TouchableOpacity> */}
+            <TouchableOpacity onPress={handlRefresh}>
+              <MaterialIcons
+                name="refresh"
+                size={24}
+                color={PRIMARY}
+                style={styles.iconButton}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+        {/* search */}
+        {/* <View style={[styles.headerRow, {marginVertical: moderateScale(4)}]}>
+          <View style={styles.searchContainer}>
+            <MaterialIcons name="search" size={24} color={PRIMARY} />
+            <TextInput
+              placeholder="Search for Name, Bank or UPI"
+              style={styles.searchInput}
+              activeUnderlineColor={PRIMARY}
+            />
+          </View>
+        </View> */}
       </View>
 
-      <View
-        style={{
-          height: '78%',
-          marginTop: verticalScale(15),
-        }}>
-        <FlatList
-          key={key}
-          contentContainerStyle={{
-            paddingBottom: verticalScale(20),
-            marginTop: moderateScaleVertical(15),
-          }}
-          showsVerticalScrollIndicator={false}
-          data={settlements}
-          renderItem={renderItem}
-          keyExtractor={(item, index) => item._id}
-          ItemSeparatorComponent={() => <View style={styles.lineStyle} />}
-          onEndReachedThreshold={0.01}
-          ListFooterComponent={
-            !isLast && (
-              <View style={{marginTop: moderateScaleVertical(20)}}>
-                <ActivityIndicator color={PRIMARY} size="large" />
-              </View>
-            )
-          }
-          ListEmptyComponent={
-            <Text style={styles.notFoundText}>Not Found</Text>
-          }
-          onEndReached={getSettlements}
-        />
-      </View>
+      <FlatList
+        contentContainerStyle={{
+          padding: moderateScale(16),
+        }}
+        showsVerticalScrollIndicator={false}
+        data={settlements}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => item._id}
+        ItemSeparatorComponent={seperator}
+        onEndReachedThreshold={0.01}
+        ListFooterComponent={
+          !isLast && (
+            <View style={{padding: moderateScaleVertical(16)}}>
+              <ActivityIndicator color={PRIMARY} size="large" />
+            </View>
+          )
+        }
+        ListEmptyComponent={
+          <Text style={styles.notFoundText}>Not Data Found</Text>
+        }
+        onEndReached={getSettlements}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  transactionsList: {
+    flex: 1,
+  },
+  header: {
+    backgroundColor: LIGHTBLUE,
+    paddingHorizontal: moderateScale(12),
+    paddingVertical: moderateScale(8),
+  },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  title: {
+    fontFamily: 'Gilroy-Bold',
+    fontSize: moderateScale(18),
+    color: PRIMARY,
+    paddingVertical: moderateScale(8),
+  },
+  iconButton: {
+    padding: moderateScale(8),
+    borderRadius: moderateScale(12),
+  },
+  actions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   container: {
     flex: 1,
-    // position: 'relative',
     backgroundColor: WHITE,
   },
-  linearGradientStyle: {
-    width: '100%',
-    paddingVertical: moderateScaleVertical(25),
-    position: 'relative',
-  },
-  headerContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    textAlign: 'center',
-    // marginBottom: verticalScale(20)
-  },
-  headerTitle: {
-    fontSize: textScale(18),
-    color: WHITE,
-    fontFamily: 'Gilroy-Regular',
-    marginVertical: moderateScaleVertical(5),
-  },
-  headerTotal: {
-    fontSize: textScale(50),
-    fontFamily: 'Gilroy-Medium',
-    color: WHITE,
-    // marginBottom: moderateScaleVertical(15),
+  separator: {
+    height: 0.4,
+    backgroundColor: GREY_1,
   },
   notFoundText: {
     marginTop: moderateScaleVertical(15),
@@ -168,72 +184,5 @@ const styles = StyleSheet.create({
     fontFamily: 'Gilroy-Medium',
     color: BLACK,
     fontSize: textScale(18),
-  },
-  lineStyle: {
-    marginVertical: moderateScaleVertical(5),
-  },
-  pagerView: {
-    width: '100%',
-    height: verticalScale(200),
-    borderRadius: 8,
-    paddingVertical: 10,
-  },
-  indicators: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'center',
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 15,
-    justifyContent: 'center',
-  },
-  dot: {
-    height: 8,
-    width: 8,
-    borderRadius: 4,
-    backgroundColor: '#505050',
-    marginHorizontal: 3,
-    borderWidth: 0.4,
-    borderColor: 'grey',
-  },
-  title: {
-    fontFamily: 'Gilroy-SemiBold',
-    fontSize: 20,
-    marginTop: verticalScale(8),
-    color: 'rgba(97, 90, 90, 0.65)',
-  },
-  searchInput: {
-    fontFamily: 'Gilroy-Regular',
-    fontSize: 12,
-    color: GREY_2,
-    width: '85%',
-    paddingLeft: moderateScale(40),
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: verticalScale(8),
-  },
-  searchIcon: {
-    position: 'absolute',
-    left: moderateScale(6),
-    zIndex: 1,
-  },
-  filterBtn: {
-    borderColor: GREY,
-    borderWidth: 1,
-    borderRadius: 4,
-    paddingVertical: verticalScale(6),
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-    width: '40%',
-    // paddingHorizontal: moderateScale(50)
-  },
-  filterTxt: {
-    fontFamily: 'Gilroy-SemiBold',
-    fontSize: 14,
-    color: GREY_2,
   },
 });

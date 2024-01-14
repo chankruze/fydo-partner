@@ -7,6 +7,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {
   BLACK,
   ERROR_MESSAGE,
+  GREY_2,
   PRIMARY,
   SUCCESS_MESSAGE,
   WHITE,
@@ -82,8 +83,7 @@ const TransactionCard = ({item}) => {
         </Text>
         <Text
           style={{
-            ...styles.primaryText,
-            color: PRIMARY,
+            ...styles.secondaryText,
             marginVertical: verticalScale(4),
           }}>
           {item.customerPhone}
@@ -115,11 +115,11 @@ const TransactionCard = ({item}) => {
           {item.totalAmount}
         </Text>
         <View style={styles.status}>
-          <MaterialIcons
-            name="check"
-            size={14}
-            color={item.status === 'SUCCESS' ? SUCCESS_MESSAGE : ERROR_MESSAGE}
-          />
+          {item.status === 'SUCCESS' ? (
+            <MaterialIcons name="check" size={14} color={SUCCESS_MESSAGE} />
+          ) : (
+            <MaterialIcons name="check" size={14} color={ERROR_MESSAGE} />
+          )}
           <Text
             style={{
               ...styles.statusText,
@@ -163,9 +163,14 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   primaryText: {
-    fontSize: textScale(12),
+    fontSize: textScale(14),
     fontFamily: 'Gilroy-Bold',
     color: PRIMARY,
+  },
+  secondaryText: {
+    fontSize: textScale(12),
+    fontFamily: 'Gilroy-Medium',
+    color: BLACK,
   },
   status: {
     flexDirection: 'row',
@@ -178,22 +183,12 @@ const styles = StyleSheet.create({
     marginStart: moderateScale(4),
   },
   textSettlementStatus: {
-    color: BLACK,
+    color: GREY_2,
     fontSize: textScale(10),
   },
   textTxnDate: {
     color: BLACK,
     fontSize: textScale(10),
-  },
-  itemWrapper: {
-    backgroundColor: WHITE,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.2,
-    padding: moderateScale(16),
-    borderRadius: moderateScale(4),
-    margin: 2,
-    elevation: 3,
   },
   iconPaymentType: {
     borderRadius: moderateScale(1000),
