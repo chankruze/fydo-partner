@@ -122,7 +122,7 @@ export const SettlementList = ({refreshBalance}) => {
         showsVerticalScrollIndicator={false}
         data={settlements}
         renderItem={renderItem}
-        keyExtractor={(item, index) => item._id}
+        keyExtractor={item => item._id}
         ItemSeparatorComponent={seperator}
         onEndReachedThreshold={0.01}
         ListFooterComponent={
@@ -142,7 +142,7 @@ export const SettlementList = ({refreshBalance}) => {
 };
 
 const styles = StyleSheet.create({
-  transactionsList: {
+  settlementsList: {
     flex: 1,
   },
   header: {

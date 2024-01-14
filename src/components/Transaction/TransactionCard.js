@@ -8,6 +8,7 @@ import {
   BLACK,
   ERROR_MESSAGE,
   GREY_2,
+  LIGHTBLUE,
   PRIMARY,
   SUCCESS_MESSAGE,
   WHITE,
@@ -27,34 +28,13 @@ const TransactionCard = ({item}) => {
   const getImageType = transactionType => {
     switch (transactionType) {
       case 'REFERRAL': {
-        return (
-          <FontAwesome5
-            name="bullhorn"
-            size={20}
-            style={styles.icon}
-            color={WHITE}
-          />
-        );
+        return <FontAwesome5 name="bullhorn" size={20} color={PRIMARY} />;
       }
       case 'SHOP_PAYMENT': {
-        return (
-          <FontAwesome5
-            size={20}
-            style={styles.icon}
-            name="store"
-            color={WHITE}
-          />
-        );
+        return <FontAwesome5 size={20} name="store" color={PRIMARY} />;
       }
       default: {
-        return (
-          <FontAwesome5
-            size={20}
-            style={styles.icon}
-            name="wallet"
-            color={WHITE}
-          />
-        );
+        return <FontAwesome5 size={20} name="wallet" color={PRIMARY} />;
       }
     }
   };
@@ -110,20 +90,14 @@ const TransactionCard = ({item}) => {
 
       {/* right */}
       <View style={styles.right}>
-        <Text style={{...styles.primaryText, color: BLACK, fontSize: 18}}>
+        <Text style={styles.amount}>
           {'\u20B9'}
           {item.totalAmount}
         </Text>
         <View style={styles.status}>
-          {item.status === 'SUCCESS' ? (
-            <MaterialIcons name="check" size={14} color={SUCCESS_MESSAGE} />
-          ) : (
-            <MaterialIcons name="check" size={14} color={ERROR_MESSAGE} />
-          )}
           <Text
             style={{
               ...styles.statusText,
-
               color:
                 item.status === 'SUCCESS' ? SUCCESS_MESSAGE : ERROR_MESSAGE,
             }}>
@@ -143,12 +117,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    margin: moderateScale(4),
+    marginVertical: moderateScale(4),
     backgroundColor: WHITE,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.2,
-    paddingVertical: moderateScale(16),
+    paddingVertical: moderateScale(8),
   },
   left: {
     justifyContent: 'center',
@@ -194,7 +165,12 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(1000),
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: PRIMARY,
+    backgroundColor: LIGHTBLUE,
     padding: moderateScale(16),
+  },
+  amount: {
+    color: PRIMARY,
+    fontFamily: 'Gilroy-Bold',
+    fontSize: moderateScale(18),
   },
 });

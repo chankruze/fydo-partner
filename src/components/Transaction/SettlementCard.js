@@ -4,7 +4,7 @@ import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {BLACK, GREY_2, PRIMARY, WHITE} from '../../assets/colors';
+import {BLACK, GREY_2, LIGHTBLUE, PRIMARY, WHITE} from '../../assets/colors';
 import {
   moderateScale,
   textScale,
@@ -20,34 +20,13 @@ const SettlementCard = ({item}) => {
   const getImageType = transactionType => {
     switch (transactionType) {
       case 'REFERRAL': {
-        return (
-          <FontAwesome5
-            name="bullhorn"
-            size={20}
-            style={styles.icon}
-            color={WHITE}
-          />
-        );
+        return <FontAwesome5 name="bullhorn" size={20} color={PRIMARY} />;
       }
       case 'SHOP_PAYMENT': {
-        return (
-          <FontAwesome5
-            size={20}
-            style={styles.icon}
-            name="store"
-            color={WHITE}
-          />
-        );
+        return <FontAwesome5 size={20} name="store" color={PRIMARY} />;
       }
       default: {
-        return (
-          <FontAwesome5
-            size={20}
-            style={styles.icon}
-            name="wallet"
-            color={WHITE}
-          />
-        );
+        return <FontAwesome5 size={20} name="wallet" color={PRIMARY} />;
       }
     }
   };
@@ -93,7 +72,7 @@ const SettlementCard = ({item}) => {
 
       {/* right */}
       <View style={styles.right}>
-        <Text style={{...styles.primaryText, color: BLACK, fontSize: 18}}>
+        <Text style={styles.amount}>
           {'\u20B9'}
           {item.amount}
         </Text>
@@ -125,12 +104,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    margin: moderateScale(4),
+    marginVertical: moderateScale(4),
     backgroundColor: WHITE,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.2,
-    paddingVertical: moderateScale(16),
+    paddingVertical: moderateScale(8),
   },
   left: {
     justifyContent: 'center',
@@ -162,7 +138,7 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(1000),
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: PRIMARY,
+    backgroundColor: LIGHTBLUE,
     padding: moderateScale(16),
   },
   status: {
@@ -174,5 +150,10 @@ const styles = StyleSheet.create({
     fontFamily: 'Gilroy-Bold',
     textTransform: 'capitalize',
     marginStart: moderateScale(4),
+  },
+  amount: {
+    color: PRIMARY,
+    fontFamily: 'Gilroy-Bold',
+    fontSize: moderateScale(18),
   },
 });
