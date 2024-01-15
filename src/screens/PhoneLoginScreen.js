@@ -95,10 +95,13 @@ const PhoneLoginScreen = ({navigation, handleNextScreen}) => {
 
   useEffect(() => {
     (async () => {
-      const phone = await requestHint();
+      const hint = await requestHint();
 
-      if (phone) {
-        setPhoneNumber(phone.slice(3));
+      if (hint) {
+        const pattern = /(?:\+91|91|0)?(\d{10})/;
+        const match = hint.match(pattern);
+        const phone = match ? match[1] : hint.slice(-10);
+        setPhoneNumber(phone);
       }
     })();
   }, []);
