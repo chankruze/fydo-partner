@@ -30,16 +30,16 @@ export default function MyOffersBottomSheet({token, toggle}) {
   const [imageUrl, setImageUrl] = useState(null);
   const [tag, setTag] = useState(null);
   const [error, setError] = useState({});
-  const [productName, setProductName] = useState(null);
-  const [description, setDescription] = useState(null);
+  const [offerName, setOfferName] = useState('');
+  const [description, setDescription] = useState('');
   const [dialogVisible, setDialogVisible] = useState(false);
-  const [startDate, setStartDate] = useState(new Date().getTime());
-  const [endDate, setEndDate] = useState(new Date().getTime());
+  const [startDate, setStartDate] = useState(moment());
+  const [endDate, setEndDate] = useState(moment().add(1, 'months'));
   const [endTimePicker, setEndTimePicker] = useState(false);
   const [startTimePicker, setStartTimePicker] = useState(false);
 
-  const handleProductName = _productName => {
-    setProductName(_productName);
+  const handleOfferName = _offerName => {
+    setOfferName(_offerName);
   };
 
   const handleDescription = _description => {
@@ -52,8 +52,7 @@ export default function MyOffersBottomSheet({token, toggle}) {
 
   const addTag = () => {
     if (validateTag()) {
-      tags.push(tag);
-      setTags(tags);
+      setTags(prev => [...tags, tag]);
       setTag(null);
     }
   };
@@ -104,7 +103,7 @@ export default function MyOffersBottomSheet({token, toggle}) {
           });
         }
         const response = await addOffer(token, {
-          title: productName,
+          title: offerName,
           description: description,
           searchTags: tags,
           startDate: startDate,
@@ -150,8 +149,8 @@ export default function MyOffersBottomSheet({token, toggle}) {
     setError({});
     let _error = {};
 
-    if (!productName) {
-      _error.productName = 'Enter product name';
+    if (!offerName) {
+      _error.offerName = 'Enter product name';
     }
 
     if (!description) {
@@ -285,25 +284,24 @@ export default function MyOffersBottomSheet({token, toggle}) {
           </View>
 
           <TextInput
-            placeholder="Product Name"
+            placeholder="Offer Name"
             style={styles.input}
-            onChangeText={handleProductName}
+            onChangeText={handleOfferName}
           />
-          {error?.productName && (
-            <Text style={styles.error}>{error?.productName}</Text>
-          )}
+          {error?.offerName ? (
+            <Text style={styles.error}>{error?.offerName}</Text>
+          ) : null}
           <TextInput
             placeholder="Add Description (Buy 1 get 1 free /Buy 2 get 20% off)"
             style={styles.input}
             onChangeText={handleDescription}
           />
-          {error?.description && (
+          {error?.description ? (
             <Text style={styles.error}>{error?.description}</Text>
-          )}
+          ) : null}
           <Text style={styles.title}>Add Search Tags</Text>
           <Text style={styles.label}>
-            Please add some tags to make the customer feel easy to find your
-            offers!
+            Add tags so that customers can find your offers easily!
           </Text>
           <View style={styles.row}>
             <View style={styles.inputContainer}>
@@ -316,7 +314,7 @@ export default function MyOffersBottomSheet({token, toggle}) {
                 value={tag}
                 onChangeText={handleInput}
                 style={styles.tagInput}
-                placeholder="Try fruits"
+                placeholder="i.e. chicken"
               />
             </View>
             <TouchableOpacity onPress={addTag} style={styles.addButton}>
@@ -325,7 +323,7 @@ export default function MyOffersBottomSheet({token, toggle}) {
           </View>
           {error?.tag && <Text style={styles.error}>{error?.tag}</Text>}
           <View style={styles.tags}>
-            {tags?.map((tag, index) => {
+            {tags.map((tag, index) => {
               return renderItem(tag, index);
             })}
           </View>
