@@ -91,10 +91,16 @@ const OnboardingScreen = props => {
           </View>
         )}
         <FlatList
+          ref={slidesRef}
           scrollEnabled={scrollEnable}
           data={slides}
           renderItem={({item}) => (
-            <OnboardingItem item={item} index={currentIndex} finish={skip} />
+            <OnboardingItem
+              item={item}
+              index={currentIndex}
+              finish={skip}
+              next={() => scrollTo(currentIndex + 1)}
+            />
           )}
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -107,7 +113,6 @@ const OnboardingScreen = props => {
           )}
           scrollEventThrottle={32}
           onViewableItemsChanged={viewableItemsChanged}
-          ref={slidesRef}
         />
       </View>
       <Paginator data={slides} scrollX={scrollX} />
@@ -155,7 +160,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: PRIMARY,
   },
   container2: {
     flex: 1,
@@ -174,7 +179,5 @@ const styles = StyleSheet.create({
   },
   skipBtn: {
     alignSelf: 'flex-end',
-    marginRight: 20,
-    marginTop: 10,
   },
 });
