@@ -98,10 +98,10 @@ const PhoneLoginScreen = ({navigation, handleNextScreen}) => {
       const hint = await requestHint();
 
       if (hint) {
-        const pattern = /(?:\+91|91|0)?(\d{10})/;
-        const match = hint.match(pattern);
-        const phone = match ? match[1] : hint.slice(-10);
-        setPhoneNumber(phone);
+        // const pattern = /(?:\+91|91|0)?(\d{10})/;
+        // const match = hint.match(pattern);
+        // const phone = match ? match[1] : hint.slice(-10);
+        setPhoneNumber(hint.slice(-10));
       }
     })();
   }, []);
