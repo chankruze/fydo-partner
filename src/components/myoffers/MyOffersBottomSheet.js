@@ -12,7 +12,7 @@ import {
   View,
 } from 'react-native';
 import Dialog from 'react-native-dialog';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import ImagePicker from 'react-native-image-crop-picker';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import uuid from 'react-native-uuid';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -27,14 +27,14 @@ import BottomsheetIcon from './../../assets/icons/bottomsheet-icon.png';
 export default function MyOffersBottomSheet({token, toggle}) {
   const [loading, setLoading] = useState(false);
   const [tags, setTags] = useState([]);
-  const [imageUrl, setImageUrl] = useState(null);
+  const [imageUri, setImageUri] = useState(null);
   const [tag, setTag] = useState(null);
   const [error, setError] = useState({});
   const [offerName, setOfferName] = useState('');
   const [description, setDescription] = useState('');
   const [dialogVisible, setDialogVisible] = useState(false);
-  const [startDate, setStartDate] = useState(moment());
-  const [endDate, setEndDate] = useState(moment().add(1, 'months'));
+  const [startDate, setStartDate] = useState(moment().valueOf());
+  const [endDate, setEndDate] = useState(moment().add(1, 'months').valueOf());
   const [endTimePicker, setEndTimePicker] = useState(false);
   const [startTimePicker, setStartTimePicker] = useState(false);
 
@@ -88,15 +88,17 @@ export default function MyOffersBottomSheet({token, toggle}) {
   const handleEndTimePicker = () => {
     setEndTimePicker(!endTimePicker);
   };
+
   const submit = async () => {
     let imagePath = null;
+
     if (validateInputs()) {
       setLoading(true);
       try {
-        if (imageUrl) {
+        if (imageUri) {
           const imageResponse = await generatePresignUrl(token, [uuid.v4()]);
           imagePath = imageResponse[0]?.split('?')[0];
-          const imageBody = await getBlob(imageUrl);
+          const imageBody = await getBlob(imageUri);
           const dataResponse = await fetch(imageResponse[0], {
             method: 'PUT',
             body: imageBody,
@@ -187,13 +189,13 @@ export default function MyOffersBottomSheet({token, toggle}) {
 
   const openCamera = async () => {
     try {
-      const result = await launchCamera({
-        mediaType: 'photo',
-        quality: 0.5,
+      const selectedImage = await ImagePicker.openCamera({
+        width: 300,
+        height: 400,
+        cropping: true,
       });
-      if (result?.assets?.length > 0) {
-        setImageUrl(result?.assets[0]?.uri);
-      }
+
+      setImageUri(selectedImage.path);
       setDialogVisible(false);
     } catch (e) {
       console.log(e);
@@ -209,14 +211,12 @@ export default function MyOffersBottomSheet({token, toggle}) {
 
   const openGallery = async () => {
     try {
-      const result = await launchImageLibrary({
-        mediaType: 'photo',
-        quality: 0.5,
-        selectionLimit: 1,
+      const selectedImage = await ImagePicker.openPicker({
+        width: 300,
+        height: 400,
+        cropping: true,
       });
-      if (result?.assets.length > 0) {
-        setImageUrl(result?.assets[0]?.uri);
-      }
+      setImageUri(selectedImage.path);
       setDialogVisible(false);
     } catch (e) {
       console.log(e);
@@ -272,17 +272,21 @@ export default function MyOffersBottomSheet({token, toggle}) {
               />
               <Text style={styles.addPhotoLabel}>Add photos</Text>
             </TouchableOpacity>
-            <Text
-              style={[
-                styles.otherLabel,
-                {
-                  alignSelf: 'center',
-                },
-              ]}>
-              If any
-            </Text>
           </View>
 
+          {imageUri ? (
+            <View style={styles.imageContainer}>
+              <Image
+                style={styles.imagePreview}
+                source={{
+                  isStatic: true,
+                  uri: imageUri,
+                  height: 128,
+                  width: 100,
+                }}
+              />
+            </View>
+          ) : null}
           <TextInput
             placeholder="Offer Name"
             style={styles.input}

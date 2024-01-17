@@ -131,7 +131,7 @@ class HomeScreen extends Component {
 
     try {
       const response = await getCategories(user?.accessToken);
-      console.log('response', response);
+      // console.log('response', response);
       let result = response?.filter(function (o1) {
         return myshop?.categories.some(function (o2) {
           return o1._id === o2;

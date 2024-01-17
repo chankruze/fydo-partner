@@ -24,7 +24,7 @@ const MyOffersScreen = ({user}) => {
     <View style={styles.container}>
       <StatusBar backgroundColor={PRIMARY} barStyle="light-content" />
       <Tab.Navigator
-        // initialRouteName="RequestedOffers"
+        initialRouteName="RequestedOffers"
         screenOptions={{
           tabBarActiveTintColor: PRIMARY,
           tabBarLabelStyle: {
