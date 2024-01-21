@@ -84,7 +84,7 @@ class HomeScreen extends Component {
       shopOpen: false,
       modalVisible: false,
       tagBottomSheetVisible: false,
-      tagTopSheetVisibel: false,
+      tagTopSheetVisible: false,
       modalOfferVisible: false,
       modelSaleVisible: false,
       carousels: [],
@@ -376,7 +376,7 @@ class HomeScreen extends Component {
   triggerTopTagModal() {
     this.setState(prevState => {
       return {
-        tagTopSheetVisibel: !prevState.tagTopSheetVisibel,
+        tagTopSheetVisible: !prevState.tagTopSheetVisible,
       };
     });
   }
@@ -387,7 +387,7 @@ class HomeScreen extends Component {
         statusBarTranslucent
         animationType="fade"
         transparent={true}
-        visible={this.state.tagTopSheetVisibel}
+        visible={this.state.tagTopSheetVisible}
         onRequestClose={this.triggerTopTagModal}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -395,7 +395,7 @@ class HomeScreen extends Component {
             activeOpacity={1}
             style={styles.addTagsBottomSheetContainer}
             onPress={this.triggerTopTagModal}>
-            <JoinNowTopSheet onPress={this.triggerTopTagModal} />
+            <JoinNowTopSheet closeModal={this.triggerTopTagModal} />
           </Pressable>
         </KeyboardAvoidingView>
       </Modal>
@@ -650,7 +650,7 @@ class HomeScreen extends Component {
         {this.state.modalOfferVisible && this.renderOfferModal()}
         {this.state.modelSaleVisible && this.renderSaleModal()}
         {this.state.tagBottomSheetVisible && this.renderTagBottomSheet()}
-        {this.state.tagTopSheetVisibel && this.renderTopSheet()}
+        {this.state.tagTopSheetVisible && this.renderTopSheet()}
         {/* main homr screen content */}
         <ScrollView showsVerticalScrollIndicator={false}>
           <StatusBar backgroundColor={PRIMARY} />

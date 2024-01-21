@@ -207,6 +207,8 @@ const ShopTiming = props => {
   const [isIndividualBreakChecked, setIsIndividualBreakChecked] =
     useState(false);
 
+  const [isBreakRequired, setIsBreakRequired] = useState(false);
+
   let rbSheet = useRef();
 
   useEffect(() => {
@@ -784,15 +786,17 @@ const ShopTiming = props => {
           style={{
             marginTop: 20,
           }}>
-          <Text style={styles.title}>Add Timing</Text>
+          <Text style={styles.title}>Add Shop Timing</Text>
           {/* usual timing */}
           <View
             style={{
               flexDirection: 'row',
               alignItems: 'center',
+              justifyContent: 'space-between',
               marginTop: 12,
             }}>
             <Text style={styles.usualText}>Usual Timing</Text>
+            <Text style={styles.usualText}>From</Text>
             <TouchableOpacity
               style={styles.timeButton}
               onPress={handleOpenTimePicker.bind(this, 'all', 'timing')}>
@@ -802,6 +806,7 @@ const ShopTiming = props => {
                 <Text style={styles.timeTxt}>Open Time</Text>
               )}
             </TouchableOpacity>
+            <Text style={styles.usualText}>To</Text>
             <TouchableOpacity
               style={styles.timeButton}
               onPress={handleCloseTimePicker.bind(this, 'all', 'timing')}>
@@ -824,7 +829,7 @@ const ShopTiming = props => {
               onCancel={setCloseTimePicker}
             />
           </View>
-          <View style={styles.individualTimingsCheckBoxContainer}>
+          <View style={styles.checkBoxContainer}>
             <Text>Add timing on a daily basis?</Text>
             <CheckBox
               value={isIndividualTimingChecked}
@@ -845,70 +850,85 @@ const ShopTiming = props => {
         </View>
 
         {/* break section */}
-        <View
-          style={{
-            marginTop: 20,
-          }}>
-          <Text style={styles.title}>Add Breaks</Text>
+        <View style={styles.checkBoxContainer}>
+          <Text>Do you close your shop for Breaks?</Text>
+          <CheckBox
+            value={isBreakRequired}
+            tintColors={{true: PRIMARY, false: DARKGREY}}
+            onValueChange={() => {
+              setIsBreakRequired(prev => !prev);
+            }}
+          />
+        </View>
+        {isBreakRequired ? (
           <View
             style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginTop: 16,
+              marginTop: 20,
             }}>
-            <Text style={styles.usualText}>Break Timing</Text>
-            <TouchableOpacity
-              style={styles.timeButton}
-              onPress={handleOpenTimePicker.bind(this, 'all', 'break')}>
-              {usualBreakStart ? (
-                <Text style={styles.timeTxt}>{usualBreakStart}</Text>
-              ) : (
-                <Text style={styles.timeTxt}>Start Time</Text>
-              )}
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.timeButton}
-              onPress={handleCloseTimePicker.bind(this, 'all', 'break')}>
-              {usualBreakClose ? (
-                <Text style={styles.timeTxt}>{usualBreakClose}</Text>
-              ) : (
-                <Text style={styles.timeTxt}>End Time</Text>
-              )}
-            </TouchableOpacity>
-            <DateTimePickerModal
-              isVisible={opentimePicker}
-              mode="time"
-              onConfirm={setGlobalOpenTime}
-              onCancel={setOpenTimePicker}
-            />
-            <DateTimePickerModal
-              isVisible={closetimePicker}
-              mode="time"
-              onConfirm={setGlobalCloseTime}
-              onCancel={setCloseTimePicker}
-            />
-          </View>
-          {/* breaks - daily basis */}
-          <View style={styles.individualTimingsCheckBoxContainer}>
-            <Text>Add different break timing on different days?</Text>
-            <CheckBox
-              value={isIndividualBreakChecked}
-              tintColors={{true: PRIMARY, false: DARKGREY}}
-              onValueChange={() => {
-                setIsIndividualBreakChecked(prev => !prev);
-              }}
-            />
-          </View>
-          {/* if break customization is checked */}
-          {isIndividualBreakChecked ? (
+            <Text style={styles.title}>Add Breaks</Text>
             <View
               style={{
+                flexDirection: 'row',
+                alignItems: 'center',
                 marginTop: 16,
+                justifyContent: 'space-between',
               }}>
-              <FlatList data={individualBreaks} renderItem={renderBreaks} />
+              <Text style={styles.usualText}>Usual Break</Text>
+              <Text style={styles.usualText}>From</Text>
+              <TouchableOpacity
+                style={styles.timeButton}
+                onPress={handleOpenTimePicker.bind(this, 'all', 'break')}>
+                {usualBreakStart ? (
+                  <Text style={styles.timeTxt}>{usualBreakStart}</Text>
+                ) : (
+                  <Text style={styles.timeTxt}>Start Time</Text>
+                )}
+              </TouchableOpacity>
+              <Text style={styles.usualText}>To</Text>
+              <TouchableOpacity
+                style={styles.timeButton}
+                onPress={handleCloseTimePicker.bind(this, 'all', 'break')}>
+                {usualBreakClose ? (
+                  <Text style={styles.timeTxt}>{usualBreakClose}</Text>
+                ) : (
+                  <Text style={styles.timeTxt}>End Time</Text>
+                )}
+              </TouchableOpacity>
+              <DateTimePickerModal
+                isVisible={opentimePicker}
+                mode="time"
+                onConfirm={setGlobalOpenTime}
+                onCancel={setOpenTimePicker}
+              />
+              <DateTimePickerModal
+                isVisible={closetimePicker}
+                mode="time"
+                onConfirm={setGlobalCloseTime}
+                onCancel={setCloseTimePicker}
+              />
             </View>
-          ) : null}
-        </View>
+            {/* breaks - daily basis */}
+            <View style={styles.checkBoxContainer}>
+              <Text>Add different break timing on different days?</Text>
+              <CheckBox
+                value={isIndividualBreakChecked}
+                tintColors={{true: PRIMARY, false: DARKGREY}}
+                onValueChange={() => {
+                  setIsIndividualBreakChecked(prev => !prev);
+                }}
+              />
+            </View>
+            {/* if break customization is checked */}
+            {isIndividualBreakChecked ? (
+              <View
+                style={{
+                  marginTop: 16,
+                }}>
+                <FlatList data={individualBreaks} renderItem={renderBreaks} />
+              </View>
+            ) : null}
+          </View>
+        ) : null}
         {/* <View style={styles.buttonContainer}>
           <TouchableOpacity
             onPress={handleAddBreaks}
@@ -1191,7 +1211,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 16,
   },
-  individualTimingsCheckBoxContainer: {
+  checkBoxContainer: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',

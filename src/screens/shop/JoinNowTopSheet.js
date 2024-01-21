@@ -28,7 +28,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const JoinNowTopSheet = ({navigation, myshop, user, onPress, setUser}) => {
+const JoinNowTopSheet = ({navigation, myshop, user, closeModal, setUser}) => {
   const [nextStep, setNextStep] = useState(false);
   const [accountName, setAccountName] = useState('');
   const [email, setEmail] = useState('');
@@ -58,7 +58,7 @@ const JoinNowTopSheet = ({navigation, myshop, user, onPress, setUser}) => {
     const response = await updateShop(user?.accessToken, request);
 
     if (response) {
-      onPress();
+      closeModal();
     }
   };
 

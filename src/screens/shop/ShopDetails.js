@@ -36,6 +36,7 @@ import ToastMessage from '../../components/common/ToastComponent';
 import {getAmenities, getCategories} from '../../services/shopService';
 import {moderateScale} from '../../utils/responsiveSize';
 import {getValue} from '../../utils/sharedPreferences';
+import {PremiumServiceModal} from './PremiumServiceModal';
 
 const mapStateToProps = state => {
   return {
@@ -45,7 +46,7 @@ const mapStateToProps = state => {
 
 const ShopDetails = ({navigation, route, user}) => {
   const shopDetails = route?.params?.data;
-  const [learnMore, setLearnMore] = useState(false);
+
   const [premiumService, setPremiumService] = useState(
     shopDetails?.isChannelPartner ? true : false,
   );
@@ -88,12 +89,11 @@ const ShopDetails = ({navigation, route, user}) => {
   const [newAmenities, setNewAmenities] = useState([]);
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
-  const [items, setItems] = useState([
-    {label: 'Apple', value: 'apple'},
-    {label: 'Banana', value: 'banana'},
-  ]);
+  const [items, setItems] = useState([]);
 
   const [isQrScanned, setIsQrScanned] = useState(false);
+  const [isPremiumServiceModalOpen, setIsPremiumServiceModalOpen] =
+    useState(false);
 
   const isFocused = useIsFocused();
 
@@ -124,7 +124,10 @@ const ShopDetails = ({navigation, route, user}) => {
   }, []);
 
   useEffect(() => {
-    addUpis();
+    // this check ensures that this side-effect is only triggered by the focus change from qr-scanner screen to this screen
+    if (upi) {
+      addUpis();
+    }
   }, [isQrScanned]);
 
   const fetchOldAmenities = () => {
@@ -304,8 +307,11 @@ const ShopDetails = ({navigation, route, user}) => {
         {/* premium service (partner programme checkbox) */}
         <View style={styles.premiumServiceContainer}>
           <Text style={styles.premiumServiceCheckBoxLabel}>
-            Do you want to join our channel partner Programme?
-            <Text style={[styles.premiumText]}> Premium Service</Text>
+            Do you want to join Fydo's Exclusive Loyalty Program?
+            <TouchableOpacity
+              onPress={() => setIsPremiumServiceModalOpen(true)}>
+              <Text style={[styles.premiumText]}>Loyalty Program</Text>
+            </TouchableOpacity>
           </Text>
           <CheckBox
             style={styles.radioBtn}
@@ -315,6 +321,10 @@ const ShopDetails = ({navigation, route, user}) => {
             onValueChange={() => {
               setPremiumService(!premiumService);
             }}
+          />
+          <PremiumServiceModal
+            isVisible={isPremiumServiceModalOpen}
+            onRequestClose={() => setIsPremiumServiceModalOpen(false)}
           />
         </View>
 
