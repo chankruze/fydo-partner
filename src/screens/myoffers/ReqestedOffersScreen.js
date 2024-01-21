@@ -88,18 +88,19 @@ const RequestedOffersScreen = ({user}) => {
     );
   }
 
+  const separator = () => <View style={styles.separator} />;
+
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
         contentContainerStyle={{
-          paddingBottom: moderateScaleVertical(20),
-          marginTop: moderateScaleVertical(15),
+          padding: moderateScaleVertical(16),
         }}
         showsVerticalScrollIndicator={false}
         data={offers}
         keyExtractor={item => item?._id.toString()}
         renderItem={({item}) => <OfferComponent item={item} />}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        ItemSeparatorComponent={separator}
         onEndReachedThreshold={0.01}
         // onMomentumScrollBegin={() => {
         //   this.onEndReachedMomentum = false;
@@ -139,6 +140,6 @@ const styles = StyleSheet.create({
     letterSpacing: 0.2,
   },
   separator: {
-    marginBottom: moderateScaleVertical(10),
+    height: moderateScaleVertical(12),
   },
 });

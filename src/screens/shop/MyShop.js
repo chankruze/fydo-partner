@@ -335,9 +335,7 @@ const MyShop = ({navigation, user, setShop}) => {
               {setMyAmenities()}
             </View>
             {offers.length > 0 && (
-              <View>
-                <StoreOffers offers={offers} navigation={navigation} />
-              </View>
+              <StoreOffers offers={offers} navigation={navigation} />
             )}
           </View>
         }

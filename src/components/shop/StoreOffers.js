@@ -5,6 +5,8 @@ import OfferComponent from '../common/OfferComponent';
 const WIDTH = Dimensions.get('screen').width;
 
 const StoreOffers = ({offers, navigation}) => {
+  const separator = () => <View style={styles.separator} />;
+
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
@@ -19,14 +21,16 @@ const StoreOffers = ({offers, navigation}) => {
         style={styles.list}
         data={offers}
         renderItem={({item}) => (
-          <OfferComponent
-            // token={token}
-            item={item}
-            navigation={navigation}
-            type={'storeOffer'}
-          />
+          <View style={{width: WIDTH * 0.7}}>
+            <OfferComponent
+              // token={token}
+              item={item}
+              navigation={navigation}
+              type={'storeOffer'}
+            />
+          </View>
         )}
-        ItemSeparatorComponent={() => <View style={styles.dealSeparator} />}
+        ItemSeparatorComponent={separator}
         keyExtractor={item => item._id.toString()}
         showsHorizontalScrollIndicator={false}
         //   ListFooterComponent={<Footer size={30} />}
@@ -79,7 +83,7 @@ const styles = StyleSheet.create({
     right: 0,
     margin: 15,
   },
-  dealSeparator: {
-    width: 20,
+  separator: {
+    width: 12,
   },
 });

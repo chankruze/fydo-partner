@@ -310,7 +310,7 @@ const ShopDetails = ({navigation, route, user}) => {
             Do you want to join Fydo's Exclusive Loyalty Program?
             <TouchableOpacity
               onPress={() => setIsPremiumServiceModalOpen(true)}>
-              <Text style={[styles.premiumText]}>Loyalty Program</Text>
+              <Text style={styles.premiumText}>Loyalty Program</Text>
             </TouchableOpacity>
           </Text>
           <CheckBox
@@ -815,12 +815,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    flexWrap: 'wrap',
   },
   premiumServiceCheckBoxLabel: {
     flex: 1,
     color: DARKBLACK,
     fontFamily: 'Gilroy-Bold',
     fontSize: 16,
+    flexDirection: 'row',
   },
   premiumDataContainer: {
     borderRadius: 16,
@@ -845,6 +847,7 @@ const styles = StyleSheet.create({
     color: PRIMARY,
     fontFamily: 'Gilroy-Medium',
     textDecorationLine: 'underline',
+    marginStart: moderateScale(4),
   },
   radioContainer: {
     flexDirection: 'row',
