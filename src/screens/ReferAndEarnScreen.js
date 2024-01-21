@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import Share from 'react-native-share';
 import {connect} from 'react-redux';
-import {BLACK, PRIMARY, WHITE} from '../assets/colors';
+import {BLACK, LIGHTBLUE, PRIMARY} from '../assets/colors';
 import ToastMessage from '../components/common/ToastComponent';
 import {getReferCode, refer} from '../services/referearnService';
 import {buildReferalLink} from '../utils/deepLinkManager';
@@ -103,11 +103,10 @@ class ReferAndEarnScreen extends Component {
     return (
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.title}>
-          Refer your nearby merchant and earn upto &#8377;100.
+          Refer your customers and earn upto &#8377;15.
         </Text>
-        <Text style={styles.label}>
-          You will receive the reward as soon as the merchant add money to their
-          wallet.
+        <Text style={styles.subtitle}>
+          You will receive the reward as soon they add money to their wallet.
         </Text>
         <Image source={ReferEarnImage} style={styles.image} />
         {/* <TextInput
@@ -133,26 +132,20 @@ class ReferAndEarnScreen extends Component {
                         {this.state.loading && <ActivityIndicator size="small" color="white"/>}
                         {!this.state.loading && <Text style={styles.buttonLabel}>Refer</Text>}
                 </TouchableOpacity> */}
-        <View style={styles.CardContainer}>
-          <TouchableOpacity style={styles.Card} onPress={this.shareCard}>
-            <View style={{alignItems: 'center', flexDirection: 'row'}}>
-              <View style={styles.subView} />
-              <View style={styles.cardLabelContainer}>
-                <Text style={styles.cardLabel}>Share your referral code</Text>
-                <Text style={styles.cardButtonLabel}>
-                  Referral code:{' '}
-                  {this.state.data.referralCode && this.state.data.referralCode}
-                </Text>
-              </View>
-            </View>
-            <View style={{alignSelf: 'flex-end', padding: moderateScale(10)}}>
-              <Image
-                source={ReferCode}
-                style={{height: moderateScale(80), width: moderateScale(90)}}
-              />
-            </View>
-          </TouchableOpacity>
-        </View>
+
+        <TouchableOpacity style={styles.card} onPress={this.shareCard}>
+          <View style={styles.subView} />
+          <View style={styles.cardBody}>
+            <Text style={styles.cardLabel}>Share your referral code</Text>
+            <Text style={styles.cardButtonLabel}>
+              Referral code:{' '}
+              {this.state.data.referralCode && this.state.data.referralCode}
+            </Text>
+          </View>
+          <View style={styles.cardFooter}>
+            <Image source={ReferCode} style={styles.phoneIcon} />
+          </View>
+        </TouchableOpacity>
       </ScrollView>
     );
   }
@@ -164,19 +157,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    padding: 10,
-    paddingTop: 25,
+    padding: 16,
   },
   title: {
     fontSize: 16,
-    color: 'black',
-    fontWeight: '500',
-    letterSpacing: 0.3,
+    color: PRIMARY,
+    fontFamily: 'Gilroy-Bold',
+    textAlign: 'center',
   },
-  label: {
+  subtitle: {
     marginVertical: 10,
-    color: 'black',
-    letterSpacing: 0.3,
+    color: BLACK,
+    fontFamily: 'Gilroy-Medium',
+    textAlign: 'center',
   },
   image: {
     height: 150,
@@ -185,68 +178,43 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginVertical: 10,
   },
-  input: {
-    height: 50,
-    borderWidth: 1,
-    borderColor: 'lightgrey',
-    marginVertical: 10,
-    borderRadius: 5,
-    fontSize: 15,
-    paddingHorizontal: 10,
-  },
-  button: {
-    width: 200,
-    backgroundColor: PRIMARY,
-    alignSelf: 'center',
-    height: 40,
-    borderRadius: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 5,
-    marginVertical: 10,
-  },
-  buttonLabel: {
-    color: 'white',
-    fontSize: 15,
-  },
-  CardContainer: {
-    padding: moderateScale(2),
-    paddingVertical: moderateScaleVertical(10),
-  },
-  Card: {
-    height: moderateScale(100),
-    borderRadius: moderateScale(10),
-    backgroundColor: WHITE,
+  card: {
+    borderRadius: moderateScale(16),
+    backgroundColor: LIGHTBLUE,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    // paddingHorizontal: moderateScale(20),
-    shadowColor: '#000',
+    shadowColor: BLACK,
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.2,
     elevation: 3,
+    marginTop: moderateScale(16),
   },
-  cardLabelContainer: {
-    marginLeft: moderateScale(15),
+  cardBody: {
+    padding: moderateScale(16),
+  },
+  cardFooter: {
+    marginLeft: 'auto',
   },
   cardLabel: {
     color: BLACK,
     fontSize: textScale(14),
-    fontWeight: '500',
-    fontFamily: 'Gilroy-Medium',
+    fontFamily: 'Gilroy-Bold',
+    textTransform: 'capitalize',
   },
   cardButtonLabel: {
     fontFamily: 'Gilroy-Medium',
-    letterSpacing: 0.3,
     color: BLACK,
-    fontSize: textScale(10),
-    marginTop: moderateScaleVertical(5),
+    fontSize: textScale(12),
+    marginTop: moderateScaleVertical(8),
   },
   subView: {
     backgroundColor: PRIMARY,
-    width: moderateScale(20),
-    height: moderateScale(100),
+    width: moderateScale(16),
+    height: '100%',
     borderTopLeftRadius: moderateScale(10),
     borderBottomLeftRadius: moderateScale(10),
+  },
+  phoneIcon: {
+    margin: moderateScale(8),
   },
 });
