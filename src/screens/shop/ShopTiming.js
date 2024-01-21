@@ -51,25 +51,33 @@ const mapDispatchToProps = dispatch => {
 };
 
 const ShopTiming = props => {
-  let rbSheet = useRef();
   const shopDetails = props.route?.params?.data;
 
   const [images, setImages] = useState(
     shopDetails?.images ? shopDetails?.images : [],
   );
-  const [timePicker, setTimePicker] = useState(false);
+
   const [opentimePicker, setOpenTimePicker] = useState(false);
   const [closetimePicker, setCloseTimePicker] = useState(false);
-  const [usualOpen, setUsualOpen] = useState(null);
-  const [usualClose, setUsualClose] = useState(null);
-  const [usualBreakStart, setUsualBreakStart] = useState(null);
-  const [usualBreakClose, setUsualBreakClose] = useState(null);
+
+  const [usualOpen, setUsualOpen] = useState(
+    shopDetails?.timing ? shopDetails?.timing[0].timings.startTime : null,
+  );
+  const [usualClose, setUsualClose] = useState(
+    shopDetails?.timing ? shopDetails?.timing[0].timings.endTime : null,
+  );
+  const [usualBreakStart, setUsualBreakStart] = useState(
+    shopDetails?.break ? shopDetails?.break[0].timings.startTime : null,
+  );
+  const [usualBreakClose, setUsualBreakClose] = useState(
+    shopDetails?.break ? shopDetails?.break[0].timings.endTime : null,
+  );
   const [addTags, setAddTags] = useState(false);
   const [addBreaks, setAddBreaks] = useState(false);
   const [selectedDay, setSelectedDay] = useState(null);
   const [checked, setChecked] = useState(new Array(7).fill(false));
-  const [breakChecked, setBreakChecked] = useState(new Array(7).fill(false));
-  const [pickerType, setPickerType] = useState();
+
+  const [pickerType, setPickerType] = useState('');
   const [individualTimings, setIndividualTimings] = useState(
     shopDetails?.timing
       ? shopDetails?.timing
@@ -198,6 +206,8 @@ const ShopTiming = props => {
     useState(false);
   const [isIndividualBreakChecked, setIsIndividualBreakChecked] =
     useState(false);
+
+  let rbSheet = useRef();
 
   useEffect(() => {
     let newBreaks = individualBreaks?.map(i => {
@@ -427,19 +437,19 @@ const ShopTiming = props => {
   };
 
   const handleOpenTimePicker = (id, type) => {
-    setOpenTimePicker(!opentimePicker);
     setSelectedDay(id);
     setPickerType(type);
+    setOpenTimePicker(prev => !prev);
   };
 
   const handleCloseTimePicker = (id, type) => {
-    setCloseTimePicker(!closetimePicker);
     setSelectedDay(id);
     setPickerType(type);
+    setCloseTimePicker(prev => !prev);
   };
 
   const setGlobalOpenTime = item => {
-    setOpenTimePicker(!opentimePicker);
+    setOpenTimePicker(prev => !prev);
     const d = moment(item).format('hh:mm A');
     let list = [];
 
@@ -490,7 +500,7 @@ const ShopTiming = props => {
   };
 
   const setGlobalCloseTime = item => {
-    setCloseTimePicker(!closetimePicker);
+    setCloseTimePicker(prev => !prev);
     const d = moment(item).format('hh:mm A');
     let list = [];
     if (selectedDay === 'all') {
@@ -721,7 +731,6 @@ const ShopTiming = props => {
             right: 5,
           }}>
           <Text style={styles.closeTxt}>Break</Text>
-          {console.log('index123==>', breakChecked[index])}
           <CheckBox
             style={[styles.radioBtn, {marginLeft: 8}]}
             value={item?.break}
